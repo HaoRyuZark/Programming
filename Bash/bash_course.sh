@@ -161,7 +161,7 @@ echo ${MY_LIST[0]} #print at index
 for item in ${MY_LIST[@]}; do echo -n $item | wc -c; done
 for ((i = 0; i < 10 i++)); do echo "$i"; done
 for i in {1..10}; do echo "$i"; done
-for item in ./content/*.md do echo "$item"; done # with pattern matching
+for item in ./content/*.md; do echo "$item"; done # with pattern matching
 for i in $(ls); do echo "$i"; done # command result
 
 # Functions

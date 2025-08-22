@@ -15,6 +15,225 @@ In contrast to high-level languages, low-level languages like C allow you to con
 
 By understanding the size of different data types, you can make informed decisions about memory allocation and optimize your programs for better performance.
 
+
+## Binary System
+
+The binary system, or base-2 numeral system, is a number system that uses only two symbols: 0 and 1. 
+This system is fundamental to all modern computers and digital devices because their 
+circuits operate on two states: on (1) or off (0). Unlike the decimal system (base-10), which uses 
+powers of 10, the binary system uses powers of 2. For example, the decimal number 9 is represented in binary as 1001, which
+is calculated as 
+
+```
+(1 times2 3
+ )+(0
+times2 
+2
+ )+(0
+times2 
+1
+ )+(1
+times2 
+0
+ )=8+0+0+1=9.
+```
+
+## Binary Operations
+
+Binary operations are performed similarly to decimal operations but with only two 
+digits.
+
+### Addition ➕
+
+```
+0+0=0
+
+0+1=1
+
+1+0=1
+
+1+1=10 (which is 0 with a carry-over of 1)
+
+1+1+1=11 (which is 1 with a carry-over of 1)
+
+```
+
+Example: 1011_2+101_2
+
+```
+  1011
++  101
+------
+  10000
+```
+
+### Subtraction ➖
+
+Subtraction is done using borrowing.
+
+Example: 101_2−11_2
+
+```
+  101
+-  011
+------
+   010
+```
+
+### Multiplication ✖️
+
+Binary multiplication is a series of additions and shifts.
+
+Example: 101_2 times 11_2
+
+```
+   101
+ x  11
+------
+   101  (101 x 1)
++ 1010  (101 x 1, shifted left by one place)
+-------
+  1111
+```
+
+### Division ➗
+Binary division is similar to long division in the decimal system, using repeated subtraction.
+
+Example: 1101_2 div 10_2
+
+```
+      110.1
+   _______
+10 | 1101.0
+   - 10
+   ------
+      10
+     - 10
+     ------
+       01
+      - 00
+      ------
+        10
+       - 10
+       ------
+         0
+```
+
+## Two's Complement
+
+Two's complement is a method used to represent signed (positive and negative) integers 
+in binary. It simplifies arithmetic operations, particularly subtraction, by allowing 
+it to be performed as addition. To find the two's complement of a number:
+
+- Invert the bits (change all 0s to 1s and 1s to 0s). This is also known as finding the one's complement.
+
+- Add 1 to the result.
+
+For example, to represent −5 using 8 bits:
+
+```
+The positive binary representation of 5 is 00000101.
+
+Invert the bits: 11111010.
+
+Add 1: 11111010+1=11111011.
+
+Thus, 11111011 represents −5 in two's complement. This system is crucial for a computer's arithmetic logic unit (ALU) as it avoids the need for a separate subtraction circuit.
+```
+
+## Conversions: Decimal, Binary, and Hexadecimal
+
+### Decimal to Binary
+
+To convert a decimal number to binary, you repeatedly divide the decimal number by 2 and record the remainders. The binary number is the sequence of remainders, read from bottom to top.
+
+Example: Convert 13_10 to binary.
+
+```
+13
+div2=6 remainder 1
+
+6
+div2=3 remainder 0
+
+3
+div2=1 remainder 1
+
+1
+div2=0 remainder 1
+```
+
+Reading the remainders from the bottom up, we get 1101_2.
+
+### Binary to Decimal
+
+To convert a binary number to decimal, multiply each digit by its corresponding power of 2 and sum the results.
+
+Example: Convert 1101_2 to decimal.
+
+```
+(1×2 
+3
+ )+(1×2 
+2
+ )+(0×2 
+1
+ )+(1×2 
+0
+ )
+=(1×8)+(1×4)+(0×2)+(1×1)=8+4+0+1=13 
+10
+```
+ 
+### Binary to Hexadecimal (Hex)
+
+Hexadecimal (base-16) is a number system that uses 16 symbols (0−9 and A−F). It's a compact way to represent binary numbers. To convert binary to hex, group the binary digits into sets of four, starting from the right. Then, convert each group into its hex equivalent.
+
+Example: Convert 11011010_2 to hex.
+
+```
+Group the digits: 1101 and 1010.
+
+1101_2=13_10, which is D in hex.
+
+1010_2=10_10, which is A in hex.
+
+Result: DA_16.
+```
+
+### Hexadecimal to Binary
+
+To convert hex to binary, simply convert each hex digit into its 4-bit binary equivalent.
+
+Example: Convert 2A_16 to binary.
+
+```
+2_16=0010_2
+
+A_16=1010_2
+```
+
+Combine the results: 00101010_2.
+
+## Floating-Point Numbers
+
+Floating-point numbers are used to represent real numbers (numbers with fractional parts) in binary, similar to scientific notation. They are represented by a sign bit, an exponent, and a mantissa (or significand). The IEEE 754 standard is the most widely used format for floating-point arithmetic.
+
+- Sign bit: 0 for positive, 1 for negative.
+
+- Exponent: Determines the magnitude of the number. It's stored in a biased format.
+
+- Mantissa: Represents the precision digits of the number.
+
+This format allows a wide range of values, from very small fractions to very large numbers, to be represented accurately within a fixed number of bits.
+
+## Binary Multiplication
+
+Binary multiplication is essentially a series of shift-and-add operations. For each '1' in the multiplier, the multiplicand is added to a running total, shifted to the left by the appropriate number of places.
+
+## Binary Division
+Binary division, often implemented using repeated subtraction, works much like long division in the decimal system. The divisor is repeatedly subtracted from the dividend, and a '1' is placed in the quotient for each successful subtraction. If the subtraction is not possible, a '0' is placed in the quotient, and the next digit of the dividend is brought down.
+
 ## Memory Management
 
 Memory management is a critical aspect of systems programming. It involves allocating and deallocating memory for variables and data structures. In C, memory management is done using functions like `malloc`, `calloc`, `realloc`, and `free`.
@@ -340,3 +559,32 @@ operating system.
 
 A **driver** is a software made to communicate with hardware components. They make the development 
 of the OS by regarding the specific software for all peripherals to the fabricants.
+
+## GCC Compiler Process 
+
+- Preprocessor → Inserts macros, eliminates comments etc. 
+- Compiler     → Generates the assembly code fromt the C file. 
+- Assembler    → Takes the assembly file and generates an object file which consists of headers and the binary machine structions. It is not executable. 
+- Linker       → Takes the object file/s and links them togethter to create an executable.
+
+## Header Files 
+
+Header files `.h` are used to declare functions, structs etc. They are used to tell the compiler tool chain 
+which functions are declared, but header files require also a concrete executable or object file of a `.c` file to work. 
+
+### Strucure
+
+```c
+#ifndef SOME_NAME_H // this guard helps against infinite recursion
+#define SOME_NAME_H
+
+...
+
+#endif
+```
+
+### Includes 
+
+To include a header file of a local project we use `"header.h"` and to include one that is globally installed on the system 
+`<header.h>`.
+

@@ -1,6 +1,70 @@
-# GCC Cheatsheet
+# Makefiles
 
-## Basic Compilation Commands
+Makefiles are  used to automate the build process of `C`, `C++`, and other programming languages.
+Flags, compiler options, and other build parameters can be specified in a `Makefile` to control the build process.
+
+## Variables 
+
+We can use Variables to store commands, list of files etc.
+
+```make
+CC=gcc
+INCDIRS=I.
+CFLAGS=... CFILES= x.c ...
+BINARY=bin
+RM= rm -f
+```
+
+## Build Rules
+
+**Build Rules** are used to programmatically define how our projects are going to be build
+
+ - Structure:
+
+```make
+target: $(dependencies)
+    commands
+```
+
+- Example:
+
+```make
+all: $(NAME)
+
+example: a.c b.c c.c 
+gcc a.c b.c c.c -o myprog 
+
+$(NAME): $(OBJ)
+$(ARD) $@ $^
+```
+
+**$@ $^** The first represents the name of the output file and the second the list of all dependencies
+
+## Clean 
+
+```make
+.PHONY : clean 
+clean: 
+    rm -f *.o myprog
+```
+
+## Patterns 
+
+```make
+%.o : %.c 
+    gcc -c $(FLAGS) $< -o $@
+```
+
+**$<** represents the name of the source file.
+
+## Backslash 
+
+We can use `\` to split lines like in `C` macros.
+
+
+## GCC Cheatsheet
+
+### Basic Compilation Commands
 
 - **Compile a C file**
   ```sh
@@ -15,7 +79,7 @@
   g++ file.cpp -o output
   ```
 
-## Compilation Modes
+### Compilation Modes
 
 - **Compile without linking** (generate object file)
   ```sh
@@ -32,7 +96,7 @@
   gcc file1.o file2.o -o output
   ```
 
-## Optimization Levels
+### Optimization Levels
 
 - **No optimization**
   ```sh
@@ -55,7 +119,7 @@
   gcc -Os file.c -o output
   ```
 
-## Debugging Options
+### Debugging Options
 
 - **Enable debugging symbols**
   ```sh
@@ -74,7 +138,7 @@
   gcc -Werror file.c -o output
   ```
 
-## Linking Libraries
+### Linking Libraries
 
 - **Link a math library (libm)**
   ```sh
@@ -86,7 +150,7 @@
   ```
   (If the library file is `libname.so` or `libname.a`)
 
-## Preprocessor Options
+### Preprocessor Options
 
 - **Only run the preprocessor**
   ```sh
@@ -97,7 +161,7 @@
   gcc -DDEBUG file.c -o output
   ```
 
-## Assembly and Machine Code
+### Assembly and Machine Code
 
 - **Generate assembly code**
   ```sh
@@ -108,7 +172,7 @@
   gcc -c file.c -o file.o
   ```
 
-## Cross-Compilation
+### Cross-Compilation
 
 - **Specify target architecture**
   ```sh
@@ -119,7 +183,7 @@
   arm-linux-gnueabi-gcc file.c -o output
   ```
 
-## Miscellaneous Options
+### Miscellaneous Options
 
 - **Show include paths**
   ```sh
