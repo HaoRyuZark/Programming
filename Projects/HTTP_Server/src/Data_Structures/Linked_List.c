@@ -1,34 +1,19 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-int const EMPTY_LIST = -1;
-
-typedef struct Node {
-
-  int data;
-  struct Node* next;
-} Node;
-
-typedef struct Linked_List {
-
-  Node* head;
-  Node* tail;
-
-} Linked_List;
-
-// Creating a list
+#include "Linked_List.h"
 
 Linked_List* create_List() {
 
-  Linked_List* list = malloc(sizeof(Linked_List));
-  if (list == NULL) {
-    printf("Error allocating memory");
-    exit(EXIT_FAILURE);
-  }
-  list->head = NULL;
-  list->tail = NULL;
+    Linked_List* list = malloc(sizeof(Linked_List));
 
-  return list;
+    if (list == NULL) {
+        printf("Error allocating memory");
+        exit(EXIT_FAILURE);
+    }
+    
+    list->head = NULL;
+    list->tail = NULL;
+    list->len = 0;
+
+    return list;
 }
 
 // Creating a node
@@ -49,7 +34,7 @@ Node* create_node(int data) {
 
 // Appending a node at the start
 
-void append_at_start(Linked_List *list, int data) {
+void append_at_start(Linked_List* list, int data) {
 
   Node* new_node = create_node(data);
 
@@ -61,12 +46,13 @@ void append_at_start(Linked_List *list, int data) {
     list->head = new_node;
   }
 
-  printf("Node was appended at the start of the list\n");
+    printf("Node was appended at the start of the list\n");
+    list->len++; 
 }
 
 // Pushing a node to the end
 
-void append_at_end(Linked_List *list, int data) {
+void append_at_end(Linked_List* list, int data) {
 
   Node* new_node = create_node(data);
 
@@ -79,10 +65,11 @@ void append_at_end(Linked_List *list, int data) {
     new_node->next = NULL;
   }
   printf("Node was appended at the end of the list\n");
+  list->len++;
 }
 // Pop a node
 
-int pop_node(Linked_List *list) {
+int pop_node(Linked_List* list) {
 
   Node* current = list->head;
   Node* previous = NULL;
@@ -90,11 +77,13 @@ int pop_node(Linked_List *list) {
   if (list->head == NULL) {
     
     printf("The list is empty\n");
+  
     return EMPTY_LIST;
 
   } else if (list->head == list->tail) {
   
     list->head = NULL;
+   
     list->tail = NULL;
     printf("The last node was deleted. The list is empty\n");
     
@@ -112,13 +101,14 @@ int pop_node(Linked_List *list) {
     
     free(current);
     printf("The last node was deleted\n");
+    list->len--;
 
-  return data;
+    return data;
 }
 
 // Inserting a node
 
-void insert_node(Linked_List *list, int data, int position) {
+void insert_node(Linked_List* list, int data, int position) {
 
   if (list->head == NULL && list->tail == NULL) {
     append_at_start(list, data);
@@ -148,56 +138,60 @@ void insert_node(Linked_List *list, int data, int position) {
   }
 
   printf("The node was inserted at position: %d \n", position);
+  
+  list->len++;
 }
 
 // Deleting a node
 
-int delete_node(Linked_List *list, int position) {
+int delete_node(Linked_List* list, int position) {
 
-  if (list->head == NULL) {
-    printf("The list is empty\n");
-    return EMPTY_LIST;
-  }
-  Node* current = list->head;
-  Node* previous = NULL;
-
-  while (current != NULL && position != 0) {
-    previous = current;
-    current = current->next;
-    position--;
-  }
-
-  if (current == NULL) {
-    printf("The position is invalid\n");
-    return EMPTY_LIST;
-  }
-
-  if (previous == NULL) {
-    
-    list->head = current->next;
-  
     if (list->head == NULL) {
-      list->tail = NULL;
+        printf("The list is empty\n");
+        return EMPTY_LIST;
     }
-  
-  } else {
-   
-    previous->next = current->next;
-    
-    if (current->next == NULL) {
-      list->tail = previous;
-    }
-  }
-    
-  int data = current->data;
-  free(current);
 
-  return data;
+    Node* current = list->head;
+    Node* previous = NULL;
+
+    while (current != NULL && position != 0) {
+        previous = current;
+        current = current->next;
+        position--;
+    }
+
+    if (current == NULL) {
+        printf("The position is invalid\n");
+        return EMPTY_LIST;
+    }
+
+    if (previous == NULL) {
+
+        list->head = current->next;
+
+    if (list->head == NULL) {
+          list->tail = NULL;
+    }
+
+    } else {
+
+        previous->next = current->next;
+
+        if (current->next == NULL) {
+              list->tail = previous;
+        }
+    }
+    
+    int data = current->data;
+    free(current);
+    
+    list->len--;
+    return data;
 }
 
 // Deleting the list
 
-void delete_list(Linked_List *list) {
+void delete_list(Linked_List* list) {
 
   Node* current = list->head;
   Node* next_node;
@@ -213,7 +207,7 @@ void delete_list(Linked_List *list) {
   printf("The list was deleted\n");
 }
 
-Node* reverse(Linked_List *list) {
+Node* reverse(Linked_List* list) {
 
   if (list->head == NULL) {
     return NULL;
@@ -235,33 +229,4 @@ Node* reverse(Linked_List *list) {
   return list->head;
 }
 
-Node* reverse_segment(Linked_List *list, int left, int right) {
-  if (list->head == NULL || left == right) {
-    return list->head;
-  }
 
-  Node dummy;
-  dummy.next = list->head;
-  Node* lp = &dummy;
-
-  for (int i = 1; i < left; i++) {
-    lp = lp->next;
-  }
-
-  Node* current = lp->next;
-  Node* prev = NULL;
-
-  for (int i = 0; i <= right - left; i++) {
-    Node* next = current->next;
-    current->next = prev;
-    prev = current;
-    current = next;
-  }
-
-  lp->next->next = current;
-  lp->next = prev;
-
-  return dummy.next;
-}
-
-int main() { return 0; }

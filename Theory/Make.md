@@ -61,7 +61,6 @@ clean:
 
 We can use `\` to split lines like in `C` macros.
 
-
 ## GCC Cheatsheet
 
 ### Basic Compilation Commands

@@ -81,4 +81,3 @@ Here are the key elements of JSON syntax:
 
 ---
 
-Let me know if you'd like this turned into a downloadable file or formatted for a particular platform like GitHub or a blog.
