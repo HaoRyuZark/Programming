@@ -73,41 +73,41 @@ In Spring, a **Bean** is an object that is instantiated, assembled, and managed 
 
 ## Common Annotations
 
-- @Bean - Declares a Spring Bean which can be injected into other components  
-- @Component - Marks a class as a Spring-managed component
-- @Configuration - Indicates a class contains Spring Bean definitions
-- @Service - Specialization of @Component for service layer classes
-- @Controller - Specialization of @Component for web controllers
-- @RestController - Combines @Controller and @ResponseBody for RESTful web services
-- @Repository - Specialization of @Component for data access layer classes
-- @Autowired - Automatically injects a Spring Bean into a field, constructor, or method
-- @Value - Injects values from properties files or environment variables
-- @Qualifier - Specifies which bean to inject when multiple options exist  
-- @Primary - Marks a bean as the primary choice  
-- @Scope - Defines the bean's lifecycle scope (singleton, prototype, etc.)  
-- @SpringBootApplication - Combines @Configuration, @EnableAutoConfiguration, and @ComponentScan for main application class
-- @EnableAutoConfiguration - Enables Spring Boot's auto-configuration feature
-- @ComponentScan - Configures component scanning directives for use with @Configuration
-- @ConditionalOnBean - Conditionally creates a bean based on the presence of another bean
-- @ConditionalOnMissingBean - Conditionally creates a bean if another bean is not present
-- @ConditionalOnProperty - Conditionally creates a bean based on a property value
-- @ConditionalOnClass - Conditionally creates a bean if a specific class is present on the classpath
-- @ConditionalOnMissingClass - Conditionally creates a bean if a specific class is not present on the classpath
-- @ConfigurationProperties - Binds properties from application.properties or application.yml to a Java class
+- `@Bean` - Declares a Spring Bean which can be injected into other components. Used at method level inside a class with `@Configuration` 
+- `@Component` - Marks a class as a Spring-managed component. Used at class level. 
+- `@Configuration` - Indicates a class contains Spring Bean definitions
+- `@Service` - Specialization of @Component for service layer classes
+- `@Controller` - Specialization of @Component for web controllers
+- `@RestController` - Combines @Controller and @ResponseBody for RESTful web services
+- `@Repository` - Specialization of @Component for data access layer classes
+- `@Autowired` - Automatically injects a Spring Bean into a field, constructor, or method
+- `@Value` - Injects values from properties files or environment variables
+- `@Qualifier` - Specifies which bean to inject when multiple options exist  
+- `@Primary` - Marks a bean as the primary choice  
+- `@Scope` - Defines the bean's lifecycle scope (singleton, prototype, etc.)  
+- `@SpringBootApplication` - Combines @Configuration, @EnableAutoConfiguration, and @ComponentScan for main application class
+- `@EnableAutoConfiguration` - Enables Spring Boot's auto-configuration feature
+- `@ComponentScan` - Configures component scanning directives for use with @Configuration
+- `@ConditionalOnBean` - Conditionally creates a bean based on the presence of another bean
+- `@ConditionalOnMissingBean` - Conditionally creates a bean if another bean is not present
+- `@ConditionalOnProperty` - Conditionally creates a bean based on a property value
+- `@ConditionalOnClass` - Conditionally creates a bean if a specific class is present on the classpath
+- `@ConditionalOnMissingClass` - Conditionally creates a bean if a specific class is not present on the classpath
+- `@ConfigurationProperties` - Binds properties from application.properties or application.yml to a Java class
 
 ## Test Annotations
 
-- @SpringBootTest - Loads the full application context for integration tests. We can also specify which classes and arguments to use.
-- @MockBean - Creates a mock bean for testing purposes
-- @Test - Marks a method as a test case
-- @BeforeEach - Runs before each test method
-- @AfterEach - Runs after each test method
-- @BeforeAll - Runs once before all test methods
-- @AfterAll - Runs once after all test methods
-- @DisplayName - Provides a custom name for test methods
-- @Nested - Groups related test methods together
-- @InjectMocks - Injects mock beans into the class under test
-- @Mock - Creates a mock object for testing
+- `@SpringBootTest` - Loads the full application context for integration tests. We can also specify which classes and arguments to use.
+- `@MockBean` - Creates a mock bean for testing purposes
+- `@Test` - Marks a method as a test case
+- `@BeforeEach` - Runs before each test method
+- `@AfterEach` - Runs after each test method
+- `@BeforeAll` - Runs once before all test methods
+- `@AfterAll` - Runs once after all test methods
+- `@DisplayName` - Provides a custom name for test methods
+- `@Nested` - Groups related test methods together
+- `@InjectMocks` - Injects mock beans into the class under test
+- `@Mock` - Creates a mock object for testing
 
 ## Configuration for the Application
 
@@ -123,6 +123,7 @@ You can also use @SpringBootTest with specific properties to override the defaul
 
 ## Layers in Spring Boot
 
+- **View Layer**: Handles data presentation.
 - **Controller Layer**: Handles HTTP requests and responses, maps URLs to methods, and returns views or data.
 - **Service Layer**: Contains business logic, processes data, and interacts with repositories.
 - **Repository Layer**: Manages data access, interacts with the database, and performs CRUD operations.

@@ -231,9 +231,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    nodejs waybar rust jdk-open-jdk htop man-db man-pages openssh git nnn vi zathura zathura-pdf-poppler
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
-   clamav sxiv`
-
-
+   clamav sxiv vlc bleachbit reflector`
 ---
 
 ### Setup yay
@@ -254,10 +252,6 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `sudo npm install -g regex`
 
 ---
-
-### Set GTK and Qt Themes
-
-
 
 ### ClamAV
 
@@ -363,11 +357,33 @@ These commands are useful for managing services like `nginx`, `ssh`, `docker`, e
 - `git clone git@github.com:HaoRyuZark/Computer_Science_Compedium.git`
 - `git clone git@github.com:HaoRyuZark/Mathematica_Compendium.git`
 - `git clone git@github.com:HaoRyuZark/Programming.git`
-- `git clone git@github.com:HaoRyuZark/CheatSheets.git`
 
 ## University Stuff
 
 Download the Mathematics folder from Google Drive to obtain books and worksheets.
+
+## Maintenance 
+
+- **Clear Cache:** `sudo yay -Scc` and `sudo pacman -Scc`
+- **Update:** `sudo yay -Syu`
+- **Clean unwanted dependencies:** `yay -Yc`
+- **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)`
+- **Free Disk Space:** Use `Bleachbit` or type `du -sh path` to see the disk usage of some directory and 
+`rm -rf path/` to remove. Be carefull to not important directories.
+- **Cleaning Logs of the Journal directory:** Use `journalctl` to activate the vacuum option. 
+`sudo journalctl --vacuum-time=2weeks`
+- **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist `
+
+## Video Player 
+
+## Audio Player 
+
+## Redlight 
+
+## Jupyter 
+
+## Brightness
+
 
 --- 
 

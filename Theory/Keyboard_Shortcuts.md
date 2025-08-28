@@ -1,17 +1,28 @@
 # Keyboard Shortcuts
 
-## Terminal
+## Kitty
 
 | Shortcut | Action |
 |----------|--------|
-| Mod4  + Enter | Open terminal |
-| Crtl + Shift + c | Copy |
-| Crtl + Shift + v | Paste |
-| Ctrl + Shift + t | Open new terminal tab |
-| Ctrl + Shift + w | Close terminal tab |
-| Ctrl + Shift + q | Quit terminal |
-| Ctrl + Shift + n | Open new terminal window |
-| Ctrl + Shift + arrow keys | Move between tabs|
+| `Mod4  + Enter` | Open terminal |
+| `Ctrl + Shift + Enter`    | Launch a new kitty window              |
+| `Ctrl + Shift + Space`    | Launch a new kitty overlay             |
+| `Ctrl + Shift + Q`        | Quit the current kitty window          |
+| `Ctrl + Shift + N`        | Set window/tab title                   |
+| `Ctrl + Shift + T`        | New tab                                |
+| `Ctrl + Shift + W`        | Close current tab                      |
+| `Ctrl + Shift + Left/Right` | Move to previous/next tab             |
+| `Ctrl + Shift + [` or `]` | Switch tabs left/right                 |
+| `Ctrl + Shift + Enter`    | New window (split horizontally)        |
+| `Ctrl + Shift + \`        | New window (split vertically)          |
+| `Ctrl + Shift + X`        | Close current window (split)           |
+| `Ctrl + Shift + Arrow Keys` | Move focus to another window         |
+| `Ctrl + Shift + =/-`      | Increase/decrease window size          |
+| `Ctrl + Shift + F`        | Find text (search)                     |
+| `Ctrl + Shift + Up/Down`  | Scroll up/down one line                |
+| `Ctrl + Shift + PageUp/PageDown` | Scroll by full screen            |
+| `Ctrl + Shift + C`        | Copy selected text                     |
+| `Ctrl + Shift + V`        | Paste clipboard content                |
 
 
 ## Wofi
@@ -20,6 +31,7 @@
 |----------|--------|
 | Mod4 + d | Open Wofi |
 | Mod4 + Shift + d | Open Wofi run |
+
 
 ## Browswer
 
@@ -39,4 +51,9 @@
 
 
 ## File Manager 
+
+
+## Sway 
+
+
 
