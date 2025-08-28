@@ -1,5 +1,4 @@
 # Arch Linux Setup
-
 Documentatiion for seeting up Arch Linux with the necessary tools and configurations for development.
 
 ## Installation 
@@ -231,7 +230,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    nodejs waybar rust jdk-open-jdk htop man-db man-pages openssh git nnn vi zathura zathura-pdf-poppler
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
-   clamav sxiv vlc bleachbit reflector`
+   clamav sxiv bleachbit reflector redshift jupyterlab jupyter-notebook`
 ---
 
 ### Setup yay
@@ -374,16 +373,9 @@ Download the Mathematics folder from Google Drive to obtain books and worksheets
 `sudo journalctl --vacuum-time=2weeks`
 - **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist `
 
-## Video Player 
-
-## Audio Player 
-
 ## Redlight 
 
 ## Jupyter 
-
-## Brightness
-
 
 --- 
 
