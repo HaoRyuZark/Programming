@@ -230,7 +230,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    nodejs waybar rust jdk-open-jdk htop man-db man-pages openssh git nnn vi zathura zathura-pdf-poppler
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
-   clamav sxiv bleachbit reflector redshift jupyterlab jupyter-notebook`
+   clamav sxiv bleachbit reflector redshift jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib`
 ---
 
 ### Setup yay
@@ -249,7 +249,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `sudo pacman -S python-pylatexenc`
 - `gem install neovim`
 - `sudo npm install -g regex`
-
+- `npm install -g tree-sitter-cli`
 ---
 
 ### ClamAV
@@ -307,7 +307,6 @@ Stow is program which helps managing dotfiles by using `symlinks`. To use stow c
 
 For everything related to a 'Rice' clone the repositories or setup own configurations. One option is to 
 clone the necessary repositories from github or use stow.
-
 
 ---
 
