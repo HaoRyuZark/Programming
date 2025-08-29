@@ -226,7 +226,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 ### Install the Packages by copying the following command:
 
 - `sudo pacman -S texlive fastetch 7zip make kitty neovim python pip stow npm python 
-   wl-clippboard wofi xorg-wayland timeshift nautilus luarocks linux-lts lua wayland 
+   wl-clippboard wofi xorg-wayland nautilus luarocks linux-lts lua wayland 
    nodejs waybar rust jdk-open-jdk htop man-db man-pages openssh git nnn vi zathura zathura-pdf-poppler
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
@@ -440,4 +440,26 @@ Pacman was used for almost all examples, but Yay can also be used.
 
 ## Timeshift
 
+ - **Installation:** `sudo pacman -S timeshift`
 
+### Setup via GUI 
+
+1. Select the type of snapshots
+2. Select your second storage device 
+3. Schedule the snapshot 
+4. Select the users: `root` and `yourself`, ... 
+5. Skip the filter and click ok 
+
+### Usage CLI 
+
+- **Check config:** `sudo timeshift --check`
+- **Snapshot type:** `sudo timeshift --rsync` or `sudo timeshift --btrfs`
+- **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or
+`sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
+- **Create a snapshot:** `sudo timeshift --create --comments "Something" --tags D`
+- **See snapshots:** `sudo timeshift --list`
+- **Restore system:** `sudo timeshift --restore` then type the identifier of the target
+- **Delete snapshot:** `sudo timeshift --delete` then type  the identifier of the target
+- **Delete specific snapshot:** `sudo timeshift --delete --snapshot 'date' `
+- **Delete snapshots:** `sudo timeshift --delete-all `
+- **Scheduleling:** `sudo timeshift --schedule --type_of_schedule num`

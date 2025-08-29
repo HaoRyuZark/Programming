@@ -1,4 +1,3 @@
-
 # Common Programming Patterns in LeetCode and How to Approach Them
 
 This guide covers major programming patterns frequently used in solving LeetCode problems, including their use cases, examples, and approaches.

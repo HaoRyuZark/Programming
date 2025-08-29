@@ -2,6 +2,8 @@
 
 Systems programming involves writing software that provides services to the computer hardware. This includes operating systems, device drivers, and other low-level software that interacts directly with the hardware. To understand systems programming, one must be familiar with the architecture of the computer, including how memory is managed, how processes are scheduled, and how input/output operations are performed. This document covers low level concepts which are essential for systems programming.
 
+---
+
 ## Size of Variables
 
 In contrast to high-level languages, low-level languages like C allow you to control the size of variables explicitly. The size of a variable can affect performance and memory usage. Here are some common variable sizes in C:
@@ -15,6 +17,7 @@ In contrast to high-level languages, low-level languages like C allow you to con
 
 By understanding the size of different data types, you can make informed decisions about memory allocation and optimize your programs for better performance.
 
+---
 
 ## Binary System
 
@@ -37,6 +40,8 @@ times2
 0
  )=8+0+0+1=9.
 ```
+
+---
 
 ## Binary Operations
 
@@ -119,6 +124,8 @@ Example: 1101_2 div 10_2
          0
 ```
 
+---
+
 ## Two's Complement
 
 Two's complement is a method used to represent signed (positive and negative) integers 
@@ -140,6 +147,8 @@ Add 1: 11111010+1=11111011.
 
 Thus, 11111011 represents −5 in two's complement. This system is crucial for a computer's arithmetic logic unit (ALU) as it avoids the need for a separate subtraction circuit.
 ```
+
+---
 
 ## Conversions: Decimal, Binary, and Hexadecimal
 
@@ -215,6 +224,8 @@ A_16=1010_2
 
 Combine the results: 00101010_2.
 
+---
+
 ## Floating-Point Numbers
 
 Floating-point numbers are used to represent real numbers (numbers with fractional parts) in binary, similar to scientific notation. They are represented by a sign bit, an exponent, and a mantissa (or significand). The IEEE 754 standard is the most widely used format for floating-point arithmetic.
@@ -227,12 +238,19 @@ Floating-point numbers are used to represent real numbers (numbers with fraction
 
 This format allows a wide range of values, from very small fractions to very large numbers, to be represented accurately within a fixed number of bits.
 
+---
+
 ## Binary Multiplication
 
 Binary multiplication is essentially a series of shift-and-add operations. For each '1' in the multiplier, the multiplicand is added to a running total, shifted to the left by the appropriate number of places.
 
+---
+
 ## Binary Division
+
 Binary division, often implemented using repeated subtraction, works much like long division in the decimal system. The divisor is repeatedly subtracted from the dividend, and a '1' is placed in the quotient for each successful subtraction. If the subtraction is not possible, a '0' is placed in the quotient, and the next digit of the dividend is brought down.
+
+---
 
 ## Memory Management
 
@@ -270,6 +288,8 @@ int main() {
 
 ```
 
+---
+
 ## Pointers
 
 Pointers are a fundamental concept in low-level programming. They allow you to directly manipulate memory addresses, which is crucial for performance and resource management. A pointer is a variable that stores the address of another variable.
@@ -294,6 +314,7 @@ int var = 42;
 }
 ```
 
+
 ### Cursed Pointers
 
 Here some examples of "weird" pointers in C:
@@ -309,6 +330,8 @@ int (*x())[10]; //  x is a function that returns a pointer to an array of 10 int
 int (*((*x)[]))() // x is a pointer to an array of pointers to functions that return int
 char *(*(*x[8][8])())[10]; // x is a 2D array of pointers to functions that return pointers to arrays of 10 chars
 ```
+
+---
 
 ## Bit Manipulation
 
@@ -342,19 +365,27 @@ int main() {
 }
 ```
 
+---
+
 ## Casting String-numbers to Numbers 
 
 Multiple programming languages have defaults for converting string to numbers. The way this functionality works is by 
 using the ASCII enconding which for the digits starts at 48. Therefore to convert a character number to a number the computer 
 subtracts 48 from the binary code of the character. For multiple numbers with multiple digits a system for the positions has to be accounted.
 
+---
+
 ## The Stack
 
 Is a memory region that stores local variables, function parameters, and return addresses. It operates in a last-in, first-out (LIFO) manner. The data is stored contiguously, and the stack grows downwards in memory. Each function call creates a new stack frame that contains the function's local variables and parameters.
 
+---
+
 ## The Heap
 
 The heap is a memory region used for dynamic memory allocation. Unlike the stack, memory in the heap is managed manually by the programmer using functions like `malloc`, `calloc`, `realloc`, and `free`. The heap allows for more flexible memory usage, but it also requires careful management to avoid memory leaks and fragmentation. The heap is considered slower than the stack for memory allocation and deallocation because it involves more complex bookkeeping. This slowness is caused by the fragmentation of the memory.
+
+---
 
 ## Cache
 
@@ -363,9 +394,13 @@ Cache is a small, fast memory located close to the CPU that stores frequently ac
 When the requested data is found in the cache, it is called a cache hit; if not, it is a cache miss, and the data must be fetched from the slower main memory. There is
 a caching hierarchy, typically consisting of multiple levels (L1, L2, L3), with L1 being the fastest and smallest, and L3 being larger but slower. If data is not used frequently, it may be evicted from the cache to make room for new data.
 
+---
+
 ## System Calls
 
 System calls are the interface between user applications and the operating system kernel. They allow user programs to request services from the kernel, such as file operations, process management, and network communication. System calls provide a controlled way for applications to interact with hardware and system resources.
+
+---
 
 ## Fetch Decode Execute Cycle
 
@@ -375,6 +410,8 @@ The fetch-decode-execute cycle is the fundamental process by which a CPU execute
 2. **Decode**: The fetched instruction is decoded to determine what operation it specifies and which operands are involved. This step involves interpreting the binary representation of the instruction.
 3. **Execute**: The CPU performs the operation specified by the instruction, which may involve arithmetic or logical operations, memory access, or control flow changes. The results of the execution are then stored back in memory or in registers.
 4. **Repeat**: The cycle repeats for the next instruction, with the program counter being updated to point to the next instruction in the sequence.
+
+---
 
 ## Pipelining
 
@@ -405,6 +442,8 @@ The OS is a process itself, and it runs whenever the CPU is not executing user c
 - **Exceptions**: These are unexpected events that occur during program execution, such as division by zero or invalid memory access. When an exception occurs, the CPU switches to the OS to handle the error.
 - **Context Switching**: The OS can preempt a running user program to give CPU time to another process. This is done through context switching, where the OS saves the state of the current process and loads the state of the next process to be executed.
 
+--- 
+
 ## Memory Layout of a Process
 
 The memory layout of a process typically consists of several segments:
@@ -415,6 +454,8 @@ The memory layout of a process typically consists of several segments:
 - **Heap Segment**: Used for dynamic memory allocation.
 - **Stack Segment**: Contains local variables and function call information.
 
+---
+
 ## Virtual Memory
 
 Virtual memory is a memory management technique that allows a computer to use more memory than is physically available by using disk space as an extension of RAM. It also provides the illusion of a large, contiguous memory space to applications, while the operating system manages the mapping between virtual addresses and physical addresses.
@@ -423,15 +464,20 @@ It is done by dividing the memory into fixed-size pages and mapping them to phys
 
 Via hardware support, such as the Memory Management Unit (MMU), virtual memory allows for efficient memory usage, isolation between processes, and protection against unauthorized access. This unit is also responsible for managing the page table, which keeps track of the mapping between virtual addresses and physical addresses.
 
+---
+
 ## ABI
 
 The Application Binary Interface (ABI) defines how different components of a binary program interact at the machine level. It specifies details such as calling conventions, data types, and system calls, ensuring that compiled code can run on a specific platform without requiring recompilation.
+
+---
 
 ## Processes
 
 A **proces** is an instance of a program.
 
-## PCB 
+
+### PCB 
 
 The **process control block** is an abstraction the operating sytem uses to identify processes. 
 An over simplification would be 
@@ -449,6 +495,7 @@ pub struct PCB {
 Processes from the perspective of the operating system require this strucure to be handled by the context switching. This is also considered the 
 CPU state of the process.
 
+
 ## IPC 
 
 This stands for the term **inter process communication**. The two main approaches are **shared memory** and 
@@ -458,6 +505,8 @@ to create a queue or queues in which data from the processes can be communicatee
 
 The previously mentioned queues or more informal mailboxes for processes are called **ports**.
 
+--- 
+
 ## Interrupts
 
 Interrupts are implemented at hardware level to store the state of the CPU correctly. One variant is to use 
@@ -465,6 +514,8 @@ two register sets. One for the user mode and one for the kernel mode.
 
 Another way is to make the stack register of the OS always visible to the CPU via a hardwired memory location or register. So 
 during the context switching the all critical registers can be stored correctly.
+
+---
 
 ## User Mode and Kernel Mode
 
@@ -475,11 +526,13 @@ The value of the register is modified by an interrupt.
 
 The CPU contains a timer to automatically return control to the OS in the case a process does not voluntarelly return control.
 
+---
+
 ## CPU Scheduling
 
 CPU scheduling is the process of deciding which of the processes in the ready queue will be allocated to the CPU. The primary motivation behind CPU scheduling is to maximize CPU utilization and provide a responsive system for users. A well-designed scheduling algorithm aims to ensure that the CPU is never idle as long as there are processes ready to run, while also providing a fair and efficient allocation of CPU time among competing processes. Scheduling is a fundamental concept in multiprogramming operating systems, where multiple processes can reside in memory at the same time. The scheduler is a key component of the operating system that makes these allocation decisions.
 
-## Cooperative and Preemptive Scheduling
+### Cooperative and Preemptive Scheduling
 
 There are two main approaches to CPU scheduling: cooperative and preemptive.
 
@@ -487,7 +540,8 @@ There are two main approaches to CPU scheduling: cooperative and preemptive.
 
 - Preemptive scheduling is a more robust approach where the operating system can interrupt a running process and force it to give up the CPU. This is typically done after a certain time interval, known as a time slice, has elapsed, or when a higher-priority process becomes ready. Preemptive scheduling ensures that no single process can monopolize the CPU, leading to a more responsive and fair system. It is the dominant approach in modern operating systems.
 
-## Scheduling Strategies
+
+### Scheduling Strategies
 
 Several algorithms and strategies are used to implement CPU scheduling, each with its own advantages and disadvantages. The choice of strategy often depends on the goals of the system (e.g., maximizing throughput, minimizing response time, or ensuring fairness).
 
@@ -499,10 +553,14 @@ Several algorithms and strategies are used to implement CPU scheduling, each wit
 
 - **Round-Robin (RR) Scheduling:** This is a preemptive algorithm designed for time-sharing systems. Each process is given a small unit of CPU time, called a time quantum or time slice. When the time quantum expires, the process is preempted and added to the end of the ready queue. RR provides a fair share of the CPU to each process and is generally effective for interactive systems where response time is a key concern. The performance of RR is highly dependent on the size of the time quantum. A small quantum can lead to frequent context switches, which can increase overhead, while a large quantum can make it behave like FCFS.
 
+---
+
 ## Signals 
 
 **Signals** are a way of inter-process communication. They are used to communicate a process an specific behaviour like terminating, halting, 
 resuming etc. They are provided the OS to trigger interrupts directly.
+
+---
 
 ## Concurrency And parallelism
 
@@ -514,6 +572,7 @@ Concurrency and parallelism are two related concepts in computer science that de
 
 - **Address Space**  is the memory region used by a process.
 
+--- 
 ## Threads
 
 Threads are inner entities in a process which can be executed concurrently inside a process. They have their own CPU state and are 
@@ -523,24 +582,34 @@ threads which are not sleeping.
 From the OS perspective a thread is not very different from a process but for a developer it is 
 way to inform the operating system that specific regions of a program can be executed concurrently.
 
+---
+
 ## Memory protection
 
 Because checking for memory security each time a processes is executed would be very costly in terms of performance this ascpect is implemented via hardware.
 
 The condition is: **address >= base and address < base + limit**
 
+--- 
+
 ## Sleep 
 
 This instruction is used to voluntarelly give the CPU to another process for an specific time.
 It uses an sleeping queue to regulate the use of the computer inner timmer via software. 
 
+--- 
+
 ## Race Conditions
 
 Race conditions occur when multiple threads or processes access shared resources concurrently, and the final outcome depends on the timing of their execution. This can lead to unpredictable behavior and bugs in the program. It is important to note that spanning multiple threads does not guarantee parallel execution, as the operating system may schedule them on a single core, leading to interleaved execution. But this can still result in race conditions if not properly managed.
 
+--- 
+
 ## Atomic Operations
 
 Atomic operations are operations that are completed in a single step relative to other threads. They are indivisible and cannot be interrupted, ensuring that no other thread can see an intermediate state. This is crucial for preventing race conditions and ensuring data consistency in concurrent programming. The mostly consist of simple operations like incrementing a counter or setting a flag, and they are typically implemented using low-level hardware instructions that guarantee atomicity.
+
+--- 
 
 ## Mutexes and Condition Variables
 
@@ -550,15 +619,21 @@ Condition variables allow threads to wait for certain conditions to be met befor
 
 Both approaches use **atomic operations** to ensure no race conditions occur.
 
+---
+
 ## Cores 
 
 Moder processors have multiple cpus which can improve performance both for processes and threads. This is handled by the 
 operating system.
 
+---
+
 ## Drivers 
 
 A **driver** is a software made to communicate with hardware components. They make the development 
 of the OS by regarding the specific software for all peripherals to the fabricants.
+
+--- 
 
 ## GCC Compiler Process 
 
@@ -566,6 +641,8 @@ of the OS by regarding the specific software for all peripherals to the fabrican
 - Compiler     → Generates the assembly code fromt the C file. 
 - Assembler    → Takes the assembly file and generates an object file which consists of headers and the binary machine structions. It is not executable. 
 - Linker       → Takes the object file/s and links them togethter to create an executable.
+
+---
 
 ## Header Files 
 
@@ -587,4 +664,72 @@ which functions are declared, but header files require also a concrete executabl
 
 To include a header file of a local project we use `"header.h"` and to include one that is globally installed on the system 
 `<header.h>`.
+
+---
+
+## Sockets
+
+Sockets are an abstraction provided by the operating system to enable communication 
+between different processes either on the same machine or over a network. They act as 
+endpoints in a two-way communication channel. **Socket = Protocol + IP Address + Port Number**. 
+
+Sockets operate primarily at the **Transport** layer of the **OSI** model. They are called from the 
+**Application** layer asking to send or receive data. Then the socket wrap it via **TCP/UDP** and send it to 
+the **Network** layer.
+
+---
+
+## What is a File Descriptor?
+
+A **file descriptor (FD)** is a low-level integer handle used by an operating system to uniquely identify an open file or input/output (I/O) resource. File descriptors are central to how operating systems like Unix, Linux, and macOS manage I/O operations, including files, pipes, and sockets.
+
+In short, file descriptors are integers which represent a current open file.
+
+### Key Characteristics:
+
+* **Integer Identifier**: File descriptors are represented by non-negative integers (e.g., `0`, `1`, `2`).
+* **Resource Handle**: Each FD refers to an open I/O resource, such as a file, socket, or device.
+* **Process-specific**: FDs are unique within a process and are maintained by the process’s file descriptor table.
+
+### Standard File Descriptors:
+
+By default, every process starts with three open file descriptors:
+
+| FD | Name     | Description     |
+| -- | -------- | --------------- |
+| 0  | `stdin`  | Standard input  |
+| 1  | `stdout` | Standard output |
+| 2  | `stderr` | Standard error  |
+
+### File Descriptors and Sockets:
+
+In networking, **sockets are treated like files**. When you create a socket using `socket()`, the system returns a file descriptor that you can use for reading and writing data:
+
+```c
+int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+// sockfd is now a file descriptor for a socket
+```
+
+This file descriptor can be used with functions like `read()`, `write()`, `close()`, or `select()` just like regular files.
+
+### Why File Descriptors Matter:
+
+* They provide a **uniform interface** for I/O operations.
+* Used heavily in **multiplexing I/O** (e.g., `select()`, `poll()`, `epoll()`).
+* Essential for **resource management**—every open FD consumes system resources.
+
+### Closing File Descriptors:
+
+To free up system resources, file descriptors must be explicitly closed using:
+
+```c
+close(sockfd); // Closes the socket and releases the FD
+```
+
+Failing to close file descriptors can lead to **resource leaks**, limiting how many files or sockets a program can open simultaneously.
+
+---
+
+
+
 

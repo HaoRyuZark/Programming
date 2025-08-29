@@ -2,8 +2,6 @@
 
 ## Step-by-Step: Set Up Git Repo with SSH
 
----
-
 ### 1️⃣ Set up SSH key (only needed once per machine)
 
 #### ✅ Check if you already have an SSH key

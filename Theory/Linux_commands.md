@@ -1,18 +1,18 @@
-#System & User Management Commands
+# System & User Management Commands
 
--whoami
+- whoami
     Usage: whoami
     Function: Displays the current user’s username.
 
--adduser
+- adduser
     Usage: sudo adduser username
     Function: Adds a new user to the system.
 
--passwd
+- passwd
     Usage: passwd username
     Function: Changes the password for a user.
 
--su
+- su
     Usage: su username
     Function: Switches the current user to another user.
 
@@ -24,7 +24,7 @@
     Usage: exit
     Function: Exits the current session or shell.
 
-#File & Directory Management
+# File & Directory Management
 
 -ls
     Usage: ls, ls -l, ls -a
