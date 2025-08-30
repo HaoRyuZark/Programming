@@ -216,4 +216,15 @@ sock.bind(server_address)
 sock.listen(1)
 
 print(f"Listening on {server_address}")
+```
+
+--- 
+
+### Command ip link 
+
+In linux the `ip link` command will return three device names 
+
+- `lo` for the loop back device 
+- `Ethernet Plug` 
+- `Ẁifi card`
 
