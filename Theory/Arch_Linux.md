@@ -231,7 +231,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
    clamav sxiv bleachbit reflector redshift jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
-   tk nm-connection-editor iwd modemmanager usb_modeswitch`
+   tk nm-connection-editor iwd modemmanager usb_modeswitch gnome`
 ---
 
 ### Setup yay
