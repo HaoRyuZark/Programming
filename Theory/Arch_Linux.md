@@ -230,8 +230,9 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    nodejs waybar rust jdk-open-jdk htop man-db man-pages openssh git nnn vi zathura zathura-pdf-poppler
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
-   clamav sxiv bleachbit reflector redshift jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
-   tk nm-connection-editor iwd modemmanager usb_modeswitch gnome`
+   clamav sxiv bleachbit reflector jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
+   tk nm-connection-editor iwd modemmanager usb_modeswitch lxappearance qt5ct`
+
 ---
 
 ### Setup yay
@@ -251,7 +252,16 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `gem install neovim`
 - `sudo npm install -g regex`
 - `npm install -g tree-sitter-cli`
+
 ---
+
+### GTK and Qt Themes 
+
+- **Installing GTK Themes:** `yay -S vimix-gtk-themes vimix-cursors vimix-icon-theme`
+- **Setting up the Qt env var:** write `QT_QPA_PLATFORMTHEME="qt5ct"` with `sudo vim /etc/environment `
+-**Instaling Qt Themes:** `sudo pacman -S breeze` 
+
+--- 
 
 ### ClamAV
 
@@ -309,6 +319,10 @@ Stow is program which helps managing dotfiles by using `symlinks`. To use stow c
 For everything related to a 'Rice' clone the repositories or setup own configurations. One option is to 
 clone the necessary repositories from github or use stow.
 
+- `git clone git@github.com:HaoRyuZark/dotfiles.git` 
+- `cd dotfiles`
+- `stow */`
+
 ---
 
 ### systemctl For enabling key Packages
@@ -364,6 +378,7 @@ Download the Mathematics folder from Google Drive to obtain books and worksheets
 ## Maintenance 
 
 - **Clear Cache:** `sudo yay -Scc` and `sudo pacman -Scc`
+- **Update database** `sudo yay -Syy`
 - **Update:** `sudo yay -Syu`
 - **Clean unwanted dependencies:** `yay -Yc`
 - **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)`
@@ -372,10 +387,6 @@ Download the Mathematics folder from Google Drive to obtain books and worksheets
 - **Cleaning Logs of the Journal directory:** Use `journalctl` to activate the vacuum option. 
 `sudo journalctl --vacuum-time=2weeks`
 - **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist `
-
-## Redlight 
-
-## Jupyter 
 
 --- 
 
@@ -456,7 +467,7 @@ Pacman was used for almost all examples, but Yay can also be used.
 - **Check config:** `sudo timeshift --check`
 - **Snapshot type:** `sudo timeshift --rsync` or `sudo timeshift --btrfs`
 - **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or
-`sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
+  `sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
 - **Create a snapshot:** `sudo timeshift --create --comments "Something" --tags D`
 - **See snapshots:** `sudo timeshift --list`
 - **Restore system:** `sudo timeshift --restore` then type the identifier of the target
