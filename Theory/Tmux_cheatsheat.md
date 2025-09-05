@@ -47,6 +47,5 @@
 - `Ctrl-b d` – Detach from tmux session
 - `tmux source-file ~/.tmux.conf` – Reload tmux configuration
 
-This cheat sheet covers the essential commands for working with tmux efficiently!
 
 
