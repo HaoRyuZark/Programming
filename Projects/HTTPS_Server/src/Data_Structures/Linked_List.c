@@ -1,6 +1,8 @@
 #include "Linked_List.h"
 
-Linked_List* create_List() {
+#define EMPTY_LIST -1
+
+Linked_List* create_linked_list() {
 
     Linked_List* list = malloc(sizeof(Linked_List));
 
@@ -15,24 +17,6 @@ Linked_List* create_List() {
 
     return list;
 }
-
-// Creating a node
-
-Node* create_node(int data) {
-
-  Node* new_node = malloc(sizeof(Node));
-  if (new_node == NULL) {
-    printf("Error allocating memory");
-    exit(EXIT_FAILURE);
-  }
-
-  new_node->data = data;
-  new_node->next = NULL;
-
-  return new_node;
-}
-
-// Appending a node at the start
 
 void append_at_start(Linked_List* list, int data) {
 
@@ -50,7 +34,6 @@ void append_at_start(Linked_List* list, int data) {
     list->len++; 
 }
 
-// Pushing a node to the end
 
 void append_at_end(Linked_List* list, int data) {
 
@@ -67,7 +50,6 @@ void append_at_end(Linked_List* list, int data) {
   printf("Node was appended at the end of the list\n");
   list->len++;
 }
-// Pop a node
 
 int pop_node(Linked_List* list) {
 
@@ -106,8 +88,6 @@ int pop_node(Linked_List* list) {
     return data;
 }
 
-// Inserting a node
-
 void insert_node(Linked_List* list, int data, int position) {
 
   if (list->head == NULL && list->tail == NULL) {
@@ -141,8 +121,6 @@ void insert_node(Linked_List* list, int data, int position) {
   
   list->len++;
 }
-
-// Deleting a node
 
 int delete_node(Linked_List* list, int position) {
 

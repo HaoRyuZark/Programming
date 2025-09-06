@@ -6,6 +6,6 @@ typedef struct Node {
     int data;
 } Node;
 
-struct Node* create_Node(int data);
+struct Node* create_node(int data);
 
 #endif

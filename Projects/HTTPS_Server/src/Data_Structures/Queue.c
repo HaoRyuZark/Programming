@@ -1,30 +1,9 @@
+#include "Queue.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <unistd.h>
 
 #define NO_ELEMENTS -134
-
-typedef struct Node {
-    int data;
-    struct Node* next;
-}Node;
-
-typedef struct Queue {
-    Node* first;
-    Node* last;
-    size_t data_size;
-    unsigned int len;
-} Queue;
-
-
-Node* create_node(int data) {
-
-    Node* new_node = (Node*)malloc(sizeof(Node));
-    new_node->data = data;
-    new_node->next = NULL;
-
-    return new_node;
-}
 
 Queue* create_queue() {
 
@@ -95,6 +74,3 @@ int dequeue(Queue* self) {
     return data;
 }
 
-int main() {
-    return 0;
-}

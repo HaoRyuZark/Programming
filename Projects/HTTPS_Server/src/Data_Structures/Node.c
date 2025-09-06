@@ -1,8 +1,10 @@
 #include "Node.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Node* create_Node(int data) {
+
+Node* create_node(int data) {
     
     Node* node = (Node*)malloc(sizeof(Node));
     
@@ -12,6 +14,7 @@ struct Node* create_Node(int data) {
     }
     
     node->data = data;
-   
+    node->next = NULL; 
+
     return node;
 }
