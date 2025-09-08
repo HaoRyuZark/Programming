@@ -296,9 +296,9 @@ Pointers are a fundamental concept in low-level programming. They allow you to d
 
 Example of using pointers in C:
 
-```C
-
+```c
 #include <stdio.h>
+
 int main() {
 
 int var = 42;
@@ -309,7 +309,10 @@ int var = 42;
     printf("Address of var: %p\n", (void *)&var);
     printf("Value of ptr: %p\n", (void *)ptr);
     printf("Value pointed to by ptr: %d\n", *ptr);
+    
+    int** dptr = &ptr;
 
+    printf("Dereferencing double pointer %d", **ptr);
     return 0;
 }
 ```
@@ -329,6 +332,47 @@ void (*func_ptr)(int); // pointer to a function that takes an int and returns vo
 int (*x())[10]; //  x is a function that returns a pointer to an array of 10 integers 
 int (*((*x)[]))() // x is a pointer to an array of pointers to functions that return int
 char *(*(*x[8][8])())[10]; // x is a 2D array of pointers to functions that return pointers to arrays of 10 chars
+```
+
+### Strings and Char Buffers in C
+
+In C, strings are represented as arrays of characters terminated by a null character ('\0'). Unlike higher-level languages, C does not have a native string type—just character arrays.
+
+```c
+char str1[] = "Hello";       // Size is automatically 6 (5 + null terminator)
+char str2[10] = "Hi";        // Manually specified size, with extra space
+char *str3 = "World";        // Pointer to a string literal (read-only)
+```
+
+#### Char Buffers
+
+A char buffer is just a character array that can hold a string, often used for input/output or manipulation:
+
+```c
+char buffer[100];  // Buffer that can store up to 99 characters + '\0'
+```
+
+You can use functions like strcpy, strcat, strlen, and strcmp from <string.h> to work with these buffers.
+
+#### Common Pitfalls
+
+Always ensure there’s enough space for the null terminator `('\0')`.
+
+Be careful with buffer overflows—C doesn’t do bounds checking.
+
+Writing to string literals (like char *s = "text";) is undefined behavior.
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char name[20];
+    strcpy(name, "Alice");
+    strcat(name, " Smith");
+    printf("Full name: %s\n", name);
+    return 0;
+}
 ```
 
 ---
@@ -365,7 +409,72 @@ int main() {
 }
 ```
 
+### Bit fields 
+
+Is a series of bits where individual bits have meaning. They can be used to safe space, increase performance, etc. 
+A common use is networking where we want to send compact packages.
+
+```c
+#include <stdio.h>
+#include <stdint.h>
+
+// File open flags (up to 8 bits)
+#define F_READ     0x01  // 0000 0001
+#define F_WRITE    0x02  // 0000 0010
+#define F_APPEND   0x04  // 0000 0100
+#define F_CREATE   0x08  // 0000 1000
+#define F_TRUNC    0x10  // 0001 0000
+#define F_BINARY   0x20  // 0010 0000
+
+void open_file(const char *filename, uint8_t flags) {
+   
+   printf("Opening file: %s\n", filename);
+
+    if (flags & F_READ)
+        printf(" - Mode: READ\n");
+
+    if (flags & F_WRITE)
+        printf(" - Mode: WRITE\n");
+
+    if (flags & F_APPEND)
+        printf(" - Option: APPEND\n");
+
+    if (flags & F_CREATE)
+        printf(" - Option: CREATE if not exists\n");
+
+    if (flags & F_TRUNC)
+        printf(" - Option: TRUNCATE existing file\n");
+
+    if (flags & F_BINARY)
+        printf(" - Option: BINARY mode\n");
+}
+
+
+int main() {
+
+    uint8_t flags = F_READ | F_WRITE | F_CREATE;
+
+    open_file("data.txt", flags);
+
+    return 0;
+}
+```
+
+### Bit Masks 
+
+It is a binary pattern used to modify anoher binary pattern using bitwise operations. 
+
 ---
+
+## Structs 
+
+A struct is a contiguous block of memory which contaings enough memory for all members plus padding for addressing the word size. Mostly 
+64 bits or 8 bytes.
+
+## Unions
+
+Similar to struct it also a way of grouping data but it only allocates enough to hold the biggest member. It can only be 
+in one of its variants at the time.
 
 ## Casting String-numbers to Numbers 
 
@@ -560,6 +669,40 @@ Several algorithms and strategies are used to implement CPU scheduling, each wit
 **Signals** are a way of inter-process communication. They are used to communicate a process an specific behaviour like terminating, halting, 
 resuming etc. They are provided the OS to trigger interrupts directly.
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+
+int interrupt_count = 0;
+
+// Signal handler function
+void handle_sigint(int sig) {
+    interrupt_count++;
+    printf("\nCaught signal %d (SIGINT). Interrupt count: %d\n", sig, interrupt_count);
+
+    if (interrupt_count >= 3) {
+        printf("Too many interrupts. Exiting now.\n");
+        exit(0);
+    }
+}
+
+int main() {
+    // Register signal handler
+    signal(SIGINT, handle_sigint);
+
+    printf("Press Ctrl+C to send SIGINT. Program will exit after 3 interrupts.\n");
+
+    // Infinite loop
+    while (1) {
+        printf("Working...\n");
+        sleep(1);
+    }
+
+    return 0;
+}
+```
 ---
 
 ## Concurrency And parallelism
@@ -667,6 +810,19 @@ To include a header file of a local project we use `"header.h"` and to include o
 
 ---
 
+## Firmware 
+
+It is embeded into the hardware. Nowadays it is called **UEFI** and before it was called **BIOS**. It loads the 
+bootloaders and they also provide some functionality for configurations.
+
+--- 
+
+## Bootloaders 
+
+It is reponsible for launching the OS. It reads an specific sector in the disk to do this. 
+
+---
+
 # Networking
 
 Networking in computer science refers to concept of connection of 
@@ -716,6 +872,7 @@ By default, every process starts with three open file descriptors:
 | 0  | `stdin`  | Standard input  |
 | 1  | `stdout` | Standard output |
 | 2  | `stderr` | Standard error  |
+
 
 ### File Descriptors and Sockets:
 
@@ -908,5 +1065,15 @@ In linux the `ip link` command will return three device names
 - `Ethernet Plug` 
 - `Ẁifi card`
 
+## Network Protocols 
 
+A protocol is a set of for transmitting data across a network. 
 
+- **Adress Resolution Protocol ARP:** Used for the mapping to MAC addresses. 
+- **Ethernet:** Used for the direct connection in a network. 
+- **nternet Control Protocol:** It is for testing reachability and other manners across the internet.
+
+## SSH 
+
+Secure shell is a protocol used for providing a secure encrypted connection to a remote machine. It uses asymmetric encryption 
+and commonly port 22 for the connection.

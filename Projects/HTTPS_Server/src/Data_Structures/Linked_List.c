@@ -167,24 +167,6 @@ int delete_node(Linked_List* list, int position) {
     return data;
 }
 
-// Deleting the list
-
-void delete_list(Linked_List* list) {
-
-  Node* current = list->head;
-  Node* next_node;
-
-  while (current != NULL) {
-    next_node = current;
-    free(current);
-    current = next_node;
-  }
-
-  free(list);
-
-  printf("The list was deleted\n");
-}
-
 Node* reverse(Linked_List* list) {
 
   if (list->head == NULL) {
@@ -207,4 +189,23 @@ Node* reverse(Linked_List* list) {
   return list->head;
 }
 
+void delete_list(Linked_List* list) {
+
+    if (list == NULL) {
+        perror("List is NULL\n");
+        return;
+    }
+
+    Node* temp; 
+    Node* current = list->head;
+
+    while (current != NULL) {
+        
+        temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    free(list);
+}
 

@@ -313,27 +313,26 @@ _“High-level modules should not depend on low-level modules. Both should depen
 This principle reduces coupling by ensuring that both high-level and low-level modules depend on interfaces or abstract classes. It also promotes the use of dependency injection to provide concrete implementations.
 
 _Example:_  
+
 A `PaymentProcessor` should not directly instantiate a `StripePaymentService`. Instead, it should depend on an interface `IPaymentService`, and the implementation (`StripePaymentService`) can be injected at runtime.
 
 ---
 
 ## DevOps
 
-Is a set of practices, tools, and a cultural philosophy  that automate and integrate the processes between 
+Is a set of practices, tools, and a cultural philosophy that automate and integrate the processes between 
 software development and IT operations teams.
 
-### Phases 
+### Phases and Tools 
 
-- Plan 
-- Code 
-- Build
-- Test 
-- Release 
-- Deploy 
-- Operate 
-- Monitor 
-- Repeat
-
+- **Plan:** Jira, Common Sense
+- **Code:** Git, GitHub, Nvim
+- **Build:** Maven, Make, Cargo
+- **Test:** Azure. (Quality Assurance, not code tests)  
+- **Release:** Jenkins 
+- **Deploy:**  Docker, Nix, Kubernetes
+- **Operate:** CHEF, Ansible  
+- **Monitor:** Grafana, Graylog
 
 
 # Design Patterns in Object-Oriented Programming (OOP)

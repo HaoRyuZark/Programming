@@ -33,4 +33,8 @@ void preorder(Tree_Node* root);
 
 void postorder(Tree_Node* root);
 
+void delete_tree(Binary_Tree* self);
+
+void delete_rec(Tree_Node* root);
+
 #endif // !BINARY_TREE

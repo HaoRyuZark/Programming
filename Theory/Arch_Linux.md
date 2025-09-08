@@ -370,6 +370,45 @@ These commands are useful for managing services like `nginx`, `ssh`, `docker`, e
 
 Download the Mathematics folder from Google Drive to obtain books and worksheets.
 
+
+### Second Hardrive 
+
+Use the same procedure like when during the installtion consisting of: 
+
+- Identifying
+- Paritioning
+- Formating 
+- Mounting 
+
+The difference is that this time we want to add it to `fstab` to mount automatically when booting
+
+- Get the UUID with `lsblk -f`
+- Open and edit the `/etc/fstab` and add the line `UUID=id /mnt/... file_system_type permisions(defaults) dump_option (0)  policy_option (0)`
+
+### Timeshift
+
+#### Setup via GUI 
+
+1. Select the type of snapshots
+2. Select your second storage device 
+3. Schedule the snapshot 
+4. Select the users: `root` and `yourself`, ... 
+5. Skip the filter and click ok 
+
+#### Usage CLI 
+
+- **Check config:** `sudo timeshift --check`
+- **Snapshot type:** `sudo timeshift --rsync` or `sudo timeshift --btrfs`
+- **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or
+  `sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
+- **Create a snapshot:** `sudo timeshift --create --comments "Something" --tags D`
+- **See snapshots:** `sudo timeshift --list`
+- **Restore system:** `sudo timeshift --restore` then type the identifier of the target
+- **Delete snapshot:** `sudo timeshift --delete` then type  the identifier of the target
+- **Delete specific snapshot:** `sudo timeshift --delete --snapshot 'date' `
+- **Delete snapshots:** `sudo timeshift --delete-all `
+- **Scheduleling:** `sudo timeshift --schedule --type_of_schedule num`
+
 --- 
 
 ### Maintenance 
@@ -460,36 +499,6 @@ Pacman was used for almost all examples, but Yay can also be used.
 
 * **Eliminate Orphan Packages**:
   `sudo pacman -Qdtq | sudo pacman -Rns -`
-
----
-
-## Timeshift
-
-### Setup via GUI 
-
-1. Select the type of snapshots
-2. Select your second storage device 
-3. Schedule the snapshot 
-4. Select the users: `root` and `yourself`, ... 
-5. Skip the filter and click ok 
-
-### Usage CLI 
-
-- **Check config:** `sudo timeshift --check`
-- **Snapshot type:** `sudo timeshift --rsync` or `sudo timeshift --btrfs`
-- **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or
-  `sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
-- **Create a snapshot:** `sudo timeshift --create --comments "Something" --tags D`
-- **See snapshots:** `sudo timeshift --list`
-- **Restore system:** `sudo timeshift --restore` then type the identifier of the target
-- **Delete snapshot:** `sudo timeshift --delete` then type  the identifier of the target
-- **Delete specific snapshot:** `sudo timeshift --delete --snapshot 'date' `
-- **Delete snapshots:** `sudo timeshift --delete-all `
-- **Scheduleling:** `sudo timeshift --schedule --type_of_schedule num`
-
---- 
-
-# Linux Theory
 
 ---
 

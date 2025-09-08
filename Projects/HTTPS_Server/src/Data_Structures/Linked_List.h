@@ -26,9 +26,8 @@ int pop_node(Linked_List* list);
 
 int delete_node(Linked_List* list, int position);
 
-void delete_list(Linked_List* list);
-
 Node* reverse(Linked_List* list);
 
+void delete_list(Linked_List* list);
 
 #endif

@@ -197,5 +197,26 @@ void postorder(Tree_Node* root) {
     printf("%d ", root->data);
 }
 
+void delete_rec(Tree_Node* root) {
+    
+    if (root == NULL) {
+        return;
+    }
+    
+    delete_rec(root->left);
+    delete_rec(root->right);
+    free(root);    
+}
 
+void delete_tree(Binary_Tree* self) {
+    
+    if (self == NULL) {
+        perror("Bst is not defined\n");
+        return;
+    }
+    
+    delete_rec(self->root);
+
+    free(self);
+}
 
