@@ -232,7 +232,8 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
    clamav sxiv bleachbit reflector jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
-   tk nm-connection-editor iwd modemmanager usb_modeswitch lxappearance qt5ct timeshift tmux`
+   tk nm-connection-editor iwd modemmanager usb_modeswitch lxappearance qt5ct timeshift tmux otf-font-awesome
+   fzf bat lsd tldr lazygit`
 
 ---
 
@@ -389,6 +390,7 @@ The difference is that this time we want to add it to `fstab` to mount automatic
 
 #### Setup via GUI 
 
+To open, use `sudo -E timeshift-gtk` (Not the best way TODO)
 1. Select the type of snapshots
 2. Select your second storage device 
 3. Schedule the snapshot 

@@ -118,6 +118,7 @@ git push -u origin main
 - `git merge <branch_name>` – Merge a branch into the current branch
 - `git branch -d <branch_name>` – Delete a branch
 - `git branch -D <branch_name>` – Force delete a branch
+- `git rebase <branch_name>` – It applies your changes in your branch into another after the head of the other brach. Also rebasing it.
 
 ## Working with Remotes
 

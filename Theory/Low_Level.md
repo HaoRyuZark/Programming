@@ -901,7 +901,7 @@ close(sockfd); // Closes the socket and releases the FD
 
 Failing to close file descriptors can lead to **resource leaks**, limiting how many files or sockets a program can open simultaneously.
 
----
+### TLDR
 
 In short, file descriptors are integers which represent a current open file.
 
@@ -909,13 +909,15 @@ In short, file descriptors are integers which represent a current open file.
 
 ## OSI Model
 
-- Application
-- Presentation
-- Session
-- Transport
-- Network 
-- Data Link 
-- Physical
+It as framework for working with networks. It stands for **Open System Interconnection**. It consist of the following layers:
+
+- **Application:**  It provides network services for the users by providing protocols like Brave.
+- **Presentation:** Performs the task of syntax processing. This means to translate layer from application format to network format and viceversa
+- **Session:**      It supports the construction direction and construction of connections of devices. 
+- **Transport:**    This layer takes care of the transport of data across the network.
+- **Network:**      It handles the routin of the data. 
+- **Data Link:**    It receives the data and packages it into frames which are going to be send to the respective targets.
+- **Physical:**     This layer consist on the electrical part of the network. In general the hardware.
 
 ---
 
@@ -1071,7 +1073,7 @@ A protocol is a set of for transmitting data across a network.
 
 - **Adress Resolution Protocol ARP:** Used for the mapping to MAC addresses. 
 - **Ethernet:** Used for the direct connection in a network. 
-- **nternet Control Protocol:** It is for testing reachability and other manners across the internet.
+- **Internet Control Protocol:** It is for testing reachability and other manners across the internet.
 
 ## SSH 
 

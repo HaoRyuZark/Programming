@@ -27,7 +27,7 @@ unsigned short in_cksum(unsigned short* data, int count) {
     unsigned long sum = 0;
 
     while (count > 1) {
-        sum += *data;
+        sum += *data++;
         count -= 2;
     }
     
