@@ -232,8 +232,8 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
    clamav sxiv bleachbit reflector jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
-   tk nm-connection-editor iwd modemmanager usb_modeswitch lxappearance qt5ct timeshift tmux otf-font-awesome
-   fzf bat lsd tldr lazygit`
+   tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
+   fzf bat lsd tldr lazygit swayidle thunar autotiling starship`
 
 ---
 
@@ -250,6 +250,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `yay -S brave-bin` - `Enter` - `Enter`
 - `yay -S ripgrep`
 - `yay -S fd`
+- `yay -S visual-studio-code-bin`
 - `sudo npm install -g neovim`
 - `sudo pacman -S python-neovim`
 - `sudo pacman -S python-pylatexenc`
@@ -261,7 +262,6 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 
 ### GTK and Qt Themes 
 
-- **Installing GTK Themes:** `yay -S vimix-gtk-themes vimix-cursors vimix-icon-theme`
 - **Setting up the Qt env var:** write `QT_QPA_PLATFORMTHEME="qt5ct"` with `sudo vim /etc/environment `
 - **Instaling Qt Themes:** `sudo pacman -S breeze` 
 
@@ -354,6 +354,12 @@ These commands are useful for managing services like `nginx`, `ssh`, `docker`, e
 ### Audio 
 
 - `systemctl --user enable --now pipewire pipewire-pulse wireplumber`
+
+---
+
+### Set pdf viewer 
+
+- `xdg-mime default org.pwmt.zathura.desktop application/pdf`
 
 --- 
 
@@ -648,6 +654,7 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `/root`   | For the root user                                  |
 | `/run`    | Temp filesystem for temporal runtime information   |
 | `/srv`    | If the computer is a service(server) the files for users will be stored here                    |
+| `/sys`    | Acts as a dynamic interface between the kernel and the hardware  |
 
 ---
 
@@ -673,5 +680,6 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
   * **GPT (GUID Partition Table)** - newer, supports more partitions
 
 ---
+
 
 

@@ -1,6 +1,5 @@
-# Shortcuts and keybinds
+# Shortcuts and Keybinds
 
-## Kitty
 
 | Shortcut | Action |
 |----------|--------|
@@ -29,25 +28,25 @@
 
 | Shortcut | Action |
 |----------|--------|
-| Mod4 + d | Open Wofi |
-| Mod4 + Shift + d | Open Wofi run |
+| `Mod4 + d` | Open Wofi |
+| `Mod4 + Shift + d` | Open Wofi run |
 
 
 ## Browser
 
 | Shortcut | Action |
 |----------|--------|
-| Crtl + t | Open new tab |
-| Crtl + w | Close tab |
-| Crtl + Shift + t | Reopen last closed tab |
-| Crtl + r | Reload page |
-| Crtl + e | Go to the address bar |
-| Alt + left | Go back |
-| Alt + right | Go forward |
-| Ctrl + Shift + b | Toggle bookmarks bar |
-| Ctrl + Shift + j | Open developer tools |
-| Ctrl + Shift + arrow keys | Select text |
-| Ctrl + f | Find on page |
+| `Crtl + t` | Open new tab |
+| `Crtl + w` | Close tab |
+| `Crtl + Shift + t` | Reopen last closed tab |
+| `Crtl + r` | Reload page |
+| `Crtl + e` | Go to the address bar |
+| `Alt + left` | Go back |
+| `Alt + right` | Go forward |
+| `Ctrl + Shift + b` | Toggle bookmarks bar |
+| `Ctrl + Shift + j` | Open developer tools |
+| `Ctrl + Shift + arrow keys` | Select text |
+| `Ctrl + f` | Find on page |
 
 
 ## File Manager 
@@ -55,7 +54,7 @@
 
 ## Sway 
 
-| Category       | Shortcut                        | Action / Description                                |
+| Category       | Shortcut                        | Action                                |
 |----------------|---------------------------------|-----------------------------------------------------|
 | **Navigation** | `Mod + h/j/k/l`                 | Move focus left/down/up/right                       |
 |                | `Mod + arrow keys`              | Move focus in corresponding direction               |
@@ -88,7 +87,7 @@
 
 ## NetRW File Manager in Vim
 
-| Key / Command     | Action Description                                                  |
+| Key/Command     | Action                                                 |
 |-------------------|----------------------------------------------------------------------|
 | `:Explore`        | Open netrw in the current window                                     |
 | `:Ex`             | Shorthand for `:Explore`                                             |
@@ -117,3 +116,52 @@
 | `p`               | Toggle preview window                                                |
 | `:Rexplore`       | Return to previous netrw buffer                                      |
 
+
+## fzf 
+
+
+| Shortcut           | Action                                                                 |
+|--------------------|----------------------------------------------------------------------|
+| `CTRL-J` / `↓`     | Move cursor **down** one line                                         |
+| `CTRL-K` / `↑`     | Move cursor **up** one line                                           |
+| `CTRL-D`           | Move cursor **half-page down**                                        |
+| `CTRL-U`           | Move cursor **half-page up**                                          |
+| `CTRL-B`           | Move cursor **full-page up**                                          |
+| `CTRL-F`           | Move cursor **full-page down**                                        |
+| `TAB`              | Toggle selection of current item and move cursor **down**             |
+| `Shift-TAB`        | Toggle selection of current item and move cursor **up**               |
+| `CTRL-A`           | Select all items                                                     |
+| `CTRL-T`           | Open **fzf** on file paths (useful inside the shell)                  |
+| `CTRL-R`           | Open **fzf** on shell command history                                 |
+| `CTRL-/`           | Toggle **preview window**                                             |
+| `CTRL-Y`           | Copy current selection to system clipboard (when integrated)          |
+| `CTRL-Q`           | Push selected items to the quickfix list (in Vim integration)         |
+| `ESC`              | Cancel and exit without making a selection                            |
+| `Enter`            | Accept current item (or all selected items if multi-select is active) |
+
+
+### Notes
+- `TAB` and `Shift-TAB` are key for **multi-select mode** (triggered with `fzf -m`).
+- Some bindings like `CTRL-Y` or `CTRL-Q` depend on your shell/editor integration.
+
+## Oil
+
+
+| Shortcut | Action                                                                 |
+|----------|---------------------------------------------------------------------------|
+| `g?`     | Show a popup with this cheat sheet contents                               |
+| `<CR>`   | Open the entry under the cursor                                           |
+| `<C-p>`  | Open the entry under the cursor in a preview window, or close it if open  |
+| `<C-s>`  | Open the entry under the cursor in a vertical split window                |
+| `<C-h>`  | Open the entry under the cursor in a horizontal split window              |
+| `<C-t>`  | Open the entry under the cursor in a new tab                              |
+| `<C-l>`  | Refresh current directory list (:e! also works)                           |
+| `<C-c>`  | Close Oil and restore original buffer                                     |
+| `g.`     | Toggle hidden files and directories (including ../ parent entry)          |
+| `g\`     | Jump to and from the trash for the current directory                      |
+| `-`      | Navigate to the parent path                                               |
+| `_`      | Open Oil at Neovim’s current working directory                            |
+| `` ` ``  | Runs :cd to change cwd to the current Oil directory                       |
+| `~`      | Show the current working directory (cwd)                                  |
+| `gx`     | Open the entry under the cursor in an external program                    |
+| `gs`     | Opens a popup for changing the sort order                                 |
