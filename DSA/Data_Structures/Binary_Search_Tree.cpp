@@ -13,8 +13,11 @@
  *  Preorder:   root left right
  *  Inorser:    left root right
  *  Postorder:  right root left
+ * 
+ * A binary tree is considered complete if for all levels except for last are completely 
+ * polulated and the last level will be populated from left to right
  *
- *  */
+ * */
 
 typedef struct Node {
     int data;

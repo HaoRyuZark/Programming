@@ -260,7 +260,9 @@ void insertion_sort(int* arr, int n) {
         
         int temp = arr[i];
         int j = i - 1;
-
+        
+        // Swapping positons starting the previous index
+        // only if the number at current index is less than the one at the previous
         while (j >= 0 && temp < arr[j]) {
 
             arr[j + 1] = arr[j];
@@ -272,22 +274,21 @@ void insertion_sort(int* arr, int n) {
 }
 
 // Selection sort
+// Swapping based on the index
 void selection_sort(int* arr, int n) {
 
     for (int i = 0; i < n - 1; i++) {
         
-        int current_min = i;
+        int current_min_index = i;
 
         for (int j = i; j < n; j++) {
             
-            if (arr[j] < arr[current_min]) {               
-                current_min = j;
+            if (arr[j] < arr[current_min_index]) {               
+                current_min_index = j;
             }
         }
-
         
-        swap(&arr[i], &arr[current_min]);
-        
+        swap(&arr[i], &arr[current_min_index]);        
     } 
 }
 

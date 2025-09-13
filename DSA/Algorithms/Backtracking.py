@@ -1,5 +1,7 @@
 import copy
 from typing import List
+from typing import Tuple
+
 '''
 Backtracking
  
@@ -58,32 +60,52 @@ Use cases:
 Example 1 find all subsets of a set
 '''
 
-from typing import Tuple
-    
+
+def powerset(nums: list[int]):
+
+    res: list[list[int]] = []
+    n: int = len(nums)
+
+    def backtrack(state: list[int], index: int):
+        
+        res.append(state.copy())
+            
+        
+        for i in range(index, n):
+             
+            state.append(i)
+            backtrack(state, i)
+            state.pop()
+
+    backtrack([], 0)
+
+    print(res)
+
+powerset([1,2,3])
+
+# Alternative
 def find_subsets(nums):
-
-    def backtrack(start, current):
-        
-        result.append(list(current))
-        
-        for i in range(start, len(nums)):
-
-            if i > start and nums[i] == nums[i - 1]:
-                continue
-
-            current.append(nums[i])
-            backtrack(i + 1, current)
-
-            current.pop()
     
-    result = []
+    res: list[list[int]] = []
+    n: int = len(nums)
+ 
+    def backtrack(index, state):
+        
+        if index == n:
+            res.append(state.copy())
+            return
+        
+        # Do not pick 
+        backtrack(index + 1, state.copy())
+        
+        # Picking the number
+        state.append(nums[index])
+        backtrack(index + 1, state.copy())
+        state.pop()
 
-    nums.sort()
-
+    
     backtrack(0, [])
-
-    return result
-
+    print(res)
 
 '''
  Example 2: N-Queens problem

@@ -49,7 +49,58 @@
 | `Ctrl + f` | Find on page |
 
 
-## File Manager 
+## Yazi 
+
+| Shortcut                                                                    | Action                                                                                                                   |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `f1` or `~` | Open help menu |
+| `k` or `↑`                                                                  | Move the cursor up                                                                                           |
+| `j` or `↓`                                                                  | Move the cursor down                                                                                          |
+| `l` or `→`                                                                  | Enter hovered directory                                                                                       |
+| `h` or `←`                                                                  | Go to parent directory (leave current directory)                                                              |
+| `K`                                                                         | Seek up 5 units in the preview                                                                                |
+| `J`                                                                         | Seek down 5 units in the preview                                                                              |
+| `g` + `g`                                                                   | Move cursor to the top                                                                                       |
+| `G`                                                                         | Move cursor to the bottom                                                                                    |
+| `z`                                                                         | cd to a directory or reveal a file via **fzf**                                                               |
+| `Z`                                                                         | cd to a directory via **zoxide**                                                                              |
+| `Space`                                                                     | Toggle selection of hovered file/directory                                                                    |
+| `v`                                                                         | Enter visual mode (selection mode)                                                                            |
+| `V`                                                                         | Enter visual mode (unset mode)                                                                                |
+| `Ctrl + a`                                                                  | Select all files                                                                                              |
+| `Ctrl + r`                                                                  | Inverse selection of all files                                                                                |
+| `Esc`                                                                       | Cancel selection                                                                                             |
+| `o`                                                                         | Open selected files                                                                                           |
+| `O` or `Shift + Enter`                                                      | Open selected files interactively                                                                             |
+| `Enter`                                                                     | Open selected files                                                                                          |
+| `Tab`                                                                       | Show the file information (preview or info pane)                                                              |
+| `y`                                                                         | Yank (copy) selected files                                                                                    |
+| `x`                                                                         | Yank (cut) selected files                                                                                     |
+| `p`                                                                         | Paste yanked files                                                                                            |
+| `P`                                                                         | Paste yanked files, overwrite if destination exists                                                           |
+| `Y` or `X`                                                                  | Cancel the yank (copy/cut) status                                                                             |
+| `d`                                                                         | Trash selected files                                                                                         |
+| `D`                                                                         | Permanently delete selected files                                                                             |
+| `a`                                                                         | Create a file (or if name ends in `/`, directory)                                                             |
+| `r`                                                                         | Rename selected file(s)                                                                                       |
+| `.`                                                                         | Toggle visibility of hidden files                                                                             |
+| `;` or `:`                                                                  | Run a shell command (blocking or non-blocking)                                                                |
+| `-`                                                                         | Symlink the absolute path of yanked files                                                                     |
+| `_`                                                                         | Symlink the relative path of yanked files                                                                     |
+| `Ctrl + -`                                                                  | Hardlink yanked files                                                                                         |
+| `f`                                                                         | Filter files                                                                                                  |
+| `/`                                                                         | Find next file                                                                                                |
+| `?`                                                                         | Find previous file                                                                                            |
+| `n`                                                                         | Go to next found (search) item                                                                                |
+| `N`                                                                         | Go to previous found item                                                                                     |
+| `s`                                                                         | Search files by name using fd                                                                                 |
+| `S`                                                                         | Search files by content using ripgrep                                                                         |
+| `Ctrl + s`                                                                  | Cancel ongoing search                                                                                         |
+| `,` ⇒ `m` / `M` / `b` / `B` / `e` / `E` / `a` / `A` / `n` / `N` / `s` / `S` | Sorting: modified time, birth time, extension, alphabetically, naturally, size, etc. (with reverse versions) |
+| `~` or `F1`                                                                 | Open the help screen                                                                              |
+| `q`                                                                         | Quit Yazi application                                                                                         |
+| `Q`                                                                         | Quit without writing the current working directory file                                                       |
+| `Ctrl + z`                                                                  | Suspend process (send to background)                                                              |
 
 
 ## Sway 

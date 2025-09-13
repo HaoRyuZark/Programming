@@ -7,7 +7,7 @@
 // Complete binary tree:
 // -> Every level is completely filled exept for the leafs at the extrems
 //
-// Heap Propertie:
+// Heap Property:
 // -> Each node is smaller/greater(for max heap) than or equal to its children.
 typedef struct Heap {    
     std::vector<int> arr;
