@@ -36,7 +36,7 @@ int find_min(int* arr, int n) {
     return min;
 }
 
-// Counting sort
+// Counting sort only positive numbers
 int* counting_sort(int* arr, int n) {
   
     int max = find_max(arr, n);
@@ -49,13 +49,18 @@ int* counting_sort(int* arr, int n) {
     for (i = 0; i < n; i++) { //Count occurrences in the orignial array and update the corresponding index in temp
         temp[arr[i]]++;
     }
-
-    for (i = 1; i < temp_s; i++) {      // accumulative sum of each elment with its predecesors
+     // Accumulative sum of each elment with its predecesors
+     // This is the so called Running Sum which tells us how many elements before "index" are less or equal than the index 
+     // In other words, eahc temp[index] represents the last position index can appear in the sorted array
+    for (i = 1; i < temp_s; i++) {         
         temp[i] = temp[i] + temp[i - 1];
     }
 
     int* sorted = (int *)malloc(n * sizeof(int)); //create new array to return 
-    
+   
+    // Placement: We are working our way back to sort original array using the information won in the last step
+    // We use i for the current index in our new array and use the value at temp[arr[i] - 1] to get the last occurrence.
+    // Then we decrement the value of the last occurence. The minus one is necessary because arrays are zero indexed
     for (i = 0; i < n; i++) {
 
         sorted[temp[arr[i]] - 1] = arr[i]; // sorted at the position of the occurrences of current (minus 1) is = to current 
@@ -66,6 +71,33 @@ int* counting_sort(int* arr, int n) {
     return sorted;
 }
 
+//Version for posive and negative numbers. Logic is similar but we have to use a trick for no having negative indexes
+void sign_counting_sort(int* arr, int n) {
+  
+    int max = find_max(arr, n);
+    int min = find_min(arr, n);
+
+    int temp_s = max - min + 1;
+    int* temp = calloc(temp_s, sizeof(int)); // Allocate an array of the range 0 to max + 1 
+
+    int i;
+
+    for (i = 0; i < n; i++) { //Count occurrences in the orignial array and update the corresponding index in temp
+        temp[arr[i] - min]++;
+    }
+
+    int arr_index = 0;
+
+    for (int i = 0; i < temp_s; i++) {
+        while (temp[i] > 0) {
+            arr[arr_index] = i + min;
+            temp[i]--;
+            arr_index++;
+        }
+    }
+
+    free(temp);
+}
 // Helper for radix
 void counting_sort_for_radix(int* arr, int n, int unit) {
   
