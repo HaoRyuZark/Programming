@@ -379,10 +379,18 @@ To have offline documentation run
 
 --- 
 
+### Copilot in Neovim 
+
+To set up copilot run 
+
+- `Lazy load copilot.vim`
+- `Copilot setup` and proceed to authenticate
+
 ### University Stuff
 
 Download the Mathematics folder from Google Drive to obtain books and worksheets.
 
+--- 
 
 ### Second Hardrive 
 
@@ -397,6 +405,8 @@ The difference is that this time we want to add it to `fstab` to mount automatic
 
 - Get the UUID with `lsblk -f`
 - Open and edit the `/etc/fstab` and add the line `UUID=id /mnt/... file_system_type permisions(defaults) dump_option (0)  policy_option (0)`
+
+---
 
 ### Timeshift
 

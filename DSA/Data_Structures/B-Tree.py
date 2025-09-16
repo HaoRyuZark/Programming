@@ -73,7 +73,7 @@ class B_Tree:
             
             self.insert_not_full(u.children[i], key) # applying the algorithm again until the key can be inserted
 
-        
+
     def deletion(self, key):
         pass
         
@@ -91,3 +91,5 @@ class Node:
             return True 
 
         return False
+
+    
