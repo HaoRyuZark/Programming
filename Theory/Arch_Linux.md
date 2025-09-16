@@ -233,7 +233,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
    clamav sxiv bleachbit reflector jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
    tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
-   fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn`
+   fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker`
 
 ---
 
@@ -321,6 +321,14 @@ clone the necessary repositories from github or use stow.
 
 ---
 
+### Devdocs 
+
+To have offline documentation run 
+
+- `sudo docker run --name devdocs -d -p 9292:9292 ghcr.io/freecodecamp/devdocs:latest`
+
+---
+
 ### systemctl For enabling key Packages
 
 #### Basic `systemctl` Commands
@@ -329,25 +337,17 @@ clone the necessary repositories from github or use stow.
 
 - **Start a service**  `sudo systemctl start <service-name>`
 
-
 - **Stop a service** `sudo systemctl stop <service-name>`
-
 
 - **Restart a service** `sudo systemctl restart <service-name>`
 
-
 - **Enable a service** `sudo systemctl enable <service-name>`
-
 
 - **Disable a service** `sudo systemctl disable <service-name>`
 
-
 - **Check status of a service** `systemctl status <service-name>`
 
-
 - **List all active services** `systemctl list-units --type=service`
-
-These commands are useful for managing services like `nginx`, `ssh`, `docker`, etc.
 
 ---
 
@@ -362,6 +362,12 @@ These commands are useful for managing services like `nginx`, `ssh`, `docker`, e
 - `xdg-mime default org.pwmt.zathura.desktop application/pdf`
 
 --- 
+
+### Docker 
+
+- `sudo systemctl enable docker.service`
+
+---
 
 ### Clone development respositories
 
