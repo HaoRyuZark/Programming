@@ -810,6 +810,17 @@ To include a header file of a local project we use `"header.h"` and to include o
 
 ---
 
+## Memory Mapped IO 
+
+A way code can control hardware is via special region of memory which 
+can not normally be accessed because of compiler optimizations unless the keyword `volatile` is used in `C`, for example.
+
+This region of memory has special connections to the direct hardware or microcontroller of the device we want to control. Therefore, 
+by writing specific values to it we can send signals which get decoded by the circuit and are translated into the reality as for example 
+turning on pixel.
+
+---
+
 ## Firmware 
 
 It is embeded into the hardware. Nowadays it is called **UEFI** and before it was called **BIOS**. It loads the 

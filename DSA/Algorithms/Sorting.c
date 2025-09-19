@@ -283,7 +283,9 @@ void merge_recursion(int* arr, int left, int right) {
 }
 
 //Only a wrapper for merge_sort
-void merge_sort(int* arr, int n) { merge_recursion(arr, 0, n - 1); }
+void merge_sort(int* arr, int n) { 
+    merge_recursion(arr, 0, n - 1); 
+}
 
 // Insertion Sort
 void insertion_sort(int* arr, int n) {

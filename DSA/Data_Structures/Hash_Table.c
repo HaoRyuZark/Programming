@@ -5,39 +5,48 @@
 #define TABLE_SIZE 1000
 #define MAX_KEY_LEN 256
 
-/* Hash Tables
- *
- * -> Hash tables are arrays with a hash function that allow us to store key-value pair.
- * -> A hash function is a partially injectice function takes some input and returns a numeric output.
- * -> When more than one key maps to the same index it is called a collisions
- *
- *  Handling collisions
- * 
- *  - Open Hashing: Create a linkedlist at the index when a collision takes place. For further collisions append 
- *   the value at the end of the linkedlist.
- *
- *  - Closed Hashing: There are different approaches for this but all have the goal of finding another place in the hash table to 
- *    put the pair instead of chaining them in a linked list.
- *
- *    -> Linear Probing (h(k) + i) % size: Sequential search.
- *       Pros: Table completely full
- *             Simple
- *             Efficient
- *       Cons: Clustering
- *             For Some hash functions it will be very problematic
- *
- *    -> Quadratic Probing (h(k) + i^2) % size: cuadratic search
- *          Pros: Same as the linear approach and solves the Clustering problematic
- *          Cons: In some cases the the table is not completely filled
- *
- *    -> Double Hashing (h1(k) + i *h2(k)) & size:
- *          Pros: No Clustering
- *                Uniform distribution
- *                More effective than the preious ones
- *          Cons:
- *              Collisions can still occur and can cause thrashing 
- * */
 
+/*
+ * ===========================
+ *          HASHING
+ * ===========================
+ *
+ * Definition:
+ * Hashing is a technique used to map data of arbitrary size 
+ * (keys) to fixed-size values (hashes) using a hash function.
+ * These hash values act as indexes into a hash table, enabling
+ * very fast insertion, search, and deletion on average.
+ *
+ * Open Hashing (Separate Chaining):
+ * In open hashing, each table index points to a linked list (or
+ * other data structure) of entries that share the same hash.
+ * Collisions are handled by simply adding the new key to the list.
+ *
+ * Closed Hashing (Open Addressing):
+ * In closed hashing, all elements are stored directly in the hash
+ * table array. When a collision occurs, probing is used to find
+ * another open slot.
+ *
+ * Linear Probing:
+ * When a collision occurs, check the next slot (index + 1), and 
+ * continue sequentially until an empty slot is found.
+ *
+ * Quadratic Probing:
+ * Similar to linear probing, but instead of moving one step at a 
+ * time, the step size increases quadratically (i.e. 1^2, 2^2, 3^2...).
+ * This helps reduce clustering.
+ *
+ * Double Hashing:
+ * Uses a second hash function to calculate the step size for probing,
+ * giving better distribution and minimizing clustering.
+ *
+ * How Big Should a Hash Table Be:
+ * Ideally, the table size should be a prime number to minimize
+ * clustering and reduce collisions. The size should be chosen
+ * based on the expected number of elements and desired load factor.
+ * A common practice is to keep the load factor <= 0.7 for good
+ * performance.
+ */
 typedef struct Pair {
     char key[MAX_KEY_LEN];
     int value;

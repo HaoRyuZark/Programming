@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 
 typedef struct Node {
@@ -300,7 +299,7 @@ void print_nth_data(Doubly_Linked_List* list, unsigned int position) {
         return;
     }
     Node* node = get_nth_node(list, position);
-    printf("%s\n", node->data);
+    printf("%d\n", node->data);
 }
 
 void make_cycle(Doubly_Linked_List* list) {

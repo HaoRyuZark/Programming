@@ -27,6 +27,6 @@ void free_vec(Vec* self);
 
 void set_at_index(Vec* self, int data, int index);
 
-void resize(int* arr);
+int get(Vec* self, int index);
 
 #endif // !VECTOR_H

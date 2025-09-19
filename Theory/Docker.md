@@ -6,6 +6,9 @@ A quick reference guide to working with Docker — images, containers, volumes, 
 
 ## 📦 **Docker Basics**
 
+Docker is a virtualization software used to simplify the deployment of applications. It achives its goal with tow main concepts
+**Images** and **Contaniers**.
+
 ```bash
 # Check Docker version
 docker --version
@@ -20,6 +23,9 @@ docker --help
 ---
 
 ## 🔍 **Images**
+
+These are files which declare all the dependencies, commands port, os, etc necessary to run an application. They can be shared across machines 
+which makes the system reproducible.
 
 ```bash
 # List all local images
@@ -38,6 +44,8 @@ docker rmi <image_id>              # force remove: docker rmi -f <image_id>
 ---
 
 ## 🏃 **Containers**
+
+A container is an instance of a running image which works as a lightweight virtual machine. 
 
 ```bash
 # Run a container

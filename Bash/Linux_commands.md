@@ -16,67 +16,67 @@
     Usage: su username
     Function: Switches the current user to another user.
 
--sudo
+- sudo
     Usage: sudo command
     Function: Executes a command with superuser privileges.
 
--exit
+- exit
     Usage: exit
     Function: Exits the current session or shell.
 
 # File & Directory Management
 
--ls
+- ls
     Usage: ls, ls -l, ls -a
     Function: Lists files in the current directory.
 
--pwd
+- pwd
     Usage: pwd
     Function: Prints the current working directory.
 
--cd
+- cd
     Usage: cd path, cd .., cd
     Function: Changes the current directory.
 
--mkdir
+- mkdir
     Usage: mkdir directoryname
     Function: Creates a new directory.
 
--rmdir
+- rmdir
     Usage: rmdir directoryname
     Function: Removes an empty directory.
 
--touch
+- touch
     Usage: touch filename
     Function: Creates a new file or updates its timestamp.
 
--cp
+- cp
     Usage: cp file destination
     Function: Copies files and directories.
 
--mv
+- mv
     Usage: mv file destination
     Function: Moves or renames files and directories.
 
--rm
+- rm
     Usage: rm file, rm -r directory
     Function: Removes files or directories.
 
--ln
+- ln
     Usage: ln -s file link
     Function: Creates a symbolic link to a file.
 
-#File Viewing & Editing
+# File Viewing & Editing
 
--cat
+- cat
     Usage: cat filename
     Function: Displays the content of files.
 
--nano
+- nano
     sage: nano filename
     Function: Opens a file in the Nano text editor.
 
--vim
+- vim
     Usage: vim filename
     Function: Opens a file in the Vim text editor.
 
