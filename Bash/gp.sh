@@ -2,6 +2,12 @@
 
 set -euo pipefail
 
+if [[ $# -lt 1 ]]; then
+    echo "Error: No mode specified. Please provide 'push' or 'pull'."
+    echo "Usage: $0 <push|pull>"
+    exit 1
+fi
+
 MODE="$1"
 PATHS=(
   "$HOME/Homo_Deus/Programming"
