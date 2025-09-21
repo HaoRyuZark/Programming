@@ -1,4 +1,4 @@
-#!/usr/bin/env/bash  
+#!/usr/bin/bash  
 set -euo pipefail # this lines set bash to strict mode. Means that if errors occurrs then 
 # execution of the script is aborted
 # e for exit on error 

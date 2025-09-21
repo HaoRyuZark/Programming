@@ -3,11 +3,17 @@
 #include <stdlib.h>
 
 int  max(int a, int b);
+
 void naive_approach(char* text, char* pattern, int n, int m);
+
 void longest_prefix_suffix_table(char* pattern, int m, int* table);
+
 void knuth_morris_pratt(char* text, char* pattern, int n, int m);
+
 void compute_bad_character_shift(char* pattern, int m, int* alphabet);
+
 void compute_good_suffix_shift(char* pattern, int m, int* shift);
+
 void boyer_moore(char* text, char* pattern, int n, int m);
 
 int main() {
@@ -20,6 +26,7 @@ int main() {
 
     naive_approach(text, pattern, n, m);
     knuth_morris_pratt(text, pattern, n, m);
+    boyer_moore(text, pattern, n, m);
 
     return 0;
 }
@@ -59,23 +66,23 @@ void longest_prefix_suffix_table(char* pattern, int m, int* table) {
         if (pattern[i] == pattern[j]) { // same letter found at both ends
             
             /*
-             * This lines work in the following manner: 
+             * These lines work in the following manner: 
              * we are checking if the character match and if the previous have already
              * matched then they accumulate : table[i] = j because j is already telling us the number
              * of matching characters. Of course, this is the most optimal way of doing it. But a double pointer 
              * approach would also work
              */
 
-            j++;            // move to the next letter / increment length of the proper prefix suffix
-            table[i] = j;   // store the length of the suffix/prefix
-            i++;            // move to the next letter
+            j++;                    // move to the next letter / increment length of the proper prefix suffix
+            table[i] = j;           // store the length of the suffix/prefix
+            i++;                    // move to the next letter
         
-        } else {                   // if no match
+        } else {                    // if no match
             
-            if (j != 0) {         // if not at the start 
-                j = table[j - 1];   // set j = to length of the lps of the part that mached ,which is the part at [j -1] 
+            if (j != 0) {           // if not at the start 
+                j = table[j - 1];   // set j = to length of the longest_prefix_suffix of the part that mached ,which is the part at [j - 1]
                                 
-            } else {              // if j at the start
+            } else {                // if j at the start
                 table[i] = 0;       // no prefix/suffix -> 0
                 i++;                // go to next latter
             }
@@ -87,7 +94,7 @@ void longest_prefix_suffix_table(char* pattern, int m, int* table) {
 *  Demostration 
 *
 * Start
-* 0   1
+*  0   1
 *  j   i
 *  A   A   A   A   B   A
 *  
@@ -116,7 +123,7 @@ void longest_prefix_suffix_table(char* pattern, int m, int* table) {
 *  0   1   2   3   0   0
 *
 *
-* Mismatch -> j = table[ j - 1] = 
+* Mismatch -> j = table[ j - 1] = 2 
 *                   4
 *                  ji
 *  A   A   A   A   B   A
@@ -124,7 +131,7 @@ void longest_prefix_suffix_table(char* pattern, int m, int* table) {
 *  0   1   2   3   0   0    
 *
 
-* Mismatch -> j = table[j - 1]
+* Mismatch -> j = table[j - 1] = 1
 *                  4
 *          j       i
 *  A   A   A   A   B   A
@@ -172,7 +179,7 @@ void knuth_morris_pratt(char* text, char* pattern, int n, int m) {
             j++;
         }    
         
-        if (j == m) { // Found!
+        if (j == m) {       // Found!
             j = lps[j - 1]; // update j for skiping the already checked section and continue
             printf("Found at %d \n", i - m);
         
