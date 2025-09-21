@@ -11,7 +11,7 @@ Steps:
     3. Repeat 1 and 2. Remember to add the time of traveling before reaching and only update if the estimate is minimal.
     
 Remark:
-    Each time we explore a new twon we garantee that we have the shortest path
+    Each time we explore a new vertex we garantee that we have the shortest path
 '''
 
 import heapq
@@ -66,43 +66,6 @@ def dijkstra_original(graph: Graph, start: str, end: str) -> list[str]:
     
     return path[::-1]
 
-
-def dijkstra(n, edges, src):  # Basiclly a greedy bfs
-    
-    # Transform to adjacency list
-    adj = {}
-    for i in range(n):
-        adj[i] = []
-
-    for s, dst, weight in edges:
-        adj[s].append([dst, weight])
-
-    shortest = {}
-
-    priority_queue = [[0, src]] # Step 0.
-    
-    # Perform search
-    while priority_queue:
-
-        current_weight, current = heapq.heappop(priority_queue) # Get first
-
-        if current in shortest:             # If already visited continue
-            continue
-
-        shortest[current] = current_weight                                           # If not visited update estimate
-
-        for node, weight in adj[current]:                                            # check neighbors
-            
-            if node not in shortest:                                                 # for neighbors
-                heapq.heappush(priority_queue, [current_weight + weight, node])      # add neighbor to queue with the their estimate + currnt.
-
-    # Outside the search
-    # Add unvisited nodes and add negative distance
-    for i in range(n):
-        if i not in shortest:
-            shortest[i] = -1
-
-    return shortest
 
 '''
 Used for directed graphs

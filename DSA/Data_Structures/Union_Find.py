@@ -1,5 +1,3 @@
-
-
 '''
 Union Find:
 
@@ -57,8 +55,9 @@ class union_find:
 
         else: 
             self.parent[x] = self.find(self.parent[x]) # optimized recursive call to traverse the the tree upwards
-                                                       # and also set the middle elements of the chain as stand alone children of 
-                                                       # the representative 
+                                                       # and also set the middle elements of the chain as stand alone 
+                                                       # children of the representative
+                                                       
         
             return self.parent[x] 
 
