@@ -80,7 +80,7 @@ void longest_prefix_suffix_table(char* pattern, int m, int* table) {
         } else {                    // if no match
             
             if (j != 0) {           // if not at the start 
-                j = table[j - 1];   // set j = to length of the longest_prefix_suffix of the part that mached ,which is the part at [j - 1]
+                j = table[j - 1];   // set j = to length of the longest_prefix_suffix of the part that already mached, which is the part at table[j - 1]
                                 
             } else {                // if j at the start
                 table[i] = 0;       // no prefix/suffix -> 0
