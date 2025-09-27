@@ -281,14 +281,11 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
  
 ---
 
-### None-ls 
+### Neovim
 
-Run inside neovim
+Maintenance 
 
-- `MasonInstall erb-lint`
-- `MasonInstall prettier`
-- `MasonInstall stylua`
-- `MasonInstall rubocop`
+- Delete Everything: `rm -rf ~/.local/share/nvim/*`
 
 ---
 
