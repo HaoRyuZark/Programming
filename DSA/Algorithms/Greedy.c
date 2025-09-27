@@ -18,7 +18,6 @@ typedef struct {
 } Activity;
 
 // Function to sort activities by end time using simple Bubble Sort
-
 void sort_activities(Activity activities[], int n) {
 
     for (int i = 0; i < n-1; i++) {

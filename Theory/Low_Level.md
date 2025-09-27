@@ -540,6 +540,8 @@ is done in that way to mitigate the effects of the intermidiate states of the de
 The chain flip-flops also creates a binary counter which can be used to control the phases of execution by incrementing the counter and using the ouput for a binary 
 decoder.
 
+Actually, this proccess is very complex, and CPU's can actually predict branches, execute instructions out of order and some other stuff to minimize iddle time. 
+
 ---
 
 ## When does The OS Run
