@@ -59,8 +59,6 @@ Use cases:
 '''
 Example 1 find all subsets of a set
 '''
-
-
 def powerset(nums: list[int]):
 
     res: list[list[int]] = []
@@ -106,6 +104,33 @@ def find_subsets(nums):
     
     backtrack(0, [])
     print(res)
+
+def permute(n):    
+    res = []
+    def permute_rec(per):
+
+        if len(per) == n:
+            res.append(per.copy())
+            return
+
+        for i in range(1, n + 1):
+
+            if i in per:
+                continue
+
+            per.append(i)
+            permute_rec(per)
+            per.pop()
+    
+
+    permute_rec([])
+    
+
+    print(f"Permutations: {len(res)}")
+    print(res)
+
+permute(5)
+
 
 '''
  Example 2: N-Queens problem
@@ -361,7 +386,7 @@ def find_path(matrix: list[list[int]]) -> list[list[int]]:
 '''
 Find all permutations of a set of numbers
 '''
-def permute(nums: List[int]) -> List[List[int]]:
+def permutate(nums: List[int]) -> List[List[int]]:
 
     res = []
 
@@ -380,16 +405,97 @@ def permute(nums: List[int]) -> List[List[int]]:
     backtrack([])  # Start with an empty state
     return res
 
-def main():
-    n = 4
-    board = [['.' for _ in range(n)] for _ in range(n)]
-    solutions = n_queens(board, n)
+"""
+Generating all words 
+"""
+def generate_words():
 
-    for sol in solutions:
-        for row in sol:
-            print("".join(row))
-        print()
+    alphabet = ['o', 'p', 't', 'r']
+    count = 0 # expected 1.364
+    
+    for i in range(1,6): 
+        count += generate(i, "", alphabet)
+    
+    print(count)
 
+"""
+Will return the number of words 
+"""
+def generate(length, word, alphabet):
+   
+    # Recursive case, a word of len x was generated
+    if len(word) == length:
+       print(word)
+       return 1 
+    
+    count = 0
+    
+    # Take a different letter and keep counting
+    for c in alphabet:
+       count += generate(length, word + c, alphabet)
+    
+    return count
 
+def count_words():
+    
+    letters = ['o', 'p', 't', 'r']
+    count = 0
 
-main()
+    def count_rec(oc, tc, pc, rc, word):
+        nonlocal count
+
+        # stop condition
+        if len(word) == 5:
+            if oc == 2 and tc == 2 and pc + rc == 1:
+                count += 1
+                print(word)
+            return
+
+        for c in letters:
+            if c == 'o' and oc < 2:
+                count_rec(oc + 1, tc, pc, rc, word + 'o')
+            elif c == 't' and tc < 2:
+                count_rec(oc, tc + 1, pc, rc, word + 't')
+            elif c == 'p' and pc < 1:
+                count_rec(oc, tc, pc + 1, rc, word + 'p')
+            elif c == 'r' and rc < 1:
+                count_rec(oc, tc, pc, rc + 1, word + 'r')
+
+    count_rec(0, 0, 0, 0, "")
+    print("Total:", count)
+
+"""
+Generating Words by brute force
+"""
+def print_all_words():
+  
+  le = ['o', 'p', 't', 'r']
+  count = 0
+
+  for i in range(0,4):
+    for j in range(0,4):
+      for k in range(0,4):
+        for l in range(0,4):
+          for o in range(0,4):
+            word = le[i] + le[j] + le[k] + le[l] + le[o] 
+            count += check_word(word)
+  
+  print(count) # expected 60
+
+def check_word(word):
+  
+  o = 0
+  t = 0
+
+  for c in word:
+    if c == 'o':
+      o += 1
+    if c == 't':
+      t += 1
+  
+  if t == 2 and o == 2:
+    print(word)
+    return 1
+  return 0
+
+generate_words()

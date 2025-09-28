@@ -34,7 +34,7 @@ For wireless connections run: `iwctl` and then run the following commands insede
 For direct connections you can skip and type: `- $ iwctl --passphrase passphrase station name connect SSID`
 And to disconnect if needed: `[iwd]# station device disconnect`
 
-4. **Update the system clock:* `timedatectl`
+4. **Update the system clock:** `timedatectl`
 
 5. **Partion the disks using fdisk:** Identify the hardrive using `lsblk` then run the following commands in order:
 
