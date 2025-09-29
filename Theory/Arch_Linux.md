@@ -234,7 +234,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    clamav sxiv bleachbit reflector jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
    tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
-   lua-language-server bash-language-server`
+   lua-language-server bash-language-server texlab`
 
 ---
 
