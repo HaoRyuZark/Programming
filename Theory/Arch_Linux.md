@@ -233,7 +233,8 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
    clamav sxiv bleachbit reflector jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
    tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
-   fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker`
+   fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
+   lua-language-server bash-language-server`
 
 ---
 
@@ -257,7 +258,8 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `gem install neovim`
 - `sudo npm install -g regex`
 - `npm install -g tree-sitter-cli`
-
+- `yay -S sql-language-server`
+- `yay -S clangd`
 ---
 
 ### GTK and Qt Themes 

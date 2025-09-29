@@ -187,7 +187,8 @@ local MY_VAR_2 "AHHHHH"
 # AWK
 awk -F,'{print $1}' test.txt #get firt word after coma
 
-
+# Find all log files modified in the last 24 ours 
+find . -name "*.log" -mtime -1
 
 
 

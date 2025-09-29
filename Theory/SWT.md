@@ -40,6 +40,7 @@ stages of testing. The bottom of the V represents the implementation stage.
 | Specification Design  |       <-       | Unit Testing        |
 |                       | Implementation |                     |
 
+
 ## Iterative Development
 
 This model allows developers to plan multiple iterations of the steps: Analysis, Proposal, Implementation and Testing.

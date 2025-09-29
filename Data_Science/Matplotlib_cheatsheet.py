@@ -169,7 +169,7 @@ y = np.random.random(100)
 z = np.random.random(100)
 
 
-ax.scatter(x, y, z, c=z, cmap='viridis', s=50, alpha=0.7)
+ax.scatter(x, y, c=z, cmap='viridis', s=50, alpha=0.7)
 ax.set_title("3D Scatter Plot")
 plt.show()
 
