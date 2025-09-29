@@ -60,6 +60,8 @@ Use cases:
 '''
 Example 1 find all subsets of a set
 '''
+
+
 def powerset(nums: list[int]):
 
     res: list[list[int]] = []
