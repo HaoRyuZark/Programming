@@ -14,10 +14,15 @@ for the economic development of software its use and maintenance.
 
 1. Analysis of requirements
 2. Design and Architecture
-3. Implementation
-4. Testing
-5. Introduction in the system
-6. Maintenance
+3. Implementation and unit testing
+4. Integration and Integration testing
+5. Deploymend and Acceptance testing
+6. Operation Maintenance
+7. Retirement
+
+## Stakeholder 
+
+Term for the individuals inside the software project: developers, investors, poduct owner, architect, etc.
 
 ## Waterfall Model
 
@@ -194,7 +199,7 @@ Stands for Unified Modeling Language. Which is a standard for modeling.
 
 - **Structure Diagramms:** Objects, Classes, Packages, Components, Composition, Inheritance.
 - **Behavior Diagramms:** Use-Case, Activity, State.
-- **Interaction Diagramms:** Sequence, Interaction, Time.
+- **Interaction Diagramms:** Sequence, Interaction, Time, Communication.
 
 
 

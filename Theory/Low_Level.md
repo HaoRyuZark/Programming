@@ -252,6 +252,21 @@ Binary division, often implemented using repeated subtraction, works much like l
 
 ---
 
+## Numbers in C 
+
+In the `C` programming language numbers in other base different from 10 can be used by adding a prefix to the number's start
+
+```c
+
+int b = 0b10010; // Binary
+
+int o = 0222; // Octal 
+
+int hex = 0xFFFF; // Hexadecimal
+```
+
+--- 
+
 ## Memory Management
 
 Memory management is a critical aspect of systems programming. It involves allocating and deallocating memory for variables and data structures. In C, memory management is done using functions like `malloc`, `calloc`, `realloc`, and `free`.
@@ -1092,3 +1107,11 @@ A protocol is a set of for transmitting data across a network.
 
 Secure shell is a protocol used for providing a secure encrypted connection to a remote machine. It uses asymmetric encryption 
 and commonly port 22 for the connection.
+
+### Layout 
+
+```txt
+| Packet length -- Padding Amount -- Payload Padding -- Message Authentication |
+```
+
+Everything between packet length and message authentication is encrypted.
