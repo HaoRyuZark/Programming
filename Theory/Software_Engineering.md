@@ -1,43 +1,5 @@
 # General Software Engineering Topics
 
-## Table of contents
-
-| Topic                                   | Concepts                                                                                                   |
-| :-------------------------------------- |:-----------------------------------------------------------------------------------------------------------|
-| Learning                                | How to learn, strategies, preparation, etc.                                                                |
-| Responsibility for One's Craft          | Dunning-Kruger Effect,Principle of Least Surprise, Scout Rule, WTF Metric                                  |
-| Software Quality and Quality Management | Measurable and Non-measurable                                                                              |
-| Software Testing                        | Test Driven Development, Unit, Integration, End-to-End, Smoke, Regression, Acceptance                      |
-| Design Principles                       | Visual Hierarchy, Contrast, Consistency, Balance, Feedback, Simplicity, Alignment, Proximity, Repetition   |
-| Clean Code & Code Smells                | Readability, Naming-conventions, Dead Code, Long Methods, Magic Numbers, Comments vs. Clarity,Bad practices|
-| Coding Paradigms                        | Object-Oriented & Functional Programming, Architectural Decisions, Imperative vs Declarative               |
-| Design Patterns & Design Principles     | Coupling, Cohesion, Convention                                                                             |
-| Design Patterns & Design Principles     | SOLID: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion|
-| Design Patterns & Design Principles     | Composite & Adapter                                                                                        |
-| Design Patterns & Design Principles     | Builder & Command                                                                                          |
-| Design Patterns & Design Principles     | Observer & Singleton                                                                                       |
-| Design Patterns & Design Principles     | Dependency Injection & Inversion of Control                                                                |
-| Design Patterns & Design Principles     | Model-View-Controller (MVC)                                                                                |
-| Design Patterns & Design Principles     | Object-Relational Mapping (Entity, DAO, Services)                                                          |
-| Requirements and Task Specification     | User Stories, Use Cases,Acceptance Criteria, INVEST Principle                                              |
-| Time Estimation & Time Management       | Planning Poker, Time Boxing,Eisenhower Matrix, Pomodoro Technique                                          |
-| Logging                                 | Logging Levels (Info, Debug, Warn, Error), Log Rotation, Centralized Logging, Structured Logs              |
-| Error Detection and Debugging           | Breakpoints, Stack Traces, Watch Expressions, Reproducing Bugs, Rubber Duck Debugging                      |
-| Profiling                               | CPU Usage, Memory Leaks, I/O Bottlenecks, Tools like perf, JProfiler, VisualVM                             |
-| Refactoring                             | Red-Green-Refactor Cycle, Code Simplification, Removing Duplication, Improving Naming                      |
-| Unit Testing                            | Arrange-Act-Assert Pattern, Mocking, Test Coverage, Isolation, Assertions                                  |
-| Data Protection & Data Security         | GDPR, Encryption, Authentication, Authorization, Secure by Design                                          |
-| Technology Radar                        | Hype Cycle                                                                                                 |
-| Technology Radar                        | Agile & Lean                                                                                               |
-| Technology Radar                        | Continuous Integration &Continuous Deployment                                                              |
-| Technology Radar                        | WWW, Web Browser, Web Services                                                                             |
-| Technology Radar                        | DevOps, Cloud, PaaS, SaaS, FaaS                                                                            |
-| Technology Radar                        | Data Mining, Big Data, DataWarehouse, Data Lake                                                            |
-| Technology Radar                        | Digitalization & Internet of Things                                                                        |
-| Technology Radar                        | Artificial Intelligence & Machine Learning                                                                 |
-
----
-
 ## Learning 
 
 Learning a new skill, technology or concept takes primarily time and effort. This effort is materialized in the form of reading, watching a video, listening to a podcast, 
