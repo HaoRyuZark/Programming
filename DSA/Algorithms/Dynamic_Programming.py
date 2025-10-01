@@ -223,8 +223,8 @@ We use a bottom-up dynamic programming approach:
 
 - Define lens[i][j] as the length of the LCS between text1[i:] and text2[j:].
 - We start from the end of both strings and work backwards.
-- If characters match at i and j, we include that character and move diagonally.
-- If not, we explore both skipping a character in text1 [i + 1][j] or text2 [i][j + 1] and take the max.
+- If characters match at i and j, we include that character and move diagonally. This means we do not have to check the subscases
+- If not, we explore both skipping a character in text1 [i + 1][j] or text2 [i][j + 1] and take the max of their longest common subsequence.
 
 This avoids recomputation and builds up the solution efficiently.
 
