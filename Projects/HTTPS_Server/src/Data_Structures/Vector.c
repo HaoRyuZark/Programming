@@ -8,11 +8,11 @@ Vec* create_vec() {
 
     Vec* vec = (Vec*)malloc(sizeof(Vec));
     
-    handle_error_with_return(vec, NULL, "Could not initialize vec"); 
+    handle_error_with_return(vec, NULL, "Could not initialize vec")
 
     vec->arr = (int*)malloc(INITIAL_CAPACITY * sizeof(int));
     
-    handle_error_with_return(vec->arr, NULL,"Could not allocate memory for the internal array in vec");
+    handle_error_with_return(vec->arr, NULL,"Could not allocate memory for the internal array in vec")
     
     vec->len = 0;
     vec->capacity = INITIAL_CAPACITY;

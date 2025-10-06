@@ -21,7 +21,7 @@ Binary_Tree* create_binary_tree() {
 Binary_Tree* init_binary_tree(int data) {
 
     Binary_Tree* bst = (Binary_Tree*)malloc(sizeof(Binary_Tree));
-
+    
     if (bst == NULL) {
         perror("Could not allocate memory for bst\n");
         return NULL;

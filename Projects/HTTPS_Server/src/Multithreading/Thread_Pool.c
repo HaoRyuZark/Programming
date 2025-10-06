@@ -1,29 +1,14 @@
-#include <stdio.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <threads.h>
+#include "Thread_Pool.h"
 
-// Task representation
-typedef struct Task {
+/*
+ * A thread pool is way of handling multiple request or tasks in 
+ * a system by initilizing a certain number of threads "worker" which 
+ * continously check if there are task in a queue and if there are jobs to 
+ * do they execute it and then repeat the process.
+ * */
+Task_Queue* queue_construtor() {
 
-    void* (*job)(void* arg);
-    void* args;
-    struct Task* next;
-
-} Task;
-
-// Queue structure for storing tasks
-typedef struct Queue {
-
-    Task* first;
-    Task* last;
-    int length;
-
-} Queue;
-
-Queue* queue_construtor() {
-
-    Queue* queue = (Queue*)malloc(sizeof(Queue));
+    Task_Queue* queue = (Task_Queue*)malloc(sizeof(Task_Queue));
     
     queue->first = NULL;
     queue->last = NULL;
@@ -32,8 +17,10 @@ Queue* queue_construtor() {
     return queue;
 }
 
-void queue_destructor(Queue* self) {
-   
+void queue_destructor(Task_Queue* self) {
+    
+    handle_error_and_exit(self, "Task-queue is NULL!")
+    
     Task* current = self->first;
     Task* temp;
 
@@ -42,7 +29,6 @@ void queue_destructor(Queue* self) {
         current = current->next;
         free(temp);
     }
-
 }
 
 // Create a new task
@@ -66,8 +52,9 @@ Task* task_from(Task* other) {
     return task;
 }
 
-// Dequeue and execute a task (thread-safe)
-void* dequeue(Queue* self) {
+void* dequeue(Task_Queue* self) {
+    
+    handle_error_and_exit(self, "Task-queue is NULL!")
 
     Task* current = self->first;
     self->first = self->first->next;
@@ -85,23 +72,15 @@ void* dequeue(Queue* self) {
     return res;
 }
 
-
-typedef struct Thread_Pool {
-
-    int thread_num;
-    int active;
-    struct Queue* tasks;
-    pthread_t* workers;
-    pthread_mutex_t mutex;
-    pthread_cond_t condvar;
-
-} Thread_Pool;
-
-// Execute thread function
+/* Execute thread function 
+ *
+ * It runs an infinite loop and if thre are tasks availiable it executes it. 
+ * For synchornization the mutex is aquired and the condition variable signals 
+ * if there are even any tasks*/
 void* thread_job(void* args) {
-
+    
     Thread_Pool* thread_pool = (Thread_Pool*)args;
-
+    
     while (thread_pool->active == 1) {
 
         pthread_mutex_lock(&thread_pool->mutex);
@@ -121,11 +100,19 @@ void* thread_job(void* args) {
 }
 
 
-// Enqueue a task into the queue (thread-safe)
+/* 
+ * Enqueue a task into the queue (thread-safe). 
+ *
+ * When adding a task we make sure that only the current thread can 
+ * modify its contents. Then after adding a task to the queue we release the 
+ * mutex and also notify all the thread waiting for a task to execute it*/
 void enqueue(Thread_Pool* thread_pool, Task* task) {
     
-    pthread_mutex_lock(&thread_pool->mutex);
 
+    pthread_mutex_lock(&thread_pool->mutex);
+    
+    handle_error_and_exit(thread_pool->workers, "Task-queue is NULL!")
+    
     if (!thread_pool->tasks->first) {
         thread_pool->tasks->first = task;
         thread_pool->tasks->last = task;
@@ -136,7 +123,7 @@ void enqueue(Thread_Pool* thread_pool, Task* task) {
     
     thread_pool->tasks->length++;
     
-    pthread_mutex_lock(&thread_pool->mutex);
+    pthread_mutex_unlock(&thread_pool->mutex);
     pthread_cond_signal(&thread_pool->condvar);
 }
 
@@ -163,11 +150,13 @@ Thread_Pool thread_pool_constructor(int thread_num) {
 void thread_pool_destructor(Thread_Pool* thread_pool) {
     
     thread_pool->active = 0; 
-
+    
+    // Signal each thread to finish their job
     for (int i = 0; i < thread_pool->thread_num; i++) {
         pthread_cond_signal(&thread_pool->condvar);
     }
-
+    
+    // Wait join all threads
     for (int i = 0; i < thread_pool->thread_num; i++) {
         pthread_join(thread_pool->workers[i], NULL);        
     }
@@ -176,8 +165,4 @@ void thread_pool_destructor(Thread_Pool* thread_pool) {
     queue_destructor(thread_pool->tasks);
 }
 
-int main() {
-    
-    printf("Hello Mom!");
-    return 0;
-}
+

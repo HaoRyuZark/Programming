@@ -22,9 +22,6 @@ pthread_t thread_pool[THREAD_NUM];
 pthread_mutex_t mutex;
 pthread_cond_t cnd;
 
-typedef struct sockaddr_in SA_IN;
-typedef struct sockaddr SA;
-
 //Queue
 typedef struct Node_t {
     struct Node_t* next;
@@ -79,13 +76,16 @@ Server_Queue queue = {
 
 int main(int argc, char** argv) {
 
-    int server_socket, client_socket,
-        addr_size; // init sockets and the size of the address
-    SA_IN server_addr, client_addr;
+    int server_socket;
+    int client_socket;
+    int addr_size;      // init sockets and the size of the address
+
+    struct sockaddr_in server_addr, client_addr;
 
     for (int i = 0; i < THREAD_NUM; i++) {
       pthread_create(&thread_pool[i], NULL, thread_function, NULL);
     }
+
     check((server_socket = socket(AF_INET, SOCK_STREAM, 0)), "Failed socket");
 
     // init address_struct
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(SERVERPORT);
 
-    check(bind(server_socket, (SA* )&server_addr, sizeof(server_addr)),
+    check(bind(server_socket, (struct sockaddr* )&server_addr, sizeof(server_addr)),
           "Failed to bind");
 
     check(listen(server_socket, SERVER_BACKLOG), "Listen failed");
@@ -102,16 +102,18 @@ int main(int argc, char** argv) {
     pthread_mutex_init(&mutex, NULL);
 
     while (true) {
+
         printf("Waiting for connections");
 
-        addr_size = sizeof(SA_IN);
-        check((client_socket = accept(server_socket, (SA* )&client_addr,
+        addr_size = sizeof(struct sockaddr_in);
+        check((client_socket = accept(server_socket, (struct sockaddr* )&client_addr,
                                       (socklen_t* )&addr_size)),"accept failed");
         printf("Connection accepted");
         
         //Pointer to int to store the client_sock
         int* pclient = malloc(sizeof(int)); 
         *pclient = client_socket;
+
         pthread_mutex_lock(&mutex); //create a mutex for enqueue
         enqueue(&queue, pclient);
         pthread_cond_wait(&cnd, &mutex); //if there is no work wait
@@ -151,47 +153,53 @@ void* thread_function(void* arg) {
 }
 
 void* handle_connection(void* p_client_socket) {
-      int client_socket = *((int *)p_client_socket);
-      free(p_client_socket);
-      char buffer[BUFSIZE];
-      size_t bytes_read;
-      int msgsize = 0;
-      char actualpath[PATH_MAX + 1];
 
-      // read clients message (file to read)
-      while ((bytes_read = read(client_socket, buffer + msgsize,
-                                sizeof(buffer) - msgsize - 1)) > 0) {
-        msgsize += bytes_read;
+    int client_socket = *((int*)p_client_socket);
+
+    free(p_client_socket);
+    
+    char buffer[BUFSIZE];
+    size_t bytes_read;
+    int msgsize = 0;
+    char actualpath[PATH_MAX + 1];
+
+    // read clients message (file to read)
+    while ((bytes_read = read(client_socket, buffer + msgsize,sizeof(buffer) - msgsize - 1)) > 0) {
+    msgsize += bytes_read;
 
         if (msgsize > BUFSIZE - 1 || buffer[msgsize - 1] == '\n') {
-          break;
+            break;
         }
-      }
+    }
 
-      check(bytes_read, "recv error");
-      buffer[msgsize - 1] = 0;
+    check(bytes_read, "recv error");
 
-      printf("REQUEST: %s\n", buffer);
-      fflush(stdout);
+    buffer[msgsize - 1] = 0;
 
-      if (realpath(buffer, actualpath) == NULL) {
+    printf("REQUEST: %s\n", buffer);
+    
+    fflush(stdout);
+
+    if (realpath(buffer, actualpath) == NULL) {
+   
         printf("Error, bad path");
         close(client_socket);
         return NULL;
-      }
+    }
 
-      FILE *fp = fopen(actualpath, "r");
-      if (fp == NULL) {
+    FILE *fp = fopen(actualpath, "r");
+
+    if (fp == NULL) {
+        
         printf("No File exists\n");
         close(client_socket);
         return NULL;
     }
 
     // read file contents and send to clients
-
     while ((bytes_read = fread(buffer, 1, BUFSIZE, fp)) > 0) {
-      printf("sendig %zu bytes\n", bytes_read);
-      write(client_socket, buffer, bytes_read);
+        printf("sendig %zu bytes\n", bytes_read);
+        write(client_socket, buffer, bytes_read);
     }
 
     close(client_socket);
