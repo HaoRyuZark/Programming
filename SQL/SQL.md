@@ -1,8 +1,49 @@
-# SQL Cheatsheet
+# Databases
 
-A quick reference guide for common SQL commands and concepts.
+A quick reference guide for common SQL commands, concepts and 
+databases in general.
 
 ---
+
+## Database System 
+
+A **databases-system** is made of databases-management-engine and clients which 
+make request to this server.
+
+Other parts: 
+
+- **Data Manipulation Language**
+- **Data Definition Language**
+- **Processing steps for requests**
+- **Schema (Metadata)**
+- **Synchronization**
+
+## Definitions
+
+**Date** is sequence of characters and symbols. 
+
+**Information** is given by data 
+when meaning can be given to it. 
+
+**Knowledge** is won by the systematic connection 
+of datapoints, information and the own experience.
+
+**Relation** refers to the logical connection between data points.
+
+**Consistency** refers to the state of data which attached to specific rules and it does 
+not violates these last.
+
+**Integrity** correctness and completness of the data set 
+
+**Redundancy** multiple occurrences of data. It can be harmful, but also necessary in some 
+situtations.
+
+**Persistency** data is available and not erased after the server is down 
+
+**Error Recovery** self explanatory
+
+
+--- 
 
 ## SQL Basics
 - `SELECT` retrieves data from a table

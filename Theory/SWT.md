@@ -24,11 +24,89 @@ for the economic development of software its use and maintenance.
 
 Term for the individuals inside the software project: developers, investors, poduct owner, architect, etc.
 
+## Software Quality 
+
+Capability of sofware product to satisfy steated and implied needs when used under especified conditions.
+
+- **Functional Suitability**
+- **Performance Efficiency**
+- **Compatibily**
+- **Interaction Capability**
+- **Reliability**
+- **Security** 
+- **Mantainability**
+- **Safety** 
+
+## When To Produce New Software
+
+The goal is to minimize the cost of the use of software. The decision is 
+**make or buy**
+
+- **Commercial off the Shelf:** Customization, Software as service
+- **Total Cost of Ownership:** Return of Investment, Costs of the different phases.
+
+### Balance of using already existing software 
+
+
+| **Advantages**                                         | **Disadvantages**                                                     |
+| ------------------------------------------------------ | --------------------------------------------------------------------- |
+| ▪ Faster deployment                                    | ▪ Dependence on the vendor: maintenance, further development, support |
+| ▪ Quality improvement through many users               | ▪ Costs of custom software are often underestimated                   |
+| ▪ Development costs are borne by a large customer base | ▪ Custom adaptations are rarely possible                              |
+| ▪ Higher planning reliability                          | ▪ Further development must be coordinated with many stakeholders      |
+| ▪ Total Cost of Ownership (TCO) is generally lower     | ▪ No unique selling point in competition                              |
+|                                                        | ▪ Lock-in effect                                                      |
+
+
+## Discovery of Errors 
+
+
+| **Error made** | **Error detected** |
+|-------------|----------------|
+| User needs| Operation and Maintenance|
+|Requirements Analysis | Deployment and Acceptance Testing |
+|Desing | Integration Testing |
+|Implementation | Unit Testing |
+|Code input | IDE and Compiler |
+
+
+## Cost of Errors
+
+
+| **Phase of Error Detection**       | **Cost Factor** |
+| ---------------------------------- | :---------------:|
+| Requirements Analysis              | 1               |
+| Design                             | 3 – 6           |
+| Implementation                     | 10              |
+| Unit Testing & Integration Testing | 15 – 40         |
+| Deployment & Acceptance Testing    | 30 – 70         |
+| Operation & Maintenance            | 40 – 1,000      |
+
+
 ## Waterfall Model
 
 This model takes the steps of the life cycle and orders them
 into descending order as the way software is planed, developed, used and
 maintained. It has been criticized for not being realistic.
+
+- **Requirements Analysis**
+- **Desing**
+- **Implementation and Unit Testing**
+- **Integration Testing**
+- **Deployment and Acceptance Testing**
+- **Operation and Maintenance**
+
+
+| **Advantages**                                       | **Disadvantages**                                                              |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------ |
+| ▪ Simple & intuitive                                 | ▪ Requires a structured approach                                               |
+| ▪ Widely used                                        | ▪ Clients are only involved at the beginning, requirements are often unclear   |
+| ▪ Documents                                          | ▪ Testing & acceptance occur late, only after the system is complete           |
+| ▪ Written specification documentation                | ▪ Continuous quality assurance is problematic                                  |
+| ▪ Contract for handover to next phase                | ▪ "Activity" and "phase" are not clearly separated                             |
+| ▪ Easy to monitor as quasi-milestones in the project | ▪ Project management: cycles are problematic, no milestones between activities |
+| ▪ Transparent process flow                           |                                                                                |
+
 
 ## V-Model
 
@@ -37,7 +115,7 @@ importance of testing at each stage of development. The left side of the V
 represents the stages of development, while the right side represents the
 stages of testing. The bottom of the V represents the implementation stage.
 
-| Left Side of V        |  Middle of V   | Right Side of V     |
+| **Left Side of V**        |  **Middle of V**   | **Right Side of V**     |
 | :-------------------- | :------------: | ------------------- |
 | Requirements Analysis |       <-       | Acceptance Testing  |
 | System Design         |       <-       | System Testing      |

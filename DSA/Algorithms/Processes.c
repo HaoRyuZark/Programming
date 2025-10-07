@@ -148,5 +148,12 @@ int main(int argc, char* argv[]) {
         };
     };
     
+
+    /*
+     * To redirect the output to another file we have to use the functions dup() which creates a copy of an 
+     * old file descriptor using the lowest number in the file descriptor table and dup2() which is similar but it accepts an specified fd.
+     * */
+
+
     return 0;
 }

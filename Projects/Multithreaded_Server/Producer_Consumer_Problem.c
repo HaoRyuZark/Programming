@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <time.h>
 #include <semaphore.h>
 
+/*
+ * As a side note when using threads we can pass an arugment using the address of the argument of arguments into the 
+ * pthread_create function. And to get it after the threads terminante pass the address 
+ * to the pthread_join function (void**) &result.
+ *
+ * Another concept which is not very often use are barriers which allow the access to a resource only when a certain number of threads want ot access it.
+ * */
 #define THREAD_NUM 8
 
 sem_t semEmpty;
