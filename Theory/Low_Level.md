@@ -1115,3 +1115,13 @@ and commonly port 22 for the connection.
 ```
 
 Everything between packet length and message authentication is encrypted.
+
+---
+
+## I/O Devices 
+
+To control hardware the CPU does not actually perform the operations directly, but it uses smaller computers 
+build into the devices called **mirco-controllers**. The communication can be stablished via 
+memory mapped io or by isolated io which uses specific buses and components.
+
+

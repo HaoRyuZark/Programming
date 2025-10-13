@@ -1158,7 +1158,6 @@ clamav ALL=(ALL) NOPASSWD: SETENV: /usr/bin/notify-send
 
 ```
 
-
 - Create the file if it does not exists `/etc/clamav/virus-event.bash` and write 
 
 ```bash 

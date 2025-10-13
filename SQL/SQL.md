@@ -13,39 +13,43 @@ make request to this server.
 Other parts: 
 
 - **Data Manipulation Language**
+
 - **Data Definition Language**
+
 - **Processing steps for requests**
+
 - **Schema (Metadata)**
+
 - **Synchronization**
 
 ## Definitions
 
-**Date** is sequence of characters and symbols. 
+- **Date** is sequence of characters and symbols. 
 
-**Information** is given by data 
+- **Information** is given by data 
 when meaning can be given to it. 
 
-**Knowledge** is won by the systematic connection 
+- **Knowledge** is won by the systematic connection 
 of datapoints, information and the own experience.
 
-**Relation** refers to the logical connection between data points.
+- **Relation** refers to the logical connection between data points.
 
-**Consistency** refers to the state of data which attached to specific rules and it does 
+- **Consistency** refers to the state of data which attached to specific rules and it does 
 not violates these last.
 
-**Integrity** correctness and completness of the data set 
+- **Integrity** correctness and completness of the data set 
 
-**Redundancy** multiple occurrences of data. It can be harmful, but also necessary in some 
+- **Redundancy** multiple occurrences of data. It can be harmful, but also necessary in some 
 situtations.
 
-**Persistency** data is available and not erased after the server is down 
+- **Persistency** data is available and not erased after the server is down 
 
-**Error Recovery** self explanatory
-
+- **Error Recovery** self explanatory
 
 --- 
 
 ## SQL Basics
+
 - `SELECT` retrieves data from a table
 - `FROM` specifies the table
 - `WHERE` filters rows
@@ -53,37 +57,36 @@ situtations.
 - `LIMIT` restricts number of rows
 
 Example:
+
 ```sql
-SELECT name, age 
-FROM users 
-WHERE age > 18 
-ORDER BY age DESC 
-LIMIT 5;
+SELECT name, age FROM users WHERE age > 18 ORDER BY age DESC LIMIT 5;
 ````
 
 ---
 
 ## Data Types
 
-* **Numeric**:
+- **Numeric**:
 
-  * `INT` – whole numbers
-  * `DECIMAL(p, s)` – fixed-point (precision, scale)
-  * `FLOAT`, `REAL` – approximate values
-* **String**:
+  - `INT` – whole numbers
+  - `DECIMAL(p, s)` – fixed-point (precision, scale)
+  - `FLOAT`, `REAL` – approximate values
 
-  * `CHAR(n)` – fixed length
-  * `VARCHAR(n)` – variable length
-  * `TEXT` – long text
-* **Date/Time**:
+- **String**:
 
-  * `DATE` – YYYY-MM-DD
-  * `TIME` – HH\:MM\:SS
-  * `DATETIME` – YYYY-MM-DD HH\:MM\:SS
-  * `TIMESTAMP` – auto-updated date/time
-* **Boolean**:
+  - `CHAR(n)` – fixed length
+  - `VARCHAR(n)` – variable length
+  - `TEXT` – long text
 
-  * `BOOLEAN` or `TINYINT(1)` (0 = false, 1 = true)
+- **Date/Time**:
+
+  - `DATE` – YYYY-MM-DD
+  - `TIME` – HH\:MM\:SS
+  - `DATETIME` – YYYY-MM-DD HH\:MM\:SS
+  - `TIMESTAMP` – auto-updated date/time
+- **Boolean**:
+
+  - `BOOLEAN` or `TINYINT(1)` (0 = false, 1 = true)
 
 Example:
 
@@ -101,7 +104,7 @@ CREATE TABLE employees (
 
 ## Creating Tables
 
-* Use `CREATE TABLE` to define a new table.
+- Use `CREATE TABLE` to define a new table.
 
 Example:
 
@@ -117,7 +120,7 @@ CREATE TABLE users (
 
 ## Dropping Tables
 
-* `DROP TABLE` deletes a table and all its data.
+- `DROP TABLE` deletes a table and all its data.
 
 Example:
 
@@ -129,9 +132,9 @@ DROP TABLE users;
 
 ## Altering Tables
 
-* Use `ALTER TABLE` to modify an existing table.
-* Add, remove, or rename columns.
-* Add or remove constraints.
+- Use `ALTER TABLE` to modify an existing table.
+- Add, remove, or rename columns.
+- Add or remove constraints.
 
 Examples:
 
@@ -153,9 +156,9 @@ ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE (email);
 
 ## Keys
 
-* **Primary Key**: uniquely identifies each row.
-* **Unique Key**: ensures all values are unique.
-* **Composite Key**: primary key with multiple columns.
+- **Primary Key**: uniquely identifies each row.
+- **Unique Key**: ensures all values are unique.
+- **Composite Key**: primary key with multiple columns.
 
 Example:
 
@@ -171,10 +174,10 @@ CREATE TABLE orders (
 
 ## Constraints
 
-* `NOT NULL` – value cannot be null
-* `UNIQUE` – all values must be different
-* `CHECK` – condition must be met
-* `DEFAULT` – assigns a default value
+- `NOT NULL` – value cannot be null
+- `UNIQUE` – all values must be different
+- `CHECK` – condition must be met
+- `DEFAULT` – assigns a default value
 
 Example:
 
@@ -191,8 +194,8 @@ CREATE TABLE products (
 
 ## Foreign Keys
 
-* Establish relationship between tables.
-* References another table’s primary key.
+- Establish relationship between tables.
+- References another table’s primary key.
 
 Example:
 
@@ -208,7 +211,7 @@ CREATE TABLE orders (
 
 ## Inserting
 
-* Use `INSERT INTO` to add data.
+- Use `INSERT INTO` to add data.
 
 Example:
 
@@ -221,8 +224,8 @@ VALUES (1, 'Alice', 25);
 
 ## Updating
 
-* Use `UPDATE` to modify existing data.
-* Always use `WHERE` to avoid updating all rows.
+- Use `UPDATE` to modify existing data.
+- Always use `WHERE` to avoid updating all rows.
 
 Example:
 
@@ -236,7 +239,7 @@ WHERE id = 1;
 
 ## Deleting
 
-* Use `DELETE` to remove rows.
+- Use `DELETE` to remove rows.
 
 Example:
 
@@ -249,14 +252,14 @@ WHERE age < 18;
 
 ## Functions
 
-* **Aggregate functions**: `COUNT`, `SUM`, `AVG`, `MAX`, `MIN`
-* **String functions**: `UPPER`, `LOWER`, `CONCAT`
-* **Date functions**: `NOW`, `CURDATE`
+- **Aggregate functions**: `COUNT`, `SUM`, `AVG`, `MAX`, `MIN`
+- **String functions**: `UPPER`, `LOWER`, `CONCAT`
+- **Date functions**: `NOW`, `CURDATE`
 
 Example:
 
 ```sql
-SELECT COUNT(*) AS total_users, AVG(age) AS avg_age 
+SELECT COUNT(-) AS total_users, AVG(age) AS avg_age 
 FROM users;
 ```
 
@@ -264,7 +267,7 @@ FROM users;
 
 ## Nested Queries
 
-* Query inside another query.
+- Query inside another query.
 
 Example:
 
@@ -282,7 +285,7 @@ WHERE id IN (
 
 ## Triggers
 
-* Run automatically when an event occurs.
+- Run automatically when an event occurs.
 
 Example:
 
@@ -301,8 +304,8 @@ END;
 
 ## Union
 
-* Combines results of two queries.
-* Removes duplicates (`UNION ALL` keeps them).
+- Combines results of two queries.
+- Removes duplicates (`UNION ALL` keeps them).
 
 Example:
 
@@ -316,10 +319,10 @@ SELECT name FROM suppliers;
 
 ## Joins
 
-* **INNER JOIN**: only matching rows
-* **LEFT JOIN**: all left table + matches
-* **RIGHT JOIN**: all right table + matches
-* **FULL OUTER JOIN**: all rows
+- **INNER JOIN**: only matching rows
+- **LEFT JOIN**: all left table + matches
+- **RIGHT JOIN**: all right table + matches
+- **FULL OUTER JOIN**: all rows
 
 Example:
 
@@ -333,7 +336,7 @@ INNER JOIN orders ON users.id = orders.user_id;
 
 ## On Delete
 
-* Defines what happens when a referenced row is deleted.
+- Defines what happens when a referenced row is deleted.
 
 Example:
 
@@ -349,7 +352,7 @@ CREATE TABLE orders (
 
 ## On Cascade
 
-* Automatically deletes or updates child rows when parent row changes.
+- Automatically deletes or updates child rows when parent row changes.
 
 Example:
 
@@ -365,13 +368,13 @@ CREATE TABLE orders (
 
 ## Transactions
 
-* Used to group multiple SQL statements into a single unit of work.
-* Ensures **atomicity** (all or nothing).
-* Commands:
+- Used to group multiple SQL statements into a single unit of work.
+- Ensures **atomicity** (all or nothing).
+- Commands:
 
-  * `BEGIN` or `START TRANSACTION`: start a transaction
-  * `COMMIT`: save changes
-  * `ROLLBACK`: undo changes
+  - `BEGIN` or `START TRANSACTION`: start a transaction
+  - `COMMIT`: save changes
+  - `ROLLBACK`: undo changes
 
 Example:
 
@@ -400,7 +403,7 @@ CREATE TABLE IF NOT EXISTS maps (
     len INTEGER NOT NULL,
     PRIMARY KEY(id),
     UNIQUE (name),
-    CONSTRAINT valid_area CHECK (wid * len <= 100000),
+    CONSTRAINT valid_area CHECK (wid - len <= 100000),
     CONSTRAINT valid_dimensions CHECK (wid > 0 AND len > 0)
 );
 
@@ -502,3 +505,21 @@ CREATE TRIGGER IF NOT EXISTS check_obstacle_not_location
         SELECT RAISE(ABORT, 'Obstacle coordinates cannot be the same as a location');
 END;
 ```
+
+## Normal Forms 
+
+A **normalized** table are protected from data inconsistencies and make the tables more readable. 
+
+- **I Normal Form:** 
+    - No row order for information.
+    - No Mixing data types in the same column. 
+    - No Tables without a rimary key.
+    - No Repeating groups.
+
+- **II Normal Form:** Each non-key attribute must depend on the entire primary key. Do not add columns which are non-sensical to a table.
+
+- **III Normal Form:** Every attribute in a table should depend on the key, the whole key, and nothing but the key.
+
+- **IV Normal Form:** Multivalued dependencies in a table must be multivalueed dependencies on the key.
+
+- **V Normal Form:** Our table in the forth normal form cannot be describable as the logical result of joining some other tables together 
