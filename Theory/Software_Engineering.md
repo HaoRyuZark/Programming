@@ -584,6 +584,10 @@ Includes inconsistent formatting, lack of error handling, deep nesting, and prem
 
 ## Coding Paradigms
 
+### Procedural 
+
+This paradigm is based on procedures which can undestood as series of instructions. The poster-boy for this paradigm is `C`
+
 ### Object-Oriented Programming (OOP)
 
 A paradigm based on objects that encapsulate data and behavior. Key principles include inheritance, polymorphism, encapsulation, and abstraction.
