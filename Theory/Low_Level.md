@@ -733,6 +733,7 @@ Concurrency and parallelism are two related concepts in computer science that de
 - **Address Space**  is the memory region used by a process.
 
 --- 
+
 ## Threads
 
 Threads are inner entities in a process which can be executed concurrently inside a process. They have their own CPU state and are 

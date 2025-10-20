@@ -262,6 +262,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `yay -S sql-language-server`
 - `yay -S asm-lsp`
 - `rustup component add rust-analyzer`
+- `yay -S tex-fmt`
 
 ---
 
