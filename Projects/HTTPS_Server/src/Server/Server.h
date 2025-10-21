@@ -8,14 +8,14 @@
 
 typedef struct Server {
 
-    int port;
-    int socketfd;
-    int backlog;
-    int interface;
-    int address_family;
-    int domain;
-    int protocol;
-    struct sockaddr_in server_addr;
+    int port;                       // port for the os to refidirect the traffic
+    int socketfd;                   // file descriptor for the socket
+    int backlog;                    // number of simultaneous connnections
+    int interface;                  // this holds the actual IP address for the socket
+    int address_family;             // socket address family 
+    int domain;                     // communication domain, version of IP
+    int protocol;                   // Data transfer protocol
+    struct sockaddr_in server_addr; // Describes an IPv4 Internet domain socket address
 
     int (*run_func)(); 
 

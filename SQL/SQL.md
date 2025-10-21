@@ -24,7 +24,7 @@ Other parts:
 
 ## Definitions
 
-- **Date** is sequence of characters and symbols. 
+- **Data** is sequence of characters and symbols. 
 
 - **Information** is given by data 
 when meaning can be given to it. 
@@ -50,14 +50,15 @@ situtations.
 
 ## ANSI/SPARC Architecture 
 
-- **Extern:** Individual user perspectives, interfaces, reports.
+- **External Level:** It defines how the users interact with the database via APIS, etc.
 
 - **Conceptual Level:** Complete and redundancy free representation of all information. ER-Models and database 
-schema with data and relations.
+schema with data and relations. It is the abstract representation.
 
-- **Internal/Physical Level:** Physical components of the database, the computer.
+- **Internal/Physical Level:** Physical components of the database, the computer. In general all the technical aspects of the 
+database system.
 
-This architecture is brings us the following advantages: 
+This architecture brings us the following advantages: 
 
 - **Logical Data-Independence:** Changes at the conceptual level do not affect the external level. 
 
