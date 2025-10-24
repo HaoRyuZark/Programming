@@ -363,7 +363,9 @@ what do we want to accomplish, which obstacles have been encountered. It is basi
 what was good and what was bad, etc. The goal is that in the next Sprint Backlog the problems will be partially or completely solved. It 
 is also a moment to evaluate the tools, practices, etc.
 
-### Kanban
+--- 
+
+## Kanban
 
 Another methodology from Japan. Principles:
 
@@ -459,6 +461,8 @@ the necessary adjustments.
 **Use the Horizon**: When trying to solve a problem, do not just focus on the problem itself and think about solving it mechanically. Instead, look at the bigger picture, 
 consider the context, ask how does this problem relate to other problems, and how does it fit into the overall system or project, which techniques or tools can be used to solve it, etc.
 
+--- 
+
 ## Responsibility for One's Craft
 
 ### Dunning-Kruger Effect
@@ -502,49 +506,6 @@ Subjective and harder to quantify, yet critical for long-term success:
 -   Scalability potential
 
 A good quality management approach balances both measurable and non-measurable aspects, using metrics where possible while relying on experience and best practices otherwise.
-
----
-
-## Test Driven Development (TDD)
-
-A practice where tests are written before the code. The cycle follows:
-
-1. **Red** – Write a failing test.
-2. **Green** – Write the minimum code to pass the test.
-3. **Refactor** – Improve the code while ensuring the test still passes.
-
-### Unit Testing
-
-Tests individual components (usually functions or classes) in isolation. Fast and localized, it's the foundation of a reliable test suite.
-
-### Integration Testing
-
-Verifies that multiple components work together as expected. For example, testing interactions between a database and an API layer.
-
-### End-to-End (E2E) Testing
-
-Simulates real user scenarios through the full stack, testing the system from start to finish. Useful for detecting issues in user flows.
-
-### Smoke Testing
-
-A basic test suite run to check whether the major functions of an application work after a build or deployment. Often called “build verification tests.”
-
-### Regression Testing
-
-Ensures that recent changes haven’t broken existing functionality. It helps prevent reintroducing old bugs.
-
-### Acceptance Testing
-
-Tests whether the system meets business requirements. Often done by QA or stakeholders using user stories or criteria.
-
-### Given-When-Then Naming Convention
-
-A part variant of the Test-Driven Development approach is the Behavior-Driven Development.
-This methodology uses the Given-When-Then format to describe tests such that it tells the expected behavior of the system in a human-readable way.
-
--   **Given**: The initial context or state.
--   **When**: The action or event that occurs.
--   **Then**: The expected outcome or result.
 
 ---
 
@@ -663,43 +624,29 @@ Establishing and adhering to agreed-upon patterns and naming schemes across a co
 
 The SOLID principles are a set of five object-oriented design principles aimed at making software designs more understandable, flexible, and maintainable. Coined by Robert C. Martin (Uncle Bob), these principles help developers build robust and scalable systems.
 
----
-
-**1. Single Responsibility Principle (SRP)**  
-_“A class should have only one reason to change.”_  
+**1. Single Responsibility Principle (SRP)**  _“A class should have only one reason to change.”_  
 SRP advocates that a class should do one thing and do it well. It should encapsulate only one responsibility or functionality of the software. When a class is responsible for more than one thing, changes to one responsibility can affect the others, increasing the risk of bugs and reducing maintainability.
 
 _Example:_  
 A `UserManager` class should only manage user data and not handle user authentication. Authentication should be a separate responsibility handled by an `Authenticator` class.
 
----
-
-**2. Open/Closed Principle (OCP)**  
-_“Software entities (classes, modules, functions, etc.) should be open for extension but closed for modification.”_  
+**2. Open/Closed Principle (OCP)**  _“Software entities (classes, modules, functions, etc.) should be open for extension but closed for modification.”_  
 This principle encourages designing systems in a way that allows the addition of new functionality without altering existing code. This is often achieved using abstractions such as interfaces or abstract classes.
 
 _Example:_  
 If you have a class that calculates area for shapes, instead of modifying it every time you add a new shape, use a `Shape` interface with an `area()` method and implement it in each shape class (`Circle`, `Rectangle`, etc.).
 
----
-
-**3. Liskov Substitution Principle (LSP)**  
-_“Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.”_  
+**3. Liskov Substitution Principle (LSP)**  _“Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.”_  
 LSP ensures that derived classes extend the base classes without changing their behavior. Subclasses must adhere to the expectations set by the parent class.
 
 _Example:_  
 If `Bird` has a method `fly()`, then a `Penguin` class extending `Bird` violates LSP because penguins can’t fly. In such cases, hierarchy needs to be rethought, possibly introducing a `FlightlessBird` subclass.
 
----
-
-**4. Interface Segregation Principle (ISP)**  
-_“Clients should not be forced to depend upon interfaces they do not use.”_  
+**4. Interface Segregation Principle (ISP)**  _“Clients should not be forced to depend upon interfaces they do not use.”_  
 This principle promotes creating smaller, more specific interfaces rather than a large, all-encompassing one. It helps avoid forcing classes to implement methods that are not relevant to them.
 
 _Example:_  
 Instead of a single `IMachine` interface with `print()`, `scan()`, and `fax()` methods, create separate interfaces like `IPrinter`, `IScanner`, and `IFaxMachine`. This way, a `Printer` class only implements `IPrinter`.
-
----
 
 **5. Dependency Inversion Principle (DIP)**  
 _“High-level modules should not depend on low-level modules. Both should depend on abstractions.”_  
@@ -711,24 +658,7 @@ A `PaymentProcessor` should not directly instantiate a `StripePaymentService`. I
 
 ---
 
-## DevOps
-
-Is a set of practices, tools, and a cultural philosophy that automate and integrate the processes between 
-software development and IT operations teams.
-
-### Phases and Tools 
-
-- **Plan:** Jira, Common Sense
-- **Code:** Git, GitHub, Nvim
-- **Build:** Maven, Make, Cargo
-- **Test:** Azure. (Quality Assurance, not code tests)  
-- **Release:** Jenkins 
-- **Deploy:**  Docker, Nix, Kubernetes
-- **Operate:** CHEF, Ansible  
-- **Monitor:** Grafana, Graylog
-
-
-# Design Patterns in Object-Oriented Programming (OOP)
+## Design Patterns in Object-Oriented Programming (OOP)
 
 ### Singleton Pattern
 
@@ -885,13 +815,11 @@ Captures and externalizes an object’s internal state without violating encapsu
 
 --- 
 
-# Common Programming Patterns in LeetCode and How to Approach Them
+## Common Programming Patterns in LeetCode and How to Approach Them
 
 This guide covers major programming patterns frequently used in solving LeetCode problems, including their use cases, examples, and approaches.
 
----
-
-## 1. Backtracking
+### Backtracking
 
 **Use Cases:**
 
@@ -913,9 +841,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 3. Use backtracking to undo previous choices.
 4. Prune invalid paths early for efficiency.
 
----
-
-## 2. Two Pointers
+### Two Pointers
 
 **Use Cases:**
 
@@ -934,9 +860,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 2. Move pointers based on the condition.
 3. Commonly used for sorted arrays.
 
----
-
-## 3. Sliding Window
+### Sliding Window
 
 **Use Cases:**
 
@@ -955,9 +879,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 2. Expand/shrink the window based on constraints.
 3. Track max/min/required values within the window.
 
----
-
-## 4. Dynamic Programming (DP)
+### Dynamic Programming (DP)
 
 **Use Cases:**
 
@@ -978,9 +900,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 3. Create recurrence relations.
 4. Optimize using memoization or tabulation.
 
----
-
-## 5. BFS & DFS
+### BFS & DFS
 
 **Use Cases:**
 
@@ -998,9 +918,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 * **DFS:** Recursively or using stack; explore as deep as possible.
 * **BFS:** Use queue; explore level by level.
 
----
-
-## 6. Binary Search
+### Binary Search
 
 **Use Cases:**
 
@@ -1019,9 +937,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 2. Use mid = low + (high - low) / 2.
 3. Adjust bounds based on condition.
 
----
-
-## 7. Priority Queues
+### Priority Queues
 
 **Use Cases:**
 
@@ -1039,9 +955,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 1. Use `heapq` in Python or `PriorityQueue` in Java.
 2. Define custom comparator if needed.
 
----
-
-## 8. Trie
+### Trie
 
 **Use Cases:**
 
@@ -1060,9 +974,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 2. Build Trie for dictionary.
 3. Use it for efficient prefix queries.
 
----
-
-## 9. Greedy
+### Greedy
 
 **Use Cases:**
 
@@ -1082,9 +994,8 @@ This guide covers major programming patterns frequently used in solving LeetCode
 2. Prove or validate it leads to a global optimum.
 3. Sort if necessary to prioritize selection.
 
----
 
-## 10. Sorting
+### Sorting
 
 **Use Cases:**
 
@@ -1103,9 +1014,7 @@ This guide covers major programming patterns frequently used in solving LeetCode
 2. Sort data upfront.
 3. Combine sorted results as needed.
 
----
-
-## 11. Pattern Matching
+### Pattern Matching
 
 **Use Cases:**
 
@@ -1125,21 +1034,35 @@ This guide covers major programming patterns frequently used in solving LeetCode
 
 ---
 
-## Notes
-
-* These patterns often overlap.
-* Combine multiple patterns to solve complex problems.
-* Practice recognizing which pattern applies based on constraints and input size.
-
----
-
 ## Continuous Integration (CI)
 
-Continuous Integration (CI) is a software development practice where developers frequently merge their code changes into a shared repository, often multiple times a day. Each merge triggers an automated build and test process to detect integration issues early, ensuring faster feedback and higher software quality.
+Continuous Integration (CI) is a software development practice where developers frequently merge their code changes into a shared repository, often multiple times a day. Each merge triggers an automated build and test process to detect integration issues early, ensuring faster feedback and 
+higher software quality. 
 
----
+Goals:
 
-### 🔑 Key Concepts of CI
+- **Feature Driven Development**
+- **Automatic Tests** 
+- **Availability of demo and test-systems**
+- **Increase of software quality**
+
+
+### Principles 
+
+- **Shared Code Base:** Maintained via a version-control-system.
+
+- **Automatic translation:** Standardized definition of tests, static checks by each integration.
+
+- **Automatic Distribution and Mirrors:** Division of distributions in DEV, TEST and PROD. Changes are tested 
+in the production environment.
+
+- **Frequent Integration:** Reduces the number of errors in the code-base. (Trunk-Based-Development).
+
+- **Continuous Test Development:** For each change in the code, documentation and anaylsis there is a test or check.
+
+- **Documentation:** Makes it easier for anybody to understand the procduct.
+
+### Key Concepts of CI
 
 * **Frequent Commits:** Developers integrate changes into the main branch frequently.
 * **Automated Builds:** Code is compiled, packaged, and validated automatically.
@@ -1147,9 +1070,8 @@ Continuous Integration (CI) is a software development practice where developers 
 * **Early Feedback:** Failures are detected quickly and resolved faster.
 * **Collaboration:** Encourages team-wide ownership of code quality.
 
----
 
-### ⚙️ Phases of CI
+### Phases of CI
 
 1. **Code Commit**
 
@@ -1182,9 +1104,8 @@ Continuous Integration (CI) is a software development practice where developers 
    * Artifacts are deployed to staging/test environments for validation.
    * If extended to **Continuous Deployment (CD)**, production deployment can be automated.
 
----
 
-### 🎯 Functions of CI
+### Functions of CI
 
 * **Automation of Builds & Tests:** Eliminates manual intervention, reduces errors.
 * **Early Bug Detection:** Prevents accumulation of defects by testing frequently.
@@ -1193,9 +1114,24 @@ Continuous Integration (CI) is a software development practice where developers 
 * **Faster Delivery:** Streamlined pipelines accelerate release cycles.
 * **Collaboration & Transparency:** CI dashboards and logs improve visibility.
 
----
 
-### 🛠️ Popular CI Tools
+### DevOps
+
+Is a set of practices, tools, and a cultural philosophy that automate and integrate the processes between 
+software development and IT operations teams.
+
+#### Phases and Tools 
+
+- **Plan:** Jira, Common Sense
+- **Code:** Git, GitHub, Nvim
+- **Build:** Maven, Make, Cargo
+- **Test:** Azure. (Quality Assurance, not code tests)  
+- **Release:** Jenkins 
+- **Deploy:**  Docker, Nix, Kubernetes
+- **Operate:** CHEF, Ansible  
+- **Monitor:** Grafana, Graylog
+
+### Popular CI Tools
 
 #### 1. **Jenkins**
 
@@ -1233,9 +1169,8 @@ Continuous Integration (CI) is a software development practice where developers 
 * Strong integration with Azure cloud.
 * Multi-language and platform support.
 
----
 
-### 🏗️ Example CI Workflow (Simplified)
+### Example CI Workflow (Simplified)
 
 ```yaml
 # Example GitHub Actions CI Workflow
@@ -1262,9 +1197,7 @@ jobs:
         run: npm test
 ```
 
----
-
-### ✅ Best Practices in CI
+### Best Practices in CI
 
 * Commit small, frequent changes.
 * Keep builds fast and reliable.
@@ -1274,9 +1207,8 @@ jobs:
 * Monitor pipeline health with dashboards.
 * Secure the pipeline (secrets, dependencies, access).
 
----
+### CI vs. CD
 
-### 📌 CI vs. CD
 
 | Aspect         | Continuous Integration (CI) | Continuous Delivery/Deployment (CD) |
 | -------------- | --------------------------- | ----------------------------------- |
@@ -1285,15 +1217,176 @@ jobs:
 | Deployment     | Not always included         | Always included (staging/prod)      |
 | Risk Reduction | Early bug detection         | Minimized release risk              |
 
+
 ---
 
+## Version Control 
 
+Version control refers to the process of keeping track of each change in a code base via a version control system.
+This is accomplished by saving checkpoints for each change and creating different development branches for different versions 
+of the system.
 
+### Central VC
 
+The code base is stored in one computer and each develper access the server to edit the code. 
+Example: Concurrent Versions System.
 
+### Distributed VC 
 
+Each developer acts a as code base. This means that it is not necessary to have one central unit, where every request is handled, instead 
+developer can get specific versions of the code from one another. Example Git.
 
+### Branching 
 
+Branching refers to the process of creating new development branches for different features or versions. There is 
+also a main branch which works as the reference point for the base of multiple products or as the main version 
+of a software.
 
+### Traceability
 
+Degree to which a relationship can be established between to or more products of the development process, especially products 
+having a predecessor-successor or master-subordinate realtionship to one another.
 
+- **Pre-Requirements:** Where do the requirements come from? Who was responsible? Which stakeholder? 
+
+- **Post-Requirements:** Which new requirements do we have? 
+
+### Reasons for VC 
+
+- **Impact Analysis:** Effects of the changes. 
+
+- **Requirements Coverage Analysis:** Which requirements has been covered. 
+
+- **Test Coverage:** How much has been tested. 
+
+- **Reusability**
+
+- **Debugging**
+
+--- 
+
+## Model Control View Architecture
+
+The **Model Control View Architecture** defines the structural and functional design that enables interaction between the user interface, control logic, and underlying model management system. It is organized into modular layers that ensure scalability, maintainability, and real-time responsiveness.
+
+### 1. Architectural Overview
+
+The architecture follows a **three-tier structure**:
+
+1. **Presentation Layer (UI)**
+   Provides the graphical interface through which users interact with the system.
+
+   * Displays model status, configuration panels, and performance metrics.
+   * Supports interactive controls for parameter tuning and monitoring.
+   * Implements real-time updates using WebSocket or streaming APIs.
+
+2. **Control Layer (Logic and Orchestration)**
+   Acts as the intermediary between the UI and backend model services.
+
+   * Handles user commands, input validation, and state synchronization.
+   * Maintains session context and ensures consistent model configurations.
+   * Implements event-driven communication for responsiveness and low latency.
+
+3. **Data and Model Layer (Backend Services)**
+   Manages the actual models, data pipelines, and configuration storage.
+
+   * Provides APIs for model inference, parameter updates, and telemetry data.
+   * Utilizes caching and database systems for fast retrieval and persistence.
+   * Integrates with deployment infrastructure for distributed model execution.
+
+### 2. Core Components
+
+* **Model Controller**
+  Coordinates communication between the user interface and model APIs. Responsible for applying updates to model parameters and retrieving system metrics.
+
+* **Configuration Manager**
+  Handles persistence and versioning of model settings. Enables loading, saving, and restoring of configuration profiles.
+
+* **Telemetry Engine**
+  Collects and streams performance data such as latency, throughput, and token utilization. Supports visualization in the UI dashboard.
+
+* **Access Gateway**
+  Enforces security and role-based permissions for users interacting with model controls.
+
+### 3. Data Flow
+
+1. The user issues a control command (e.g., parameter change) through the interface.
+2. The Control Layer validates the request and dispatches it to the Model Controller.
+3. The Model Controller updates the backend model configuration and logs the event.
+4. Updated performance and configuration data are streamed back to the UI for visualization.
+
+### 4. Design Principles
+
+* **Modularity** – Each component functions independently for ease of maintenance.
+* **Real-Time Feedback** – Low-latency event propagation ensures responsive control.
+* **Security and Traceability** – All operations are authenticated and logged.
+* **Scalability** – Supports multiple concurrent users and models across distributed systems.
+
+--- 
+
+## Object-Relational Mapping (ORM) Architecture
+
+The **Object-Relational Mapping (ORM) Architecture** provides a structured mechanism for bridging the gap between **object-oriented programming models** and **relational database systems**. It allows developers to manipulate database entities using native programming language constructs, abstracting away the complexities of SQL queries and database schemas.
+
+### 1. Architectural Overview
+
+The ORM architecture is typically divided into **four main layers**, each responsible for a specific aspect of data interaction:
+
+1. **Domain Model Layer**
+   Represents business entities as objects (classes) within the application.
+
+   * Encapsulates business logic, relationships, and data validation.
+   * Each class corresponds to a database table, and each object instance maps to a table row.
+
+2. **Mapping Layer**
+   Defines the correspondence between object attributes and database columns.
+
+   * Uses metadata (annotations, XML, or configuration files) to describe how objects relate to tables.
+   * Handles inheritance, relationships (one-to-one, one-to-many, many-to-many), and type conversions.
+
+3. **Persistence Layer**
+   Manages the translation of object operations into SQL commands.
+
+   * Automates CRUD (Create, Read, Update, Delete) operations.
+   * Optimizes query generation and manages transactions and caching.
+   * Ensures synchronization between in-memory objects and persistent data.
+
+4. **Database Layer**
+   Represents the underlying relational database management system (RDBMS).
+
+   * Stores and retrieves data based on SQL commands issued by the persistence layer.
+   * Maintains integrity constraints, indexing, and query optimization.
+
+### 2. Core Components
+
+* **Entity Manager / Session**
+  Acts as the interface for creating, reading, updating, and deleting entities. Manages the lifecycle of persistent objects and their database representations.
+
+* **DAO** 
+  Data Access Objects are the class representations of the different entities inside out database. 
+
+* **Query Builder / ORM Query Language**
+  Provides an abstraction over SQL to allow developers to define queries using object-oriented syntax (e.g., JPQL, HQL, or LINQ).
+
+* **Transaction Manager**
+  Ensures atomic and consistent database operations, supporting rollback and commit mechanisms.
+
+* **Caching Layer**
+  Improves performance by reducing redundant database queries through first-level (session) and second-level (shared) caching.
+
+### 3. Data Flow
+
+1. The application interacts with domain objects rather than writing SQL directly.
+2. The ORM framework translates these object operations into appropriate SQL statements.
+3. The persistence layer executes these statements on the database.
+4. Results are mapped back into objects and returned to the application for further processing.
+
+### 4. Design Principles
+
+* **Abstraction** – Isolates database details from application logic.
+* **Consistency** – Ensures object states remain synchronized with database records.
+* **Portability** – Enables easy migration across different database systems.
+* **Maintainability** – Reduces boilerplate code, improving readability and long-term maintainability.
+* **Performance Optimization** – Leverages lazy loading, caching, and query optimization techniques.
+
+The **Object-Relational Mapping Architecture** streamlines database interactions, allowing developers to focus on business logic rather than SQL syntax. It serves as a crucial architectural component in modern applications that require seamless integration between object-oriented design and relational data storage.
