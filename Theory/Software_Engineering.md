@@ -382,6 +382,155 @@ Another methodology from Japan. Principles:
 Is the process of defining how a software product is going to be, work, what it needs, etc. There are functional requirements which are very specific
 and non-functional which are like 'nice-to-haves'
 
+The goal is to have a specific list of requirements for the software product to be deployed and general organization.
+
+### Principles 
+
+- **Cost Orientation:** The cost of each decision has to be stimated. 
+
+- **Stakeholder:** Each stakeholder has an specific role.
+
+- **Mutual Understanding:** Foraml standardized documentation.
+
+- **Context:** Specific area of use.
+
+- **Problem -> Requirement -> Solution:** Are always handled together.
+
+- **Validation:** Progress can be validated via the requirement list.
+
+- **Evolution:** Continuous updates to the requirement list.
+
+- **Innovation** Intention to improve the product.
+
+- **Systematic Work** Standardized methodology of work.
+
+### Work Products
+
+- Documented interim or final result  
+- From sketch to contractual specification  
+- **Characteristics:** purpose, presentation, scope & lifespan  
+- **Presentation:** natural language; template-based; model-based; other forms, e.g., prototype  
+
+#### Typical Work Products
+
+- Individual requirement, e.g., *User Story*, *Software Requirements Specification (SRS)*  
+- Set of requirements, e.g., use case, graphical models (e.g., UML), interface description, *Epics*, *Product Backlog*, *Story Map*  
+
+#### Level of Detail
+
+- Depends on the purpose  
+- *Note:* A high level of detail is time-consuming & costly  
+
+#### Early Planning & Clarification
+
+- With stakeholders: work products, presentation, levels of detail  
+
+#### Guidelines
+
+- Work product fits the purpose  
+- Completeness & appropriate structure  
+- No redundancies or inconsistencies  
+- Clarity & consistent terminology  
+- Versioning & traceability
+
+### Natural Language Workproducts
+
+#### Advantages
+
+- Expressiveness & flexibility  
+- Direct; no special tools required  
+- Easier for clients or users to understand  
+
+#### Disadvantages
+
+- Ambiguities, omissions, lack of precision, etc.  
+
+#### Recommendations
+
+- Use short and well-structured sentences  
+- Define and consistently use a uniform technical vocabulary  
+- Avoid vague or ambiguous terms and phrases  
+- Be aware of common sources of error, e.g.:
+  - Incompleteness  
+  - Overuse of nouns  
+  - Conditions  
+  - Passive formulations  
+  - Universal quantifiers  
+  - Nominalizations  
+- **Guideline:** *SOPHIST rule set*, based on *Neuro-Linguistic Programming (NLP)*
+
+### Template- and Model-Based Work Products
+
+#### Predefined Structures
+
+- **Sentence template:** syntactic sentence structure, e.g., *User Story*  
+- **Form template:** specific fields, e.g., *Use Case*  
+- **Document template:** structure for a requirements document, e.g., *ISO 29148*  
+
+#### Advantages
+
+- Consistent structure  
+- Support in capturing important information  
+
+#### Disadvantages
+
+- Focus on form instead of content  
+- Other aspects may be overlooked  
+
+#### Model
+
+- Simplified, abstract representation of reality for specific aspects  
+- Often graphical representation  
+
+**Types:**
+
+- Context models  
+- Models for structure & data  
+- Models for function & process  
+- Models for state & behavior  
+
+**Modeling languages:**  
+
+- Use standardized syntax, especially *UML*  
+
+#### Limitations
+
+- Not every relevant piece of information can be expressed  
+
+#### Challenge
+
+- Integrating and maintaining consistency across various models
+
+
+## Requirements Specification & Functional Specification
+
+### Requirements Specification (Lastenheft)
+
+- Defined by the **client**
+- Contains the complete set of **requirements** for the **deliveries and services** of a contractor within a project  
+
+### Functional Specification (Pflichtenheft)
+
+- Developed by the **contractor**
+- Contains **implementation guidelines** based on the client’s Requirements Specification  
+
+### Challenges with the Requirements Specification (Lastenheft)
+
+- Describes requirements from the **client’s perspective** in their **domain-specific language**  
+- Often created by many different stakeholders, e.g.:
+  - Company management  
+  - Business departments  
+  - IT department  
+  - Works or staff council  
+  - Data protection officer  
+  - Equal opportunity officer  
+- “Non-technicians” often struggle to formally specify requirements  
+  - Leads to **implicit assumptions**, **gaps**, **ambiguities**, and **contradictions**  
+- Includes both:
+  - **Functional requirements**
+  - **Non-functional requirements**, **constraints**, **acceptance criteria**, etc.  
+- Often lacks **clear separation** between these categories
+
 --- 
 
 ## Kano Model
