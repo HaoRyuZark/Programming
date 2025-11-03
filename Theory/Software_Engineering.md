@@ -502,19 +502,19 @@ The goal is to have a specific list of requirements for the software product to 
 - Integrating and maintaining consistency across various models
 
 
-## Requirements Specification & Functional Specification
+### Requirements Specification & Functional Specification
 
-### Requirements Specification (Lastenheft)
+#### Requirements Specification (Lastenheft)
 
 - Defined by the **client**
 - Contains the complete set of **requirements** for the **deliveries and services** of a contractor within a project  
 
-### Functional Specification (Pflichtenheft)
+#### Functional Specification (Pflichtenheft)
 
 - Developed by the **contractor**
 - Contains **implementation guidelines** based on the client’s Requirements Specification  
 
-### Challenges with the Requirements Specification (Lastenheft)
+#### Challenges with the Requirements Specification (Lastenheft)
 
 - Describes requirements from the **client’s perspective** in their **domain-specific language**  
 - Often created by many different stakeholders, e.g.:
@@ -530,6 +530,71 @@ The goal is to have a specific list of requirements for the software product to 
   - **Functional requirements**
   - **Non-functional requirements**, **constraints**, **acceptance criteria**, etc.  
 - Often lacks **clear separation** between these categories
+
+### Prototyping
+
+Prototyping is about creating a simplified version of the end product with some of its capabilities. 
+The goal is to create a testable object and once there some form of the end product the requirements can be 
+adjusted.
+
+#### Rapid Prototype 
+
+Type of prototyping in which emphasis is placed on developing
+prototypes early in the development process to permit early feedback and analysis
+in support of the development process.
+
+### Requirement contrats 
+
+- **Identity:** The requirements are identical.
+
+- **Complementarity:** Implementing one requirement leads to (partial) fulfillment of the other requirements.
+
+- **Neutrality:** The implementation of the requirements is independent of each other.
+
+- **Competition:** Both requirements cannot be implemented to the same extent at the same time.
+
+- **Antinomy:** The requirements are mutually exclusive.
+
+### Priorization 
+
+The categories talk by themselves: **must, should, could won't**
+
+### Agile Requirement Engineering 
+
+In this kind of RE the development team is an active participant of the RE team.The most detailed 
+specification of comes very late during the development, and instead the team work with requirements 
+as possible test cases.
+
+### User Stories 
+
+**User Story:** Simple narrative illustrating the user goals that a software function
+will satisfy.
+
+Also, a narrative description of a software requirement, function, feature, or quality
+attribute, presented as a narrative of desired user interactions with a software
+system.
+
+#### Sentence Template 
+
+```txt
+As <Rol> I want <Action>, to <Goal>
+```
+
+#### Acceptance Criteria 
+
+After a user story specific criteria can be specified to make the description 
+of features more precisse. They are not test case specifications.
+
+```txt
+As a customer I want to order a pizza via the mobile app, to be delivered to me
+
+Acceptance criteria:
+
+- The pizza menu has to be displayed 
+- The payment possibilities should be presented to the user 
+- I need a notification that my order was taken
+```
+
 
 --- 
 
@@ -1432,7 +1497,7 @@ The architecture follows a **three-tier structure**:
 2. **Control Layer (Logic and Orchestration)**
    Acts as the intermediary between the UI and backend model services.
 
-   * Handles user commands, input validation, and state synchronization.
+   * Handles user commands, input validation, and state synchronization. In other words it handles the reques flow.
    * Maintains session context and ensures consistent model configurations.
    * Implements event-driven communication for responsiveness and low latency.
 
@@ -1475,7 +1540,9 @@ The architecture follows a **three-tier structure**:
 
 ## Object-Relational Mapping (ORM) Architecture
 
-The **Object-Relational Mapping (ORM) Architecture** provides a structured mechanism for bridging the gap between **object-oriented programming models** and **relational database systems**. It allows developers to manipulate database entities using native programming language constructs, abstracting away the complexities of SQL queries and database schemas.
+The **Object-Relational Mapping (ORM) Architecture** provides a structured mechanism for bridging the gap between **object-oriented programming models** and 
+**relational database systems**. It allows developers to manipulate database entities using native programming language constructs, abstracting away the 
+complexities of SQL queries and database schemas.
 
 ### 1. Architectural Overview
 
@@ -1512,7 +1579,7 @@ The ORM architecture is typically divided into **four main layers**, each respon
   Acts as the interface for creating, reading, updating, and deleting entities. Manages the lifecycle of persistent objects and their database representations.
 
 * **DAO** 
-  Data Access Objects are the class representations of the different entities inside out database. 
+  Data Access Objects are the classes used for exposing an API for interacting with the different entities inside out database. 
 
 * **Query Builder / ORM Query Language**
   Provides an abstraction over SQL to allow developers to define queries using object-oriented syntax (e.g., JPQL, HQL, or LINQ).
