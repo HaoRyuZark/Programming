@@ -5,8 +5,8 @@ import numpy as np
 #  Reading Data
 # ======================
 df = pd.read_csv("data.csv", delimiter="\t")   # Example: reading CSV with tab delimiter
-# df = pd.read_excel("data.xlsx")
-# df = pd.read_json("data.json")
+df = pd.read_excel("data.xlsx")
+df = pd.read_json("data.json")
 
 # Save Data
 df.to_csv("new_file.csv", index=False)
@@ -19,7 +19,7 @@ print(df.head())        # first 5 rows
 print(df.tail(3))       # last 3 rows
 print(df.shape)         # (rows, cols)
 print(df.info())        # dtypes + non-nulls
-print(df.describe())    # summary stats
+print(df.describe())    # summary stats: count, mean, std, min ,max, etc. for each of the columns
 print(df.columns)       # column names
 print(df.index)         # index info
 

@@ -595,6 +595,11 @@ Acceptance criteria:
 - I need a notification that my order was taken
 ```
 
+### Invest Criteria 
+
+Criterial for a good user story.
+
+**Independent, Negotiable, Valuable, Estimable, Small, Testable**
 
 --- 
 

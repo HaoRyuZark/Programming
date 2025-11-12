@@ -9,6 +9,8 @@ if [[ $# -lt 1 ]]; then
 fi
 
 MODE="$1"
+OS="$2"
+
 PATHS=(
   "$HOME/Homo_Deus/Programming"
   "$HOME/Homo_Deus/Mathematica_Compendium"
@@ -23,9 +25,15 @@ if [[ "$MODE" == "push" ]]; then
 
     for path in "${PATHS[@]}"; do
         cd "$path"
+        
         git add .
         git commit -m "$MESSAGE ($DATE)" || echo "Nothing to commit in $path"
-        git push -u origin main
+
+        if [[ "$path" == "$HOME/dotfiles" &&  "$OS" == "fedora" ]]; then  
+            git push -u origin fedora
+        fi
+
+        git push -u origin main  
     done
 
 elif [[ "$MODE" == "pull" ]]; then
