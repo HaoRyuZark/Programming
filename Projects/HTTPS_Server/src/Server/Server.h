@@ -16,7 +16,7 @@ typedef struct Server {
     int domain;                     // communication domain, version of IP
     int protocol;                   // Data transfer protocol
     struct sockaddr_in server_addr; // Describes an IPv4 Internet domain socket address
-
+    
     int (*run_func)(); 
 
 } Server;
