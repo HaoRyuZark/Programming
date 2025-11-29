@@ -66,8 +66,7 @@ typedef struct Node {
 
 } Node;
 
-typedef struct B_Tree {
-    
+typedef struct B_Tree {    
     Node* root;
 } B_Tree;
 

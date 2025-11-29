@@ -14,6 +14,25 @@ for the economic development of software its use and maintenance.
 
 --- 
 
+## Common Phrases 
+
+- **KISS:** Keep It Simple Stupid.
+- **DRY:** Don't Repeat Yourself.
+- **Beware of Premature Optimization:** sometimes the a sulution which is not the most optimal is good enought.
+- **Favor Composition over Inheritance:** Use inheritance as less as possible, favor interfaces and composite objects.
+- **Source Code Conventions:** Code is more often read than written, attach to the conventions and idioms for readability and idioms.
+- **YAGNI:** You Ain't Gonna Need It.
+
+--- 
+
+## Conding Conventions 
+
+Preferred way of writing, documenting, structuring and formating code. 
+
+They are mostly decided by the the team and automated with linter, formatters, etc. 
+
+--- 
+
 ## Life cycle of software
 
 1. Analysis of requirements
@@ -241,6 +260,69 @@ The part on the right is still important, but we left part should be priorized.
 | Fast development of new solution  | Gouverment Projects | 
 | Internal projects | Software requires strict planning |
 | Both the client and the develpers need to communicate together | Only puntual communication |
+
+--- 
+
+## Software Testing 
+
+Procedure of testing the functionality, resiliancy and behavior of software systems. 
+
+- **Error:** different behavior from the expected one. 
+- **Lack:** limitation of the system for a certain situations. 
+
+### Error Propagation
+
+```
+  Error -> Error State -> Failure of the system 
+```
+
+### Software Quality Assurance 
+
+It is divided into the categories: 
+
+- **Constructive:** whose goal is the reduction of errors via
+    - Standards. 
+    - Conventions. 
+    - Rules.
+    - Eucation.
+
+- **Analitical** with the goal of the identification of errors via 
+    - Dynamic tests: White-Black-Box Tests, Simulations, prototypes. 
+    - Static tests: Reviews and statical analysis. 
+
+#### Main Types of Tests 
+
+- **Static Tests:** tests where the systems is not running, based on the analysis of the code, diagrams, etc. 
+- **Dynamic Tests:** the system is running completely or parcially during the test to analyse its behavior via assumptions and validations.
+
+#### Components Test 
+
+A good component is: fast, isolated, testable, reproducible, etc. 
+
+### The AAA-Pattern 
+
+- **Arrange** Prepare the tests and assertions.
+- **Act** Perform the tests.
+- **Assert** Analyse the results.
+
+## Alpha and Beta Tests 
+
+These are system test for all possible environments. 
+
+They consist of a almost complete version of the final product with goal of tesing a real life 
+use case and get feedback from the users to improve the product and fix errors. 
+
+## Cyclic Complexity by McCabe 
+
+This complexity borrowed from the graph theory is given by 
+
+```
+v(G) = e - n + 2 
+```
+
+with e being the number of edges and n the number of nodes. 
+
+It is commonly used to analyse the complexity of controlflow diagrams.
 
 --- 
 
@@ -1611,3 +1693,64 @@ The ORM architecture is typically divided into **four main layers**, each respon
 * **Performance Optimization** – Leverages lazy loading, caching, and query optimization techniques.
 
 The **Object-Relational Mapping Architecture** streamlines database interactions, allowing developers to focus on business logic rather than SQL syntax. It serves as a crucial architectural component in modern applications that require seamless integration between object-oriented design and relational data storage.
+
+--- 
+
+## Software Architecture 
+
+Is the way of describing a solution concept for functional and non-functional requirements. 
+
+It accomplishes the following goals: 
+
+- Concrete high level descriptions of a complex system 
+- Abstraction
+- Organization of resources 
+- Gives context 
+- Orientates the planing 
+
+### Components and End-Points 
+
+- **Components** are individual entities like programs, entire systems or a comglomerate of those. 
+- **End-Points (API)** are the exposed abtracted functionality of the components. 
+--- 
+
+## OOA 
+
+Stands for object oriented analysis. Procedure of analysing a problem and modeling it in terms of classes and objects and finally implementing 
+their relations in those terms or functions, methods, etc.
+
+--- 
+
+## OOD
+
+Stands for object oriented desing. Procedure of implementing, improving and refining the resutls of the OOA and also applying 
+the concept of objects to rest of the development and architectural decisions. 
+
+--- 
+
+## Patterns in Software Engineering 
+
+There are mainly three types of patterns:
+
+- **Architectural Patterns:** Ways of defining a system composed of components and API's 
+
+- **Desing Patterns:** Ways of desining the internals of a system based on the programming paradigma and the relations of the different entities. 
+
+- **Idioms:** Language specific conventions and preferred ways of writing code. It also inlcudes best practices.
+
+--- 
+
+## The Layer Architecture 
+
+Separates each part of the system into independent layers or domains. It can be hard to implement due to the borders between layers being 
+highly subsjective. But it can also be very easy to understand.
+
+--- 
+
+## Technical Debt 
+
+It is a metaphore for the drawbacks of desing or technical choices which if not handled correctly can lead to unmaintainable 
+software and other serious problems.
+
+--- 
+

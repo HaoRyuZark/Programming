@@ -5,7 +5,6 @@
 #define TABLE_SIZE 1000
 #define MAX_KEY_LEN 256
 
-
 /*
  * ===========================
  *          HASHING
