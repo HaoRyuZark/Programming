@@ -1074,6 +1074,68 @@ Encapsulates a request as an object, allowing for parameterization, queuing, log
 - Task queues
 - Undo/redo operations
 
+**Example:**
+
+```java 
+
+interface Command {
+  void execute();
+}
+
+public class TurnOff implements Command {
+  
+  private Bulb receiver;
+
+  public TurnOff(Bulb bulb) {
+    this.receiver = bulb;
+  }
+
+  void execute() {
+    System.out.println("Turning off")
+  }
+}
+
+public class TurnOn implements Command {
+  
+  private Bulb receiver;
+
+  public TurnOn(Bulb bulb) {
+    this.receiver = bulb;
+  }
+
+  void execute() {
+    System.out.println("Turning on")
+  }
+}
+
+public class Bulb {
+  public Bulb(){}
+}
+
+public class RemoteControl {
+
+  public void submit(Command command) {
+    command.execute();
+  }
+
+}
+
+public class Main {
+
+  public static void main(String[] args) {
+      Bulb bulb = new Bulb();
+      
+      Command turnOff = new TurnOff(bulb);
+      Command turnOn = new TurnOn(bulb);
+
+      RemoteControl remoteControl = new RemoteControl();
+
+      remoteControl.submit(turnOn);
+      remoteControl.submit(turnOff);
+  }
+}
+```
+
 ### State Pattern
 
 **Definition:**  
@@ -1084,6 +1146,127 @@ Allows an object to alter its behavior when its internal state changes, appearin
 - Workflow engines
 - Game AI behavior
 
+**Example:**
+
+```java
+
+interface CoffeeMachineState {
+  void insertCoin();
+  void dispendCoffee();  // These are the transistions
+  void selectCoffee();
+}
+
+public class DispensingState implements CoffeeMachineState {
+
+  private CoffeeMachine coffeeMachine;
+  
+  public DispensingState(CoffeeMachine coffeeMachine) {
+    this.coffeeMachine = coffeeMachine
+  }
+
+  @Override
+  public void insertCoin() {
+    System.out.println("Sike");
+  }
+
+  @Override
+  public void dispendCoffee() {
+    System.out.println("Coffe dispensed");
+    coffeeMachine.setState(coffeeMachine.getIdleState());
+  }
+
+  @Override
+  public void selectCoffee() {
+    System.out.println("Sike");
+  }
+}
+
+public class SelectingState implements CoffeeMachineState {
+
+  private CoffeeMachine coffeeMachine;
+  
+  public SelectingState(CoffeeMachine coffeeMachine) {
+    this.coffeeMachine = coffeeMachine
+  }
+ 
+  @Override
+  public void insertCoin() {
+    System.out.println("Sike");
+  }
+
+  @Override
+  public void dispendCoffee() {
+    System.out.println("Sike");
+  }
+
+  @Override
+  public void selectCoffee() {
+    System.out.println("Coffee selected");
+    coffeeMachine.setState(coffeeMachine.getDispensingState());
+  }
+
+}
+
+public class IdleState implements CoffeeMachineState {
+
+  private CoffeeMachine coffeeMachine;
+  
+  public IdleState(CoffeeMachine coffeeMachine) {
+    this.coffeeMachine = coffeeMachine
+  }
+ 
+  @Override
+  public void insertCoin() {
+    System.out.println("Coin inserted");
+    coffeeMachine.setState(coffeeMachine.getSelectingState());
+  }
+
+  @Override
+  public void dispendCoffee() {
+    System.out.println("Sike");
+  }
+
+  @Override
+  public void selectCoffee() {
+    System.out.println("Sike");
+  }
+}
+public class CoffeeMachine {
+ 
+  private CoffeeMachineState idleState;
+  private CoffeeMachineState selectingState;
+  private CoffeeMachineState dispensingState;
+
+  private CoffeeMachineState current;
+  
+  public CoffeeMachine() {
+    
+    idleState = new IdleState(this);
+    selectingState = new SelectingState(this);
+    dispensingState = new DispensingState(this);
+   
+    current = this.idleState;
+  }
+
+  public void setState(CoffeeMachineState state) {
+    current = state;
+  }
+
+  public void insertCoin() {
+    state.insertCoin();
+  }
+
+  public void selectCoffee() {
+    state.selectCoffee();
+  }
+
+  public void dispendCoffee() {
+    state.dispendCoffee();
+  }
+
+}
+
+```
 ### Template Method Pattern
 
 **Definition:**  
@@ -1114,6 +1297,86 @@ Captures and externalizes an object’s internal state without violating encapsu
 - Savepoints in games or editors
 - Snapshotting application states
 
+
+**Example**
+
+```java 
+
+public class Memento {
+
+  private String state;
+
+  public Memento(String state) {
+    this.state = state;
+  }
+
+  public String getState() {
+    return this.state;
+  }
+}
+
+
+public class Caretaker {
+
+  private ArrayList<Memento> mementi;
+
+  public Caretaker() {
+    this.mementi = new ArrayList<>();
+  }
+  
+  public void addMemento(Memento m) {
+    this.mementi.add(m);
+  }
+
+  public Memento getMemento(int index) {
+    return this.mementi.get(index);
+  }
+}
+
+public class TextEditor {
+
+  private StringBuilder text;
+  
+  public TextEditor() {
+    this.text = new StringBuilder();
+  }
+
+  public void append(String text) {
+    text.append(text);
+  }
+
+  public String getContent() {
+    return this.text.toString();
+  }
+
+  public Memento save() {
+    return new Memento(text.toString());
+  }
+
+  public void restore(Memento memento) {
+    text = new StringBuilder(memento.getState());
+  }
+}
+
+public class Main {
+
+  public state void main(String[] args) {
+
+    TextEditor textEditor = new TextEditor();
+    Caretaker caretaker = new Caretaker();
+
+    textEditor.append("Hello");
+    caretaker.addMemento(textEditor.sava());
+
+    textEditor.append("World");
+    caretaker.addMemento(textEditor.sava());
+
+    textEditor.restore(caretaker.getMemento(0));
+    
+    textEditor.restore(caretaker.getMemento(1));
+  }
+}
+```
 --- 
 
 ## Common Programming Patterns in LeetCode and How to Approach Them
