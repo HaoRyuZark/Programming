@@ -1,22 +1,24 @@
 # Databases
 
-A quick reference guide for common SQL commands, concepts and 
+A quick reference guide for common SQL commands, concepts and
 databases in general.
 
 ---
 
-## Database System 
+## Database System
 
-A **databases-system** is made of databases-management-engine and clients which 
+A **databases-system** is made of databases-management-engine and clients which
 make request to this server.
 
-Other parts: 
+Other components:
 
-- **Data Manipulation Language**
+- **Data Manipulation Language:** Way of making requests for specific data.
 
-- **Data Definition Language**
+- **Data Definition Language Compiler:** Like DML for data structures
 
 - **Processing steps for requests**
+
+- **Database Manager:** Coordination unit for the database-system
 
 - **Schema (Metadata)**
 
@@ -24,47 +26,47 @@ Other parts:
 
 ## Definitions
 
-- **Data** is sequence of characters and symbols. 
+- **Data** is sequence of characters and symbols.
 
-- **Information** is given by data 
-when meaning can be given to it. 
+- **Information** is given by data
+when meaning can be given to it.
 
-- **Knowledge** is won by the systematic connection 
-of datapoints, information and the own experience.
+- **Knowledge** is won by the systematic connection
+of data-points, information and the own experience.
 
 - **Relation** refers to the logical connection between data points.
 
-- **Consistency** refers to the state of data which attached to specific rules and it does 
-not violates these last.
+- **Consistency** refers to the state of data which attached to specific rules, and it does
+not do violate these last.
 
-- **Integrity** correctness and completness of the data set 
+- **Integrity** correctness and completeness of the data set
 
-- **Redundancy** multiple occurrences of data. It can be harmful, but also necessary in some 
-situtations.
+- **Redundancy** multiple occurrences of data. It can be harmful, but also necessary in some
+situations.
 
-- **Persistency** data is available and not erased after the server is down 
+- **Persistency** data is available and not erased after the server is down
 
-- **Error Recovery** self explanatory
+- **Error Recovery** self-explanatory
 
---- 
+---
 
-## ANSI/SPARC Architecture 
+## ANSI/SPARC Architecture
 
-- **External Level:** It defines how the users interact with the database via APIS, etc.
+- **External Level:** It defines how the users interact with the database via APIs, etc.
 
-- **Conceptual Level:** Complete and redundancy free representation of all information. ER-Models and database 
+- **Conceptual Level:** Complete and redundancy free representation of all information. ER-Models and database
 schema with data and relations. It is the abstract representation.
 
-- **Internal/Physical Level:** Physical components of the database, the computer. In general all the technical aspects of the 
+- **Internal/Physical Level:** Physical components of the database, the computer. In general all the technical aspects of the
 database system.
 
-This architecture brings us the following advantages: 
+This architecture brings us the following advantages:
 
-- **Logical Data-Independence:** Changes at the conceptual level do not affect the external level. 
+- **Logical Data-Independence:** Changes at the conceptual level do not affect the external level.
 
 - **Physical Data-Independence:** Changes at the internal level do not affect the conceptual or external level.
 
---- 
+---
 
 ## SQL Basics
 
@@ -238,13 +240,12 @@ INSERT INTO users (id, name, age)
 VALUES (1, 'Alice', 25);
 ```
 
-or if you insert a complete row you can just write 
+or if you insert a complete row you can just write
 
 ```sql
 INSERT INTO users
 VALUES (1, 'Alice', 25);
 ```
-
 
 ---
 
@@ -276,20 +277,20 @@ WHERE age < 18;
 
 ---
 
-## Selecting 
+## Selecting
 
 It is used to get specific information from the rows of the table 
 
-```sql 
+```sql
 SELECT * FROM students;
 
 SELECT name, id FROM students WHERE name <> kate LIMIT 2
 ```
 
-The symbol `<>` is for "not equals". As shown, we can keep extending the conditions of the `WHERE` clause to 
+The symbol `<>` is for "not equals". As shown, we can keep extending the conditions of the `WHERE` clause to
 get more specific data.
 
---- 
+---
 
 ## Functions
 
@@ -306,17 +307,17 @@ FROM users;
 SELECT COUNT(sex), sex FROM employee GROUP by sex -- Printing how many males and females
 ```
 
---- 
+---
 
-## Wildcards 
+## Wildcards
 
-To be even more general when looking for specific data we can use a wildcard in the following way 
+To be even more general when looking for specific data we can use a wildcard in the following way
 
 ```sql
 SELECT * FROM clients WHERE client_name LIKE '%school%'
 ```
 
-Here `%` stands for any number of characters and `_` for one character. With this we can create text patterns 
+Here `%` stands for any number of characters and `_` for one character. With this we can create text patterns
 for our engine to search.
 
 ---
@@ -371,13 +372,13 @@ UNION
 SELECT name FROM suppliers;
 ```
 
-The query above will return a leist of all the names from both customers and suppliers.
+The query above will return a list of all the names from both customers and suppliers.
 
 ---
 
 ## Joins
 
-They are used to combine rows from two or more tables based on a related column between them.
+They are used to combining rows from two or more tables based on a related column between them.
 
 - **INNER JOIN**: only matching rows
 - **LEFT JOIN**: all left table + matches
@@ -392,7 +393,7 @@ FROM users
 INNER JOIN orders ON users.id = orders.user_id;
 ```
 
-Anothe example: "Find all branches and the names of their managers"
+Another example: "Find all branches and the names of their managers"
 
 ```sql
 SELECT employee.emp_id, employee.first_name, branch.branch_name 
@@ -460,9 +461,10 @@ COMMIT;
 -- If something goes wrong
 ROLLBACK;
 ```
+
 ---
 
-## Schema Example:
+## Schema Example
 
 ```sql
 
@@ -576,8 +578,7 @@ CREATE TRIGGER IF NOT EXISTS check_obstacle_not_location
 END;
 ```
 
-
-## Example II:
+## Example II
 
 ```sql
 CREATE TABLE employee (
@@ -704,20 +705,387 @@ INSERT INTO works_with VALUES(105, 406, 130000);
 
 ```
 
-## Normal Forms 
+## Model
 
-A **normalized** table are protected from data inconsistencies and make the tables more readable. 
+- **Entity:** Representation of an abstract or concrete object. $E:[e_1, e_2, ..., e_n]$
 
-- **I Normal Form:** 
-    - No row order for information.
-    - No Mixing data types in the same column. 
-    - No Tables without a rimary key.
-    - No Repeating groups.
+- **Relation:** Interaction between entities. $(e, a) | e \in E \land a \in A$
 
-- **II Normal Form:** Each non-key attribute must depend on the entire primary key. Do not add columns which are non-sensical to a table.
+- **Attribute:** Trait of an entity or relation $E:e_1$
 
-- **III Normal Form:** Every attribute in a table should depend on the key, the whole key, and nothing but the key.
+- **Composite Attribute:** An attribute made of more attributes $E:{D}$
 
-- **IV Normal Form:** Multivalued dependencies in a table must be multivalueed dependencies on the key.
+- **Cardinality:** Number of participants in a relation. Must be given in both ways. $1:n$ or $1:1$ etc.,
+There is also the Min-Max notation which is $(min, max)$
 
-- **V Normal Form:** Our table in the forth normal form cannot be describable as the logical result of joining some other tables together 
+## Relations
+
+A **relation** is a set of the Cartesian Product of two sets. It contains ordered pairs $(a,b)$
+
+The Cartesian Product for our entities is defined as
+
+$$
+    S \times T := \bigcup_{(s_1, \dots, s_n) \in S} \left[ \bigcup_{(t_1, \dots, t_k) \in T} \{(s_1, \dots, s_n, t_1, \dots, t_k)\}\right]
+$$
+
+Simplified each element of $S$ is combined with each element of $T$. The size of this
+special product is $ |T \times S| = |S| \cdot |T| $
+
+## Relational Algebra
+
+Relational Algebra is a **formal, procedural query language** for the relational model. It provides a set of **operators** that take relations (tables) as input and produce relations as output. It forms the **theoretical foundation of SQL** and relational database systems.
+
+Throughout this section, we use two example relations to illustrate each concept.
+
+### Example Relations
+
+Let the schemas be:
+
+$$
+A(id, value), \quad B(id, value)
+$$
+
+and the instances:
+
+**Relation A**
+
+| id | value |
+|----|-------|
+| 1  | X     |
+| 2  | Y     |
+
+**Relation B**
+
+| id | value |
+|----|-------|
+| 2  | Y     |
+| 3  | Z     |
+
+---
+
+### 1. Axioms of Relational Algebra
+
+Relational Algebra is based on **set theory** and satisfies the following axioms:
+
+1. **Closure**:  
+   Every operation produces a relation.
+2. **Set Semantics**:  
+   Relations do not contain duplicate tuples.
+3. **Order Irrelevance**:  
+   The order of tuples and attributes does not matter.
+4. **Composability**:  
+   Operations can be nested arbitrarily.
+
+**Example**  
+If $\sigma_{id > 1}(A)$ returns a relation, it can be used as input to another operator such as projection.
+
+---
+
+### 2. Relations
+
+A **relation** is a finite set of tuples over a fixed set of attributes.
+
+Formally:
+
+$$
+R \subseteq D_1 \times D_2 \times \dots \times D_n
+$$
+
+**Example**  
+Relation $A(id, value)$ is a set of tuples:
+
+$$
+A = \{(1, X), (2, Y)\}
+$$
+
+---
+
+### 3. Cartesian Product for Relations
+
+The **Cartesian product** combines every tuple of one relation with every tuple of another.
+
+$$
+A \times B
+$$
+
+**Example**
+
+$$
+A \times B =
+$$
+
+| A.id | A.value | B.id | B.value |
+|-----|---------|------|---------|
+| 1 | X | 2 | Y |
+| 1 | X | 3 | Z |
+| 2 | Y | 2 | Y |
+| 2 | Y | 3 | Z |
+
+---
+
+### 4. Union ($\cup$)
+
+Combines tuples from two relations with the **same schema**.
+
+$$
+A \cup B
+$$
+
+**Example**
+
+$$
+A \cup B = \{(1,X), (2,Y), (3,Z)\}
+$$
+
+---
+
+### 5. Set Difference ($-$)
+
+Returns tuples in one relation but **not** in another.
+
+$$
+A - B
+$$
+
+**Example**
+
+$$
+A - B = \{(1,X)\}
+$$
+
+---
+
+### 6. Intersection ($\cap$)
+
+Returns tuples common to both relations.
+
+$$
+A \cap B
+$$
+
+**Example**
+
+$$
+A \cap B = \{(2,Y)\}
+$$
+
+---
+
+### 7. Symmetric Difference ($\triangle$)
+
+Tuples in either relation but **not in both**.
+
+$$
+A \triangle B = (A - B) \cup (B - A)
+$$
+
+**Example**
+
+$$
+A \triangle B = \{(1,X), (3,Z)\}
+$$
+
+---
+
+### 8. Projection ($\pi$)
+
+Selects specific attributes.
+
+$$
+\pi_{value}(A)
+$$
+
+**Example**
+
+| value |
+|-------|
+| X |
+| Y |
+
+---
+
+### 9. Selection ($\sigma$)
+
+Filters tuples based on a predicate.
+
+$$
+\sigma_{id = 2}(A)
+$$
+
+**Example**
+
+| id | value |
+|----|-------|
+| 2 | Y |
+
+---
+
+### 10. Rename ($\rho$)
+
+Renames relations or attributes.
+
+$$
+\rho_{A'(key, data)}(A)
+$$
+
+**Example**  
+Renames `id` → `key`, `value` → `data`.
+
+---
+
+### 11. Join ($\bowtie$)
+
+A **theta join** combines tuples that satisfy a condition.
+
+$$
+A \bowtie_{A.id = B.id} B
+$$
+
+**Example**
+
+| id | A.value | B.value |
+|----|---------|---------|
+| 2 | Y | Y |
+
+---
+
+### 12. Natural Join
+
+Automatically joins on **attributes with the same name**.
+
+- Natural Join = Cartesian Product + Selection + Projection
+
+$$
+A \bowtie B
+$$
+
+**Example**
+
+| id | value |
+|----|-------|
+| 2 | Y |
+
+---
+
+### 13. Outer Join
+
+Preserves non-matching tuples.
+
+- Left outer join: $A \leftouterjoin B$
+- Right outer join: $A \rightouterjoin B$
+- Full outer join: $A \fullouterjoin B$
+
+**Example (Left Outer Join)**
+
+| id | A.value | B.value |
+|----|---------|---------|
+| 1 | X | NULL |
+| 2 | Y | Y |
+
+---
+
+### 14. Semi Join
+
+Returns tuples from one relation that **have a match** in the other.
+
+$$
+A \ltimes B
+$$
+
+**Example**
+
+| id | value |
+|----|-------|
+| 2 | Y |
+
+---
+
+### 15. Division ($\div$)
+
+Used to express **"for all"** queries.
+
+Let:
+- $R(X, Y)$
+- $S(Y)$
+
+Then:
+
+$$
+R \div S
+$$
+
+**Example Concept**  
+If $A(id, value)$ contains all values in $B(value)$, division returns the corresponding `id`s.
+
+Division is commonly used in queries like:
+> “Find entities related to **all** items in a set.”
+
+### Assigment ($=$)
+
+This is just using to store the result of a relational algebra operation.
+
+## Types of Keys
+
+A **key** is an attribute or combination of attributes (**composite key**) which uniquely identifies an entity.
+
+- **Candidate Key:** The term refers to the attributes which are suited for being the key.
+- **Irreducible:** A key has to be as atomic as possible.
+- **Super key:** It consists of a candidates key's attributes + potentially some extra attributes.
+- **Alternate Key:** This is an alternative primary key. This means that the UNIQUE constraints will be imposed on the attribute/s.
+- **Surrogate Key:** This key has only meaning inside the database. Example: ID → Person's Name.
+- **Foreign Key** This key is an attribute of one table which references another table.
+
+## Relation Schema
+
+The $(\mathcal{R}, \tau)$ represents a **relation schema**. We can constrain our relations to obey certain rules. Thus, limiting our space. Here, $\mathcal{R}$ is the set of all relations of $n$ elements and $\tau$ is a $n$ tuple (attributes).
+
+This is the analog of using `CREATE TABLE` in SQL. We are creating rules for 
+the tuples inside the relation.
+
+## Functional Dependencies
+
+A **functional relation** is dependence between one or more attributes commonly noted `A -> B`.
+
+Formally $a \rightarrow b$ holds:
+
+$$
+    \forall r (\mathcal{R}) \forall d_1, d_2 \in r (d_1[\alpha] = d_2[\alpha] \implies d_1[\beta] = d_2[\beta])
+$$
+
+where $r(\mathcal{R})$ is a relation in the Schema $\mathcal{R}$, $\alpha$
+is a tuple in the schema and $d[\alpha]$ is the tuple without $\alpha$.
+
+## How to find a Candidate Key
+
+Given a set of attributes $\{A,B,C,D,E\}$ with the following functional dependencies
+
+$$
+A \rightarrow B, C \rightarrow B, A \rightarrow D
+$$
+
+To find the candidate
+keys the algorithm goes as follows:
+
+## Normal Forms
+
+A **normalized** table are protected from data inconsistencies and make the tables more readable.
+
+- **I Normal Form:**
+  - No row order for information.
+  - No Mixing data types in the same column.
+  - No Tables without a primary key.
+  - No Repeating groups.
+
+This normal is mostly given in relational algebra problems.
+
+- **II Normal Form:** Each non-key attribute must depend on the entire primary key.
+  - The relation is in the second normal form if it is already in the first normal form and each **non-key** attribute is functionally dependent on the **key-candidate**.
+
+- **III Normal Form:** Every non-key attribute in a table should depend on the key, the whole key, and nothing but the key.
+  - The relation is in the third normal form if it is already in the second normal form and each **non-key** attribute is not dependent on other **non-key** attribute.
+  - **Boyce-Cood III Normal Form:** Every attribute in a table should depend on the key, the whole key, and nothing but the key.
+  
+- **IV Normal Form:** Multivalued dependencies in a table must be multivalued dependencies on the key.
+
+- **V Normal Form:** Our table in the forth normal form cannot be describable as the logical result of joining some other tables
+    together

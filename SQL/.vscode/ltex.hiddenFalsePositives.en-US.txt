@@ -1,0 +1,5 @@
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QNo Repeating groups.\\E$"}
+{"rule":"PRP_JJ","sentence":"^\\QI Normal Form:\nNo row order for information.\\E$"}
+{"rule":"AGREEMENT_SENT_START","sentence":"^\\QRemoves duplicates (\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q keeps them).\\E$"}
+{"rule":"AGREEMENT_SENT_START","sentence":"^\\QCombines results of two queries.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QGiven a set of attributes \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q with the following functional dependencies $A \\rightarrow B, C \\rightarrow B, A \\rightarrow D, $.\\E$"}
