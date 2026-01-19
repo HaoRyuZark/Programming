@@ -1,16 +1,9 @@
 import pandas as pd
 import numpy as np
 
-# ======================
-# In Pandas we work with Series and DataFrames 
-# 
-# Series: are 1D labeled column 
-# DataFrames: Is a grid of labeled columns 
-# ======================
+##################################################################################################
 
-# ======================
-#  Reading Data
-# ======================
+#  READING DATA
 
 # Creating a series
 l = [i for i in range(0, 100)]
@@ -21,59 +14,80 @@ df_1 = pd.DataFrame({"Name": ["A", "B", "X"], "Aman": [1, 2, 3]})
 
 df = pd.read_csv("data.csv", delimiter="\t")   # tab-delimited CSV
 df = pd.read_excel("data.xlsx")
-df = pd.read_json("data.json")
 df = pd.read_parquet("data.parquet")
-df = pd.read_sql("SELECT * FROM table", con=connection)
+df = pd.read_html("https://example.com/table.html")[0]  # first table from webpage
+df = pd.read_html("https://example.com/table.html", match="target") # table containing "target"
+df = pd.read_json("data.json")
+# df = pd.read_sql("SELECT * FROM table", con=connection)
 
 # Save Data
 df.to_csv("new_file.csv", index=False)
 # df.to_excel("new_file.xlsx", index=False)
 
 
-# ======================
-# Inspect Data
-# ======================
+##################################################################################################
 
-print(df.head())        
-print(df.tail(3))        
-print(df.shape)          
-print(df.info())        
-print(df.describe())    
-print(df.columns)       
-print(df.index)         
+# Axis Parameter
+# axis=0 : operate on rows (default)
+# axis=1 : operate on columns
+
+##################################################################################################
+
+# MODIFIYING COLUMNS 
+
+df.columns = [s for s in df.columns.str.strip()]  # remove whitespace from column name
+df.columns = df.columns.str.lower()               # convert column names to lowercase
+df.columns = df.columns.droplevel()               # drop multiindex level from columns
+df = df.locate[:, ~df.columns.str.contains("unnamed", case=False)]  # remove unnamed columns
+df = df.locate[:, ~df.columns.duplicated()]  # remove duplicated columns
+df.rename(columns={"OldName": "NewName"}, inplace=True)  # rename columns
+df["FareBin"] = pd.qcut(df["Fare"], 4, labels=False, duplicates="drop")  # binning into quartiles
+df["AgeGroup"] = pd.cut(df["Age"], bins=[0, 12, 20, 40, 60, 80], labels=["Child", "Teen", "Adult", "Mid-Age", "Senior"])  # custom bins
+
+##################################################################################################
+
+# INSPECT DATA
+
+print(df.head())         # first 5 rows 
+print(df.tail(3))        # last 3 rows
+print(df.shape)          # (rows, columns) 
+print(df.info())         # summary info
+print(df.describe())     # statistical summary
+print(df.columns)        # column names 
+print(df.index)          # index info 
 print(df.sample(5))      # random sample of rows
 print(df.nunique())      # number of unique values per column
 print(df.memory_usage()) # memory usage
 
+##################################################################################################
 
-# ======================
-# Selecting Data
-# ======================
+# SELECTING DATA
 
-print(df["Name"])                   
-print(df[["Name", "Type 1"]])       
-print(df.iloc[0])                   
-print(df.iloc[0, 1])                
-print(df.loc[0, "Name"])            
-print(df[1:4])                      
-print(df.at[0, "Name"])             # fast scalar getter
-print(df.iat[0, 1])                 # fast scalar getter
+print(df["Name"])                  # single column           
+print(df[["Name", "Type 1"]])      # multiple columns
+print(df.iloc[0])                  # first row by position
+print(df.loc[0])                   # first row by label  
+print(df.iloc[0, 1])               # specific cell by position
+print(df.loc[0, "Name"])           # specific cell by label
+print(df[1:4])                     # rows by position slice 
+print(df.at[0, "Name"])            # fast scalar getter
+print(df.iat[0, 1])                # fast scalar getter
 
 
-# ======================
-# Iteration
-# ======================
+##################################################################################################
 
-for index, row in df.iterrows():
+# ITERATION
+
+for index, row in df.iterrows():                        # iterate rows
     print(index, row["Name"], row["Type 1"])
 
-for chunk in pd.read_csv("data.csv", chunksize=1000):
+for chunk in pd.read_csv("data.csv", chunksize=1000):   # iterate in chunks
     print(chunk.shape)
 
 
-# ======================
-# Filtering (Boolean Indexing)
-# ======================
+##################################################################################################
+
+# FILTERING
 
 print(df[df["Type 1"] == "Fire"])
 print(df[df["HP"] > 100])
@@ -87,18 +101,17 @@ print(df[df["Type 2"].notnull()])
 print(df.query("HP > 100 and `Type 1` == 'Fire'"))   # query syntax
 
 
-# ======================
-# Sorting
-# ======================
+##################################################################################################
+
+# SORTING
 
 print(df.sort_values("Name", ascending=True))
-print(df.sort_values(["Type 1", "HP"], ascending=[1, 0]))
+print(df.sort_values(["Primary Type", "HP"], ascending=False))
 print(df.sort_index())   # sort by index
 
+##################################################################################################
 
-# ======================
-# Creating & Modifying Columns
-# ======================
+# ADDING & REMOVING COLUMNS
 
 df["Total Attack"] = df["Attack"] + df["Sp. Atk"]
 df["Total"] = df.iloc[:, 4:10].sum(axis=1)
@@ -119,15 +132,23 @@ del df["Ratio"]
 # Reorder columns
 df = df[["Name", "Primary Type"] + [col for col in df.columns if col not in ["Name", "Primary Type"]]]
 
+##################################################################################################
 
-# ======================
-# GroupBy & Aggregations
-# ======================
+# DELETE ROWS
 
-print(df.groupby("Primary Type").mean(numeric_only=True))
-print(df.groupby("Primary Type")["Name"].count())
+df.drop(index=0)                        # drop by index label
+df.drop("0", axis=0, inplace=True )     # drop by index position
+df.drop(index=df[df["HP"] < 50].index)  # drop
+df = df[df["HP"] >= 50]                      # filter rows
 
-print(df.groupby("Primary Type").agg({
+##################################################################################################
+
+# GROUPBY & AGGREGATIONS
+
+print(df.groupby("Primary Type").mean(numeric_only=True)) # mean stats by Primary Type
+print(df.groupby("Primary Type")["Name"].count()) # count of names by Primary Type
+
+print(df.groupby("Primary Type").agg({ 
     "Attack": ["mean", "max"],
     "Defense": "median"
 }))
@@ -146,10 +167,9 @@ df["Attack_zscore"] = df.groupby("Primary Type")["Attack"].transform(
     lambda s: (s - s.mean()) / s.std()
 )
 
+##################################################################################################
 
-# ======================
-# Conditional Changes
-# ======================
+# CONDITIONAL CHANGES
 
 df["Legendary Label"] = np.where(df["Legendary"], "Legendary", "Normal")
 
@@ -161,14 +181,13 @@ df["Strength"] = df.apply(label, axis=1)
 df.loc[df["Primary Type"] == "🔥 Fire", "Primary Type"] = "Fire"
 df.loc[df["HP"] < 50, "Category"] = "Low HP"
 
+##################################################################################################
 
-# ======================
-# Advanced Cleaning
-# ======================
+# ADVANCED CLEANING
 
-df.dropna()                  
-df.fillna(0)                 
-df.drop_duplicates()         
+df.dropna()                 # drop rows with any NaN 
+df.fillna(0)                # fill NaN with 0
+df.drop_duplicates()        # remove duplicate rows
 
 df["Name"] = df["Name"].str.strip()         # remove whitespace
 df["Name"] = df["Name"].str.lower()         # lowercase
@@ -188,9 +207,9 @@ df["Attack_clipped"] = df["Attack"].clip(lower=0, upper=200)
 df["HP"] = df["HP"].fillna(df["HP"].median())
 
 
-# ======================
-# Data Reshaping (Pivot, Melt, Merge, Join)
-# ======================
+##################################################################################################
+
+# DATA RESHAPING (PIVOT, MELT, MERGE, JOIN)
 
 # Pivot / Unpivot
 pivot = df.pivot_table(values="Attack", index="Primary Type", columns="Legendary", aggfunc="mean")
@@ -203,30 +222,29 @@ df_concat = pd.concat([df, df_1], axis=0, ignore_index=True)
 merged = df.merge(df_1, on="Name", how="left")
 joined = df.join(df_1.set_index("Name"), on="Name", how="inner")
 
+##################################################################################################
 
-# ======================
-# Window Functions
-# ======================
+# WINDOW FUNCTIONS
 
 df["Rolling_Hp"] = df["HP"].rolling(3).mean()
 df["Expanding_Attack"] = df["Attack"].expanding().sum()
 df["Rank"] = df["Attack"].rank()
 
-# ======================
-# Time Series Utilities
-# ======================
+##################################################################################################
+
+# TIME SERIES
 
 # Ensure datetime type
 df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
 
 df = df.set_index("Date")
 df.resample("M").mean()        # monthly resample
-df["DayOfWeek"] = df.index.day_name()
+#df["DayOfWeek"] = df.index.day_name()
 
+##################################################################################################
 
-# ======================
-# Export
-# ======================
+# EXPORTING DATA
+
 df.to_csv("output.csv", index=False)
 df.to_excel("output.xlsx", index=False)
 df.to_json("output.json", orient="records")

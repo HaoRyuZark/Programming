@@ -68,6 +68,14 @@ This architecture brings us the following advantages:
 
 ---
 
+## Anomalies 
+
+- **Delete:** we delete data unintenional when deleting other data
+- **Update:** we create inconsistency accross the data base when updating rows
+- **Insert:** we can not insert rows due to unnecessary dependencies
+
+---
+
 ## SQL Basics
 
 - `SELECT` retrieves data from a table
@@ -462,6 +470,14 @@ COMMIT;
 ROLLBACK;
 ```
 
+### Shared LOCK 
+
+Multiple reads are permitted  
+
+### Exclusion Lock  
+
+Only one write 
+
 ---
 
 ## Schema Example
@@ -718,353 +734,23 @@ INSERT INTO works_with VALUES(105, 406, 130000);
 - **Cardinality:** Number of participants in a relation. Must be given in both ways. $1:n$ or $1:1$ etc.,
 There is also the Min-Max notation which is $(min, max)$
 
-## Relations
-
-A **relation** is a set of the Cartesian Product of two sets. It contains ordered pairs $(a,b)$
-
-The Cartesian Product for our entities is defined as
-
-$$
-    S \times T := \bigcup_{(s_1, \dots, s_n) \in S} \left[ \bigcup_{(t_1, \dots, t_k) \in T} \{(s_1, \dots, s_n, t_1, \dots, t_k)\}\right]
-$$
-
-Simplified each element of $S$ is combined with each element of $T$. The size of this
-special product is $ |T \times S| = |S| \cdot |T| $
-
-## Relational Algebra
-
-Relational Algebra is a **formal, procedural query language** for the relational model. It provides a set of **operators** that take relations (tables) as input and produce relations as output. It forms the **theoretical foundation of SQL** and relational database systems.
-
-Throughout this section, we use two example relations to illustrate each concept.
-
-### Example Relations
-
-Let the schemas be:
-
-$$
-A(id, value), \quad B(id, value)
-$$
-
-and the instances:
-
-**Relation A**
-
-| id | value |
-|----|-------|
-| 1  | X     |
-| 2  | Y     |
-
-**Relation B**
-
-| id | value |
-|----|-------|
-| 2  | Y     |
-| 3  | Z     |
-
----
-
-### 1. Axioms of Relational Algebra
-
-Relational Algebra is based on **set theory** and satisfies the following axioms:
-
-1. **Closure**:  
-   Every operation produces a relation.
-2. **Set Semantics**:  
-   Relations do not contain duplicate tuples.
-3. **Order Irrelevance**:  
-   The order of tuples and attributes does not matter.
-4. **Composability**:  
-   Operations can be nested arbitrarily.
-
-**Example**  
-If $\sigma_{id > 1}(A)$ returns a relation, it can be used as input to another operator such as projection.
-
----
-
-### 2. Relations
-
-A **relation** is a finite set of tuples over a fixed set of attributes.
-
-Formally:
-
-$$
-R \subseteq D_1 \times D_2 \times \dots \times D_n
-$$
-
-**Example**  
-Relation $A(id, value)$ is a set of tuples:
-
-$$
-A = \{(1, X), (2, Y)\}
-$$
-
----
-
-### 3. Cartesian Product for Relations
-
-The **Cartesian product** combines every tuple of one relation with every tuple of another.
-
-$$
-A \times B
-$$
-
-**Example**
-
-$$
-A \times B =
-$$
-
-| A.id | A.value | B.id | B.value |
-|-----|---------|------|---------|
-| 1 | X | 2 | Y |
-| 1 | X | 3 | Z |
-| 2 | Y | 2 | Y |
-| 2 | Y | 3 | Z |
-
----
-
-### 4. Union ($\cup$)
-
-Combines tuples from two relations with the **same schema**.
-
-$$
-A \cup B
-$$
-
-**Example**
-
-$$
-A \cup B = \{(1,X), (2,Y), (3,Z)\}
-$$
-
----
-
-### 5. Set Difference ($-$)
-
-Returns tuples in one relation but **not** in another.
-
-$$
-A - B
-$$
-
-**Example**
-
-$$
-A - B = \{(1,X)\}
-$$
-
----
-
-### 6. Intersection ($\cap$)
-
-Returns tuples common to both relations.
-
-$$
-A \cap B
-$$
-
-**Example**
-
-$$
-A \cap B = \{(2,Y)\}
-$$
-
----
-
-### 7. Symmetric Difference ($\triangle$)
-
-Tuples in either relation but **not in both**.
-
-$$
-A \triangle B = (A - B) \cup (B - A)
-$$
-
-**Example**
-
-$$
-A \triangle B = \{(1,X), (3,Z)\}
-$$
-
----
-
-### 8. Projection ($\pi$)
-
-Selects specific attributes.
-
-$$
-\pi_{value}(A)
-$$
-
-**Example**
-
-| value |
-|-------|
-| X |
-| Y |
-
----
-
-### 9. Selection ($\sigma$)
-
-Filters tuples based on a predicate.
-
-$$
-\sigma_{id = 2}(A)
-$$
-
-**Example**
-
-| id | value |
-|----|-------|
-| 2 | Y |
-
----
-
-### 10. Rename ($\rho$)
-
-Renames relations or attributes.
-
-$$
-\rho_{A'(key, data)}(A)
-$$
-
-**Example**  
-Renames `id` → `key`, `value` → `data`.
-
----
-
-### 11. Join ($\bowtie$)
-
-A **theta join** combines tuples that satisfy a condition.
-
-$$
-A \bowtie_{A.id = B.id} B
-$$
-
-**Example**
-
-| id | A.value | B.value |
-|----|---------|---------|
-| 2 | Y | Y |
-
----
-
-### 12. Natural Join
-
-Automatically joins on **attributes with the same name**.
-
-- Natural Join = Cartesian Product + Selection + Projection
-
-$$
-A \bowtie B
-$$
-
-**Example**
-
-| id | value |
-|----|-------|
-| 2 | Y |
-
----
-
-### 13. Outer Join
-
-Preserves non-matching tuples.
-
-- Left outer join: $A \leftouterjoin B$
-- Right outer join: $A \rightouterjoin B$
-- Full outer join: $A \fullouterjoin B$
-
-**Example (Left Outer Join)**
-
-| id | A.value | B.value |
-|----|---------|---------|
-| 1 | X | NULL |
-| 2 | Y | Y |
-
----
-
-### 14. Semi Join
-
-Returns tuples from one relation that **have a match** in the other.
-
-$$
-A \ltimes B
-$$
-
-**Example**
-
-| id | value |
-|----|-------|
-| 2 | Y |
-
----
-
-### 15. Division ($\div$)
-
-Used to express **"for all"** queries.
-
-Let:
-- $R(X, Y)$
-- $S(Y)$
-
-Then:
-
-$$
-R \div S
-$$
-
-**Example Concept**  
-If $A(id, value)$ contains all values in $B(value)$, division returns the corresponding `id`s.
-
-Division is commonly used in queries like:
-> “Find entities related to **all** items in a set.”
-
-### Assigment ($=$)
-
-This is just using to store the result of a relational algebra operation.
-
 ## Types of Keys
 
 A **key** is an attribute or combination of attributes (**composite key**) which uniquely identifies an entity.
 
 - **Candidate Key:** The term refers to the attributes which are suited for being the key.
+
 - **Irreducible:** A key has to be as atomic as possible.
+
 - **Super key:** It consists of a candidates key's attributes + potentially some extra attributes.
+
 - **Alternate Key:** This is an alternative primary key. This means that the UNIQUE constraints will be imposed on the attribute/s.
+
 - **Surrogate Key:** This key has only meaning inside the database. Example: ID → Person's Name.
+
 - **Foreign Key** This key is an attribute of one table which references another table.
 
-## Relation Schema
-
-The $(\mathcal{R}, \tau)$ represents a **relation schema**. We can constrain our relations to obey certain rules. Thus, limiting our space. Here, $\mathcal{R}$ is the set of all relations of $n$ elements and $\tau$ is a $n$ tuple (attributes).
-
-This is the analog of using `CREATE TABLE` in SQL. We are creating rules for 
-the tuples inside the relation.
-
-## Functional Dependencies
-
-A **functional relation** is dependence between one or more attributes commonly noted `A -> B`.
-
-Formally $a \rightarrow b$ holds:
-
-$$
-    \forall r (\mathcal{R}) \forall d_1, d_2 \in r (d_1[\alpha] = d_2[\alpha] \implies d_1[\beta] = d_2[\beta])
-$$
-
-where $r(\mathcal{R})$ is a relation in the Schema $\mathcal{R}$, $\alpha$
-is a tuple in the schema and $d[\alpha]$ is the tuple without $\alpha$.
-
-## How to find a Candidate Key
-
-Given a set of attributes $\{A,B,C,D,E\}$ with the following functional dependencies
-
-$$
-A \rightarrow B, C \rightarrow B, A \rightarrow D
-$$
-
-To find the candidate
-keys the algorithm goes as follows:
+--- 
 
 ## Normal Forms
 
@@ -1084,8 +770,48 @@ This normal is mostly given in relational algebra problems.
 - **III Normal Form:** Every non-key attribute in a table should depend on the key, the whole key, and nothing but the key.
   - The relation is in the third normal form if it is already in the second normal form and each **non-key** attribute is not dependent on other **non-key** attribute.
   - **Boyce-Cood III Normal Form:** Every attribute in a table should depend on the key, the whole key, and nothing but the key.
-  
+
 - **IV Normal Form:** Multivalued dependencies in a table must be multivalued dependencies on the key.
 
 - **V Normal Form:** Our table in the forth normal form cannot be describable as the logical result of joining some other tables
-    together
+
+--- 
+
+## Practical Use of SQL in Code with Java as Example: 
+
+--- 
+
+## Embeded SQL 
+
+ --- 
+
+## API's
+
+--- 
+
+## ORM, JPA and Hibernate
+
+### JPA
+
+### ORM 
+
+### Static Mapping
+
+### Dynamic Mapping
+
+### Hybernate
+
+### Entity Classes 
+
+### Inheritance Handling
+
+### Foreign Keys 
+
+### Relations
+
+--- 
+
+## NoSQL Databases
+
+
+

@@ -1,28 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import animation
 
-# --------------------------------------------------
+##################################################################################################
+
 # Random Data Setup
-# --------------------------------------------------
+
 X_data = np.random.random(50) * 100
 Y_data = np.random.random(50) * 100
 
-# --------------------------------------------------
+##################################################################################################
+
 # Scatter Plot
 # Customization options: color, marker, size (s), alpha (transparency), cmap (color map)
-# --------------------------------------------------
+
 plt.scatter(X_data, Y_data, color='blue', marker='o', s=50, alpha=0.7)
 plt.title("Scatter Plot Example")
 plt.xlabel("X Axis")
 plt.ylabel("Y Axis")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Line Plot
+
 # Customization options: linestyle ('-', '--', ':'), color, linewidth, marker
-# --------------------------------------------------
+
 years = [200 + i for i in range(50)]
 weights = np.random.random(50) * 50
 
@@ -245,3 +250,227 @@ plt.show()
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(X, Y, Z, cmap='viridis')
+
+##################################################################################################
+
+# Seaborn
+
+import seaborn as sb
+
+# Seaborn provides built in datasets
+print(sb.get_dataset_names())
+
+# Load a built in dataset based on US State car crash percentages
+crash_df = sb.load_dataset('car_crashes')
+
+data = pd.DataFrame(X,Y)
+
+##################################################################################################
+
+# Distribution Plots
+
+# Histogram
+# Customization: bins, kde=boolean, 
+sb.displot(X)
+
+# Joint Plot 
+# Customization: kind='graph type'
+sb.jointplot(x='labelx', y='labely', data=data, kind='hex')
+
+# KDE Plot
+sb.kdeplot(Y)
+
+# Pair Plot plots relationships across the entire data frames numerical values
+sb.pairplot(data)
+
+# Load data on tips
+tips_df = sb.load_dataset('tips')
+
+# With hue you can pass in a categorical column and the charts will be colorized
+# You can use color maps from Matplotlib to define what colors to use
+# sns.pairplot(tips_df, hue='sex', palette='Blues')
+
+# Rug Plot 
+# Single col plot
+sb.rugplot(X)
+
+##################################################################################################
+
+# Styling 
+
+# Style of 
+sb.set_style('white')
+
+# Figure size
+plt.figure(figsize=(8,4))
+
+# Change size of lables, lines and other elements to best fit
+# how you will present your data (paper, talk, poster)
+sb.set_context('paper', font_scale=1.4)
+
+sb.jointplot(x='speeding', y='alcohol', data=data, kind='reg')
+
+# Get rid of spines
+# You can turn of specific spines with right=True, left=True
+# bottom=True, top=True
+sb.despine(left=False, bottom=False)
+
+##################################################################################################
+
+# Categorical Plots 
+
+# Bar Plot 
+
+# Aggregate categorical data based on a function (mean is the default)
+# Estimate total bill amount based on sex
+# With estimator you can define functions to use other than the mean like those
+# provided by NumPy : median, std, var, cov or make your own functions
+sb.barplot(x='sex',y='total_bill',data=tips_df, estimator=np.median)
+
+# Counter Plot
+
+# A count plot is like a bar plot, but the estimator is counting 
+# the number of occurances
+sb.countplot(x='sex',data=tips_df)
+
+# Box Plot
+
+plt.figure(figsize=(14,9))
+sb.set_style('darkgrid')
+
+# A box plot allows you to compare different variables
+# The box shows the quartiles of the data. The bar in the middle is the median and
+# the box extends 1 standard deviation from the median
+# The whiskers extend to all the other data aside from the points that are considered
+# to be outliers
+# Hue can add another category being sex
+# We see men spend way more on Friday versus less than women on Saturday
+sb.boxplot(x='day',y='total_bill',data=tips_df, hue='sex')
+# Moves legend to the best position
+plt.legend(loc=0)
+
+# Strip Plot
+
+plt.figure(figsize=(8,5))
+
+# The strip plot draws a scatter plot representing all data points where one
+# variable is categorical. It is often used to show all observations with 
+# a box plot that represents the average distribution
+# Jitter spreads data points out so that they aren't stacked on top of each other
+# Hue breaks data into men and women
+# Dodge separates the men and women data
+sb.stripplot(x='day',y='total_bill',data=tips_df, jitter=True, 
+              hue='sex', dodge=True)
+
+##################################################################################################
+
+# Pair Grid 
+
+plt.figure(figsize=(8,6))
+sb.set_context('paper', font_scale=1.4)
+
+iris = sb.load_dataset("iris")
+
+# You can create a grid of different plots with complete control over what is displayed
+# Create the empty grid system using the provided data
+# Colorize based on species
+# iris_g = sns.PairGrid(iris, hue="species")
+
+# Put a scatter plot across the upper, lower and diagonal
+# iris_g.map(plt.scatter)
+
+# Put a histogram on the diagonal 
+# iris_g.map_diag(plt.hist)
+# And a scatter plot every place else 
+# iris_g.map_offdiag(plt.scatter)
+
+# Have different plots in upper, lower and diagonal
+# iris_g.map_upper(plt.scatter)
+# iris_g.map_lower(sns.kdeplot)
+
+# You can define define variables for x & y for a custom grid
+iris_g = sb.PairGrid(iris, hue="species",
+                      x_vars=["sepal_length", "sepal_width"],
+                      y_vars=["petal_length", "petal_width"])
+
+iris_g.map(plt.scatter)
+
+# Add a legend last
+iris_g.add_legend()
+
+##################################################################################################
+
+# Matrix Plots 
+
+# Heat maps 
+
+plt.figure(figsize=(8,6))
+sb.set_context('paper', font_scale=1.4)
+
+# To create a heatmap with data you must have data set up as a matrix where variables
+# are on the columns and rows
+
+# Correlation tells you how influential a variable is on the result
+# So we see that n previous accident is heavily correlated with accidents, while the
+# insurance premium is not
+crash_mx = crash_df.corr()
+
+# Create the heatmap, add annotations and a color map
+sb.heatmap(crash_mx, annot=True, cmap='Blues')
+
+plt.figure(figsize=(8,6))
+sb.set_context('paper', font_scale=1.4)
+
+# We can create a matrix with an index of month, columns representing years
+# and the number of passengers for each
+# We see that flights have increased over time and that most people travel in
+# July and August
+flights = sb.load_dataset("flights")
+flights = flights.pivot_table(index='month', columns='year', values='passengers')
+
+# You can separate data with lines
+sb.heatmap(flights, cmap='Blues', linecolor='white', linewidth=1)
+
+# Cluster Map 
+
+# A Cluster map is a hierarchically clustered heatmap
+# The distance between points is calculated, the closest are joined, and this
+# continues for the next closest (It compares columns / rows of the heatmap)
+# This is data on iris flowers with data on petal lengths
+
+plt.figure(figsize=(8,6))
+sb.set_context('paper', font_scale=1.4)
+
+iris = sb.load_dataset("iris")
+# Return values for species
+# species = iris.pop("species")
+# sns.clustermap(iris)
+
+# With our flights data we can see that years have been reoriented to place
+# like data closer together
+# You can see clusters of data for July & August for the years 59 & 60
+# standard_scale normalizes the data to focus on the clustering
+sb.clustermap(flights,cmap="Blues", standard_scale=1)
+
+
+#####################################################################################
+
+# Regression Plots 
+
+# lmplot combines regression plots with facet grid
+tips_df = sb.load_dataset('tips')
+tips_df.head()
+
+plt.figure(figsize=(8,6))
+sb.set_context('paper', font_scale=1.4)
+
+plt.figure(figsize=(8,6))
+
+# We can plot a regression plot studying whether total bill effects the tip
+# hue is used to show separation based off of categorical data
+# We see that males tend to tip slightly more
+# Define different markers for men and women
+# You can effect the scatter plot by passing in a dictionary for styling of markers
+sb.lmplot(x='total_bill', y='tip', hue='sex', data=tips_df, markers=['o', '^'], 
+          scatter_kws={'s': 100, 'linewidth': 0.5, 'edgecolor': 'w'})
+

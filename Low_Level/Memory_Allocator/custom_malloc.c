@@ -127,7 +127,6 @@ void* calloc(size_t nelem, size_t elsize) {
 }
 
 int main () {
-
     return 0;
 }
 

@@ -2,75 +2,33 @@ import numpy as np
 from matplotlib import pyplot as plt
 import math
 
-# Load data
-data = np.loadtxt('https://data.bialonski.de/ml/admission-data.txt', delimiter=',')
-X, y = np.insert(data[:, :2] / 100, 0, 1, 1), (data[:, 2] - .5) * 2
+class Logistic_Regression:
 
-f_1 = X[:,1]
-f_2 = X[:,2]
-plt.scatter(f_1, f_2, c=y, cmap='viridis')
-N = len(X)
-
-def sm(X, w, y):
-    val = 0 
-    for i in range(N):
-        val = val + (y[i] * X[i] * theta_value(X[i], w, y[i]))
-    return val
-
-# Better: rewrite theta to accept y_i as parameter
-def theta_value(x, w, y_i):
-    return -y_i * np.dot(w, x)
+    def __init__(self, n_iters=1000, learning_rate=0.0001):
+        self.n_iters = n_iters
+        self.learning_rate = learning_rate
+        self.weights = None 
+        self.bias = None 
     
+    def theta(self, X):
+        return X.T @ self.weights + self.bias
 
-def sigma(X, w, y):
-    val = np.zeros(3)  # Initialize as vector, not scalar
-    for i in range(N):
-        theta_i = theta_value(X[i], w, y[i])
-        val = val + (y[i] * X[i] * theta_i)
-    return val
+    def sigmoid(self, theta):
+        return 1.0 / (1.0 + np.exp(-theta))
     
-def gradient(w, X, y):
-    return (1/N) * sm(X, w, y)
-
-def E_in(X, w, y):
-    val = 0    
-    for i in range(N):
-        val = val + math.log(1 + np.e**theta_value(X[i], w, y[i]))
-    return (1 / N) * val
-
-T = 100
-eta = 2
-
-def update_weights(w, v_t):
-    return w + (eta * v_t)
-
-def gradient_descent(X, y):
-    w = np.zeros(3)
-    errs = []
-    for i in range(1, T):
-        errs.append(E_in(X, w, y))
+    def fit(self, X, y):
+        n_samples, n_features = X.shape
         
-        g_t = gradient(w, X, y)
-        v_t = -g_t
-        
-        # Normalize v_t
-        v_t_norm = np.linalg.norm(v_t)
-        if v_t_norm > 0:  # Avoid division by zero
-            v_t = v_t / v_t_norm
-        
-        w = update_weights(w, v_t)
-    
-    return (w, errs)
+        for _ in range(self.n_iters):
+            
+            y_pred = self.sigmoid(self.theta(X))
+              
+            dw = (1/n_samples) * (X.T @ (y_pred - y)) # vector
+            db = (1/n_samples) * np.sum((y_pred - y)) # number
 
-# Run gradient descent
-w_final, errors = gradient_descent(X, y)
-print("Final weights:", w_final)
-print("Final error:", errors[-1])
-
-# Plot error over iterations
-plt.figure()
-plt.plot(range(1, T), errors)
-plt.xlabel('Iteration')
-plt.ylabel('E_in')
-plt.title('Training Error')
-plt.show()
+            self.weights = self.weights - (self.learning_rate * dw)
+            self.bias = self.bias - (self.learning_rate * db)
+        
+    def predict(self, X, threshold=0.5):
+        y_pred = self.sigmoid(self.theta(X))
+        return np.array([0 if y <= threshold else 1 for y in y_pred])
