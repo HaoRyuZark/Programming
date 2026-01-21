@@ -73,8 +73,8 @@ In Spring, a **Bean** is an object that is instantiated, assembled, and managed 
 
 ## Common Annotations
 
-- `@Bean` - Declares a Spring Bean which can be injected into other components. Used at method level inside a class with `@Configuration` 
-- `@Component` - Marks a class as a Spring-managed component. Used at class level. 
+- `@Bean` - Declares a Spring Bean which can be injected into other components. Used at method level inside a class with `@Configuration`
+- `@Component` - Marks a class as a Spring-managed component. Used at class level.
 - `@Configuration` - Indicates a class contains Spring Bean definitions
 - `@Service` - Specialization of @Component for service layer classes
 - `@Controller` - Specialization of @Component for web controllers
@@ -119,16 +119,42 @@ In Spring, a **Bean** is an object that is instantiated, assembled, and managed 
 
 Configuration for testing is accomplished using the same properties files, but often with a separate `application-test.properties` or `application-test.yml` file. This allows for different configurations during testing, such as using an in-memory database or different server ports.
 
-You can also use @SpringBootTest with specific properties to override the default configuration for tests.
+Example: 
+
+```yaml
+
+spring:
+    application:
+
+```
+
+You can also use `@SpringBootTest` with specific properties to override the default configuration for tests.
 
 ## Layers in Spring Boot
 
 - **View Layer**: Handles data presentation.
+
 - **Controller Layer**: Handles HTTP requests and responses, maps URLs to methods, and returns views or data.
+
 - **Service Layer**: Contains business logic, processes data, and interacts with repositories.
+
 - **Repository Layer**: Manages data access, interacts with the database, and performs CRUD operations.
+
 - **Model Layer**: Represents the data structure, often using JPA entities or POJOs (Plain Old Java Objects).
+
 - **Configuration Layer**: Contains configuration classes, properties, and beans that define application settings and dependencies.
+
 - **Security Layer**: Manages authentication, authorization, and security configurations.
+
 - **Testing Layer**: Contains test classes and methods for unit and integration testing, often using JUnit and Mockito.
+
 - **Persistence Layer**: Handles database interactions, often using JPA repositories or custom DAO (Data Access Object) implementations.
+
+## Hibernate and JPA
+
+## MVC
+
+## Convention over Configuration
+
+## Spring Security
+

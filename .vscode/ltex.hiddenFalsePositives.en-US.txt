@@ -1,0 +1,1 @@
+{"rule":"MISSING_GENITIVE","sentence":"^\\QRESTful applications use HTTP requests to perform CRUD (Create, Read, Update, Delete) operations on resources, which are identified by URIs (Uniform Resource Identifiers).\\E$"}

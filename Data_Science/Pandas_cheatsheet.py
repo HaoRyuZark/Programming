@@ -27,22 +27,84 @@ df.to_csv("new_file.csv", index=False)
 
 ##################################################################################################
 
+# Data Cleaning 
+
+df = pd.read_csv("data.csv")
+
+# Remove leading/trailing whitespace from column names
+df.columns = df.columns.str.strip()
+
+# Remove unnamed columns
+df = df.locate[:, ~df.columns.str.contains("unnamed", case=False)]
+
+# Remove NaN rows
+df = df.dropna()
+
+# Remove duplicate rows
+df = df.drop_duplicates()
+
+# Remove Column with name "Unwanted"
+df = df.drop(columns=["Unwanted"], errors="ignore")
+
+# Strip 
+
+#df["Last_Name"] = df["Last_Name"].str.lstrip("...")
+#df["Last_Name"] = df["Last_Name"].str.lstrip("/")
+#df["Last_Name"] = df["Last_Name"].str.rstrip("_")
+df["Last_Name"] = df["Last_Name"].str.strip("123._/")
+
+# Formating Phone Numbers 
+
+#df["Phone_Number"] = df["Phone_Number"].str.replace('[^a-zA-Z0-9]','') get rid of invalid characters
+
+#df["Phone_Number"].apply(lambda x: x[0:3] + '-' + x[3:6] + '-' + x[6:10]) formating
+
+#df["Phone_Number"] = df["Phone_Number"].apply(lambda x: str(x)) convert to string
+
+#df["Phone_Number"] = df["Phone_Number"].apply(lambda x: x[0:3] + '-' + x[3:6] + '-' + x[6:10])
+
+df["Phone_Number"] = df["Phone_Number"].str.replace('nan--','')
+df["Phone_Number"] = df["Phone_Number"].str.replace('Na--','')
+
+# There are multiple ways to do data cleaning, this is covers the most common ones.
+ 
+##################################################################################################
+
 # Axis Parameter
 # axis=0 : operate on rows (default)
 # axis=1 : operate on columns
 
 ##################################################################################################
 
+# loc and iloc
+
+# loc[index] returns the entry with the index of 2
+# iloc[index] returns the entry at index 2
+
+# if sort the data the associated indexes ramain the same, thus iloc is like indexing an array and 
+# loc like using the index as id
+
+##################################################################################################
+
 # MODIFIYING COLUMNS 
 
 df.columns = [s for s in df.columns.str.strip()]  # remove whitespace from column name
-df.columns = df.columns.str.lower()               # convert column names to lowercase
+df.columns = df.columns.str.lower()          # type: ignore     # convert column names to lowercase
 df.columns = df.columns.droplevel()               # drop multiindex level from columns
+
 df = df.locate[:, ~df.columns.str.contains("unnamed", case=False)]  # remove unnamed columns
 df = df.locate[:, ~df.columns.duplicated()]  # remove duplicated columns
+
 df.rename(columns={"OldName": "NewName"}, inplace=True)  # rename columns
+
 df["FareBin"] = pd.qcut(df["Fare"], 4, labels=False, duplicates="drop")  # binning into quartiles
 df["AgeGroup"] = pd.cut(df["Age"], bins=[0, 12, 20, 40, 60, 80], labels=["Child", "Teen", "Adult", "Mid-Age", "Senior"])  # custom bins
+
+# split columns 
+df["Stree_Addr"], df["State"], df["Zip"] = df["Address"].str.split(",", 2, expand=True) # split up to two comas. This creates three new columns but the 
+# original is not removed, to do that we have to drop it afterwards
+
+df.reset_index(drop=True) # reset the indexes after droping rows
 
 ##################################################################################################
 
@@ -117,6 +179,7 @@ df["Total Attack"] = df["Attack"] + df["Sp. Atk"]
 df["Total"] = df.iloc[:, 4:10].sum(axis=1)
 df["Name Length"] = df["Name"].apply(len)
 df["Type 1"] = df["Type 1"].replace("Fire", "🔥 Fire")
+
 df = df.rename(columns={"Type 1": "Primary Type"})
 
 # Adding columns with assign()

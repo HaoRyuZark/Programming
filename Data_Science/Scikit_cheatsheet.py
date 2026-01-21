@@ -7,9 +7,12 @@ from sklearn.model_selection import train_test_split
 
 # Regression dataset
 X_reg, y_reg = load_diabetes(return_X_y=True)
+
+# train_test_split accepts our data and labels, test_size= percentage of data for the test data, random_state 
 X_train_reg, X_test_reg, y_train_reg, y_test_reg = train_test_split(X_reg, y_reg, test_size=0.2, random_state=42)
 
 # Classification dataset
+# This function make_classification gives you a data set with samples, features and their respective labels
 X_clf, y_clf = make_classification(n_samples=1000, n_features=20, random_state=42)
 X_train_clf, X_test_clf, y_train_clf, y_test_clf = train_test_split(X_clf, y_clf, test_size=0.2, random_state=42)
 
@@ -30,6 +33,15 @@ preprocessor = ColumnTransformer([
     ("num", StandardScaler(), numeric_features),
     ("cat", OneHotEncoder(handle_unknown="ignore"), categorical_features)
 ])
+
+# Scaling
+# This refers to take a feature and mutipliyin it by some numeric value. 
+# When we add or substract a value we are shifting the distribution either to right or 
+# to the left
+
+scaler = StandardScaler() # use for Z scoring
+scaler.fit_transform(X_train_clf)
+
 
 ##################################################################################################
 

@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <random>
+#include <condition_variable>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -742,6 +743,24 @@ void lambda_expressions() {
 
     int mulResult = multiply(5);
     std::cout << "Result of multiplication: " << mulResult << std::endl;
+
+    // capture block 
+    // this allows us to capture all variables in the scope by value or reference
+
+    int a = 10;
+    int b = 20;
+
+    auto capture_all_by_value = [=]() {
+        return a + b;
+    };
+
+    auto capture_all_by_reference = [&]() {
+        return a + b;
+    };
+
+    std::cout << "Capture all by value: " << capture_all_by_value() << std::endl;
+    std::cout << "Capture all by reference: " << capture_all_by_reference() << std::endl;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -1093,27 +1112,157 @@ void stl_algorithms() {
 
 // Threads 
 
-std::mutex m;
-int global_i = 0;
-std::unique_lock<std::mutex> mutex;
+void simple_thread_example() {
+   
+    auto task = []() {
+        std::cout << "Thread is running." << std::endl;
+    };
 
-void thread_func() {
+    // The thread function can accept the following arguments:
+    //  - A function pointer
+    //  - A lambda expression
+    //  - A functor (an object that overloads the operator()) 
+    std::thread t(task);
+    t.join(); // Wait for the thread to finish
+}
+
+void mutex_example_1() {
+
+    std::mutex mtx;
+    int sharedResource = 0;
+
+    auto task = [&mtx, &sharedResource]() {
+        
+        // lock_guard is a RAII-style mechanism for owning a mutex for the duration of a scoped block
+        std::lock_guard<std::mutex> lock(mtx); // Automatically locks and unlocks the mutex
+        for (int i = 0; i < 1000; ++i) {
+            ++sharedResource;
+        }
+    };
+
+    std::thread t1(task);
+    std::thread t2(task);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "Final value of sharedResource: " << sharedResource << std::endl;
+}
+
+void mutex_example_2() {
+
+    std::mutex mtx;
+    int sharedResource = 0;
+
+    auto task = [&mtx, &sharedResource]() {
+
+        mtx.lock();                         // Alternative way to lock the mutex
+        for (int i = 0; i < 1000; ++i) {
+            ++sharedResource;
+        }
+        mtx.unlock();
+    };
+
+    std::thread t1(task);
+    std::thread t2(task);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "Final value of sharedResource: " << sharedResource << std::endl;
+}
+
+void mutex_example_3() {
     
-    std::cout << "NOTHING" << std::endl;
- 
-    m.lock();
-    global_i++;
-    m.unlock();
+    std::mutex mtx;
+    int sharedResource = 0;
+
+    auto task = [&mtx, &sharedResource]() {
+
+        // try_lock attempts to lock the mutex without blocking
+        if (mtx.try_lock()) {               // Try to lock the mutex without blocking
+            for (int i = 0; i < 1000; ++i) {
+                ++sharedResource;
+            }
+            mtx.unlock();
+        } else {
+            std::cout << "Could not acquire lock." << std::endl;
+        }
+    };
+
+    std::thread t1(task);
+    std::thread t2(task);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "Final value of sharedResource: " << sharedResource << std::endl;
+}
+
+void condition_variable_example() {
+
+    std::mutex mtx;
+    std::condition_variable cv;
+  
+    bool ready = false;
+    int sharedData = 0;
+
+    auto producer = [&]() {
+
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // Simulate work
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            sharedData = 42;
+            ready = true;
+        }
+        cv.notify_one(); // Notify the consumer
+    };
+
+    auto consumer = [&]() {
+       
+        // unique_lock is a more flexible locking mechanism than lock_guard
+        std::unique_lock<std::mutex> lock(mtx);
+
+        cv.wait(lock, [&]() { return ready; }); // Wait until notified and ready is true
+        std::cout << "Consumed data: " << sharedData << std::endl;
+    };
+
+    std::thread prodThread(producer);
+    std::thread consThread(consumer);
+
+    prodThread.join();
+    consThread.join();
+}
+
+// Example of a thread that modifies a variable and returns its value
+void thread_example_with_return_value() {
+
+    auto task = [](int& x) {
+        x += 10;
+    };
+
+    int result = 0;
+    std::thread t(task, std::ref(result)); // Use std::ref to pass by reference
+    t.join();
+    std::cout << "Result from thread: " << result << std::endl;
 
 }
 
-void thread_examples() {
-    
-    std::thread t1(thread_func);
 
-    std::mutex m;
-    
-    t1.join();
+// detached threads
+
+void detached_thread_example() {
+
+    auto task = []() {
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::cout << "Detached thread finished work." << std::endl;
+    };
+
+    std::thread t(task);
+    t.detach(); // Detach the thread to run independently, this means we cannot join it later
+
+    std::cout << "Main thread continues execution." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(3)); // Wait to see detached thread output
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

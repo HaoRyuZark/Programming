@@ -27,6 +27,33 @@ print("Linspace:", arr7)
 
 ##################################################################################################
 
+# Axis 
+
+# Axis is a common parameter of different numpy and pandas features. It is used to 
+# define the axis a function should act onto. For example for a 2d array we have 2 dimension 0 and 1. 
+
+axis_example = np.array([np.arange(3) for _ in range(3)]) # a 3 by 3 matrix with three rows with [1,2,3]
+
+# Mean vector 
+m = np.mean(axis_example, axis=1)
+
+# Sum of the rows
+m = np.mean(axis_example, axis=0)
+
+# Axis  Axis -> 1
+#   |   1   3   4
+#   "   1   1   1 
+#   0   0   2   4
+
+# Axises for 4D array
+
+# axis = 0: act on the 3d arrays
+# axis = 1: act on the 2d arrays in each 3d array
+# axis = 2: act on the rows in each 2d array
+# axis = 3: act on the col in each 2d array
+
+##################################################################################################
+
 # Sorting 
 
 unsorted = np.array([3, 1, 4, 1, 5, 9, 2])
