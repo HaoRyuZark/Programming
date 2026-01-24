@@ -1,4 +1,11 @@
-# Vim Cheatsheets
+# Vim Cheatsheet
+
+## Modes 
+
+- **Normal Mode:** Navigation
+- **Insert Mode:** Modify 
+- **Visual Mode:** Select
+- **Command Mode:** Commands
 
 ## Navigation
 
@@ -178,7 +185,7 @@ Here's a Markdown file that documents **[lazy.nvim](https://github.com/folke/laz
 
 ---
 
-## 📦 Installation
+## Installation
 
 You can install `lazy.nvim` by cloning it into the `~/.config/nvim/lazy` directory or using the following command:
 
@@ -213,11 +220,11 @@ Example structure:
 ~/.config/nvim/
 ├── init.lua
 └── lua/
-    ├── plugins/
-    │   ├── init.lua     <-- calls `lazy.setup()`
-    │   ├── lsp.lua
-    │   ├── treesitter.lua
-    │   └── telescope.lua
+├── plugins/
+│   ├── init.lua     <-- calls `lazy.setup()`
+│   ├── lsp.lua
+│   ├── treesitter.lua
+│   └── telescope.lua
 ```
 
 Each file in `lua/plugins/` returns a plugin spec or a list of specs:
@@ -272,7 +279,7 @@ You can use many triggers to lazy-load plugins:
 
 ---
 
-## 💡 Common Commands
+## Common Commands
 
 Once `lazy.nvim` is set up, use the following commands in Neovim:
 
@@ -289,7 +296,7 @@ Once `lazy.nvim` is set up, use the following commands in Neovim:
 
 ---
 
-## 🔧 Tips
+## Tips
 
 * Use `config = function()` to configure plugins.
 * Use `opts = {}` to pass options directly to plugins that support `opts`.
@@ -298,7 +305,7 @@ Once `lazy.nvim` is set up, use the following commands in Neovim:
 
 ---
 
-## 🧾 Example Plugin Spec
+## Example Plugin Spec
 
 ```lua
 -- lua/plugins/example.lua

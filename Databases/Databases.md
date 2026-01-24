@@ -87,7 +87,17 @@ This architecture brings us the following advantages:
 Example:
 
 ```sql
+
 SELECT name, age FROM users WHERE age > 18 ORDER BY age DESC LIMIT 5;
+
+SELECT name, gdp/population FROM users WHERE gdp >= 10000000;
+
+-- Order by the most recent and by name
+SELECT winner, yr, subject FROM nobel WHERE winner LIKE 'Sir%' ORDER BY yr DESC,  winner
+
+-- Show the 1984 winners and subject ordered by subject and winner name; but list chemistry and physics last.
+SELECT winner, subject FROM nobel WHERE yr = 1984 ORDER BY subject IN ('chemistry','physics'), subject, winner; -- because IN () returns in this case 0 or 1 they go last
+
 ````
 
 ---
@@ -283,7 +293,6 @@ DELETE FROM users
 WHERE age < 18;
 ```
 
----
 
 ## Selecting
 
@@ -298,24 +307,33 @@ SELECT name, id FROM students WHERE name <> kate LIMIT 2
 The symbol `<>` is for "not equals". As shown, we can keep extending the conditions of the `WHERE` clause to
 get more specific data.
 
----
-
 ## Functions
 
 - **Aggregate functions**: `COUNT`, `SUM`, `AVG`, `MAX`, `MIN`
-- **String functions**: `UPPER`, `LOWER`, `CONCAT`
+- **String functions**: `UPPER`, `LOWER`, `CONCAT`, `LEFT`, `RIGHT`
 - **Date functions**: `NOW`, `CURDATE`
+- **Math Functions**: `ROUND`, `FLOOR`, `CEIL`
 
 Example:
 
 ```sql
+
+-- 
 SELECT COUNT(-) AS total_users, AVG(age) AS avg_age 
 FROM users;
 
+-- 
 SELECT COUNT(sex), sex FROM employee GROUP by sex -- Printing how many males and females
-```
 
----
+-- ROUND gdp per capita to the neares 1000
+SELECT name, ROUND(gdp/population, -3) FROM world WHERE gdp >= 1000000000000
+
+-- Just rounding  
+SELECT name, ROUND(population/1000000, 2), ROUND(gdp/1000000000, 2) FROM world WHERE continent='South America'
+
+-- Show the name and the capital where the first letters of each match. Don't include countries where the name and the capital are the same word.
+SELECT name, capital FROM world WHERE name <> capital AND LEFT(name, 1) = LEFT(capital, 1)
+```
 
 ## Wildcards
 
@@ -327,8 +345,6 @@ SELECT * FROM clients WHERE client_name LIKE '%school%'
 
 Here `%` stands for any number of characters and `_` for one character. With this we can create text patterns
 for our engine to search.
-
----
 
 ## Nested Queries
 
@@ -345,8 +361,6 @@ WHERE id IN (
     WHERE product_id = 10
 );
 ```
-
----
 
 ## Triggers
 
@@ -365,7 +379,6 @@ BEGIN
 END;
 ```
 
----
 
 ## Union
 
@@ -411,8 +424,6 @@ branch
 ON employee.emp_id = branch.mgr_id
 ```
 
----
-
 ## On Delete
 
 - Defines what happens when a referenced row is deleted.
@@ -427,8 +438,6 @@ CREATE TABLE orders (
 );
 ```
 
----
-
 ## On Cascade
 
 - Automatically deletes or updates child rows when parent row changes.
@@ -442,8 +451,6 @@ CREATE TABLE orders (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 ```
-
----
 
 ## Transactions
 
@@ -477,8 +484,6 @@ Multiple reads are permitted
 ### Exclusion Lock  
 
 Only one write 
-
----
 
 ## Schema Example
 

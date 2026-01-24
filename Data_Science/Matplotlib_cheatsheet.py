@@ -13,8 +13,22 @@ Y_data = np.random.random(50) * 100
 
 ##################################################################################################
 
+# Figure and Ax
+
+fig, ax = plt.subplots() # fig is the whole and the ax is the axis. you can also do 
+
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3) # one row three columns
+
+fig, axs = plt.subplots(3, 3)
+
+axs[0, 0].scatter() # accessing the first plot
+
+##################################################################################################
+
 # Scatter Plot
+
 # Customization options: color, marker, size (s), alpha (transparency), cmap (color map)
+# needs X and Y
 
 plt.scatter(X_data, Y_data, color='blue', marker='o', s=50, alpha=0.7)
 plt.title("Scatter Plot Example")
@@ -37,10 +51,11 @@ plt.xlabel("Years")
 plt.ylabel("Weights")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Bar Plot
+
 # Customization options: color, width, edgecolor, orientation (barh for horizontal)
-# --------------------------------------------------
 x = ['C++', 'Rust', 'C', 'Py', 'Java', 'Bash']
 y = [20, 30, 40, 10, 30, 5]
 
@@ -48,38 +63,42 @@ plt.bar(x, y, color='green', edgecolor='black')
 plt.title("Bar Chart Example")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Histogram
+
 # Customization options: bins, color, cumulative, density, alpha
-# --------------------------------------------------
 ages = np.random.normal(20, 1.5, 1000)  # mean, standard deviation, samples
 
-plt.hist(ages, bins=20, color='purple', alpha=0.7)
+plt.hist(ages, bins=20, color='purple', alpha=0.7, cumulative=True)
 plt.title("Histogram Example")
 plt.xlabel("Age")
 plt.ylabel("Frequency")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Pie Chart
+
 # Customization options: labels, autopct (percentages), colors, explode
-# --------------------------------------------------
 plt.pie(y, labels=x, autopct='%1.1f%%', startangle=90)
 plt.title("Pie Chart Example")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Boxplot
+
 # Customization options: notch, vert (vertical/horizontal), patch_artist (colors)
-# --------------------------------------------------
 plt.boxplot(ages, notch=True, patch_artist=True)
 plt.title("Boxplot Example")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Legend
 # Customization options: location (loc), fontsize, title, shadow, frameon
-# --------------------------------------------------
+
 plt.plot(years, np.random.random(50)*100, label="Experiment A")
 plt.plot(years, np.random.random(50)*100, label="Experiment B")
 plt.title("Legend Example")
@@ -88,9 +107,10 @@ plt.ylabel("Values")
 plt.legend(loc="upper right", fontsize=10, title="Experiments", shadow=True)
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Multiple Plots with Labels
-# --------------------------------------------------
+
 plt.plot(years, np.random.random(50)*100, label="Line 1")
 plt.plot(years, np.random.random(50)*50, label="Line 2")
 plt.title("Multiple Line Example")
@@ -99,21 +119,24 @@ plt.ylabel("Values")
 plt.legend()
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Plot Styling
+
 # Customization options: plt.style.use("style_name")
 # Common styles: 'seaborn', 'ggplot', 'fivethirtyeight', 'classic'
-# --------------------------------------------------
+
 plt.style.use("seaborn-v0_8")
 plt.plot(years, np.random.random(50)*100, label="Styled Line")
 plt.title("Styled Plot Example")
 plt.legend()
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Multiple Figures
+
 # Each figure can contain its own independent plot
-# --------------------------------------------------
 plt.figure(1)
 plt.plot(years, np.random.random(50)*100, color='blue')
 plt.title("Figure 1")
@@ -123,10 +146,11 @@ plt.bar(x, y, color='orange')
 plt.title("Figure 2")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Subplots
+
 # Customization options: rows, cols, figsize, sharex, sharey
-# --------------------------------------------------
 fig, axs = plt.subplots(2, 2, figsize=(8, 6))
 axs[0, 0].plot(years, np.random.random(50)*100)
 axs[0, 0].set_title("Line Plot")
@@ -143,30 +167,42 @@ axs[1, 1].set_title("Scatter Plot")
 plt.tight_layout()
 plt.show()
 
-# --------------------------------------------------
+# Mosaic
+
+fig, axd = plt.subplot_mosaic([['upleft', 'right'],
+                               ['lowleft', 'right']], layout='constrained')
+axd['upleft'].set_title('upleft')
+axd['lowleft'].set_title('lowleft')
+axd['right'].set_title('right')
+
+##################################################################################################
+
 # Exporting Plots
+
 # Common formats: PNG, JPG, PDF, SVG
 # Options: dpi, bbox_inches
-# --------------------------------------------------
+
 plt.plot(years, weights, label="Export Example")
 plt.title("Exporting Plot Example")
 plt.legend()
 plt.savefig("exported_plot.png", dpi=300, bbox_inches="tight")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # Plot Customization (titles and labels demo)
-# --------------------------------------------------
+
 plt.plot(years, np.random.random(50)*100)
 plt.title("Title Example")
 plt.xlabel("Year")
 plt.ylabel("Dollar")
 plt.show()
 
-# --------------------------------------------------
+##################################################################################################
+
 # 3D Scatter Plot
+
 # Customization options: marker, color, cmap, size (s), alpha
-# --------------------------------------------------
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 x = np.random.random(100)
@@ -179,10 +215,11 @@ ax.set_title("3D Scatter Plot")
 plt.show()
 
 
-# --------------------------------------------------
+##################################################################################################
+
 # 3D Surface Plot
+
 # Customization options: cmap, edgecolor, linewidth, alpha
-# --------------------------------------------------
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
@@ -198,10 +235,11 @@ ax.set_title("3D Surface Plot")
 plt.show()
 
 
-# --------------------------------------------------
+##################################################################################################
+
 # 3D Wireframe Plot
+
 # Customization options: color, linewidth, rstride, cstride
-# --------------------------------------------------
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
@@ -211,10 +249,11 @@ ax.set_title("3D Wireframe Plot")
 plt.show()
 
 
-# --------------------------------------------------
+##################################################################################################
+
 # 3D Contour Plot
+
 # Customization options: levels, cmap, offset, alpha
-# --------------------------------------------------
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
@@ -224,9 +263,10 @@ ax.set_title("3D Contour Plot")
 plt.show()
 
 
-# --------------------------------------------------
+##################################################################################################
+
 # Animating a 2D Line Plot
-# --------------------------------------------------
+
 fig, ax = plt.subplots()
 x = np.linspace(0, 2*np.pi, 200)
 y = np.sin(x)
@@ -234,6 +274,7 @@ line, = ax.plot(x, y)
 
 
 # Animation function
+
 def animate(i):
     line.set_ydata(np.sin(x + i/10.0)) # shift sine wave
     return line,
@@ -244,9 +285,10 @@ plt.title("Animated Sine Wave")
 plt.show()
 
 
-# --------------------------------------------------
+##################################################################################################
+
 # Animating a 3D Rotating Surface
-# --------------------------------------------------
+
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(X, Y, Z, cmap='viridis')
@@ -281,10 +323,13 @@ sb.jointplot(x='labelx', y='labely', data=data, kind='hex')
 sb.kdeplot(Y)
 
 # Pair Plot plots relationships across the entire data frames numerical values
+# Only with numerical data
 sb.pairplot(data)
 
 # Load data on tips
 tips_df = sb.load_dataset('tips')
+
+sb.pairplot(data.select_dtypes(['number']), hue="pclass")
 
 # With hue you can pass in a categorical column and the charts will be colorized
 # You can use color maps from Matplotlib to define what colors to use
@@ -471,6 +516,6 @@ plt.figure(figsize=(8,6))
 # We see that males tend to tip slightly more
 # Define different markers for men and women
 # You can effect the scatter plot by passing in a dictionary for styling of markers
-sb.lmplot(x='total_bill', y='tip', hue='sex', data=tips_df, markers=['o', '^'], 
+sb.lmplot(x='total_bill', y='tip', hue='sex', data=tips_df, 
           scatter_kws={'s': 100, 'linewidth': 0.5, 'edgecolor': 'w'})
 
