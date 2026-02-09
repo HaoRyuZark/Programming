@@ -8,6 +8,7 @@
 #include <random>
 #include <thread>
 #include <vector>
+#include <atomic>
 #include <algorithm>
 #include <numeric>
 #include <cmath>
@@ -21,12 +22,15 @@
 #include <tuple>
 #include <fstream>
 #include <memory>
-#include <span>
 #include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+#include <regex>
 #include <random>
 #include <condition_variable>
+#include <chrono>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,31 +62,55 @@ void basic_cpp() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Memory Management C Style
+// restrict
 
-void memory_management_c_style() {
+void restrict_example() {
+    // 'restrict' is not a standard C++ keyword, but it is used in C99 and some C++ compilers as an extension.
+    // It indicates that a pointer is the only reference to the object it points to, allowing for potential optimizations.
 
-    // Dynamic memory allocation using malloc and free
-    int* arr = (int*)malloc(5 * sizeof(int));
-
-    for (int i = 0; i < 5; ++i) {
-        arr[i] = i * 10;
-    }
-
-    for (int i = 0; i < 5; ++i) {
-        std::cout << "arr[" << i << "] = " << arr[i] << std::endl;
-    }
-
-    int* temp = (int*)realloc(arr, 10 * sizeof(int));
-
-    if (temp != nullptr) {
-        arr = temp;
-        for (int i = 5; i < 10; ++i) {
-            arr[i] = i * 10;
+    // Example usage (compiler-specific):
+    /*
+    void foo(int* __restrict a, int* __restrict b) {
+        for (int i = 0; i < 100; ++i) {
+            a[i] += b[i];
         }
     }
+    */
+}  
 
-    free(arr);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// volatile
+
+void volatile_example() {
+    volatile int flag = 0;
+
+    // In a multi-threaded context, one thread might modify 'flag'
+    // while another thread reads it. The 'volatile' keyword prevents
+    // the compiler from optimizing away repeated reads of 'flag'.
+
+    while (flag == 0) {
+        // Wait for flag to be set by another thread
+    }
+
+    std::cout << "Flag has been set!" << std::endl;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// inline 
+
+inline int add(int a, int b) {
+    return a + b;
+}
+
+
+void inline_example() {
+    // Inline functions suggest to the compiler to insert the function's code directly at the call site
+    // to reduce function call overhead. However, the compiler may ignore this suggestion.
+
+    int result = add(5, 10);
+    std::cout << "Result of addition: " << result << std::endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +146,7 @@ void c_features() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Consts
+// conts
 
 #define PI1 3.14f // c practice
 
@@ -138,7 +166,41 @@ void constants() {
     int const *ptr_a = &a; // pointer to const int
     int* const ptr_b = &b; // unmutable pointer to an int
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Math functions 
+
+void math_functions() {
+
+    double value = 9.0;
+    double sqrtValue = std::sqrt(value);
+    double powValue = std::pow(value, 2);
+    double sinValue = std::sin(value);
+    double logValue = std::log(value);
+
+    std::cout << "Square root of " << value << " is " << sqrtValue << std::endl;
+    std::cout << value << " raised to the power of 2 is " << powValue << std::endl;
+    std::cout << "Sine of " << value << " is " << sinValue << std::endl;
+    std::cout << "Natural logarithm of " << value << " is " << logValue << std::endl;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// noexcept
+
+void noexcept_example() {
+
+    // Function that is guaranteed not to throw exceptions
+    auto safeFunction = []() noexcept {
+        std::cout << "This function will not throw exceptions." << std::endl;
+    };
+
+    safeFunction();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // Initializtion Types 
 
@@ -158,6 +220,7 @@ void initialization_types() {
     // Prevents narrowing conversions
     int arr[] = {1, 2, 3, 4, 5};
     std::vector<int> vec = {6, 7, 8, 9, 10};
+    
     int narrow = {static_cast<int>(3.14)}; // Explicit cast needed
 }
 
@@ -173,7 +236,16 @@ void initialization_types() {
 
 // Structs are similar to classes but default to public access
 struct Structure {
+
+private:
+    int secret = 0;
+
+public: 
+
+    Structure() : data(0) {} // default constructor
+    Structure(int data) : data(data) {} // parameterized constructor
     int data;
+    static int var;
 
     // Unlike in c the struct can have member functions
     void display() {
@@ -181,6 +253,14 @@ struct Structure {
     }
 };
 
+int Structure::var = 10; // static members have to be initialized outside the class. Do not ask
+
+// C++ is allowed to do one implicit conversion like for example Entity a = 22; if Entity has a constructor which accepts an int it 
+// will interpert the line as a call to that constructor. 
+//
+// THIS IS HORRIBLE!!!!!!! NEVER USE THAT!!!!!!!!!!
+//
+// Explicit disables implicit conversion for objects now the constructor has to be called explicitely 
 class Example {
 
     private: // Private section
@@ -189,17 +269,26 @@ class Example {
 
     public: // Public section
 
-        Example() : privateData(0), otherData(0) { // default constructor
+        explicit Example() : privateData(0), otherData(0) { // default constructor
             privateData = 0;
             otherData = 0;
         }
         
         Example (const Example&){} // copy construcor. Is called when =, ()
 
-        Example(int val, int otherVal) : privateData(val), otherData(otherVal) { // contructor supporting uniform initialization
+        explicit Example(int val, int otherVal) : privateData(val), otherData(otherVal) { // contructor supporting uniform initialization
             privateData = val;
             otherData = otherVal;
         }
+
+        Example operator= (const Example& other) { // overloaded assignment operator
+            if (this != &other) { // self-assignment check
+                privateData = other.privateData;
+                otherData = other.otherData;
+            }
+            return *this;
+        }
+
 
         void show() {
             std::cout << "Private Data: " << privateData << std::endl;
@@ -297,6 +386,14 @@ void multiple_inheritance() {
 
 // Copy Constructor and Initialization-types
 
+void copy_constructor_initialization_types() {
+
+    Example original(42, 84); // Parameterized constructor
+    Example copy = original;   // Copy constructor
+
+    copy.show();
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Exception Handling
@@ -362,7 +459,6 @@ void write_files() {
 
 // Abstract Classes and Interfaces
 
-
 class AbstractBase {
     public:
         virtual void pureVirtualFunction() = 0; // Pure virtual function
@@ -383,6 +479,22 @@ void abstract_classes_interfaces() {
     ConcreteDerived obj;
     obj.pureVirtualFunction();
 }
+
+class Interface {
+    public:
+        virtual void interfaceMethod() = 0; // Pure virtual function
+
+        virtual ~Interface() {
+            // Virtual destructor
+        }
+};
+
+class InterfaceImpl : public Interface {
+    public:
+        void interfaceMethod() override {
+            std::cout << "Implementation of interface method in InterfaceImpl." << std::endl;
+        }
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -512,6 +624,9 @@ void smart_pointers() {
 
     std::cout << "Another Unique Pointer Value: " << *anotherUniquePtr << std::endl;
 
+    //make_unique: this returns a unique pointer to a newly created object
+    auto makeUniquePtr = std::make_unique<int>(15);
+
     // Using shared_ptr
     // Multiple shared_ptr can own the same object. Reference counting is used to manage the object's lifetime.
     // Mutable shared ownership
@@ -534,7 +649,132 @@ void smart_pointers() {
     } else {
         std::cout << "Object has been deleted." << std::endl;
     }
+
+    // smart pointer with non primitive types
+    std::shared_ptr<Example> examplePtr = std::make_shared<Example>(50, 100);
+    examplePtr->show();
+
+    std::unique_ptr<std::vector<int>> vecPtr = std::make_unique<std::vector<int>>();
+
 }
+
+void playing_with_strings() {
+    
+    std::array<const char*, 4> arr = {"This", "is", "a", "sentence"};
+
+    auto length = [](char* str){ return strlen(str) + 1; };
+
+    auto reverse = [](char* str){
+        
+        size_t len = strlen(str);
+
+        char* r_str = (char *)malloc(sizeof(char) * len);
+
+        for (int i = 0; i < len; i++) {
+            r_str[i] = str[len - 1 - i];
+        }
+
+        return r_str;
+    };
+ 
+    auto reverse_2 = [](char* str){
+        
+        size_t len = strlen(str);
+
+        std::unique_ptr<char[]> r_v(new char[len]);
+
+        for (int i = 0; i < len; i++) {
+            r_v[i] = str[len - 1 - i];
+        }
+    
+        return r_v;
+    };   
+
+    std::cout << length(const_cast<char*>(arr[0])) << std::endl;
+
+    char* r_str = reverse(const_cast<char*>(arr[0]));
+    std::cout << r_str  << std::endl;
+    free(r_str);
+
+    std::unique_ptr<char[]> r2 = reverse_2(const_cast<char*>(arr[0]));
+    std::cout << r2.get()  << std::endl;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Rule of 5
+
+// When implementing classes that manage resources, consider implementing the following five special 
+// member functions:
+// 1. Destructor
+// 2. Copy Constructor
+// 3. Copy Assignment Operator
+// 4. Move Constructor
+// 5. Move Assignment Operator
+
+class ma_container {
+public:
+    explicit ma_container(int* a,
+                          std::unique_ptr<int> b,
+                          std::shared_ptr<std::vector<int>> c)
+        : int_ptr(a), // just pointer assignment
+          unique_ptr(std::move(b)), // transfer ownership
+          shared_vector_ptr(std::move(c)) {} // shared ownership
+
+    // Copy constructor
+    ma_container(const ma_container& other)
+        : int_ptr(other.int_ptr ? new int(*other.int_ptr) : nullptr), // deep copy of the pointer
+          unique_ptr(other.unique_ptr ? std::make_unique<int>(*other.unique_ptr) : nullptr), // deep copy of unique_ptr
+          shared_vector_ptr(other.shared_vector_ptr) // deep copy of shared_ptr 
+    {}
+    
+    // Assignment operator
+    ma_container& operator=(const ma_container& other) {
+        
+        if (this == &other) return *this; // handling self-assignment
+
+        int* new_int = other.int_ptr ? new int(*other.int_ptr) : nullptr; // deep copy of the pointer
+        auto new_unique = other.unique_ptr ? std::make_unique<int>(*other.unique_ptr) : nullptr; // deep copy of unique_ptr
+
+        int_ptr = new_int; // assign the new deep copied pointer
+        unique_ptr = std::move(new_unique); // assign the new deep copied unique_ptr
+        shared_vector_ptr = other.shared_vector_ptr; // deep copy of shared_ptr
+
+        return *this;
+    }
+    
+    // Move constructor
+    ma_container(ma_container&& other) noexcept 
+        : int_ptr(other.int_ptr), // shallow copy of the pointer
+          unique_ptr(std::move(other.unique_ptr)), // transfer ownership
+          shared_vector_ptr(std::move(other.shared_vector_ptr)) { // transfer ownership
+        other.int_ptr = nullptr;
+    }
+
+    // Move assignment
+    ma_container& operator=(ma_container&& other) noexcept {
+        if (this == &other) return *this;
+
+        delete int_ptr; // free existing resource
+        int_ptr = other.int_ptr; // shallow copy of the pointer
+        unique_ptr = std::move(other.unique_ptr); // transfer ownership
+        shared_vector_ptr = std::move(other.shared_vector_ptr); // transfer ownership
+
+        other.int_ptr = nullptr;
+        return *this;
+    }
+
+    ~ma_container() {
+        delete int_ptr; // free the raw pointer resource other are automatically managed
+    }
+
+private:
+    int* int_ptr;
+    std::unique_ptr<int> unique_ptr;
+    std::shared_ptr<std::vector<int>> shared_vector_ptr;
+};
+
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -618,17 +858,41 @@ void lvalue_reference_example(const int& ref) {
     printf("Printing");
 }
 
+// const allows us to accept both lvalues and rvalues
+void print_string(const std::string& str) {
+    std::cout << str << std::endl;
+}
+
+// accepts only temporary objects. Parameter is an rvalue reference
+void print_string(std::string&& str) {
+    std::cout << str << std::endl;
+}
+
 void call_examples() {
     
+    //rvalue = 10 
+    //lvalue = i
     int i = 10; 
+
     int& ref = i;
     
     lvalue_reference_example(ref);
     
-    const int& ref2 = 10;     
+    // without const we get an error, because 10 is not an lvalue
+    const int& ref2 = 10;  // the reason this works it beacuse the compiler will do something like 
+    // int temp = 10; int& ref2 = temp;
 
     lvalue_reference_example(ref2);
+    
+    std::string str1 = "AHHH";
+    std::string str2 = "AHHH";
+    std::string str = str1 + str2;
+
+    print_string(str); // works without const 
+    print_string(str1 + str2); // does not work without const
 }
+
+
 
 // rvalue references bind only to rvalues and represented as &&
 void rvalue_references_perfect_forwarding() {
@@ -707,11 +971,6 @@ void c_pp_casting() {
     // similars. In cpp this is done is a more standardize way.
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Up and Downcasting  
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Lambda Expressions 
@@ -752,6 +1011,15 @@ void lambda_expressions() {
     std::cout << "Capture all by value: " << capture_all_by_value() << std::endl;
     std::cout << "Capture all by reference: " << capture_all_by_reference() << std::endl;
 
+    // parameterized capture by reference
+    auto capture_by_reference = [&a, &b]() {
+        return a + b;
+    };
+    
+    // parameterized capture by value
+    auto capture_by_value = [a, b]() {
+        return a + b;
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -802,18 +1070,119 @@ void vector_methods() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Deque
+// Double-ended queue
+
+void deque_methods() {
+
+    std::deque<int> numDeque;
+
+    // Adding elements
+    numDeque.push_back(10);
+    numDeque.push_back(20);
+    numDeque.push_front(5);
+
+    // Accessing front and back elements
+    std::cout << "Front element: " << numDeque.front() << std::endl;
+    std::cout << "Back element: " << numDeque.back() << std::endl;
+
+    // Iterating through the deque
+    std::cout << "Deque elements: ";
+    for (const int& num : numDeque) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    // Removing elements
+    numDeque.pop_back();
+    numDeque.pop_front();
+
+    std::cout << "Deque after removals: ";
+    for (const int& num : numDeque) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Queue 
 
+void queue_methods() {
+    std::queue<int> numQueue;
+
+    // Adding elements
+    numQueue.push(10);
+    numQueue.push(20);
+    numQueue.push(30);
+
+    // Accessing front and back elements
+    std::cout << "Front element: " << numQueue.front() << std::endl;
+    std::cout << "Back element: " << numQueue.back() << std::endl;
+
+    // Removing elements
+    numQueue.pop();
+    std::cout << "After pop, front element: " << numQueue.front() << std::endl;
+
+    // Size of the queue
+    std::cout << "Queue size: " << numQueue.size() << std::endl;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Stack 
 
+void stack_methods() {
+    std::stack<int> numStack;
+
+    // Adding elements
+    numStack.push(10);
+    numStack.push(20);
+    numStack.push(30);
+
+    // Accessing top element
+    std::cout << "Top element: " << numStack.top() << std::endl;
+
+    // Removing elements
+    numStack.pop();
+    std::cout << "After pop, top element: " << numStack.top() << std::endl;
+
+    // Size of the stack
+    std::cout << "Stack size: " << numStack.size() << std::endl;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Multimap 
 
+// A multimap is an associative container that contains a sorted list of key-value pairs,
+// where multiple elements can have the same key.
+
+void multimap_methods() {
+    std::multimap<std::string, int> ageMap;
+
+    // Inserting elements
+    ageMap.insert({"Alice", 30});
+    ageMap.insert({"Bob", 25});
+    ageMap.insert({"Alice", 35}); // Duplicate key
+
+    // Accessing elements
+    std::cout << "Ages of Alice:" << std::endl;
+    auto range = ageMap.equal_range("Alice");
+    for (auto it = range.first; it != range.second; ++it) {
+        std::cout << it->second << std::endl;
+    }
+
+    // Iterating through the map
+    std::cout << "Age Map:" << std::endl;
+    for (const auto& pair : ageMap) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+    }
+
+    // Erasing elements with a specific key
+    ageMap.erase("Bob");
+    std::cout << "Bob erased from the map." << std::endl;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -859,11 +1228,58 @@ void unordered_map_methods() {
 
 void map_example() {
 
+    std::map<std::string, int> ageMap;
+
+    // Inserting elements
+    ageMap["Alice"] = 30;
+    ageMap["Bob"] = 25;
+    ageMap["Charlie"] = 35;
+
+    // Accessing elements
+    std::cout << "Alice's age: " << ageMap["Alice"] << std::endl;
+
+    // Iterating through the map
+    std::cout << "Age Map:" << std::endl;
+    for (const auto& pair : ageMap) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+    }
+
+    // Finding an element
+    auto it = ageMap.find("Bob");
+
+    if (it != ageMap.end()) {
+        std::cout << "Bob's age found: " << it->second << std::endl;
+    } else {
+        std::cout << "Bob not found in the map." << std::endl;
+    }
+
+    // Erasing an element
+    ageMap.erase("Charlie");
+    std::cout << "Charlie erased from the map." << std::endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Regex
+
+void regex_examples() {
+    std::string text = "The quick brown fox jumps over the lazy dog.";
+    std::regex vowel_regex("[aeiou]");
+
+    // Find all vowels in the text
+    auto words_begin = std::sregex_iterator(text.begin(), text.end(), vowel_regex);
+    auto words_end = std::sregex_iterator();
+
+    std::cout << "Vowels found: ";
+    for (std::sregex_iterator i = words_begin; i != words_end; ++i) {
+        std::cout << i->str() << " ";
+    }
+    std::cout << std::endl;
+
+    // Replace vowels with '*'
+    std::string replaced_text = std::regex_replace(text, vowel_regex, "*");
+    std::cout << "Text after replacement: " << replaced_text << std::endl;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -941,6 +1357,11 @@ void tuple_examples() {
 
     // Tuple size
     std::cout << "Tuple size: " << std::tuple_size<decltype(myTuple)>::value << std::endl;
+
+    // iterate over tuple
+    std::apply([](auto&&... args) {
+        ((std::cout << args << " "), ...);
+    }, myTuple);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -998,8 +1419,102 @@ void iterator_examples() {
     auto finish = vec.end();
     
     int index = 1;
+   
     // iterator starting from 1  
     auto somewhere = vec.begin() + index;
+
+    // Range 
+    for (int ele: vec) { 
+        std::cout << ele << " ";   
+    }
+
+    // iterating over a map 
+
+}
+
+// Writing Iterators 
+
+class My_Vector {
+    private:
+        int* data;
+        size_t size;
+    public:
+        My_Vector(size_t s) : size(s) {
+            data = new int[size];
+            for (size_t i = 0; i < size; ++i) {
+                data[i] = i; // Initialize with some values
+            }
+        }
+
+        ~My_Vector() {
+            delete[] data;
+        }
+
+        // Nested iterator class
+        class Iterator {
+            private:
+                int* ptr;
+            public:
+                Iterator(int* p) : ptr(p) {}
+
+                int& operator*() {
+                    return *ptr;
+                }
+
+                Iterator& operator++() {
+                    ++ptr;
+                    return *this;
+                }
+
+                bool operator!=(const Iterator& other) const {
+                    return ptr != other.ptr;
+                }
+        };
+
+        Iterator begin() {
+            return Iterator(data);
+        }
+
+        Iterator end() {
+            return Iterator(data + size);
+        }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// using 
+
+// The using keyword in C++ is used to create type aliases, making code more readable and easier to manage.
+void using_example() {
+    // Creating a type alias for a complex type
+    using StringIntMap = std::map<std::string, int>;
+
+    StringIntMap ageMap;
+
+    ageMap["Alice"] = 30;
+    ageMap["Bob"] = 25;
+
+    for (const auto& pair : ageMap) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Struture binding
+
+void structure_binding_example() {
+
+    std::unordered_map<std:: string,  std::string> colors = {
+        {"red", "0x1000"},
+        {"yellow", "0x1000"},
+        {"blue", "0x1000"},
+    };
+
+    // binding reference to the pair fields
+    for (auto&[color, hex]: colors) {
+        std::cout << color << " " << hex << std::endl;
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1034,6 +1549,7 @@ class Complex {
 
 // Template Specialization
 // Template specialization allows you to define a specific implementation of a template for a particular data type.
+
 template <typename T>
 class Calculator {
     public:
@@ -1057,6 +1573,19 @@ void specialized_addition(T a, int b) {
     T result = calc.add(a, b);
     std::cout << "Addition Result: " << result << std::endl;
 }
+
+// Template class that calculates the power of a number at compile time
+template <int B, int N> 
+struct Power {
+    constexpr static int b_hoch_n = B * Power<B, N - 1>::value;
+};
+
+template<int B>
+struct Power<B, 0> {
+    constexpr static int b_hoch_n = 1;
+};
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1131,6 +1660,44 @@ void simple_thread_example() {
     //  - A functor (an object that overloads the operator()) 
     std::thread t(task);
     t.join(); // Wait for the thread to finish
+
+    // Multiple Threads
+    std::vector<std::thread> threads; 
+
+    for (int i = 0; i < 5; ++i) {
+        threads.emplace_back([i]() {
+            std::cout << "Thread " << std::this_thread::get_id() << " is running." << std::endl;
+        });
+    }
+
+    for (auto& th : threads) {
+        th.join();
+    }
+
+}
+
+void scope_lock_example() {
+    
+    std::mutex mtx;
+    int sharedResource = 0;
+
+    auto task = [&mtx, &sharedResource]() {
+   
+        // unique_lock is a more flexible locking mechanism than lock_guard
+        // it can also handle multiple locks and unlocks within the same scope
+        std::unique_lock<std::mutex> lock(mtx); // Automatically locks and unlocks the mutex via RAII
+        for (int i = 0; i < 1000; ++i) {
+            ++sharedResource;
+        }
+    };
+
+    std::thread t1(task);
+    std::thread t2(task);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "Final value of sharedResource: " << sharedResource << std::endl;
 }
 
 void mutex_example_1() {
@@ -1141,7 +1708,8 @@ void mutex_example_1() {
     auto task = [&mtx, &sharedResource]() {
         
         // lock_guard is a RAII-style mechanism for owning a mutex for the duration of a scoped block
-        std::lock_guard<std::mutex> lock(mtx); // Automatically locks and unlocks the mutex
+        // it is also useful to avoid deadlocks in case of exceptions
+        std::lock_guard<std::mutex> lock(mtx); // Automatically locks and unlocks the mutex via RAII
         for (int i = 0; i < 1000; ++i) {
             ++sharedResource;
         }
@@ -1206,6 +1774,31 @@ void mutex_example_3() {
     std::cout << "Final value of sharedResource: " << sharedResource << std::endl;
 }
 
+// Atomic 
+
+void atomic_example() {
+
+    std::atomic<int> atomicCounter(0); // atomic allows safe concurrent access without explicit locks
+
+    auto task = [&atomicCounter]() {
+        for (int i = 0; i < 1000; ++i) {
+            atomicCounter.fetch_add(1); // Atomically increment the counter
+        }
+    };
+
+    std::thread t1(task);
+    std::thread t2(task);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "Final value of atomicCounter: " << atomicCounter.load() << std::endl;
+}
+
+// Condition Variables
+
+// The idea is that even if the treads should run concurrently, sometimes we need one thread to act first on some 
+// data before the other thread can proceed. Condition variables allow threads to wait for certain conditions to be met.
 void condition_variable_example() {
 
     std::mutex mtx;
@@ -1222,7 +1815,7 @@ void condition_variable_example() {
             sharedData = 42;
             ready = true;
         }
-        cv.notify_one(); // Notify the consumer
+        cv.notify_one(); // Notify the consumer, there is also notify_all() for multiple consumers
     };
 
     auto consumer = [&]() {
@@ -1274,117 +1867,6 @@ void detached_thread_example() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Template Metaprogramming 
-
-// TODO 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// C strings 
-
-#define MAX_LEN 1000
-
-void c_strings() {
-    
-    char* str = "A normal string with no much to it";
-    
-    int len = strnlen(str, MAX_LEN); // number of chats plus \0 terminator 
-
-    // Tokenization (destructive)!!!!
-    
-    char* piece = strtok(str, " "); // returns the string until the separator 
-    // will return "A\0"
-
-    piece = strtok(NULL, " "); // will take the previosly used string but now without "A"
-    
-    printf("%s", piece);
-    
-    
-    // Newer alternaitves 
-    char* original = strdup("AHHHHHH, ajbakjnvkjnc , ijajavja");
-    char* rest = original;
-    char* token;
-    
-    // Similar to the original but with only one call
-    while ((token = strtok_r(rest, ",", &rest))) {
-        printf("Token: %s", token);
-    }
-    
-    // This one also return separators separated by separators 
-    while ((token = strsep(&original, ",")) != NULL) {
-        printf("Token: %s", token);
-    }    
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Tagged Unions 
-
-enum result {
-    Some,
-    Err,
-};
-
-struct result_alg {
-    
-    enum result res; 
-
-    union {
-        char* c;
-        void* p;
-    } value;
-};
-
-void demo_tagged_unions() {
-
-    char abc[2] = {'a', 'b'};
-
-    result_alg r = {r.res = Some, r.value.c =abc};
-
-    switch (r.res) {
-        case Some: printf("Some content"); break;
-        case Err: printf("Error"); break;
-        default: printf("Invalid State");
-    }
-
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// memset, memcpy, strcpy, memmove 
-
-#include <ranges>
-char* get_deafult_string(int size) {
-
-    char* s = (char*)malloc(sizeof(char)*size);
-    
-    if (s == NULL) {
-        return NULL;
-    }
-
-    for (int i = 0; i < size; i++) {
-        s[i] = (char)i;
-    }
-
-    return s;
-}
-
-void memory_functions_example() {
-    
-    int size = 10; 
-    char* s = get_deafult_string(size);
-    char* dest = (char*)malloc(sizeof(char) * size);
-    char* dest_2 = (char*)malloc(sizeof(char) * size); 
-
-    memset(s, '1', size); // setting all characters to 1
-    memcpy(dest, s, size); 
-    memmove(dest, s, size); 
-    strncpy(dest_2, s, size);
-
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Random Numbers 
 
 void random_numbers() {
@@ -1401,9 +1883,458 @@ void random_numbers() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// mutable 
+
+// mutable in classes
+class Example_Mutable {
+
+private:
+    std::string name;
+    mutable int count = 0; // allows to modify in const methods
+
+public:
+    const std::string& get_name() const {
+        count++;
+        return name;
+    }
+};
+
+// mutable in lambdas
+void mutable_example() {
+
+    int x = 0;
+    auto f = [=]() mutable { //allows to modify the copy of the value in the lambda
+        x++;
+        std::cout<< x << std::endl;
+    };
+
+    f();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Optional 
+
+void optional_example() {
+    
+    std::optional<int> optInt; // initially empty
+
+    if (!optInt.has_value()) {
+        std::cout << "optInt is empty." << std::endl;
+    }
+
+    optInt = 42; // assigning a value
+
+    if (optInt.has_value()) {
+        std::cout << "optInt has value: " << optInt.value() << std::endl;
+    }
+
+    // Using value_or to provide a default value
+    int value = optInt.value_or(0);
+    std::cout << "Value from optInt or default: " << value << std::endl;
+
+    // Resetting the optional
+    optInt.reset();
+
+    if (!optInt) {
+        std::cout << "optInt is now empty after reset." << std::endl;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+//  Variant
+
+// is like a union but safer. It can hold one of several types at a time.
+void variant_example() {
+    
+    std::variant<int, float, std::string> var; // can hold int, float, or string
+
+    var = 42; // holds an int
+    std::cout << "Variant holds int: " << std::get<int>(var) << std::endl;
+
+    var = 3.14f; // holds a float
+    std::cout << "Variant holds float: " << std::get<float>(var) << std::endl;
+
+    var = "Hello, Variant!"; // holds a string
+    std::cout << "Variant holds string: " << std::get<std::string>(var) << std::endl;
+
+    // Using std::visit to handle different types
+    std::visit([](auto&& arg) {
+        std::cout << "Variant contains: " << arg << std::endl;
+    }, var);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+// String view 
+
+// string_view is a lightweight, non-owning reference to a sequence 
+// of characters. It is useful for passing around strings without copying them.
+void string_view_example() {
+    
+    std::string str = "Hello, String View!";
+    std::string_view strView(str); // Create a string_view from a std::string
+
+    std::cout << "String View: " << strView << std::endl;
+
+    // Accessing characters
+    for (size_t i = 0; i < strView.size(); ++i) {
+        std::cout << strView[i] << " ";
+    }
+    std::cout << std::endl;
+
+    // Substring
+    std::string_view subView = strView.substr(7, 6); // "String"
+    std::cout << "Substring: " << subView << std::endl;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+// Functional
+
+void functional_example() {
+    
+    // Using std::function to store a lambda
+    std::function<int(int, int)> add = [](int a, int b) {
+        return a + b;
+    };
+
+    int result = add(5, 10);
+    std::cout << "Result of addition: " << result << std::endl;
+
+    // Using std::bind to create a new function with some arguments fixed
+    auto add_five = std::bind(add, 5, std::placeholders::_1);
+    int result2 = add_five(10); // equivalent to add(5, 10)
+    std::cout << "Result of adding five: " << result2 << std::endl;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+// Full example with most of the above features
+
+template<typename T>
+class Node {
+
+private:
+    std::shared_ptr<Node<T>> next;
+    std::shared_ptr<Node<T>> previous;
+    T data;
+
+public:
+     
+    explicit Node(T data): data(data), next(nullptr), previous(nullptr) {}
+   
+    Node(T data, std::shared_ptr<Node<T>> next, std::shared_ptr<Node<T>> previous): data(data), next(next), previous(previous) {}
+    
+    // Copy Constructor
+    Node(const Node& other): 
+        data(other.data), 
+        next(other.next), // shared ownership
+        previous(other.previous) // shared ownership
+        {}
+
+    // Move Constructor
+    Node (Node&& other) noexcept: data(other.data), next(std::move(other.next)), previous(std::move(other.previous)) {}
+
+    // Assignment operator
+    Node& operator=(const Node& other) {
+        if (this == &other) {return *this; }
+     
+        data = other.data;
+        next = other.next;
+        previous = other.previous;
+        return *this;
+    }
+    
+    // Move assignment 
+    Node& operator=(Node&& other) noexcept {
+        if (this == &other) {return *this; }
+        
+        data = other.data;
+        next = std::move(other.next);
+        previous = std::move(other.previous);
+
+        return *this;
+    }
+
+    T get_data() const {
+        return this->data;
+    }
+
+    std::shared_ptr<Node<T>> get_next() const {
+        return this->next;
+    }
+
+    std::shared_ptr<Node<T>> get_previous() const {
+        return this->previous;
+    }
+
+    void set_data(T data) {
+        this->data = data;
+    }
+
+    void set_next(std::shared_ptr<Node<T>> next) {
+        this->next = next; // shared ownership
+    }
+
+    void set_previous(std::shared_ptr<Node<T>> previous) {
+        this->previous = previous; // shared ownership
+    }
+    
+    bool operator==(Node<T>& other) { 
+        return this->data == other.data;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Node<T>& node) {
+        os << node.data;
+        return os;
+    }
+};
+
+template <typename T>
+class Double_Linked_List {
+
+private:
+
+    std::shared_ptr<Node<T>> head;
+    std::shared_ptr<Node<T>> tail;
+
+    size_t len;
+
+public:
+    
+    // Default Constructor
+    Double_Linked_List(): head(nullptr), tail(nullptr), len(0) {}
+
+    // Parameterized Constructor no pointers
+    explicit Double_Linked_List(T data): head(std::make_shared<Node<T>>(Node<T>(data))), tail(head), len(1) {}
+    
+    // Copy constructor
+    explicit Double_Linked_List(const Double_Linked_List<T>& other): head(other.head), tail(other.tail), len(other.len) {}
+
+    // Move constructor 
+    Double_Linked_List(Double_Linked_List<T>&& other): head(std::move(other.head)), tail(std::move(other.tail)), len(other.len) {}
+
+    // Assigment Operator
+    Double_Linked_List<T>& operator=(const Double_Linked_List<T>& other) {
+
+        if (this == &other) return *this;
+
+        head = other.head;
+        tail = other.tail;
+        len = other.len;
+
+        return *this;
+    }
+
+    void append_at_the_start(T data) {
+        
+        if (this->head == nullptr) {
+            this->head = std::make_shared<Node<T>>(Node<T>(data));
+            this->tail = this->head;
+            this->len++;
+            return;
+        };
+        
+        std::shared_ptr<Node<T>> temp = this->head;
+        
+        Node<T> node = Node<T>(data, temp, this->tail);
+
+        this->head = std::make_shared<Node<T>>(node);
+        temp->set_previous(this->head);
+        this->tail->set_next(this->head);
+        this->len++;
+    }
+
+    void append_at_the_end(T data) {
+
+        if (this->head == nullptr) {
+            this->head = std::make_shared<Node<T>>(Node<T>(data));
+            this->tail = this->head;
+            this->len++;
+            return;
+        };
+        
+        std::shared_ptr<Node<T>> temp = this->tail;
+        
+        Node<T> node = Node<T>(data, this->head, temp); 
+
+        this->tail = std::make_shared<Node<T>>(node);
+        temp->set_next(this->tail);
+        this->head->set_previous(this->tail);
+
+        this->len++;
+    }
+
+    void append_at_index(T data, size_t index) {
+
+        if (index >= this->len) return;
+
+        std::shared_ptr<Node<T>> node = std::make_shared<Node<T>>(Node<T>(data));
+
+        int pos= 0;
+        std::shared_ptr<Node<T>> dummy = this->head; 
+
+        while (pos < index) {
+            pos++;
+            dummy = dummy->get_next();
+        }
+        
+        std::shared_ptr<Node<T>> previous = dummy->get_previous(); 
+        std::shared_ptr<Node<T>> next = dummy->get_next();
+
+        previous->set_next(node);
+
+        node->set_next(dummy);
+        node->set_previous(previous);
+
+        dummy->set_previous(node);
+
+        this->len++;
+    }
+
+    void set_at_index(T data, size_t index) {
+        
+        if (index >= this->len) return;
+
+        std::shared_ptr<Node<T>> node = std::make_shared<Node<T>>(Node(data));
+
+        int pos= 0;
+        std::shared_ptr<Node<T>> dummy = this->head; 
+
+        if (this->head == nullptr) {
+            
+            this->head = std::make_shared<Node<T>>(Node<T>(data));
+            this->tail = this->head;
+            this->len++;
+            return;
+        }
+
+        while (pos < index) {
+            pos++;
+            dummy = dummy->get_next();
+        }
+
+        dummy->set_data(data); 
+    }
+
+    T get_at_index(size_t index) {
+
+        if (index >= this->len) return T();
+        
+        int pos= 0;
+        std::shared_ptr<Node<T>> dummy = this->head; 
+        
+        while (pos < index) {
+            pos++;
+            dummy = dummy->get_next();
+        }
+
+        return dummy->get_data();
+    }
+
+    T first() {
+        return this->head->get_data();
+    }
+
+    T last() {
+        return this->tail->get_data();
+    }
+
+    void remove_head() {
+
+        if (this->head == nullptr) return;
+
+        if (this->head == this->tail) {
+            this->head = nullptr;
+            this->tail = nullptr;
+            this->len--;
+            return;
+        }
+
+        std::shared_ptr<Node<T>> new_head = this->head->get_next();
+
+        this->tail->set_next(new_head);
+        new_head->set_previous(this->tail);
+        this->head = new_head;
+        this->len--; 
+    }
+    
+    void remove_tail() {
+        if (this->head == nullptr) return;
+        
+        if (this->head == this->tail) {
+            this->head = nullptr;
+            this->tail = nullptr;
+            this->len--;
+            return;
+        }
+        std::shared_ptr<Node<T>> dummy = this->tail;
+
+        std::shared_ptr<Node<T>> new_tail = this->tail->get_previous();
+        
+        this->head->set_previous(new_tail);
+        new_tail->set_next(this->head);
+        this->tail = new_tail;
+        this->len--;     
+    }
+
+    void remove_at_index(size_t index) {
+
+        if (index >= this->len) return;
+
+        if (index == 0) {
+            remove_head();
+            return;
+        }
+
+        if (index == this->len - 1) {
+            remove_tail();
+            return;
+        }
+
+        int pos= 0;
+        std::shared_ptr<Node<T>> dummy = this->head; 
+
+        while (pos < index) {
+            pos++;
+            dummy = dummy->get_next();
+        }
+
+        std::shared_ptr<Node<T>> prev = dummy->get_previous(); 
+        std::shared_ptr<Node<T>> next = dummy->get_next(); 
+
+        prev->set_next(next);
+        next->set_previous(prev);
+        this->len--;
+
+    }
+
+    bool operator==(const Double_Linked_List<T>& other) {
+
+        if (this->len != other.len) return false;
+
+        std::shared_ptr<Node<T>> dummy1 = this->head;
+        std::shared_ptr<Node<T>> dummy2 = other.head;
+
+        while (dummy1 != nullptr) {
+            if (dummy1->get_data() != dummy2->get_data()) {
+                return false;
+            }
+            dummy1 = dummy1->get_next();
+            dummy2 = dummy2->get_next();
+        }
+
+        return true;
+    }
+
+};
+
+
 // Main Function
 
-int main() {
+int main(int argc, char** argv) {
     
     std::cout << "AHHHHHHHHHHHHHHH" << std::endl;
     return 0;

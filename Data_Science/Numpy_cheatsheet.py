@@ -13,7 +13,7 @@ arr4 = np.ones((3, 2))                # 3x2 matrix of ones
 arr5 = np.eye(3)                      # 3x3 identity matrix
 arr6 = np.arange(0, 10, 2)            # array([0,2,4,6,8]) (start, stop, step)
 arr7 = np.linspace(0, 1, 5)           # 5 points between 0 and 1 inclusive
-
+arr8 = np.logspace(-9, 3, num=13)     # array with numbers evely spaces on a logarithmic scale
 
 print("Array:", arr1)
 print("Shape:", arr1.shape)
@@ -136,6 +136,19 @@ print("Stacked horizontally:\n", stacked_h)
 
 stacked_d = np.dstack((a, a))
 print("Stacked depth-wise:\n", stacked_d)
+
+column_stack = np.column_stack((a, b))
+print("Stacked side by side:\n", stacked_d)
+
+##################################################################################################
+
+# Blocks
+
+# Numpy blocks allows us to construct matrices using  other matrices as lego blocks 
+
+b = np.block([[np.eye(2) * 2, np.zeros((2,3))], [np.ones((3,2)), np.eye(3) * 3]])
+
+# The only criteria is that the dimenions mathc
 
 ##################################################################################################
 
@@ -275,7 +288,8 @@ print("Matrix multiplication:\n", np.dot(mat, mat2))
 print("Frobenius norm:", np.linalg.norm(mat))
 
 
-# Solve linear system Ax = b
+# Solve linear systems Ax = b
+
 A = np.array([[3, 1], [1, 2]])
 b = np.array([9, 8])
 x = np.linalg.solve(A, b)
@@ -397,10 +411,8 @@ rows = np.array([0, 1, 2])
 cols = np.array([2, 1, 0])
 print("Advanced indexing result:", arr2d[rows, cols]) # [30, 50, 70]
 
-
 # Using integer array indexing
 print("Select multiple elements:\n", arr2d[[0,2],[1,2]]) # elements at (0,1) and (2,2)
-
 
 # Boolean array with shape matching
 bool_arr = np.array([[True, False, True],[False, True, False],[True, False, True]])
@@ -411,8 +423,11 @@ print("Elements selected by boolean array:", arr2d[bool_arr])
 # View vs Copy
 
 original = np.array([1, 2, 3, 4, 5])
+
 view = original.view()
+
 copy = original.copy()
+copy = np.copy(original)
 
 view[0] = 99
 copy[1] = 88
@@ -421,3 +436,22 @@ print("Original array:", original)
 print("View after modification:", view)
 print("Copy after modification:", copy)
 
+###################################################################################
+
+# Vectorized operations
+
+# A lot of opertions in numpy can act on whole vectors instead of single elements. This can improve performance by avoiding loops 
+
+def is_even(x):
+    return 1 if x % 2 == 0 else 0
+
+vectorized_is_even = np.vectorize(is_even) # now this new function can act on vector, optimizing performance
+
+###################################################################################
+
+# Custom Datatypes
+
+dt = np.dtype(np.int32) # used for declearing datatypes as dictionaries
+
+# strings are considered as numbers with n bits where n is the length of the string 
+# in an array n is the max len

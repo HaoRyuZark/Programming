@@ -27,59 +27,57 @@ def getClassedPoints(N):
         y[i] = -y[i]
     return X, y, f
 
-# Perceptron hypothesis
-def h(x, w):
-    return np.sign(np.dot(w.T, x))
+X_2_2, y_2_2, f = getClassedPoints(50)
 
-def in_sample_error(X_raw, y, w):
-    X = np.column_stack((np.ones(X_raw.shape[0]), X_raw))
-    y_pred = np.sign(X @ w)
-    return np.mean(y_pred != y)
+def in_sample_error(X, y, w):
+    predictions = np.sign(X @ w)
+    misclassified = np.sum(predictions != y)
+    return misclassified / len(y)
 
-def pocket(X_raw, y, w_init=None, t=100):
-    X = np.column_stack((np.ones(X_raw.shape[0]), X_raw))
+def pocket(X, y, T=1000):
+    X_with_bias = np.column_stack((np.ones(X.shape[0]), X))
     
-    if w_init is None:
-        w = np.zeros(X.shape[1])
-    else:
-        w = w_init.copy()
-
-    w_hat = w.copy()
-    best_err = in_sample_error(X_raw, y, w_hat)
+    w = np.zeros(X_with_bias.shape[1])
+    w_best = np.copy(w)
+    best_error = in_sample_error(X_with_bias, y, w_best)
     
-    for _ in range(t):
-        for i, x_i in enumerate(X):
-            if h(x_i, w) != y[i]:
-                w_new = w + y[i] * x_i
-                err_new = in_sample_error(X_raw, y, w_new)
-                if err_new < best_err:
-                    w_hat = w_new.copy()
-                    best_err = err_new
-                w = w_new
-                break
-    return w_hat
+    for _ in range(T):
+        
+        predictions = np.sign(X_with_bias @ w)
+        misclassified_idx = np.where(predictions != y)[0]
+        
+        if len(misclassified_idx) == 0:
+            break
+        
+        i = np.random.choice(misclassified_idx)
+        w = w + y[i] * X_with_bias[i]
+        
+        current_error = in_sample_error(X_with_bias, y, w)
+        
+        if current_error < best_error:
+            w_best = np.copy(w)
+            best_error = current_error
+    
+    return w_best
 
-def p(x_values, w):
-    # x_values: array of x coordinates
-    return -(w[0] + w[1]*x_values)/w[2]
+w = pocket(X_2_2, y_2_2, T=1000)
+print("Best weights:", w)
+print("Final in-sample error:", in_sample_error(np.column_stack((np.ones(X_2_2.shape[0]), X_2_2)), y_2_2, w))
 
-# Generate data
-X, y, f_true = getClassedPoints(20)
+X_with_bias = np.column_stack((np.ones(X_2_2.shape[0]), X_2_2))
+predictions = np.sign(X_with_bias @ w)
 
-# Train perceptron
-w_final = pocket(X, y, t=1000)
+# Plot the data points with predictions
+plt.figure(figsize=(10, 6))
+plt.scatter(X_2_2[:, 0], X_2_2[:, 1], c=predictions, cmap='coolwarm', edgecolors='black')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.title('Pocket Algorithm Classification Results')
 
-# Plot data points
-plt.scatter(X[:, 0], X[:, 1], c=y, cmap='bwr', edgecolors='k')
-
-# Plot true decision boundary
-x_line = np.linspace(0, 1, 100)
-plt.plot(x_line, f_true(x_line), 'g--', label='True boundary')
-
-# Plot learned decision boundary
-plt.plot(x_line, p(x_line, w_final), 'b-', label='PLA boundary')
-
-plt.xlabel('x1')
-plt.ylabel('x2')
+x_min, x_max = X_2_2[:, 0].min() - 0.1, X_2_2[:, 0].max() + 0.1
+x_line = np.array([x_min, x_max])
+y_line = -(w[0] + w[1] * x_line) / w[2]
+plt.plot(x_line, y_line, 'g-', linewidth=2, label='Decision Boundary')
 plt.legend()
+plt.grid(True, alpha=0.3)
 plt.show()

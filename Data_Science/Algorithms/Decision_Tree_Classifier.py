@@ -1,7 +1,6 @@
 import numpy as np 
 import pandas as pd 
 import matplotlib.pyplot as pl
-from pandas.core.generic import dt
 from scipy.sparse import data 
 
 class Node:
@@ -173,17 +172,3 @@ from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
 data = datasets.load_breast_cancer()
-X, y = data.data, data.target
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
-
-
-dtc = Decision_Tree_Classifier(4, 10)
-
-dtc.fit(X_train, y_train)
-predictions = dtc.predict(X_test)
-
-def accuracy(preds, y_test):
-    return np.sum(preds == y_test) / len(y_test)
-
-print(accuracy(predictions, y_test))

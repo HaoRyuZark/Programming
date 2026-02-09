@@ -1,8 +1,46 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import csv
 from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import animation
+from matplotlib import animation, colors
+from collections import Counter
+
+##################################################################################################
+
+# alpha Parameter 
+
+# It is a parameter that comes in a lot of plot types. Its use is to control the transparency of the plot elements. 
+# Values range from 0 (completely transparent) to 1 (completely opaque).
+
+##################################################################################################
+
+# scale 
+
+# It is used to control the scaling of various plot elements, such as line widths, marker sizes, and font sizes.
+
+X = np.random.random(50) * 100
+Y = np.random.random(50) * 100
+
+plt.scatter(X, Y, color='blue', marker='o', s=100, alpha=0.5) # alpha makes the points more transparent
+plt.title("Alpha Parameter Example", fontsize=14) # fontsize scales the title size
+plt.xlabel("X Axis", fontsize=12)
+plt.xscale("log") # changes the scale of the x axis to logarithmic
+plt.yscale("linear") # changes the scale of the y axis to linear
+plt.ylabel("Y Axis", fontsize=12)
+plt.show()
+
+##################################################################################################
+
+# Reading  CVS data Using Pure python 
+
+with open("data.csv", "./") as data:
+    
+    csv_reader = csv.DictReader(data) # iterator to get data via keys instead of indexes
+    language_counter = Counter()
+
+    for row in csv_reader:
+        language_counter.update(row['LanguagesWorkedWith'].split(';'))
 
 ##################################################################################################
 
@@ -11,17 +49,7 @@ from matplotlib import animation
 X_data = np.random.random(50) * 100
 Y_data = np.random.random(50) * 100
 
-##################################################################################################
-
-# Figure and Ax
-
-fig, ax = plt.subplots() # fig is the whole and the ax is the axis. you can also do 
-
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3) # one row three columns
-
-fig, axs = plt.subplots(3, 3)
-
-axs[0, 0].scatter() # accessing the first plot
+plt.style.use('seaborn-deep') # adding a style
 
 ##################################################################################################
 
@@ -43,12 +71,19 @@ plt.show()
 # Customization options: linestyle ('-', '--', ':'), color, linewidth, marker
 
 years = [200 + i for i in range(50)]
+something = [np.random.random() for _ in range(50)]
 weights = np.random.random(50) * 50
 
-plt.plot(years, weights, color='red', linestyle='--', linewidth=2, marker='o')
+plt.plot(years, weights, color='red', linestyle='--', linewidth=2, marker='o') # we can also pass the label we passed in the legend
 plt.title("Line Plot Example")
 plt.xlabel("Years")
 plt.ylabel("Weights")
+
+plt.plot(something, weights, color='blue', linestyle='.', marker='.')
+plt.legend(["Random Data", "years"]) # it receives a list of strings with the same order you inputed you data for clarifiying which line if from who
+
+plt.tight_layout() # adds padding
+plt.grid() # puts a grid in the background
 plt.show()
 
 ##################################################################################################
@@ -63,6 +98,24 @@ plt.bar(x, y, color='green', edgecolor='black')
 plt.title("Bar Chart Example")
 plt.show()
 
+plt.barh(x, y, color='green', edgecolor='black')
+plt.title("Bar Chart Horizontal Example")
+plt.show()
+
+x_rand = np.arange(20)
+x_rand_2 = np.arange(20)
+
+y_rand_2 = np.random.random(20) * 20
+y_rand = np.random.random(20) * 20
+
+width = 0.25 # we can use plus or minus on the indexes with this width to put the bars side by side
+
+# Putting bars side by side by shifting the x value
+plt.bar(x_rand, y_rand, color='blue', width=width)
+plt.bar(x_rand_2 + width, y_rand_2, color='yellow', width=width)
+plt.xticks(ticks=x_rand, labels=x) # ticks based on the x indexes with y based on the labels (this time the programming languages. The plot is bullshit
+plt.show()
+
 ##################################################################################################
 
 # Histogram
@@ -71,6 +124,7 @@ plt.show()
 ages = np.random.normal(20, 1.5, 1000)  # mean, standard deviation, samples
 
 plt.hist(ages, bins=20, color='purple', alpha=0.7, cumulative=True)
+plt.axvline(ages.mean(), color='k', linestyle='dashed', linewidth=1) # adding a line for the mean
 plt.title("Histogram Example")
 plt.xlabel("Age")
 plt.ylabel("Frequency")
@@ -121,6 +175,11 @@ plt.show()
 
 ##################################################################################################
 
+# Heat Maps 
+
+
+##################################################################################################
+
 # Plot Styling
 
 # Customization options: plt.style.use("style_name")
@@ -150,6 +209,16 @@ plt.show()
 
 # Subplots
 
+# Figure and Ax
+
+fig, ax = plt.subplots() # fig is the whole and the ax is the axis. you can also do 
+
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3) # one row three columns
+
+fig, axs = plt.subplots(3, 3)
+
+axs[0, 0].scatter() # accessing the first plot
+
 # Customization options: rows, cols, figsize, sharex, sharey
 fig, axs = plt.subplots(2, 2, figsize=(8, 6))
 axs[0, 0].plot(years, np.random.random(50)*100)
@@ -167,8 +236,13 @@ axs[1, 1].set_title("Scatter Plot")
 plt.tight_layout()
 plt.show()
 
+# using tuple unpacking for multiple Axes
+fig, (ax1, ax2) = plt.subplots(1, 2)
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
+
 # Mosaic
 
+# Mosaics allows us to divive the plot created into sections and we can then put our plots into thosw sections accordingly
 fig, axd = plt.subplot_mosaic([['upleft', 'right'],
                                ['lowleft', 'right']], layout='constrained')
 axd['upleft'].set_title('upleft')
@@ -210,7 +284,7 @@ y = np.random.random(100)
 z = np.random.random(100)
 
 
-ax.scatter(x, y, c=z, cmap='viridis', s=50, alpha=0.7)
+ax.scatter(x, y, c=z, cmap='viridis', s=50, alpha=0.7) # c= is the color based on z values
 ax.set_title("3D Scatter Plot")
 plt.show()
 

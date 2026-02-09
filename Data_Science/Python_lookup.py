@@ -622,3 +622,14 @@ side_effect_list = []
 
 def add_to_list(item):
     side_effect_list.append(item)
+
+###############################################################################
+
+# Counter
+
+from collections import Counter
+
+l = ["A", "B", "C"]
+
+c = Counter(l) # returns a dictionary with the uniques of the list as keys as their occurrences as values
+c.update(["A"]) # based on its previous state it updates it accordingly to its content

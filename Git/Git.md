@@ -2,9 +2,10 @@
 
 ## Step-by-Step: Set Up Git Repo with SSH
 
-### 1️⃣ Set up SSH key (only needed once per machine)
+### Set up SSH key (only needed once per machine)
 
-#### ✅ Check if you already have an SSH key
+#### Check if you already have an SSH key
+
 ```bash
 ls ~/.ssh
 ```
@@ -36,6 +37,7 @@ cat ~/.ssh/id_ed25519.pub
 Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it there.
 
 #### 1.5 Test your connection
+
 ```bash
 ssh -T git@github.com
 ```
@@ -44,7 +46,7 @@ If successful, you'll see a message like:
 
 ---
 
-### 2️⃣ Create a new local Git repository
+### Create a new local Git repository
 
 ```bash
 mkdir my-project
@@ -54,7 +56,7 @@ git init
 
 ---
 
-### 3️⃣ Add files and commit
+### Add files and commit
 
 ```bash
 echo "# My Project" > README.md
@@ -64,13 +66,13 @@ git commit -m "Initial commit"
 
 ---
 
-### 4️⃣ Create a remote GitHub repo (manually)
+### Create a remote GitHub repo (manually)
 
 Go to [GitHub](https://github.com/new) and create a new repository **without** initializing with a README (since we already have one locally).
 
 ---
 
-### 5️⃣ Link local repo to GitHub (via SSH)
+### Link local repo to GitHub (via SSH)
 
 ```bash
 git remote add origin git@github.com:your-username/your-repo.git
@@ -78,7 +80,7 @@ git remote add origin git@github.com:your-username/your-repo.git
 
 ---
 
-### 6️⃣ Push to GitHub
+### Push to GitHub
 
 ```bash
 git push -u origin main
@@ -108,6 +110,12 @@ git push -u origin main
 - `git commit --amend` – Edit the last commit
 - `git log` – Show commit history
 - `git log --oneline --graph` – Show a compact commit history
+
+## Commits, Brances and HEAD 
+
+- **Commits** are the units of storage whic are snapshots of the working directory with an identifer of type hash. 
+- **Branches** are just pointer to a commit hash. Mostly at the end of a chain
+- **HEAD** Is a pointer to the current commit.
 
 ## Branching and Merging
 
@@ -142,7 +150,8 @@ git push -u origin main
 
 - `git reset <file>` – Unstage a file
 - `git reset --hard <commit>` – Reset to a specific commit (deletes changes)
-- `git reset --soft <commit>` – Reset to a commit but keep changes staged
+- `git reset --soft <commit>` – Reset to a commit but keep changes staged and the working directory unchanged
+- `git reset --mixed <commit>` – Reset to a commmit, clears statging and the working directory remeains unchanged (default)
 - `git revert <commit>` – Create a new commit that undoes a previous commit
 
 ## Tagging

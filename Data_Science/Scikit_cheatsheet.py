@@ -1,3 +1,7 @@
+import numpy as np
+import pandas as pd 
+from copy import deepcopy
+
 ##################################################################################################
 
 # DATA LOADING & SPLIT
@@ -19,8 +23,7 @@ X_train_clf, X_test_clf, y_train_clf, y_test_clf = train_test_split(X_clf, y_clf
 ##################################################################################################
 
 # PREPROCESSING
-
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder, QuantileTransformer, PolynomialFeatures
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 import numpy as np
@@ -31,7 +34,7 @@ categorical_features = [3]
 
 preprocessor = ColumnTransformer([
     ("num", StandardScaler(), numeric_features),
-    ("cat", OneHotEncoder(handle_unknown="ignore"), categorical_features)
+    ("cat", OneHotEncoder(handle_unknown="ignore"), categorical_features) # OneHotEncoders will transform categorical data into numerical values
 ])
 
 # Scaling
@@ -42,6 +45,10 @@ preprocessor = ColumnTransformer([
 scaler = StandardScaler() # use for Z scoring
 scaler.fit_transform(X_train_clf)
 
+
+QuantileTransformer(n_quantiles=100).fit_transform(X_train_clf) # uses the quantiles for scaling
+
+PolynomialFeatures(degree=3) # this allows us to increase the number of features using polynomial expansion 
 
 ##################################################################################################
 
@@ -58,13 +65,39 @@ print("KNN train R^2:", knn.score(X_train_reg, y_train_reg))
 # PIPELINES
 
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import MinMaxScaler, FunctionTransformer
+from sklearn.model_selection import LinearRegression
 
 pipe = Pipeline([
     ("scaler", StandardScaler()),
     ("model", KNeighborsRegressor(n_neighbors=5))
 ])
 pipe.fit(X_train_reg, y_train_reg)
+
 print("Pipeline test R^2:", pipe.score(X_test_reg, y_test_reg))
+print("Pipeline parametes:", pipe.get_params()) # get_params returns a dictionary with the parameters which can be accepted by our 
+# objects in the pipeline dictionary. Their named using the pattern 'ste__paramter_x'
+
+# More Complex Example 
+
+X_train = np.array([])
+
+std_scaler = StandardScaler()
+std_scaler.fit(X_train[:,:2]) # using std_scaler for the first column 
+
+min_max_scaler = MinMaxScaler()
+min_max_scaler.fit(X_train[:,2:]) # using min_max_scaler for the rest of the columns
+
+def preprocessor(X):
+    A = np.copy(X)
+    A[:, :2] = std_scaler.transform(X[:, :2])
+    A[:, 2:] = min_max_scaler.transform(X[:, 2:])
+
+    return A
+
+preprocess_transformer = FunctionTransformer(preprocessor)
+
+pipeline = Pipeline([('scale', preprocess_transformer), ('reg', LinearRegression())])
 
 ##################################################################################################
 
@@ -72,10 +105,28 @@ print("Pipeline test R^2:", pipe.score(X_test_reg, y_test_reg))
 
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
-param_grid = {"model__n_neighbors": range(1, 11)}
-grid = GridSearchCV(pipe, param_grid, cv=5)
+# Hyper parameters 
+
+param_grid = {"model__n_neighbors": range(1, 11)} 
+# The invididual paramters are the same as for the object it acts on but with their step name
+# and a double underscore for the actual parameter: step__parameter
+
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", KNeighborsRegressor(n_neighbors=5))
+])
+
+pipe.fit(X_train_reg, y_train_reg)
+
+grid = GridSearchCV(pipe, param_grid, cv=5, verbose=4) # you can also pass an array of scoring matrics for te scoring of the models
+
 grid.fit(X_train_reg, y_train_reg)
+
+pd.DataFrame(grid.cv_results_) # is an statistical overview of the data generated during our cross validation process
+
 print("Best params (GridSearch):", grid.best_params_)
+print("Best estimator (GridSearch):", grid.best_estimator_)
+print("Best score (GridSearch):", grid.best_score_)
 
 ##################################################################################################
 
@@ -84,9 +135,9 @@ print("Best params (GridSearch):", grid.best_params_)
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
-clf = LogisticRegression(max_iter=1000)
-clf.fit(X_train_clf, y_train_clf)
-y_pred = clf.predict(X_test_clf)
+logistic_regression_classifier = LogisticRegression(max_iter=1000)
+logistic_regression_classifier.fit(X_train_clf, y_train_clf)
+y_pred = logistic_regression_classifier.predict(X_test_clf)
 
 print("Accuracy:", accuracy_score(y_test_clf, y_pred))
 print("Precision:", precision_score(y_test_clf, y_pred))
@@ -139,6 +190,8 @@ print("Stacking Accuracy:", stack.score(X_test_clf, y_test_clf))
 # CROSS-VALIDATION SHORTCUT
 
 from sklearn.model_selection import cross_val_score
+from sklearn.neighbors import KNeighborsClassifier
 
-scores = cross_val_score(clf, X_clf, y_clf, cv=5, scoring='accuracy')
+knn = KNeighborsClassifier()
+scores = cross_val_score(knn, X_clf, y_clf, cv=5, scoring='accuracy')
 print("Cross-val Accuracy (mean):", scores.mean())

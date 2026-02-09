@@ -88,12 +88,17 @@ df["Phone_Number"] = df["Phone_Number"].str.replace('Na--','')
 
 # MODIFIYING COLUMNS 
 
+new_names = ['a', 'b', 'c']
+
 df.columns = [s for s in df.columns.str.strip()]  # remove whitespace from column name
 df.columns = df.columns.str.lower()          # type: ignore     # convert column names to lowercase
 df.columns = df.columns.droplevel()               # drop multiindex level from columns
 
+
 df = df.locate[:, ~df.columns.str.contains("unnamed", case=False)]  # remove unnamed columns
 df = df.locate[:, ~df.columns.duplicated()]  # remove duplicated columns
+
+df.columns = new_names # renaming all
 
 df.rename(columns={"OldName": "NewName"}, inplace=True)  # rename columns
 

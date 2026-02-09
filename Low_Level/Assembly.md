@@ -153,8 +153,6 @@ greater:
 end:
   mov ebx, 1
   int 80h
-
-
 ```
 
 --- 
@@ -438,6 +436,44 @@ end:
       mov eax, 1
       mov ebx, 1
       int 80h
+```
+
+---
+
+## Pop, Push, Call and Ret 
+
+Instructions in made up assembly!
+
+### Pop
+
+```asm
+mov r1 [stack_ptr] ; load the value into the register 1
+mov r0 [r1] ; move it to the regiester 0
+inc r1  ; increment its value (the stack grows downwards)
+mov [stack_ptr] r1 ; ; copy  the value to the stack_ptr (updating)
+```
+
+### Push
+
+```asm
+mov r0 [stack_ptr] ; load the value into the register 1
+dec r0 ; make the stack grow
+mov [r0] item ; put the data into the stack
+mov [stack_ptr] r0
+```
+
+### Call 
+
+```asm
+push {ret_addr}
+jump {addr_func}
+```
+
+### Ret
+
+```asm
+pop r0 
+jump r0
 ```
 
 ---

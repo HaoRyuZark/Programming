@@ -505,6 +505,17 @@ Is a memory region that stores local variables, function parameters, and return 
 
 ---
 
+## Function Inlining and Outlining 
+
+When compilers or the programmer himself generates/writes code, there is the choice between 
+repeating the same code over and over again or writing function. If we focus on the compiler perspective, 
+we will realize that jumping in memory multiple times can be expensive in terms of performance. Due to this fact the compiler 
+tries as much as possible to do function **inlining**, but this can also lead to big binary sizes. 
+
+Contrary to inlining, **outlining** is based on jumping to the address of the of the instructions.
+
+---
+
 ## The Heap
 
 The heap is a memory region used for dynamic memory allocation. Unlike the stack, memory in the heap is managed manually by the programmer using functions like `malloc`, `calloc`, `realloc`, and `free`. The heap allows for more flexible memory usage, but it also requires careful management to avoid memory leaks and fragmentation. The heap is considered slower than the stack for memory allocation and deallocation because it involves more complex bookkeeping. This slowness is caused by the fragmentation of the memory.
@@ -1086,30 +1097,30 @@ sock.listen(1)
 print(f"Listening on {server_address}")
 ```
 
---- 
+---
 
-### Command ip link 
+### Command ip link
 
-In linux the `ip link` command will return three device names 
+In linux the `ip link` command will return three device names
 
-- `lo` for the loop back device 
-- `Ethernet Plug` 
+- `lo` for the loop back device
+- `Ethernet Plug`
 - `Ẁifi card`
 
-## Network Protocols 
+## Network Protocols
 
-A protocol is a set of for transmitting data across a network. 
+A protocol is a set of for transmitting data across a network.
 
-- **Adress Resolution Protocol ARP:** Used for the mapping to MAC addresses. 
-- **Ethernet:** Used for the direct connection in a network. 
+- **Adress Resolution Protocol ARP:** Used for the mapping to MAC addresses.
+- **Ethernet:** Used for the direct connection in a network.
 - **Internet Control Protocol:** It is for testing reachability and other manners across the internet.
 
-## SSH 
+## SSH
 
-Secure shell is a protocol used for providing a secure encrypted connection to a remote machine. It uses asymmetric encryption 
+Secure shell is a protocol used for providing a secure encrypted connection to a remote machine. It uses asymmetric encryption
 and commonly port 22 for the connection.
 
-### Layout 
+### Layout
 
 ```txt
 | Packet length -- Padding Amount -- Payload Padding -- Message Authentication |
@@ -1119,10 +1130,8 @@ Everything between packet length and message authentication is encrypted.
 
 ---
 
-## I/O Devices 
+## I/O Devices
 
 To control hardware the CPU does not actually perform the operations directly, but it uses smaller computers 
 build into the devices called **mirco-controllers**. The communication can be stablished via 
 memory mapped io or by isolated io which uses specific buses and components.
-
-
