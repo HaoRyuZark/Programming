@@ -1,7 +1,5 @@
 **Regular Expressions (Regex) Syntax and Explanation**
 
----
-
 ### 1. Basic Characters
 - `a` : Matches character 'a' exactly.
 - `abc` : Matches the string "abc" exactly.
@@ -29,6 +27,7 @@
 - `\S` : Matches any non-whitespace character.
 
 ### 4. Quantifiers
+
 - `*` : Matches 0 or more occurrences of the preceding character (e.g., `a*` matches "", "a", "aa", etc.).
 - `+` : Matches 1 or more occurrences (e.g., `a+` matches "a", "aa", etc.).
 - `?` : Matches 0 or 1 occurrence (e.g., `a?` matches "" or "a").
@@ -37,11 +36,13 @@
 - `{n,m}` : Matches between `n` and `m` occurrences (e.g., `a{2,4}` matches "aa", "aaa", or "aaaa").
 
 ### 5. Grouping and Capturing
+
 - `(abc)` : Capturing group, treats "abc" as a single unit.
 - `(?:abc)` : Non-capturing group, groups "abc" without capturing.
 - `\n` : Refers to the nth captured group (e.g., `(\w)\1` matches doubled letters like "oo").
 
 ### 6. Assertions and Anchors
+
 - `^` : Matches the start of a string.
 - `$` : Matches the end of a string.
 - `\b` : Matches a word boundary (e.g., `\bword\b` matches "word" but not "sword").
@@ -52,6 +53,7 @@
 - `(?<!...)` : Negative lookbehind (e.g., `(?<!a)b` matches 'b' only if NOT preceded by 'a').
 
 ### 7. Advanced Constructs
+
 - `(?(condition)yes|no)` : Conditional expression.
 - `(?P<name>...)` : Named capturing group (e.g., `(?P<word>\w+)`).
 - `(?P=name)` : Refers to a named capturing group.
@@ -60,6 +62,7 @@
 - `(?>...)` : Atomic group (prevents backtracking within the group).
 
 ### 8. Examples
+
 1. **Email validation:**
    ```regex
    ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
@@ -90,8 +93,6 @@
    ```
    Matches dates formatted as 2024-03-01.
 
----
 
-This document provides a comprehensive guide to regex syntax, from simple to advanced constructs. Regex is powerful and widely used in search, validation, and text manipulation.
 
 

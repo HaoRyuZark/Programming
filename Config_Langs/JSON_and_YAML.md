@@ -140,6 +140,7 @@ recentLogins:
 
 ## YAML Syntax Explained
 
+
 | Element                   | Description                                                                     |
 | ------------------------- | ------------------------------------------------------------------------------- |
 | **Key-Value Pairs**       | Written as `key: value`                                                         |
@@ -156,6 +157,7 @@ recentLogins:
 ---
 
 ## YAML vs. JSON (Quick Comparison)
+
 
 | Feature         | YAML                         | JSON                         |
 | --------------- | ---------------------------- | ---------------------------- |

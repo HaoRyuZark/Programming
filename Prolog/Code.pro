@@ -1,16 +1,51 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Rules of the Theory 
+
+% A <- B , C
+
+% Only AND (,) at the right
+% all B,C,... are atoms
+% max one atom at the left 
+
+% Horn Scheme 
+
+% Relation Rule: A <- B, C, D 
+% Question Rule: {} <- B, c
+% Fact Rule: A <- {}
+% Empty Clause Rule: {} <- {}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Facts
 
 % what is specified inside the parenthesis are the so called atoms which act as constants
+% relationship(object1, object2).
+
+human(i).              % {} <- human(I)
+stupid(i).             % {} <- stutpid(I)
+stupid(X) :- human(X). % stupid(X) <- human(X)
+
+% {} <- stupid(I) \land stupid(I) <- human(I)
+%               \      /
+%         {} <- human(I)
+% {} <- human(I) \land human(I) <- {}
+%         |       /
+%        {} <-   {} 
+%
 
 loves(romeo, juliet). % this is a fact 
 
-loves(juliet, romeo) :- loves(romeo, juliet). % :- is use as an if 
+loves(juliet, romeo) :- loves(romeo, juliet). % :- is use as an if and ',' for and
 
 % More facts
 male(albert).
 female(juliet).
+
+is_juliet(juliet).
+
+i_love(X):- female(X); is_juliet(X). % the ; stands for 'or' 
 
 % An atom can contain letters, numbers, +, -, _, *, /, <, >, :, ., ~, &
 
@@ -54,11 +89,16 @@ does_alice_dances(alice) :- dances_else(alice),
     write('Output string').
 
 
+% Whe using variables inside our rules, prolog tests all possible combination which match in a llist matter
+predecessor(X, Z) :- parent(X,Z). % base case: no more predecessors -> Z is predecessor of X
+predecessor(X, Z) :- parent(X, Y), predecessor(Y, Z). % get parent of the parent using Y for the value we got from parent(X,Y)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Variables
 % varialbles are allways upperc case
 % loves(X, Y) will give us all possible valid combinations (run inside the terminal)
+
 
 stabs(tybalt, mercutio, sword). 
 hates(romeo, X) :- stabs(X, mercutio, sword).
@@ -96,15 +136,20 @@ what_grade(Other):-
     Grade is Other - 5,
     format('Go to grade ~w', [Grade]).
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Structures
 
+% A struture is a collection of relationships
+
 %pet named Olive?
 
-owns(albert, pet(cat, olive)).
+owns(albert, pet(cat, olive)). % compound fact -> structure
 
+p1(1,2).
+p2(3,6).
+
+segment(p1(1,2), p2(3,6)). % representation of a line sigment
 
 customer(tom, smith, 20.55).
 customer(sally, smith, 120.55).
@@ -126,12 +171,6 @@ horizontal(line(point(X, Y), point(X2, Y))).
 
 % We could also ask for the X and Y points
 % vertical(line(point(5, 10), X)). = X = point(5,_)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Trace
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -307,22 +346,23 @@ process_stream(Char, Stream) :-
 
 % They can be used to store atoms and other more complex terms
 
-
 % Constructing a list 
 wirte([albert | [alice, john]]).
 
 % Get the length
 length([1,2,3]).
 
+len2([], 0).
+len2([X |T], N) :- len2(T, N1), N is N1 + 1.
+
 % Dividing a list
 % [H | T] = [a,b,c] % where H = a, T [b, c]
 
+% Combinint lists
+% L = [1 | 2, 3, 4] = [1,2,3,4]
+
 % Check if an element is in a list
 %member(a, [a,b,c])
-
-% Custom contains function
-contains(X, [X|R]).
-contains(X, [Y|R]) :- contains(X, R).
 
 % Reverse a list
 % reverse([1,2,3,4,5], X).
@@ -330,16 +370,79 @@ contains(X, [Y|R]) :- contains(X, R).
 % Concatenate 2 lists
 % append([1,2,3], [4,5,6], X).
 
-apppend2([], L, L).
-apppend2([X|R], L, [X|T]) :- apppend2(R, L, T). % it takes three lists: l1, l2, out output; and L a parameter to work with
+append2([], L, L). % the base case just tells us to append the whole second list
+append2([X|R], L, [X|T]) :- append2(R, L, T). % it takes three lists: l1, l2, out output; and L a parameter to work with
+% the rules tell us that we get the first element, our second list stays intact, and we proceed to create a list with the 
+% current head of the first list and a list T. T is just a variable we use to get the return value of the previous recursive call 
+
+% In words
+
+interm(0, 'zero').
+interm(1, 'one').
+interm(2, 'two').
+interm(3, 'three').
+interm(4, 'four').
+interm(5, 'five').
+interm(6, 'six').
+interm(7, 'seven').
+interm(8, 'eight').
+interm(9, 'nine').
+
+in_words([], []).
+in_words([X|R], [C | T]) :- interm(X, C), in_words(R, L). % first it trys to find the right math for X, the it proceeds to form a list  and repeats the steps
+
+% Delete an item for a given list
+
+delete(X, [X], []).
+delete(X, [X | R], R).
+delete(X, [H | T], [H | R]) :- delete(X, T, R).
+
+% Permutations
+
+del(X, [X | R], R).
+del(X, [H | T], [H | R]) :- delete(X, T, R).
+
+list_permutations([], []).
+list_permutations(L, [X | P]) :- del(X, L, L1), list_permutations(L1, P). % delete the X from the list to get L1, and then proceed recurse to permute the other list
+
+% Custom contains function
+contains(X, [X|R]).
+contains(X, [Y|R]) :- contains(X, R).
+
+% Append
+
+list_append(L1, L2, L2) :- contains(L1, L2),!.
+list_append(L1, L2, [L1 | L2]).
+
+% Find Last Element
+
+get_last([X], X).
+get_last([_ | R], Y) :- get_last(R, Y).
 
 % Write items in list on separate line
 write_list([]).
-
 wirte_list([Head|Tail]) :-
   write(Head), nl,
   write_list(Tail).
 % write_list([1,2,3,4,5]). = Outputs the list
+
+% Custom len
+len([], 0).
+len([_|R], Y) :- len(R, Y1), Y is Y1 + 1.
+
+% Sum function
+sum2([], 0).
+sum2([X | R], Y) :- sum2(R, Y1), Y is X + Y1.
+
+% Is Sorted function
+
+is_sorted([]).
+is_sorted([_]).
+is_sorted([X, Y|R]) :- X =< Y, is_sorted([Y | R]).
+
+% Custom Reverse Function
+reverse2([], []).
+reverse2([X|R], T) :- reverse2(T, TX), append(RT, [X], T).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -386,3 +489,51 @@ fib(1, 1).
 fib(X, Y):- X > 1, X1 is X - 1, X2 is X-2, fib(X1, Y1), fib(X2, Y2), Y = Y1 + Y2.
 
 % use fib(5, Y): is 5
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Bactracking
+
+boy(a).
+boy(b).
+boy(c).
+girl(ab).
+girl(bc).
+girl(cd).
+
+% This will traverse among all possible pairs in 
+% tree like strucure just like tradicional backtracking
+possible_pair(X,Y):- boy(X), girl(Y). 
+
+
+river(1, 10).
+river(4, 6).
+river(X, Y) :- river(X1, Y), river(X, Y1), Y1 is Y - 1,  X1 is X - 1. 
+
+% Find the first instersection which has a river
+
+find_river(X, Y):- river(X, Y).
+
+% Max and Min
+
+% We use the third argument as our return value
+max(X, Y, X) :- X >= Y.
+max(X, Y, Y) :- X < Y.
+
+min(X, Y, X) :- X =< Y.
+min(X, Y, Y) :- X > Y.
+
+% Check line segments
+
+vertical(p1(X1, _), p2(X2, _)) :- X1 == X2. 
+horizontal(p1(_, Y1), p2(_, Y2)) :- Y1 == Y2.
+oblique(p1(X1, Y1), p2(X2, Y2)) :- X1 \== X2, Y1 \== Y2.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The cut operator 
+
+% The cut operator is used to cut the backtracking process, by signalizing 
+% the interperter to no reconsdir more rules before the previous choice
+

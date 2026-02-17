@@ -5,13 +5,6 @@
 #include <time.h>
 #include <semaphore.h>
 
-/*
- * As a side note when using threads we can pass an arugment using the address of the argument of arguments into the 
- * pthread_create function. And to get it after the threads terminante pass the address 
- * to the pthread_join function (void**) &result.
- *
- * Another concept which is not very often use are barriers which allow the access to a resource only when a certain number of threads want ot access it.
- * */
 #define THREAD_NUM 8
 
 sem_t semEmpty;
@@ -31,14 +24,14 @@ void* producer(void* args) {
         sleep(1);
 
         // Add to the buffer
-        sem_wait(&semEmpty);
+        sem_wait(&semEmpty); // wait until it is empty
         pthread_mutex_lock(&mutexBuffer);
         
         buffer[count] = x;
         count++;
         
         pthread_mutex_unlock(&mutexBuffer);
-        sem_post(&semFull);
+        sem_post(&semFull); // notify the other threads that they can take stuff from the buffer
     }
 }
 
@@ -48,14 +41,14 @@ void* consumer(void* args) {
         int y;
 
         // Remove from the buffer
-        sem_wait(&semFull);
+        sem_wait(&semFull); // wait until there is stuff to consume
         pthread_mutex_lock(&mutexBuffer);
         
         y = buffer[count - 1];
         count--;
         
         pthread_mutex_unlock(&mutexBuffer);
-        sem_post(&semEmpty);
+        sem_post(&semEmpty); // notify that production is needed
 
         // Consume
         printf("Got %d\n", y);

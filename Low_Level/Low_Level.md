@@ -1,12 +1,6 @@
 # Systems Programming
 
-Systems programming involves writing software that provides services to the computer hardware. This includes operating systems, device drivers, and other low-level software that interacts directly with the hardware. To understand systems programming, one must be familiar with the architecture of the computer, including how memory is managed, how processes are scheduled, and how input/output operations are performed. This document covers low level concepts which are essential for systems programming.
-
----
-
 ## Size of Variables
-
-In contrast to high-level languages, low-level languages like C allow you to control the size of variables explicitly. The size of a variable can affect performance and memory usage. Here are some common variable sizes in C:
 
 - `char`: 1 byte
 - `short`: 2 bytes
@@ -14,8 +8,6 @@ In contrast to high-level languages, low-level languages like C allow you to con
 - `long`: 4 or 8 bytes (depending on the architecture)
 - `float`: 4 bytes
 - `double`: 8 bytes
-
-By understanding the size of different data types, you can make informed decisions about memory allocation and optimize your programs for better performance.
 
 ---
 
@@ -228,7 +220,8 @@ Combine the results: 00101010_2.
 
 ## Floating-Point Numbers
 
-Floating-point numbers are used to represent real numbers (numbers with fractional parts) in binary, similar to scientific notation. They are represented by a sign bit, an exponent, and a mantissa (or significand). The IEEE 754 standard is the most widely used format for floating-point arithmetic.
+Floating-point numbers are used to represent real numbers (numbers with fractional parts) in binary, similar to scientific notation. They are represented 
+by a sign bit, an exponent, and a mantissa (or significand). The IEEE 754 standard is the most widely used format for floating-point arithmetic.
 
 - Sign bit: 0 for positive, 1 for negative.
 
@@ -307,7 +300,8 @@ int main() {
 
 ## Pointers
 
-Pointers are a fundamental concept in low-level programming. They allow you to directly manipulate memory addresses, which is crucial for performance and resource management. A pointer is a variable that stores the address of another variable.
+Pointers are a fundamental concept in low-level programming. They allow you to directly manipulate memory addresses, which is crucial for performance 
+and resource management. A pointer is a variable that stores the address of another variable.
 
 Example of using pointers in C:
 
@@ -351,7 +345,8 @@ char *(*(*x[8][8])())[10]; // x is a 2D array of pointers to functions that retu
 
 ### Strings and Char Buffers in C
 
-In C, strings are represented as arrays of characters terminated by a null character ('\0'). Unlike higher-level languages, C does not have a native string type—just character arrays.
+In C, strings are represented as arrays of characters terminated by a null character ('\0'). Unlike higher-level languages, C does not have a native 
+string type—just character arrays.
 
 ```c
 char str1[] = "Hello";       // Size is automatically 6 (5 + null terminator)
@@ -394,7 +389,8 @@ int main() {
 
 ## Bit Manipulation
 
-Bit manipulation is a powerful technique in systems programming that allows you to perform operations at the bit level. This can be useful for optimizing performance, reducing memory usage, and implementing low-level protocols.
+Bit manipulation is a powerful technique in systems programming that allows you to perform operations at the bit level. This can be useful for 
+optimizing performance, reducing memory usage, and implementing low-level protocols.
 
 Example of bit manipulation in C:
 
@@ -501,7 +497,8 @@ subtracts 48 from the binary code of the character. For multiple numbers with mu
 
 ## The Stack
 
-Is a memory region that stores local variables, function parameters, and return addresses. It operates in a last-in, first-out (LIFO) manner. The data is stored contiguously, and the stack grows downwards in memory. Each function call creates a new stack frame that contains the function's local variables and parameters.
+Is a memory region that stores local variables, function parameters, and return addresses. It operates in a last-in, first-out (LIFO) manner. The data is 
+stored contiguously, and the stack grows downwards in memory. Each function call creates a new stack frame that contains the function's local variables and parameters.
 
 ---
 
@@ -518,7 +515,9 @@ Contrary to inlining, **outlining** is based on jumping to the address of the of
 
 ## The Heap
 
-The heap is a memory region used for dynamic memory allocation. Unlike the stack, memory in the heap is managed manually by the programmer using functions like `malloc`, `calloc`, `realloc`, and `free`. The heap allows for more flexible memory usage, but it also requires careful management to avoid memory leaks and fragmentation. The heap is considered slower than the stack for memory allocation and deallocation because it involves more complex bookkeeping. This slowness is caused by the fragmentation of the memory.
+The heap is a memory region used for dynamic memory allocation. Unlike the stack, memory in the heap is managed manually by the programmer using functions 
+like `malloc`, `calloc`, `realloc`, and `free`. The heap allows for more flexible memory usage, but it also requires careful management to avoid memory leaks 
+and fragmentation. The heap is considered slower than the stack for memory allocation and deallocation because it involves more complex bookkeeping. 
 
 ---
 
@@ -677,7 +676,6 @@ There are two main approaches to CPU scheduling: cooperative and preemptive.
 
 - Preemptive scheduling is a more robust approach where the operating system can interrupt a running process and force it to give up the CPU. This is typically done after a certain time interval, known as a time slice, has elapsed, or when a higher-priority process becomes ready. Preemptive scheduling ensures that no single process can monopolize the CPU, leading to a more responsive and fair system. It is the dominant approach in modern operating systems.
 
-
 ### Scheduling Strategies
 
 Several algorithms and strategies are used to implement CPU scheduling, each with its own advantages and disadvantages. The choice of strategy often depends on the goals of the system (e.g., maximizing throughput, minimizing response time, or ensuring fairness).
@@ -773,19 +771,20 @@ It uses an sleeping queue to regulate the use of the computer inner timmer via s
 
 ## Race Conditions
 
-Race conditions occur when multiple threads or processes access shared resources concurrently, and the final outcome depends on the timing of their execution. This can lead to unpredictable behavior and bugs in the program. It is important to note that spanning multiple threads does not guarantee parallel execution, as the operating system may schedule them on a single core, leading to interleaved execution. But this can still result in race conditions if not properly managed.
+Race conditions occur when multiple threads or processes access shared resources concurrently, and the final outcome depends on the timing of their execution. 
 
 --- 
 
 ## Atomic Operations
 
-Atomic operations are operations that are completed in a single step relative to other threads. They are indivisible and cannot be interrupted, ensuring that no other thread can see an intermediate state. This is crucial for preventing race conditions and ensuring data consistency in concurrent programming. The mostly consist of simple operations like incrementing a counter or setting a flag, and they are typically implemented using low-level hardware instructions that guarantee atomicity.
+Atomic operations are operations that are completed in a single step relative to other threads. They are indivisible and cannot be interrupted.
 
 --- 
 
 ## Mutexes and Condition Variables
 
-Mutexes (mutual exclusions) and condition variables are synchronization primitives used to manage access to shared resources in concurrent programming. Mutexes provide a way to lock a resource so that only one thread can access it at a time, preventing race conditions.
+Mutexes (mutual exclusions) and condition variables are synchronization primitives used to manage access to shared resources in concurrent programming.
+Mutexes provide a way to lock a resource so that only one thread can access it at a time, preventing race conditions.
 
 Condition variables allow threads to wait for certain conditions to be met before continuing execution, enabling more complex synchronization patterns.
 
@@ -809,10 +808,10 @@ of the OS by regarding the specific software for all peripherals to the fabrican
 
 ## GCC Compiler Process 
 
-- Preprocessor → Inserts macros, eliminates comments etc. 
-- Compiler     → Generates the assembly code fromt the C file. 
-- Assembler    → Takes the assembly file and generates an object file which consists of headers and the binary machine structions. It is not executable. 
-- Linker       → Takes the object file/s and links them togethter to create an executable.
+- Preprocessor: Inserts macros, eliminates comments etc. 
+- Compiler: Generates the assembly code fromt the C file. 
+- Assembler: Takes the assembly file and generates an object file which consists of headers and the binary machine structions. It is not executable. 
+- Linker: Takes the object file/s and links them togethter to create an executable.
 
 ---
 
@@ -916,7 +915,8 @@ By default, every process starts with three open file descriptors:
 
 ### File Descriptors and Sockets:
 
-In networking, **sockets are treated like files**. When you create a socket using `socket()`, the system returns a file descriptor that you can use for reading and writing data:
+In networking, **sockets are treated like files**. When you create a socket using `socket()`, the system returns a file descriptor that you can use for reading
+and writing data:
 
 ```c
 int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -963,7 +963,8 @@ It as framework for working with networks. It stands for **Open System Interconn
 
 ## UDP and TCP
 
-When it comes to computer networking, **UDP (User Datagram Protocol)** and **TCP (Transmission Control Protocol)** are two core transport layer protocols used to send data over the Internet. Each has its own characteristics, strengths, and ideal use cases.
+When it comes to computer networking, **UDP (User Datagram Protocol)** and **TCP (Transmission Control Protocol)** are two core transport layer protocols used to 
+send data over the Internet. Each has its own characteristics, strengths, and ideal use cases.
 
 ### TCP (Transmission Control Protocol)
 
@@ -1105,7 +1106,7 @@ In linux the `ip link` command will return three device names
 
 - `lo` for the loop back device
 - `Ethernet Plug`
-- `Ẁifi card`
+- `Wifi card`
 
 ## Network Protocols
 

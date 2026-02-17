@@ -436,7 +436,7 @@ SELECT name as 'Customers' FROM Customers LEFT JOIN Orders ON Customers.id = Ord
 
 ## EXISTS
 
-`EXISTS` is pretty useful for cases where we just want to select rows if they are inside in other table
+`EXISTS` is pretty useful for cases where we just want to select rows if they are inside in another table
 
 ```sql
 SELECT p.name
@@ -454,8 +454,7 @@ WHERE NOT EXISTS (
 
 ## Union
 
-- Combines results of two queries.
-- Removes duplicates (`UNION ALL` keeps them).
+Combines results of two queries and removes duplicates (`UNION ALL` keeps them).
 
 Example:
 
@@ -587,7 +586,7 @@ WHERE age < 18;
 
 ## Nested Queries
 
-- Query inside another query.
+Query inside another query.
 
 Example:
 
@@ -605,7 +604,7 @@ WHERE id IN (
 
 ## Triggers
 
-- Run automatically when an event occurs.
+Run automatically when an event occurs.
 
 Example:
 
@@ -660,13 +659,8 @@ The oringal table just had month, id an revenue, but we instead return a new tab
 
 ## Transactions
 
-- Used to group multiple SQL statements into a single unit of work.
-- Ensures **atomicity** (all or nothing).
-- Commands:
-
-  - `BEGIN` or `START TRANSACTION`: start a transaction
-  - `COMMIT`: save changes
-  - `ROLLBACK`: undo changes
+The transactions are a way of avoding anomalies inside the database by adding the features of `commit` and `rollback`. A
+transaction woks under the philosophy of all or nothing.
 
 Example:
 
@@ -690,6 +684,8 @@ Multiple reads are permitted
 ### Exclusion Lock  
 
 Only one write 
+
+--- 
 
 ## Schema Example
 
@@ -805,132 +801,7 @@ CREATE TRIGGER IF NOT EXISTS check_obstacle_not_location
 END;
 ```
 
-## Example II
-
-```sql
-CREATE TABLE employee (
-  emp_id INT PRIMARY KEY,
-  first_name VARCHAR(40),
-  last_name VARCHAR(40),
-  birth_day DATE,
-  sex VARCHAR(1),
-  salary INT,
-  super_id INT,
-  branch_id INT
-);
-
-CREATE TABLE branch (
-  branch_id INT PRIMARY KEY,
-  branch_name VARCHAR(40),
-  mgr_id INT,
-  mgr_start_date DATE,
-  FOREIGN KEY(mgr_id) REFERENCES employee(emp_id) ON DELETE SET NULL
-);
-
-ALTER TABLE employee
-ADD FOREIGN KEY(branch_id)
-REFERENCES branch(branch_id)
-ON DELETE SET NULL;
-
-ALTER TABLE employee
-ADD FOREIGN KEY(super_id)
-REFERENCES employee(emp_id)
-ON DELETE SET NULL;
-
-CREATE TABLE client (
-  client_id INT PRIMARY KEY,
-  client_name VARCHAR(40),
-  branch_id INT,
-  FOREIGN KEY(branch_id) REFERENCES branch(branch_id) ON DELETE SET NULL
-);
-
-CREATE TABLE works_with (
-  emp_id INT,
-  client_id INT,
-  total_sales INT,
-  PRIMARY KEY(emp_id, client_id),
-  FOREIGN KEY(emp_id) REFERENCES employee(emp_id) ON DELETE CASCADE,
-  FOREIGN KEY(client_id) REFERENCES client(client_id) ON DELETE CASCADE
-);
-
-CREATE TABLE branch_supplier (
-  branch_id INT,
-  supplier_name VARCHAR(40),
-  supply_type VARCHAR(40),
-  PRIMARY KEY(branch_id, supplier_name),
-  FOREIGN KEY(branch_id) REFERENCES branch(branch_id) ON DELETE CASCADE
-);
-
-
--- -----------------------------------------------------------------------------
-
--- Corporate
-INSERT INTO employee VALUES(100, 'David', 'Wallace', '1967-11-17', 'M', 250000, NULL, NULL);
-
-INSERT INTO branch VALUES(1, 'Corporate', 100, '2006-02-09');
-
-UPDATE employee
-SET branch_id = 1
-WHERE emp_id = 100;
-
-INSERT INTO employee VALUES(101, 'Jan', 'Levinson', '1961-05-11', 'F', 110000, 100, 1);
-
--- Scranton
-INSERT INTO employee VALUES(102, 'Michael', 'Scott', '1964-03-15', 'M', 75000, 100, NULL);
-
-INSERT INTO branch VALUES(2, 'Scranton', 102, '1992-04-06');
-
-UPDATE employee
-SET branch_id = 2
-WHERE emp_id = 102;
-
-INSERT INTO employee VALUES(103, 'Angela', 'Martin', '1971-06-25', 'F', 63000, 102, 2);
-INSERT INTO employee VALUES(104, 'Kelly', 'Kapoor', '1980-02-05', 'F', 55000, 102, 2);
-INSERT INTO employee VALUES(105, 'Stanley', 'Hudson', '1958-02-19', 'M', 69000, 102, 2);
-
--- Stamford
-INSERT INTO employee VALUES(106, 'Josh', 'Porter', '1969-09-05', 'M', 78000, 100, NULL);
-
-INSERT INTO branch VALUES(3, 'Stamford', 106, '1998-02-13');
-
-UPDATE employee
-SET branch_id = 3
-WHERE emp_id = 106;
-
-INSERT INTO employee VALUES(107, 'Andy', 'Bernard', '1973-07-22', 'M', 65000, 106, 3);
-INSERT INTO employee VALUES(108, 'Jim', 'Halpert', '1978-10-01', 'M', 71000, 106, 3);
-
-
--- BRANCH SUPPLIER
-INSERT INTO branch_supplier VALUES(2, 'Hammer Mill', 'Paper');
-INSERT INTO branch_supplier VALUES(2, 'Uni-ball', 'Writing Utensils');
-INSERT INTO branch_supplier VALUES(3, 'Patriot Paper', 'Paper');
-INSERT INTO branch_supplier VALUES(2, 'J.T. Forms & Labels', 'Custom Forms');
-INSERT INTO branch_supplier VALUES(3, 'Uni-ball', 'Writing Utensils');
-INSERT INTO branch_supplier VALUES(3, 'Hammer Mill', 'Paper');
-INSERT INTO branch_supplier VALUES(3, 'Stamford Lables', 'Custom Forms');
-
--- CLIENT
-INSERT INTO client VALUES(400, 'Dunmore Highschool', 2);
-INSERT INTO client VALUES(401, 'Lackawana Country', 2);
-INSERT INTO client VALUES(402, 'FedEx', 3);
-INSERT INTO client VALUES(403, 'John Daly Law, LLC', 3);
-INSERT INTO client VALUES(404, 'Scranton Whitepages', 2);
-INSERT INTO client VALUES(405, 'Times Newspaper', 3);
-INSERT INTO client VALUES(406, 'FedEx', 2);
-
--- WORKS_WITH
-INSERT INTO works_with VALUES(105, 400, 55000);
-INSERT INTO works_with VALUES(102, 401, 267000);
-INSERT INTO works_with VALUES(108, 402, 22500);
-INSERT INTO works_with VALUES(107, 403, 5000);
-INSERT INTO works_with VALUES(108, 403, 12000);
-INSERT INTO works_with VALUES(105, 404, 33000);
-INSERT INTO works_with VALUES(107, 405, 26000);
-INSERT INTO works_with VALUES(102, 406, 15000);
-INSERT INTO works_with VALUES(105, 406, 130000);
-
-```
+--- 
 
 ## Model
 
@@ -1027,125 +898,6 @@ Create a separate relation containing:
   - Any attributes of the relationship
   - Composite primary key from both foreign keys
 
-### University Example
-
-Consider a university database with **Students**, **Professors**, and **Courses**:
-
-**ER-Model Entities:**
-
-**Student:**
-- Simple attributes: `StudentID`, `FirstName`, `LastName`, `Email`, `EnrollmentDate`
-- Composite attribute: `Address:[Street:VARCHAR(100), City:VARCHAR(50), ZIP:INT]`
-- Multivalued attribute: `PhoneNumbers:{VARCHAR(15)}`
-
-$$Student: <[StudentID, FirstName, LastName, Email, EnrollmentDate, Address], \{StudentID\}>$$
-
-$$Address: [Street:VARCHAR(100), City:VARCHAR(50), ZIP:INT]$$
-
-$$PhoneNumbers: \{VARCHAR(15)\}$$
-
-**Professor:**
-- Simple attributes: `ProfessorID`, `FirstName`, `LastName`, `Email`, `HireDate`, `Salary`, `DepartmentID`
-- Composite attribute: `Office:[Building:VARCHAR(50), RoomNumber:VARCHAR(10)]`
-
-$$Professor: <[ProfessorID, FirstName, LastName, Email, HireDate, Salary, DepartmentID, Office], \{ProfessorID\}>$$
-
-$$Office: [Building:VARCHAR(50), RoomNumber:VARCHAR(10)]$$
-
-**Course:**
-- Simple attributes: `CourseID`, `CourseName`, `Credits`, `DepartmentID`
-
-$$Course: <[CourseID, CourseName, Credits, DepartmentID], \{CourseID\}>$$
-
-**Relationships:**
-
-1. **Enrollment** (Student - Course): N:M relationship with attribute `Grade`, `EnrollmentDate`
-2. **Teaches** (Professor - Course): 1:N relationship (one professor teaches many courses)
-3. **Advises** (Professor - Student): 1:N relationship with attribute `SinceDate`
-
-**Relational Model Translation:**
-
-```sql
--- 1. Student entity (without composite and multivalued attributes)
-CREATE TABLE Student (
-    StudentID INT PRIMARY KEY,
-    FirstName VARCHAR(50) NOT NULL,
-    LastName VARCHAR(50) NOT NULL,
-    Email VARCHAR(100) UNIQUE NOT NULL,
-    EnrollmentDate DATE NOT NULL,
-    -- Composite attribute Address expanded
-    Street VARCHAR(100),
-    City VARCHAR(50),
-    ZIP INT
-);
-
--- 2. Multivalued attribute PhoneNumbers becomes separate table
-CREATE TABLE StudentPhone (
-    StudentID INT,
-    PhoneNumber VARCHAR(15),
-    PRIMARY KEY (StudentID, PhoneNumber),
-    FOREIGN KEY (StudentID) REFERENCES Student(StudentID) ON DELETE CASCADE
-);
-
--- 3. Professor entity (composite attribute expanded)
-CREATE TABLE Professor (
-    ProfessorID INT PRIMARY KEY,
-    FirstName VARCHAR(50) NOT NULL,
-    LastName VARCHAR(50) NOT NULL,
-    Email VARCHAR(100) UNIQUE NOT NULL,
-    HireDate DATE NOT NULL,
-    Salary DECIMAL(10,2) NOT NULL,
-    DepartmentID INT NOT NULL,
-    -- Composite attribute Office expanded
-    OfficeBuilding VARCHAR(50),
-    OfficeRoomNumber VARCHAR(10)
-);
-
--- 4. Course entity
-CREATE TABLE Course (
-    CourseID INT PRIMARY KEY,
-    CourseName VARCHAR(100) NOT NULL,
-    Credits INT CHECK (Credits > 0),
-    DepartmentID INT NOT NULL,
-    -- 1:N relationship - add ProfessorID as foreign key
-    ProfessorID INT,
-    FOREIGN KEY (ProfessorID) REFERENCES Professor(ProfessorID) ON DELETE SET NULL
-);
-
--- 5. N:M relationship Enrollment becomes separate table
-CREATE TABLE Enrollment (
-    StudentID INT,
-    CourseID INT,
-    Grade VARCHAR(2),
-    EnrollmentDate DATE NOT NULL,
-    PRIMARY KEY (StudentID, CourseID),
-    FOREIGN KEY (StudentID) REFERENCES Student(StudentID) ON DELETE CASCADE,
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID) ON DELETE CASCADE
-);
-
--- 6. 1:N relationship Advises
--- Add to the N side (Student table) or create separate table
-CREATE TABLE Advises (
-    ProfessorID INT,
-    StudentID INT,
-    SinceDate DATE NOT NULL,
-    PRIMARY KEY (StudentID), -- Each student has only one advisor
-    FOREIGN KEY (ProfessorID) REFERENCES Professor(ProfessorID) ON DELETE SET NULL,
-    FOREIGN KEY (StudentID) REFERENCES Student(StudentID) ON DELETE CASCADE
-);
-```
-
-**Summary of Translation:**
-
-| ER Concept | Translation | Example |
-|------------|-------------|---------|
-| Strong Entity | Table with PK | `Student`, `Professor`, `Course` |
-| Composite Attribute | Flatten to atomic attributes | `Address` → `Street`, `City`, `ZIP` |
-| Multivalued Attribute | Separate table with FK | `PhoneNumbers` → `StudentPhone` table |
-| 1:N Relationship | FK in N side | `Teaches` → `ProfessorID` in `Course` |
-| N:M Relationship | New table with both FKs as composite PK | `Enrollment(StudentID, CourseID)` |
-| Relationship Attributes | Add to relationship table | `Grade` in `Enrollment` |
-
 ---
 
 ## Types of Keys
@@ -1188,44 +940,4 @@ This normal is mostly given in relational algebra problems.
 - **IV Normal Form:** Multivalued dependencies in a table must be multivalued dependencies on the key.
 
 - **V Normal Form:** Our table in the forth normal form cannot be describable as the logical result of joining some other tables
-
---- 
-
-## Practical Use of SQL in Code with Java as Example: 
-
---- 
-
-## Embeded SQL 
-
- --- 
-
-## API's
-
---- 
-
-## ORM, JPA and Hibernate
-
-### JPA
-
-### ORM 
-
-### Static Mapping
-
-### Dynamic Mapping
-
-### Hybernate
-
-### Entity Classes 
-
-### Inheritance Handling
-
-### Foreign Keys 
-
-### Relations
-
---- 
-
-## NoSQL Databases
-
-
 

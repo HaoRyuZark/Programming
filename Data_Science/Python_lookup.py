@@ -249,23 +249,6 @@ def greet(name: str) -> str:
 
 print(greet("Bob"))
 
-###############################################################################
-
-# Dictionaries 
-
-my_dict = {"a": 1, "b": 2, "c": 3}
-dict_comprehension = {k: v * v for k, v in my_dict.items()}
-
-for key, value in my_dict.items():
-    print(f"{key}: {value}")
-
-ele = my_dict.get("b", "Not Found")
-print(ele)
-
-my_dict.update({"d": 4})
-
-print(my_dict)
-
 ############################################################################### 
 
 # Other Data Structures and its methods
@@ -307,16 +290,101 @@ print(math.log(100, 10))
 # Strings 
 
 sample_string: str = "  Hello, Data Science!  "
-print(sample_string.lower())
-print(sample_string.upper())
-print(sample_string.strip())
-print(sample_string.replace("Data Science", "Python"))
-print(sample_string.split(","))
-print(sample_string.find("Data"))
+
+sample_string.capitalize()
+
+sample_string.lower() 
+
+sample_string.upper()
+
+sample_string.casefold() # returns a version where the case does not matter for comparasions
+
+sample_string.center(20) # centers the text in the console
+
+sample_string.count('H') # count occurences of a pattern
+
+sample_string.encode(encoding="UTF-8") # returns a byte array of the string
+
+sample_string.endswith('a') # returnf if the string ends with the substring
+sample_string.endswith(('', ' ')) # tuple work as or
+
+sample_string.strip('pattern') # remove the pattern
+
+sample_string.replace("Data Science", "Python", 1) # the last parameter is the limit which is optional
+
+sample_string.split(",") # split at separator
+
+sample_string.find("Data") # finds the index first and last occurence of the substring
+
+sample_string_2 = 'I love {person}'
+sample_string_2.format(person='Ren')
 
 f_string: str = "Name: {}, Age: {}"
 print(f_string.format("Alice", 30))
 
+dict_t = {'person': 'Micha'}
+sample_string_2.format_map(dict_t)
+
+sample_string.index('Science') # return the start index of the first occurrence of the pattern
+
+sample_string.isalnum() # is alpha numeric
+
+sample_string.isalpha()
+
+sample_string.isascii()
+
+sample_string.isdecimal() # if all characters in the string are decimal and there is at least one character in the string
+
+sample_string.isdigit() # if all characters in the string are digits and there is at least one character in the string
+
+sample_string.isnumeric() # if all characters in the string are numeric and there is at least one character in the strin
+
+sample_string.isidentifier() # if can be used as a var name in python
+
+sample_string.islower()
+
+sample_string.isprintable() # if there are not scape-sequences
+
+sample_string.isspace()
+
+sample_string.istitle() # if in Title Syntax
+
+sample_string.isupper()
+
+text = '-'.join(['a', 'b', 'c'])
+
+text.ljust(20, '_') #  adjust left and fill the rest with the other sequence
+
+text.rjust(20, '-') # same as left but for the right
+
+sample_string.lstrip() #
+
+table = text.maketrans('a', 'z') # translation table
+text.translate(table)
+
+text.partition('-') # split at the pattern
+
+sample_string.removeprefix('Hello')
+
+sample_string.removesuffix('Sciece!')
+
+text.rfind('c') # find starting from the end
+
+text.rindex('c') # same as above but for the right-starting case
+
+text.rpartition('=')
+
+text.rsplit('-')
+
+sample_string.rstrip() # string from the right side
+
+sample_string.splitlines(keepends=True)
+
+sample_string.startswith(' ')
+
+sample_string.swapcase()
+
+sample_string.title() # convert to title case
 
 ###############################################################################
 
@@ -633,3 +701,81 @@ l = ["A", "B", "C"]
 
 c = Counter(l) # returns a dictionary with the uniques of the list as keys as their occurrences as values
 c.update(["A"]) # based on its previous state it updates it accordingly to its content
+
+###############################################################################
+
+# List Methods
+
+l = [1,2,3,4,5,5,6,6,7,6,6,43,1]
+
+l.append(68) # add 68 to the tail
+
+lc = l.copy() # creates a shallow copy
+
+l.count(4) # count occurrences of 4
+
+l.extend([9,0,1]) # concatenates the other list
+
+l.index(42) # return the index of the first occurence
+
+l.insert(0, 29) # at index i put element x
+
+l.pop() # return the last element
+
+l.pop(0) # return the element at the specified index
+
+l.remove(6) # remove the element x
+
+l.reverse() # reverses the list
+
+l.sort() # sorts
+
+l.clear() # empties the list
+
+###############################################################################
+
+# Dictionaries
+
+my_dict = {"a": 1, "b": 2, "c": 3}
+dict_comprehension = {k: v * v for k, v in my_dict.items()}
+
+for key, value in my_dict.items():
+    print(f"{key}: {value}")
+
+ele = my_dict.get("b", "Not Found")
+print(ele)
+
+my_dict.update({"d": 4})
+
+print(my_dict)
+
+users = {0: 'A', 1: 'B', 2 : 'C'}
+
+users.keys() # iterator over the keys
+
+users.values() # iterator over the values
+
+users_c = users.copy() # creates a shallow copy
+
+users.get(0) # get element based on the key
+
+users.setdefault(99, '99') # if the key does not exist it is inserted with the value and then returned
+
+dict2 = users.fromkeys(['A', 'B', 'C'], 'Something') # creates a dictionary from an iterable whose elements are going to be the keys
+# we can also pass a default val for the values instead of having None
+
+users.items() # returns all the key value pairs
+
+users.update({3: 'James'})
+
+users.pop(0) # removes by key and return the value
+
+users.popitem() # pops the last item
+
+users.clear() # deletes the contents
+
+
+
+
+
+
