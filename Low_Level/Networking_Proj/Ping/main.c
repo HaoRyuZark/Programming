@@ -22,7 +22,7 @@ unsigned int dest_addr; // destination address
 
 // Parity check for data integrity
 unsigned short in_cksum(unsigned short* data, int count) {
-     
+      
     // Standard internet check sum algorithm
     unsigned long sum = 0;
 

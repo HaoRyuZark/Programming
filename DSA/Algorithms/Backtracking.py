@@ -61,30 +61,6 @@ Use cases:
 Example 1 find all subsets of a set
 '''
 
-
-def powerset(nums: list[int]):
-
-    res: list[list[int]] = []
-    n: int = len(nums)
-
-    def backtrack(state: list[int], index: int):
-        
-        res.append(state.copy())
-            
-        
-        for i in range(index, n):
-             
-            state.append(i)
-            backtrack(state, i)
-            state.pop()
-
-    backtrack([], 0)
-
-    print(res)
-
-powerset([1,2,3])
-
-# Alternative
 def find_subsets(nums):
     
     res: list[list[int]] = []

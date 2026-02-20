@@ -5,3 +5,4 @@ protobuf
 OpenAPI
 WebSockets
 AMQP
+Amdahl
