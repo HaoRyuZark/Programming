@@ -81,6 +81,14 @@ void memory_management_c_style() {
 
 ---
 
+## sizeof
+
+The `sizeof()` operator returns the size of an element in bytes.
+
+- We use `sizeof(arr)/sizeof(arr[0])` to get length of the array. 
+
+--- 
+
 ## Pointers
 
 Pointers are a fundamental concept in low-level programming. They allow you to directly manipulate memory addresses, which is crucial for performance 
@@ -105,6 +113,70 @@ int var = 42;
     int** dptr = &ptr;
 
     printf("Dereferencing double pointer %d", **ptr);
+    return 0;
+}
+```
+
+### Pointer Arithmetic 
+
+We sometimes need to move a pointer by a certain amount to access a contiguous block of memory
+
+```c
+
+#include <stdio.h> 
+#include <stdlib.h>
+
+int main() {
+    
+    int* arr = (int*)malloc(sizeof(int) * 10); //allocating 40 bytes or 10 integers
+    
+    for (int i = 0; i < 10; i++) {
+        *(arr + i) = i; //moving from our starting address allways a multiple of 4 bytes
+        //equivalent to arr[i]
+    }
+    
+    free(arr);
+    return 0;
+}
+```
+
+### Arrays 
+
+Arrays in `C` decay to pointers, which means they are only pointers. 
+
+Here we create an array as a pointer.
+
+```c 
+#include <stdio.h> 
+#include <stdlib.h>
+
+// decay to int*
+void print_size1(int* arr) {
+
+    printf("Size of the array in function with int*: %d", sizeof(arr));
+}
+
+// decay to int*
+void print_size2(int arr[]) {
+
+    printf("Size of the array in function with int[]: %d", sizeof(arr));
+}
+
+int main() {
+    
+    // this is equivalent to int arr[10]
+    int* const arr = alloca(sizeof(int) * 10); // stack allocated 
+    for (int i = 0; i < 10; i++) {
+        *(arr + i) = i; 
+    }
+
+    printf("First element: %d", 1[arr]); // this is cursed but allowed: gets translated to *(1 + arr)
+    printf("First element: %d", "hello"[1]); // this is cursed but allowed: similar
+    
+    print_size1(arr); // 8 bytes
+    print_size2(arr); // 8 bytes
+    printf("Size of the array in main: %d", sizeof(arr)); // 40
+
     return 0;
 }
 ```
@@ -219,6 +291,10 @@ void c_strings() {
     int cmp = strncmp(dest, "Hello, World! How are you?", strnlen(dest, sizeof(dest)) ); // Compare strings
 
     printf("String length: %zu\n", strlen(dest)); // Get string length  
+
+    char* holi = "Sexo en el Oxxo";
+    strcspn(holi, 'O'); //returns the first occurence of the char in the string, else it return the length of the string
+
 }
 ```
 ---
@@ -534,25 +610,26 @@ We have the following format specifiers for the printf functions.
 
 ## Reading and Writing to Files
 
-We can open files usinf the function `fopen(path, mode)`
+We can open files usinf the function `FILE* fopen(char* path, char* mode)`, there is also the `int open(char* path, int flags)` systemcall 
+whose flags are passed by oring them bitwiese and whose return value is the file descriptor of the target file. Note that `open` is more slower to the IO being buffered which means that it is done byte by byte.
 
-Table of opening modes for files: 
+Table of opening modes for files with `fopen()`: 
 
 
-| Opening Mode | Exaplantion | 
-|:------------:| :-----------|
-|`r` |  Searches file. If the file is opened successfully fopen( ) loads it into memory and sets up a pointer that points to the first character in it. If the file cannot be opened fopen( ) returns NULL|
-|`rb`|    Open for reading in binary mode. If the file does not exist, fopen( ) returns NULL|
-|`w`|   Open for writing in text mode. If the file exists, its contents are overwritten. If the file doesn’t exist, a new file is created. Returns NULL, if unable to open the file|
-|`wb`|  Open for writing in binary mode. If the file exists, its contents are overwritten. If the file does not exist, it will be created|
-|`a`|   Searches file. If the file is opened successfully fopen( ) loads it into memory and sets up a pointer that points to the last character in it. It opens only in the append mode. If the file doesn’t exist, a new file is created. Returns NULL, if unable to open the file|
-|`ab`|  Open for append in binary mode. Data is added to the end of the file. If the file does not exist, it will be created|
-|`r+`|  Searches file. It is opened successfully fopen( ) loads it into memory and sets up a pointer that points to the first character in it. Returns NULL, if unable to open the file|
-|`rb+`|     Open for both reading and writing in binary mode. If the file does not exist, fopen( ) returns NULL|
-|`w+`|  Searches file. If the file exists, its contents are overwritten. If the file doesn’t exist a new file is created. Returns NULL, if unable to open the file|
-|`wb+`|     Open for both reading and writing in binary mode. If the file exists, its contents are overwritten. If the file does not exist, it will be created|
-|`a+`|  Searches file. If the file is opened successfully fopen( ) loads it into memory and sets up a pointer that points to the last character in it. It opens the file in both reading and append mode. If the file doesn’t exist, a new file is created. Returns NULL, if unable to open the file|
-|`ab+`| Open for both reading and appending in binary mode. If the file does not exist, it will be created|
+| Opening Mode | Explanation                                                                                                                                                                                                                                                                      |
+| :----------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|      `r`     | Open an existing file for reading. The stream is positioned at the beginning of the file. The file must exist; otherwise, `fopen()` returns `NULL`.                                                                                                                              |
+|     `rb`     | Open an existing file for reading in binary mode. The stream is positioned at the beginning of the file. The file must exist; otherwise, `fopen()` returns `NULL`.                                                                                                               |
+|      `w`     | Open a file for writing. If the file exists, its contents are truncated to zero length. If it does not exist, a new file is created. The stream is positioned at the beginning of the file. Returns `NULL` on failure.                                                           |
+|     `wb`     | Open a file for writing in binary mode. If the file exists, its contents are truncated to zero length. If it does not exist, a new file is created. The stream is positioned at the beginning of the file. Returns `NULL` on failure.                                            |
+|      `a`     | Open a file for writing in append mode. All writes occur at the end of the file, regardless of the current file position. If the file does not exist, it is created. The initial file position for writing is at the end of the file. Returns `NULL` on failure.                 |
+|     `ab`     | Open a file for writing in binary append mode. All writes occur at the end of the file. If the file does not exist, it is created. Returns `NULL` on failure.                                                                                                                    |
+|     `r+`     | Open an existing file for both reading and writing. The stream is positioned at the beginning of the file. The file must exist; otherwise, `fopen()` returns `NULL`.                                                                                                             |
+|     `rb+`    | Open an existing file for both reading and writing in binary mode. The stream is positioned at the beginning of the file. The file must exist; otherwise, `fopen()` returns `NULL`.                                                                                              |
+|     `w+`     | Open a file for both reading and writing. If the file exists, its contents are truncated to zero length. If it does not exist, a new file is created. The stream is positioned at the beginning of the file. Returns `NULL` on failure.                                          |
+|     `wb+`    | Open a file for both reading and writing in binary mode. If the file exists, its contents are truncated to zero length. If it does not exist, a new file is created. The stream is positioned at the beginning of the file. Returns `NULL` on failure.                           |
+|     `a+`     | Open a file for reading and writing in append mode. Reading may occur at any position, but all writes occur at the end of the file. If the file does not exist, it is created. The initial file position for reading is at the beginning of the file. Returns `NULL` on failure. |
+|     `ab+`    | Open a file for reading and writing in binary append mode. Reading may occur at any position, but all writes occur at the end of the file. If the file does not exist, it is created. Returns `NULL` on failure.                                                                 |
 
 
 ### Text Files
@@ -571,10 +648,23 @@ Table of opening modes for files:
 | Reading Functions                                           | Description                                                                   |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | `fscanf(FILE *stream, const char *format, ...)`             | Uses a formatted string and variable argument list to read input from a file. |
-| `fgets(char *str, int n, FILE *stream)`                     | Reads an entire line from a file.                                             |
+| `fgets(char *str, int n, FILE *stream)`                     | Reads an entire line from a file.                                            |
 | `fgetc(FILE *stream)`                                       | Reads a single character from a file.                                         |
 | `fgetw(FILE *stream)`                                       | Reads an integer value from a file.                                           |
 | `fread(void *ptr, size_t size, size_t count, FILE *stream)` | Reads a specified number of bytes from a binary file.                         |
+
+
+
+| Miscellaneous Functions | Description |
+| ------------------------| ------------| 
+| `feof(FILE* stream)` | Returns 1 if after reading a file the comple file was read |
+| `ferror(FILE* stream)` | Returns 0 if no error occurred during the reading of the file |
+| `rewind(FILE* stream)` | Restores the file pointer to the start of the file |
+| `fseek(FILE* stream, long offset, int wherece)` |  Moves the position of the file pointer to an specific location |
+|                         | The whence tells us from where we are going to move in bytes: `SEEK_SET`, `SEEK_END` and `SEEK_CUR`|  
+| `ftell(FILE* stream)` | It returns the current position of the file pointer | 
+| `rename(char* path, char* new_name)` | Renames the file |
+| `remove(char* path)` | Deletes the file |
 
 
 Example: 
@@ -584,15 +674,17 @@ Example:
 #include <stdlib.h>
 
 int main() {
-
+    
+    // The FILE struct contains the pointer to actual copy of the file loaded into 
+    // ran plus othter meta data. What we use is a pointer to such a struct
     FILE* f; 
 
     // returns a pointer
     f = fopen("file.txt", "w"); // we specify the path and the mode: w, r, rb (read binary)
     // note that if the file does not exists it will create it
-
+    fputc("15", f);
     // reading and writing to a text file
-    
+     
     int x; 
     fscanf(f, "%d", &x);
     int num = x + 10;
@@ -717,7 +809,6 @@ int writing() {
 }
 ```
 
-
 ---
 
 ## Goto 
@@ -767,6 +858,24 @@ struct some {
     int b;
 };
 ```
+
+### Struct Padding 
+
+The order of the members of the struct matter because the compiler will try to adjust the data in most optimal way 
+for fetching the data in the most efficient way possible. This means that for optimizing to read always 
+the processors **word-size** it will add padding between the members if necessary.
+
+Example with word-size = 4 bytes = 32 bits 
+
+```c 
+// True size: 6 data bytes + 2 bytes of padding after the char c and int b
+struct some_padded {
+    char a;  // 1 byte
+    char c; // 1 byte
+    int b;  // 4 bytes 
+};
+```
+
 --- 
 
 ## Unions
@@ -2237,5 +2346,373 @@ int main() {
 ```
 
 ---
+
+## Pragma
+
+Pragmas are a kind of preproccessor directives used for giving the compiler more information. 
+They are operating system specific, i.e. system call specific.
+
+Example: 
+
+```c 
+
+```
+
+--- 
+
+## OpenMP
+
+It is a standard for parallel programming for scientific computing at the thread level.
+
+In this example the text will be printed number_of_cores_in_machine times: 
+
+```c 
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+    int x = 6; 
+    omp_set_num_threads(x)// is used to overwritte the default number of threads 
+    #pragma omp parallel
+    {
+        printf("Hello, World from thread %d!\n", omp_get_thread_num());
+    }
+    return 0;
+}
+```
+
+### How to Compile 
+
+We need to specify that we will use `openmp`.
+
+```bash 
+gcc -fopenmp -o PP PP.c
+```
+
+### Loops 
+
+Parallelization for for-loops.
+
+```c 
+#pragma omp for
+for (int i=0; i<10; i++) {
+// ...
+}
+```
+
+### Regions in OpenMP
+
+- **Parallel Region**: The block undrer `#pragma omp parallel`.
+
+- **Worksharing Region**: These are parts of the code inside a parallel regions.
+
+- **Single Region**: Only one thread executes the code.
+
+- **Sections Region**: Each thread executes one of the regions.
+
+Example: 
+
+```c 
+#pragma omp parallel
+{
+  // Code here is executed by all threads
+  printf("Hello Mom\n"); 
+
+  // Only one thread
+  #pragma omp single
+  {
+    // Worksharing-Region 1
+  }
+
+  #pragma omp for
+  for (int i=0; i<n; i++) {
+    // Worksharing-Region 2
+  }
+}
+```
+
+By default, threads wait at the end of the worksharing-regions.
+
+Example 2: 
+
+```c 
+int main() {
+	omp_set_num_threads(4);
+    #pragma omp parallel for
+    for (int i=0; i<10; i++) {
+        printf("i=%d -> Thread Nr. %d\n", i, omp_get_thread_num());
+    }
+    return 0;
+}
+```
+
+
+### Regulating Access to Variables in Threads
+
+Variables inside a parallel region exists **separetly** for each thread, but 
+we can limit their scope using specific directives.
+
+- Disabling access to variables outside the parallel region.
+
+```c 
+#pragma omp parallel default(none)
+```
+
+- `shared(var)`: Shared variable accross the threads.
+
+- `firstprivate(var)`: 1 `shared` whose value is first copied from outside the region.
+
+- `private(var)`: 1 variable `shared` which in the parallel region will be initialized
+
+- `lastprivate(var)`: simitlar to `private` but only the value of the last loop-iteration will be copied.
+
+Example: 
+
+```c
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+
+    int sum = 0;
+	omp_set_num_threads(4);
+    #pragma omp parallel default(none) firstprivate(sum)
+    {
+	    #pragma omp for
+		for (int i=0; i<100000; i++) {
+    	    sum++;
+    	}
+    	printf("Thread %d: Number of iterations: %d\n", omp_get_thread_num(), sum);
+	}
+    return 0;
+}
+```
+
+### Reductions 
+
+OpenMP support reduction operations. 
+
+Supported operations; 
+
+- `+:var`
+- `*:var`
+- `max:var`
+- `min:var`
+
+Also **all** of the bitwise operations are supported. 
+
+Example:
+
+```c 
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+
+    int sum = 0;
+	omp_set_num_threads(4);
+
+    #pragma omp parallel default(none) reduction(+:sum)
+    {
+	    #pragma omp for
+		for (int i=0; i<100000; i++) {
+    	    sum++;
+    	}
+	}
+	
+	//starting from here is sum=100000
+   	printf("Thread %d: Number of iterations: %d\n", omp_get_thread_num(), sum);
+    return 0;
+}
+```
+
+### Synchronization Mechanisms 
+
+Mechanisms to prevent race condiditons 
+
+#### Reductions 
+
+Reductions in general. 
+
+Example:
+
+```c 
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+
+    int sum = 0;
+	omp_set_num_threads(4);
+
+    #pragma omp parallel default(none) reduction(+:sum)
+    {
+	    #pragma omp for
+		for (int i=0; i<100000; i++) {
+    	    sum++;
+    	}
+	}
+	
+   	printf("Thread %d: Number of iterations: %d\n", omp_get_thread_num(), sum);
+    return 0;
+}
+```
+
+#### Critial 
+
+With this we can mark the part of the code be synchornized. 
+
+Example:
+
+```c 
+
+#pragma omp parallel for default(none) shared(x)
+for (int i=0; i<1000000; i++) {
+	#pragma omp critical
+	{
+		x++;
+	}
+}
+```
+
+#### Atomic 
+
+While useful, only one basic operations can be inside an atomic block.
+
+Supported: `++, --,  +=, *=, -=, /=, &=, ^=, |=, <<=, >>=`
+
+Example:
+
+```c 
+#pragma omp parallel for default(none) shared(x)
+for (int i=0; i<1000000; i++) {
+	#pragma omp atomic
+	x++;  //Beispiel fuehrt zu Serialisierung
+}
+```
+
+#### Barriers 
+
+By default at the end of all each worksharing-regions there is **allways** a barrier.
+
+We can declare them with:
+
+```c 
+#pragma omp barrier
+```
+
+or disable them with:
+
+```c 
+#pragma omp for nowait
+```
+
+
+#### Locks 
+
+This is just a mutex 
+
+```c 
+
+omp_lock_t my_lock;
+
+omp_init_lock(&my_lock);
+
+omp_set_lock(&my_lock);
+// critical operations 
+omp_unset_lock(&my_lock);
+
+omp_destroy_lock(&my_lock);
+```
+
+#### Single and Master 
+
+One refers to a block which is only executed by one thread and the other to a block only performed by 
+the main thread. 
+
+Master is no worksharing-region; therefore it has no barrier.
+
+```c
+#pragma omp master
+{
+// .......
+}
+
+#pragma omp single
+{
+// .......
+}
+```
+
+#### Ordered 
+
+This construct ensures that inside a loop the exucution happens in order 
+
+```c 
+#pragma omp for
+for (int i = 0; i < n; i++) {
+    #pragma omp ordered
+    {
+        // Codeblock, der in der Reihenfolge der Schleifeniteration ausgeführt wird
+    }
+}
+```
+
+#### Genetal Example 
+
+The goal is to count to 4 million.
+
+Version 1:
+
+```c 
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+	omp_set_num_threads(4);
+	int g = 0;
+	int result = 0;
+	#pragma omp parallel default(none) firstprivate(g) shared(result)
+	{
+		#pragma omp for 
+		for (int i=0; i<1000000; i++) {
+			g+=1;
+		}
+		#pragma omp atomic
+		result += g;
+	}
+	printf("%d\n", result);
+	return 0;
+}
+```
+
+Version 2: 
+
+```c 
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+	
+    omp_set_num_threads(4);
+    
+    int f[1] = {0};
+    int* ff = f;
+    int result = 0;
+
+    #pragma omp parallel default(none) shared(result) firstprivate(ff) 
+	{
+		#pragma omp for 
+		for (int i=0; i<1000000; i++) {
+			*ff+=1;
+		}
+		#pragma omp atomic
+		result += *ff;
+	}
+
+    printf("%d\n", result);
+	return 0;
+}
+```
 
 
