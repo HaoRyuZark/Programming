@@ -2715,4 +2715,167 @@ int main() {
 }
 ```
 
+#### Complex Example 
+
+```c 
+void matrix_vector_multiplication() {
+    const int size = 10; 
+
+    double a[size][size];
+    double b[size]; 
+    double c[size];
+
+    double total = 0.0;
+    
+    #pragma omp parallel 
+    {
+        
+        #pragma omp for
+        for (int i = 0; i< size; i++) {
+
+            for (int j = 0; j < size; j++) {
+                a[i][j] = (j + 1) * 1.0;
+            }
+
+            b[i] = 1.0 + (i + 1);
+            c[i] = 0.0;
+        }
+    
+        #pragma omp for reduction(+: total)
+        for (int i = 0; i < size; i++) {
+
+            for (int j = 0; j < size; j++) {
+                c[i] += a[i][j] * b[j];
+            }
+            
+            total += c[i];
+        }
+    }
+
+    printf("\nMatrix-vector total - sum of all c[] = %.2f\n\n", total);
+}
+
+void random_array() {
+
+    int arr[1000000];
+    int control = 0;
+    int count_100s = 0;
+
+    #pragma omp parallel for
+    for (int i = 0; i < 1000000; i++) {
+        unsigned int seed = time(NULL) ^ omp_get_thread_num() ^ clock();
+        arr[i] = rand_r(&seed) % 100 + 1;
+    }
+
+    #pragma omp parallel for reduction(+:count_100s)
+    for (int i = 0; i < 1000000; i++) {
+        if (arr[i] == 100)
+            count_100s += 1;
+    }
+
+    for (int i = 0; i < 1000000; i++) {
+        if (arr[i] == 100)
+            control += 1;
+    }
+
+    printf("Number of 100s %d\n", count_100s);
+    printf("Number of 100s control %d\n", control);
+}
+```
+
+### How Is Work inside Loops Divided
+
+Each threads gets **blocks/chunks** of iterations to work with.
+
+#### Schedule 
+
+We have the `schedule(behavior, chunk_size)` directive to determine how many threads are going to 
+work on the loop. 
+
+**chunk_size**: It is the number of iterations divided by the number of threads.
+
+**Behaviors**:
+
+- `static`: By n threads the will be splitted into blocks of more or less equal size accross the threads.
+
+```c 
+#pragma omp parallel for schedule(static, 10)
+for (int i=0; i<1000; i++) {
+  printf("Thread Nr. %d, i=%d\n", omp_get_thread_num(), i);
+}
+```
+
+Eeach block consist of 10 iterations. 
+
+- `dynamic`: It is similar to static, but if a thread is already done it can proceed to take another block.
+It is usefull if the work divided accross the blocks is not equally time-consuming.
+
+```c 
+#pragma omp for schedule(dynamic, 10)
+for (int i=0; i<1000; i++) {
+  // ...
+}
+```
+
+- `auto`: No one uses auto.
+
+- `guided`:  Makes the blocks first big and then small at the end.
+
+```c 
+// minimal block size 10
+#pragma omp for schedule(guided, 10)
+for (int i=0; i<1000; i++) {
+  // ...
+}
+```
+
+### Nested Loops
+
+When we have nested loop which obey the following conditions: 
+
+- Both loop heads happen after the other.
+
+- The boundary of the inner loop does not depend on the outer loop. 
+
+Then we can use the `collapse(2)` directive to allow parallelism with nested loops. 
+
+Example:
+
+```c 
+#pragma omp parallel for collapse(2)
+for (int i=0; i<4; i++) {
+    for (int j=0; j<4; j++) {
+        printf("Iteration (%d/%d) ran by thread %d\n",
+               i, j, omp_get_thread_num());
+    }
+}
+```
+
+
+### How to Minimize Overhead
+
+ - Minimize the number of parallel regions.
+ - Combine parallel regions into one if possible.
+ - If possible transform nested loop into regular loops and parallelize them.
+ - Limit the use of critical sections 
+ - Use primitive locking mechanisms to reduce overhead. 
+
+### Miscellaneous Functions 
+
+- `omp_set_num_threads`: Set number of threads to use.
+- `omp_get_num_threads`: Return the current number of threads.
+- `omp_get_thread_num`:	Return the currect thread id relative to the main thread.
+
+### Enviroment Variables 
+
+- `OMP_SCHEDULE`: Changes the behavior of the Schedule clause if not specified.
+
+- `OMP_NUM_THREADS`: Sets the maximum number of threads in the parallel scope unless they are defined by 
+`omp_set_num_threads` or `num_threads` overridden.
+
+- `OMP_DYNAMIC`: Specifies whether the OpenMP runtime can adjust the number of threads 
+in a parallel scope.
+
+- `OMP_NESTED`: Specifies whether nested concurrency is enabled unless nested concurrency is enabled or 
+disabled with `omp_set_nested`.
 
