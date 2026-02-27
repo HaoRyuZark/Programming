@@ -1,0 +1,3 @@
+{"rule":"ID_CASING","sentence":"^\\QLike with Unix processes we have parent and child processes, but this time the process with the id of 0 is the parent while the one with the id of 1 is the child process.\\E$"}
+{"rule":"ID_CASING","sentence":"^\\QFor that we can use the thread id.\\E$"}
+{"rule":"EN_UNPAIRED_BRACKETS","sentence":"^\\QWriting to string literals (like char *s = \"text\";) is undefined behavior.\\E$"}

@@ -1,0 +1,17 @@
+worksharing-region
+Init
+worksharing-constructs
+OpenMP
+Worksharing
+mutex
+worksharing-regions
+pragmas
+Pragma
+Pragmas
+Waitpid
+deallocating
+unbuffered
+pthread
+Mutexes
+GOTO
+fd

@@ -1,8 +1,6 @@
 #ifndef C_String_H
 #define C_String_H
 
-#include <cstddef>
-#include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -23,6 +21,7 @@
     }                                                          
 
 #define _SELF_IS_NULL "The C_String ptr is NULL\n"
+#define _STR_IS_NULL "Could not allocate the internal string\n"
 #define _REALLOC_FAILURE "The reallocation process failed\n"
 
 typedef struct C_String {
@@ -43,6 +42,10 @@ int _rezize(C_String* self);
 
 // Public 
 
+#define create_on_the_stack(str)({ \
+                            \
+})
+
 size_t get_len(C_String* self);
 
 char* get_str(C_String* self);
@@ -50,6 +53,8 @@ char* get_str(C_String* self);
 C_String* create_empty_string();
 
 C_String* create_string_from(char* str);
+
+C_String* create_string_from_with_len(char* str, int len);
 
 C_String* create_string_from_c_string(C_String* str);
 
