@@ -2543,6 +2543,27 @@ gcc -fopenmp -o PP PP.c
 
 Parallelization for for-loops.
 
+**Manual**:
+
+```c 
+void example_loop_parallelization(int iterations) {
+    
+    int i = 0;
+
+    #pragma omp parallel firstprivate(i) 
+    {
+        int id = omp_get_thread_num();
+        int thread_num = omp_get_num_threads();
+
+        for (i = id; i < iterations; i += thread_num) {
+            printf("Iteration %d by thread %d \n", i, id);
+        }
+    }
+}
+```
+
+**Automatic**:
+
 ```c
 #pragma omp for
 for (int i=0; i<10; i++) {
@@ -2611,7 +2632,7 @@ int main() {
 
 ### Regulating Access to Variables in Threads
 
-Variables inside a parallel region exists **sparely** for each thread, but
+Variables inside a parallel region exists **separetly** for each thread, but
 we can limit their scope using specific directives.
 
 - Disabling access to variables outside the parallel region.
@@ -2620,13 +2641,17 @@ we can limit their scope using specific directives.
 #pragma omp parallel default(none)
 ```
 
-- `shared(var)`: Shared variable across the threads.
+We can also declare shared variables and also private variables for each of threads.
+ 
+- `shared(var)`: Shared variable across the threads. Changes are visible to everyone.
 
-- `firstprivate(var)`: 1 `shared` whose value is first copied from outside the region.
+- `private(var)`: Each thread gets its own separate copy. The variable original value is not copied and changes 
+do not affect the original variable.
 
-- `private(var)`: 1 variable `shared` which in the parallel region will be initialized
+- `firstprivate(var)`: like private but the original value is copied. 
 
-- `lastprivate(var)`: similar to `private` but only the value of the last loop-iteration will be copied.
+- `lastprivate(var)`: only used for workshareing constructs with loops. Each thread gets its own copy but after the loop 
+the last value is copied to the original variable.
 
 Example:
 
@@ -2637,7 +2662,7 @@ Example:
 int main() {
 
     int sum = 0;
- omp_set_num_threads(4);
+    omp_set_num_threads(4);
     #pragma omp parallel default(none) firstprivate(sum)
     {
      #pragma omp for
@@ -3150,7 +3175,7 @@ int getFactorCount(int num) {
 int asyncFactorCount(int num) {
  int result = 0;
  
-    #pragma omp parallel default(none) shared(num, result) // vars for the results
+ #pragma omp parallel default(none) shared(num, result) // vars for the results
  #pragma omp single
  {
   #pragma omp task default(none) shared(result) firstprivate(num)
@@ -3240,27 +3265,30 @@ task to finish execution.
 ```c
 
 int _fibonacci(int n) {
- if (n<=2) {
-  return 1;
- }
- int x, y;
- #pragma omp task shared(n, x)
- {
-  x = _fibonacci(n-1);
- }
- y = _fibonacci(n-2);
- #pragma omp taskwait
- return x+y;
+    if (n<=2) {
+        return 1;
+    }
+    
+    int x, y;
+    #pragma omp task shared(n, x)
+    {
+        x = _fibonacci(n-1);
+    }
+    
+    y = _fibonacci(n-2);
+    #pragma omp taskwait
+    return x+y;
 }
 
 int fibonacci(int n) {
- int result;
- #pragma omp parallel default(none) shared(n, result)
- #pragma omp single
- {
-  result = _fibonacci(n);
- }
- return result;
+    int result;
+    #pragma omp parallel default(none) shared(n, result)
+    #pragma omp single
+    {
+        result = _fibonacci(n);
+    }
+    
+    return result;
 }
 ```
 
@@ -3454,7 +3482,12 @@ We can use the status to send metadata about the message alongside
 the `MPI_Probe(sender, tag, communicator, status)` function to just get the status
 and with it the length of the package.
 
+**Structure**:
+
 ```c
+
+// All inside the processes which do not know about the data!!!
+
 MPI_Status status;
 
 // Receive the status
@@ -3471,6 +3504,73 @@ char* buf = (char*) malloc(size * sizeof(char));
 MPI_Recv(buf, size, MPI_CHAR, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 ```
 
+Real example:
+
+```C 
+void example3() {
+
+    int rank;
+    int size;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    if (rank == 0) {
+   
+        int size_arr = 50;
+    
+        int arr[] = {3, 6, 7, 5, 3, 5, 6, 2, 9, 1, 2, 7, 0, 9, 3, 6, 0, 6, 2, 6,
+        1, 8, 7, 9, 2, 0, 2, 3, 7, 5, 9, 2, 2, 8, 9, 7, 3, 6 ,1, 2,
+        9, 3, 1, 9, 4, 7, 8, 4, 5, 0};
+        
+        MPI_Status status;
+ 
+        for (int i = 1; i < size; i++) {
+            MPI_Send(arr, size_arr, MPI_INT, i, 0, MPI_COMM_WORLD);
+        }
+
+        int base = size_arr / size;
+        int remainder = size_arr % size;
+
+        int local_n = base + (rank < remainder ? 1 : 0);
+        int start = rank * base + (rank < remainder ? rank : remainder);
+        int end = start + local_n;
+
+        int loc_count = count_zeros(arr, start, end);
+        int x;
+
+        for (int i = 1; i < size; i++) {
+            MPI_Recv(&x, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            loc_count += x;
+        }
+
+        printf("Got %d zeros in total\n", loc_count);
+
+    } else {
+
+        MPI_Status status;
+        MPI_Probe(0, 0, MPI_COMM_WORLD,  &status);
+        
+        int size_arr;     
+        MPI_Get_count(&status, MPI_INT, &size_arr);
+
+        int* arr = (int*)malloc(sizeof(int) * size_arr);
+        MPI_Recv(arr, size_arr, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);       
+
+        int base = size_arr / size;
+        int remainder = size_arr % size;
+
+        int local_n = base + (rank < remainder ? 1 : 0);
+        int start = rank * base + (rank < remainder ? rank : remainder);
+        int end = start + local_n;
+
+        int loc_count = count_zeros(arr, start, end);
+        MPI_Send(&loc_count, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        free(arr);
+    }
+}
+```
+
 ### Blocking And Non-Blocking Communication in MPI
 
 - **Blocking**: After sending and receiving the main thread waits for the response. 
@@ -3482,6 +3582,14 @@ MPI_Recv(buf, size, MPI_CHAR, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 - **Async**: The main thread makes the sending and does not care more about the rest of the process.
 
 The receiving is always **synchronized**.
+
+##### Non-Blocking Sending
+
+Start send operation and return before data is completely copied out of the buffer.
+
+##### Non-Blocking Receiving
+
+Start receive operation and return before data is completely copied in to the buffer.
 
 #### Receiving Variants
 
@@ -3496,7 +3604,6 @@ THe request argument inside `MPI_Irecv` is used to determine if the receiving is
 
 - `MPI_Wait()`: waits for the receiving to be completed.
 - `MPI_Test()`: tests if the receiving was completed but it does not wait.
-
 
 Example with wait: 
 
@@ -3536,6 +3643,25 @@ MPI_TEST(&request, &completed, &status);
 
 if (completed) {
     printf("%d\n", message);
+}
+```
+
+###### Defining Our Own Await Function
+
+```c 
+
+void await_request(int rank, MPI_Request* request) {
+    
+    #if BUSY_WAIT
+    int flag = 0; 
+    int wait_count = 0;
+    MPI_Status status;
+
+    do  {
+        wait_count++;
+        MPI_Test(request, &flag, &status);
+    } while(!flag); 
+    #endif
 }
 ```
 
@@ -3597,7 +3723,7 @@ if (procRank == 0) {
 }
 ```
 
-#### Copying the Message of the other Processes 
+### simultaneous Send-Recive
 
 Using `MPI_Sendrecv(void *buf, int count, MPI_Datatype datatype, int dest, int sendtag, int source, int recvtag, MPI_Comm comm, MPI_Status * status)`
 
@@ -3633,19 +3759,22 @@ In a collective communication all processes of a **communicator** participate.
 
 We can use following orders: 
 
-- `MPI_Bcast(buffer, count, datatype, sender, comm)`: A process sends its data to all other processes.
+- `MPI_Bcast(buffer, count, datatype, sender, comm)`: A process sends its data to all other processes. The 
+functions works by when all processes call the function depending on their own rank they can realize if they are sending or receiving.
 
 Example: 
 
 ```c 
 int val = 0;
 
+int  broadcaster_rank = 0;
+
 if (procRank==0) {
     printf("Enter a value: ");
     scanf("%ld", &val);
 }
 
-MPI_Bcast(&val, 1, MPI_INT, 0, MPI_COMM_WORLD);
+MPI_Bcast(&val, 1, MPI_INT, broadcaster_rank, MPI_COMM_WORLD);
 printf("Rank: %d, Value: %d\n", procRank, val);
 ```
 
@@ -3659,7 +3788,7 @@ Example:
 ```c 
 int result = 0;
 
-MPI_Reduce(&procRank, &result, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+MPI_Reduce(&procRank)T, MPI_SUM, 0, MPI_COMM_WORLD);
 printf("Rank: %d, Wert: %d\n", procRank, result);
 ```
 
@@ -3676,12 +3805,29 @@ MPI_Allreduce(&procRank, &result, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 printf("Rank: %d, Value: %d\n", procRank, result);
 ```
 
-- `MPI_Barrier`: Like a `pthread_barrier_t` but for processes in MPI.
+- `MPI_Barrier`: Like a `pthread_barrier_t` but for processes in MPI but it is realesed 
+once every processes has called it.
 
 Example:
 
 ```c 
 
+if (procRank == 0) {
+    
+    int x;
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    
+    MPI_Recv((void*)&x, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+} else {
+    
+    int x = 1;
+
+    MPI_Barrier(MPI_COMM_WORLD);
+ 
+    MPI_Send((void*)&x, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+}
 ```
 
 - `MPI_Scatter(*sendbuf, sendcount, sendtype, *recvbuf, recvcount, recvtype, root, comm)`: It is used to divide an array accross mulitple processes.
@@ -3730,11 +3876,90 @@ data, its memory layout and other metadata.
 - `MPI_Type_vector(int count, int blocklength, int stride, MPI_Datatype oldtype, MPI_Datatype *newtype0)`: creates 
 a datatype representing regularly spaced blocks of memory.
 
-Example:
+- `count`: tells us how many blocks.
+- `blocklength`: How many contiguous elements per block.
+- `stride`: Distance between the start of blocks. Usually the number of columns.
+
+Usually is used to send columns of matrices because the elements are not stored contiguosly.
 
 ```c 
 // 3 blocks, 2 int sper block, each int starts 4 ints appart
 MPI_Type_vector(3, 2, 4, MPI_INT, &newtype); // sending 6 elements
+```
+
+Example:
+
+```c 
+#include <mpi.h>
+#include <stdio.h>
+
+void example7() {
+
+    int rank, size; 
+
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (size != 4) {
+        if (rank == 0)
+            printf("This example requires exactly 4 processes.\n");
+        return;
+    }
+
+    /* 5x5 block taken from a 10x10 matrix */
+    MPI_Datatype block_type;
+    MPI_Type_vector(5, 5, 10, MPI_INT, &block_type);
+    MPI_Type_commit(&block_type);
+
+    int recv_block[25];   // each process receives 25 ints (5x5)
+
+    if (rank == 0) {
+    
+        int arr[10][10];
+
+        /* Initialize matrix */
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                arr[i][j] = i * 10 + j;
+            }
+        }
+
+        /* Scatter one 5x5 block to each process */
+        MPI_Scatter(arr, 1, block_type,
+                    recv_block, 25, MPI_INT,
+                    0, MPI_COMM_WORLD);
+
+    } else {
+
+        MPI_Scatter(NULL, 1, block_type,
+                    recv_block, 25, MPI_INT,
+                    0, MPI_COMM_WORLD);
+    }
+
+    /* Each process modifies its received block */
+    for (int i = 0; i < 25; i++) {
+        recv_block[i] = rank;
+    }
+
+    if (rank == 0) {
+
+        int arr[10][10];  // result buffer
+
+        MPI_Gather(recv_block, 25, MPI_INT,
+                   arr, 1, block_type,
+                   0, MPI_COMM_WORLD);
+
+        printf("Gather complete.\n");
+
+    } else {
+
+        MPI_Gather(recv_block, 25, MPI_INT,
+                   NULL, 1, block_type,
+                   0, MPI_COMM_WORLD);
+    }
+
+    MPI_Type_free(&block_type);
+}
 ```
 
 - `MPI_Type_contiguous(int count, MPI_Datatype oldtype, MPI_Datatype *newtype)`: similar to vector but the elements are 
