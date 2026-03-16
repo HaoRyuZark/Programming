@@ -171,7 +171,12 @@ sometimes the first proposals are not well-thought-out and lead to problems late
 
 --- 
 
-## The Agile Manifest
+## Agile Development
+
+**Agile** is a collection of values, practices and principles for delivering value, mostly in the form of projects. It is closely
+connected to scrum.
+
+It is marked by its reduction of the planning phase by getting work done rapidly and getting feedback from the customers.
 
 ### The Four Commitments
 
@@ -410,12 +415,14 @@ dynamic.
 the sprint backlog, increment and the sprint review in a time of 2 to 4 weeks. Not dynamically adaptable.
 
 - **Sprint Planning:** Meeting of the whole team to answer the following questions: For what?, What? and How? Max of 2 hours per week. 
-The result is a sprint backlog for the next sprint. 
+The result is a sprint backlog for the next sprint. Max 120 minutes.
 
 - **Daily Scrum:** Meeting of the whole team eventually without the scrum master. It is done for checking communication, what has been done, 
 what do we want to accomplish, which obstacles have been encountered. It is basically a daily information exchange.
+Max 15 minutes.
 
 - **Sprint Review:** Demonstration of the increment. Honest review of what was accomplished and what was not. Team plus stakeholders. 
+Max 60 minutes.
 
 - **Sprint Retrospective:** Meeting of the developer team without the product owner. Self evaluation of the sprint, 
 what was good and what was bad, etc. The goal is that in the next Sprint Backlog the problems will be partially or completely solved. It 

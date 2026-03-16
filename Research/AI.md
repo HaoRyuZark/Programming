@@ -121,3 +121,19 @@ Typical Agents:
 
 --- 
 
+## Spec Driven Development
+
+It bases on describing the agent the goal, and specific tech decision, etc. in an structure document for generating the individual pieces of our
+application. It basically a framework of programming in natural language.
+
+### Best Practices
+
+- **Use an standard template**: Define a template for the structure of the the specification: required fields, technology choices, user stories, etc. The format 
+can vary depending on the art of of software piece it is going to produce. This process can also be speed up and enhanced by the LLM with meta prompting.
+
+- **Mirror structure**: Create a separate version of file structure of the software, but with the specs instead of the actual source code files or at least textual 
+descriptions of the original file. This is also an advantage in the sense of generating documentation.
+
+- **Review**: Use your own technical knowledge to review the generated code and the quality of the specifications improvements by the LLM.
+
+

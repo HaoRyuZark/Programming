@@ -1228,14 +1228,6 @@ clone the necessary repositories from github or use stow.
 
 ---
 
-### Devdocs 
-
-To have offline documentation run 
-
-- `sudo docker run --name devdocs -d -p 9292:9292 ghcr.io/freecodecamp/devdocs:latest`
-
----
-
 ### systemctl For enabling key Packages
 
 #### Basic `systemctl` Commands
@@ -1435,24 +1427,30 @@ Pacman was used for almost all examples, but Yay can also be used.
 
 ## Enviroment variables 
 
-Like in other operating systems, an enviroment variable is user defined varible which affects 
+Like in other operating systems, an enviroment is a varible which affects 
 the way processes run for the specific enviroment.
 
-In Linux the variables can be printed using the the command `env`. To see the value we can use the 
-command `printvar`. Finally to modify we can use the command `export NAME=value`
+Common use cases: 
 
-To create persistent enviroment variables we have to modify the `.bashrc` by adding 
+- In Linux the variables can be printed using the the command `env`. 
+
+- To see the value we can use the command `printvar`. Finally to modify we can use the command `export NAME=value`
+
+- We can create enviroment variables for the current section by typing  `NAME=VALUE` in the shell.
+
+- To create persistent enviroment variables we have to modify the `.bashrc` by adding 
 `export NAME=value` and then source the file with the `source FILE` command. 
 
-To set a global env. variable we have to modify the file `vim /etc/environment` using the 
+- To set a global env. variable we have to modify the file `vim /etc/environment` using the 
 export syntax and then sourcing.
 
-To delete an environment variables we can use the command `unset NAME`
+- To delete an environment variables we can use the command `unset NAME`
 
-The PATH variable is an environment variable containing an ordered list of paths that Linux will search for executables when running a command. Using these paths means that we don’t have to specify an absolute path when running a command.
+- The `PATH` variable is an environment variable containing an ordered list of paths that Linux will search for executables when running a command/binary. 
+Using these paths means that we don’t have to specify an absolute path when running a binary.
 
-To modify the path both locally we have to create an `.profile` file using the export 
-syntax and for the global approach it is very similar but we create the the file in `/etc/profile.d/varname.sh`
+   - To modify the path both locally we have to create an `.profile` file using the export 
+      syntax and for the global approach it is very similar but we create the the file in `/etc/profile.d/varname.sh`
 
 ---
 
@@ -1497,7 +1495,6 @@ syntax and for the global approach it is very similar but we create the the file
   * Supported via drivers (read/write)
 
 ---
-
 
 ## What is an Inode and How It Is Used
 
@@ -1556,6 +1553,7 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 
 ## Important Directories and Their Functions
 
+
 | Directory | Function                                           |
 |:--------- |:-------------------------------------------------- |
 | `/`       | Root directory                                     |
@@ -1604,8 +1602,9 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 
 ---
 
-# Shortcuts and Keybinds
+## Shortcuts and Keybinds
 
+### Kitty
 
 | Shortcut | Action |
 |----------|--------|
@@ -1630,7 +1629,8 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `Ctrl + Shift + V`        | Paste clipboard content                |
 
 
-## Wofi
+### Wofi
+
 
 | Shortcut | Action |
 |----------|--------|
@@ -1638,7 +1638,8 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `Mod4 + Shift + d` | Open Wofi run |
 
 
-## Browser
+### Browser
+
 
 | Shortcut | Action |
 |----------|--------|
@@ -1655,7 +1656,8 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `Ctrl + f` | Find on page |
 
 
-## Yazi 
+### Yazi 
+
 
 | Shortcut                                                                    | Action                                                                                                                   |
 | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -1709,7 +1711,8 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `Ctrl + z`                                                                  | Suspend process (send to background)                                                              |
 
 
-## Sway 
+### Sway 
+
 
 | Category       | Shortcut                        | Action                                |
 |----------------|---------------------------------|-----------------------------------------------------|
@@ -1742,7 +1745,8 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 |                | `Mod + ?`                       | Show help (if configured)                           |
 
 
-## NetRW File Manager in Vim
+### NetRW File Manager in Vim
+
 
 | Key/Command     | Action                                                 |
 |-------------------|----------------------------------------------------------------------|
@@ -1774,7 +1778,7 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `:Rexplore`       | Return to previous netrw buffer                                      |
 
 
-## fzf 
+### fzf 
 
 
 | Shortcut           | Action                                                                 |
@@ -1797,7 +1801,8 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `Enter`            | Accept current item (or all selected items if multi-select is active) |
 
 
-### Notes
+#### Notes
+
 - `TAB` and `Shift-TAB` are key for **multi-select mode** (triggered with `fzf -m`).
 - Some bindings like `CTRL-Y` or `CTRL-Q` depend on your shell/editor integration.
 
