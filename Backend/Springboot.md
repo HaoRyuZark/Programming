@@ -4,11 +4,13 @@ Is a framework for Java Backend development.
 
 ## Core Features
 
-- Auto-configuration - Automatically configures Spring Beans based on dependencies  
-- Starter Dependencies - Predefined dependency bundles for different functionalities  
-- Embedded Servers - Comes with Tomcat, Jetty, and Undertow for running apps without external servers  
-- Spring Boot CLI - Command-line tool for quick app development  
-- Spring Boot Actuator - Provides production-ready monitoring & health checks
+- **Auto-configuration** - Automatically configures Spring Beans based on dependencies  
+- **Starter Dependencies** - Predefined dependency bundles for different functionalities  
+- **Embedded Servers** - Comes with Tomcat, Jetty, and Undertow for running apps without external servers  
+- **Spring Boot CLI** - Command-line tool for quick app development  
+- **Spring Boot Actuator** - Provides production-ready monitoring & health checks
+
+--- 
 
 ## Spring Boot Starter Common Packages
 
@@ -17,6 +19,8 @@ Is a framework for Java Backend development.
 - spring-boot-starter-security - Provides security & authentication features  
 - spring-boot-starter-test - Includes testing dependencies like JUnit, Mockito, and Spring Test  
 - spring-boot-starter-thymeleaf - For integrating Thymeleaf templates  
+
+--- 
 
 ## Dependency Injection and Beans
 
@@ -67,9 +71,13 @@ Example:
     }
 ```
 
+--- 
+
 ## Beans
 
 In Spring, a **Bean** is an object that is instantiated, assembled, and managed by the Spring IoC (Inversion of Control) container. Beans are created from classes annotated with `@Component`, `@Service`, `@Repository`, or `@Controller`, or defined in a configuration class using `@Bean`.
+
+---
 
 ## Common Annotations
 
@@ -95,6 +103,8 @@ In Spring, a **Bean** is an object that is instantiated, assembled, and managed 
 - `@ConditionalOnMissingClass` - Conditionally creates a bean if a specific class is not present on the classpath
 - `@ConfigurationProperties` - Binds properties from application.properties or application.yml to a Java class
 
+--- 
+
 ## Test Annotations
 
 - `@SpringBootTest` - Loads the full application context for integration tests. We can also specify which classes and arguments to use.
@@ -109,11 +119,15 @@ In Spring, a **Bean** is an object that is instantiated, assembled, and managed 
 - `@InjectMocks` - Injects mock beans into the class under test
 - `@Mock` - Creates a mock object for testing
 
+--- 
+
 ## Configuration for the Application
 
 - **application.properties**: Main configuration file for Spring Boot applications, used to define properties like server port, database connection, etc.
 - **application.yml**: Alternative configuration file format using YAML syntax, often preferred for complex configurations
 - **Configuration Class**: Java class annotated with `@Configuration` to define beans and application settings programmatically. This class is often stored in a config package.
+
+--- 
 
 ## Configuration for the Testing
 
@@ -129,6 +143,8 @@ spring:
 ```
 
 You can also use `@SpringBootTest` with specific properties to override the default configuration for tests.
+
+--- 
 
 ## Layers in Spring Boot
 
@@ -150,10 +166,76 @@ You can also use `@SpringBootTest` with specific properties to override the defa
 
 - **Persistence Layer**: Handles database interactions, often using JPA repositories or custom DAO (Data Access Object) implementations.
 
+--- 
+
 ## Hibernate and JPA
+
+--- 
 
 ## MVC
 
+--- 
+
 ## Convention over Configuration
 
+--- 
+
 ## Spring Security
+
+--- 
+
+## REST-Controllers 
+
+
+--- 
+
+## Tomcat
+
+**Tomcat** is a java servlet container, which means that it receives requests from a client, dynamically compiles a java class to handled the request called the 
+**servlet** to handle the request.
+
+Example of Servlet: 
+
+```java 
+
+@WebServlet(name = "servlet", urlPatters="/example")
+public class Sevlet extends HttpServlet {
+
+    @Override 
+    public void init() throws SevletException {
+        super.init();
+    }
+
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doGet(req, resp);
+    }
+}
+```
+
+### Steps 
+
+1. Tomcat receives a requests
+2. Maps the request to the appropiate servlet
+3. Tomcat checks to see if theat servlet class has been loaded, if not, Tomcat creates an instance of the class
+4. It initializes the class with the `init()` method.
+5. Then it uses `doMethod()` for the appropiate type of method.
+
+--- 
+
+## Spring Container
+
+--- 
+
+## Mockito 
+
+--- 
+
+## JUnit
+
+--- 
+
+## Debugging Spring Apps
+
+
+

@@ -136,4 +136,26 @@ descriptions of the original file. This is also an advantage in the sense of gen
 
 - **Review**: Use your own technical knowledge to review the generated code and the quality of the specifications improvements by the LLM.
 
+## Skills AI can not replace
+
+AI is great at producing code, it does it fast, does not complain and with good practices it is actually usable.
+But the tool is just as useful as skilled is its owner. Hence, this skills are necessary for any developer.
+
+- **System Design**: We need to have domain knowlege, know how our system works, why we choose some architecture over another. AI does not 
+think, it is a prediction machine. Therefore, having knowlege about how the different parts of the system interact, what the trade-offs are etc, is 
+critical for the desing of software applications.
+
+- **Product Thinking**: We make products for humans not machines (most of the time), hence we have to be great at desiging products 
+and how they are going to be used, a good UI, and so on.
+
+- **Security**: AI produces very insecure code, hence knowlege about cyber security is crucial.
+
+- **Performance**: Similar to securiy, the application can work, but if its slow then it not going to useful.
+
+- **Legacy Knowlege**: Legacy code bases are mostly combination of functional software and years of technical debts which not exactly AI-frindly.
+
+- **Programming**: Programming is not about writting code, it is about problem solving, desing, cirtical thinking, thinking out of the box and understanding the inner functionalities of the code.
+
+- **Reviewing**: Even with a coding agent with the reviewer role, it does not really understand the code and just compares it to its impression of the ideal book version which differ from your usecase.
+
 

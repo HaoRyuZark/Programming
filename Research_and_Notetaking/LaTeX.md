@@ -1,133 +1,55 @@
-# Research And Writing
+# LaTeX
 
-## Learning 
+Quick reference for latex. 
 
-Learning a new skill, technology or concept takes primarily time and effort. This effort is materialized in the form of reading, watching a video, 
-listening to a podcast, attending a course, taking notes and practicing. All of which cost time. Learning always takes time, but there are some strategies 
-which can help to optimize the learning process.
+--- 
 
-### Strategies for learning and solve problems better:
+## Files
 
-- **Active Learning**: Do not just listen or read passively. Practice, ask questions, try making hypotheses and test them. 
-
-- **Take Notes**: Either by hand or digitally, taking notes helps reinforce what you learn. Summarize key points in your own words.
-
-- **Teach Others**: Explaining concepts to others forces you to clarify your understanding and identify
-
-- **Make a Plan**: Set specific learning goals and break them down into manageable tasks. This helps maintain focus and track progress. Also, if the plan fails, then proceed to make 
-the necessary adjustments.
-
-- **Practice Regularly**: Consistent practice is more effective than cramming. Prepare a set of practice material and work on it. Choose material that is relevant to your learning goals.
-
-- **Seek Feedback**: Share your work with peers or mentors to get constructive criticism.
-
-- **Exam Conditions**: Simulate exam conditions by timing yourself and working without resources. This helps build confidence and identify areas for improvement.
-
-- **Revisit and Reflect**: Regularly review what you’ve learned.
-
-- **Breaks**: Do not overdo it. Take breaks and do other activities to let your brain rest and process information.
-
-- **Sleep**: Sleep is crucial for memory consolidation.
-
-- **Use the Horizon**: When trying to solve a problem, do not just focus on the problem itself and think about solving it mechanically. Instead, look at the bigger picture, 
-consider the context, ask how does this problem relate to other problems, and how does it fit into the overall system or project, which techniques or tools can be used to solve it, etc.
+- `.tex`: source code.
+- `.dvi`: output.
+- `.log`: protocol of the compilation.
+- `.aux`: auxiliary file for the compilation process, used for referencing and linking among others.
+- `.toc`: table of contents.
+- `.lof`: list of figures.
+- `.lot`: list of tables.
+- `.bib`: used for the literature references.
+- `.bbl`: output of bibtex.
+- `.blg`: protol for bibtex.
 
 ---
 
-## Planing
+## Command Structure 
 
-- **Find a topic**: Start from general to specific by narrowing the topic of interest. It also important to 
-see the bigger picture and the conection to to other related or maybe not so related areas; something interesting can come out of that.
-Be careful to not pick a topic which has already being handled.
+The optional parameters are mostly used for configuration. While the other if not present lead to errors.
 
-- **Find the initial sources**: find sources while also being critical about the trust of the source. This does not means to only take papers, because 
-from less serious sources can lead you to more serious references. Be extremly critical about the content.
 
-- **Find the serious sources**: create a list/graph of connected ideas with their respective source. This time 
-only formal sources are allowed. This will help understanding the topic and already given you the opportunity to organize the biblographhy.
-Be extremly critical about the content, this time like really: look for biased, falacies, who paid for the paper, and finally find contrary papers if possible. 
-
-- **Make the writting plan**: Organize what is going to be in the individual sections of your paper with deadline if possible.
-Document everything, break down the plan into small goals and plan the time for doing: experiments, proofs, etc.
-
-- **Miscellaneous**:
-    - Make a pre-writting: drafts.
-    - Do not delete what you have already written. Keep it with version control.
-
---- 
-
-## Structure
-
-Template structure of all academic papers 
-
-- **Title**: Short descritive sencente about the papar. Include keyworkds if possible and do not lie.
-
-- **Abstract**: Concise summary with the main selling points of the paper. It should be descriptive but non-technical for other to understand. A good guide is the
-**What/Why/How** structure.
-
-- **Instruduction**: Normally start with a longer summary with more background, context, methods, results, etc. References can be included. It is also a good start to
-introduce notation and jargon. Finally, adding information about the struture of the paper and the way of understanding your thesis.
-
-- **Body**: Main section of the paper including the experiments, proofs, analysis. It has to be strutured into Individual sections dedicated to 
-each of the topics under a logical and consice struture.
-
-- **Discussion**: This is part of the body, but it can be handled as its own manner. Here the results should be compared to other references, the meaning should be 
-investigated, maybe we are refuting another paper; thus, we want to provide a good argument about our resuls and the methods we used. It is also the place to put
-our research into its place in the bigger picture.
-
-- **Conclusion**: Summary again of the resutls in more detail than in the abstract. We can also propose other open questions derived from our research and make a sort of 
-teaser for future research.
-
-- **Appendix**: Side details, introductory material, additional tables, code, graphs.
-
-- **References**: Organized, consistent list of references used in the paper.
-
---- 
-
-## Literature
-
-### Primary Sources
-
-Original sources about the topic written by the first person insterested in the topic.
-
-### Secondary Sources
-
-Literature written from the primary sources.
-
-### Where to find sources
-
-- **Use Wikipedia**: Wikipedia is one of the best ways to make a first impression, find sources, related persons.
-- **Google Scholar**: Easiest way.
-- **The university library**
-- **EBSCO**
-- **Sections of science books**
-
-#### Google Scholar Search
-
-User boolena operations like **AND**, **OR**, **-**, with **" "** for the strings with spaces; inside the searchbar to get better results.
-
---- 
-
-## Zotero
-
-**Zotero** is a reference manager in whihc you can store references, link references, build collections, subcollections; and even use your own publications as references.
-Its use is completely optional if you just take notes.
-
---- 
-
-## Citation
+| Command Class     | Description                                             |
+| --------- | ------------------------------------------------------- |
+| `\command` | No parameters |
+| `\command{P1}`  | One parameter           |
+| `\command{P1}{P2}`    | Two parameters          |
+| `\command[P1]`  | One optional parameter                                    |
+| `\command[P1]{P2}`  | One optional parameter and one obligatory parameter                                              |
+| `\command(P1, P2)`  | Two parameter but in braket notation           |
 
 
 --- 
 
-## Language 
+## Spacing 
 
+- `\,`: small space in math mode.
+- `\`: space between words.
+- ` `: normal space in text mode 
+- `~`: space in between words but not for new lines. 
+- `\@`: space at the end of a sentence.
+- `.lof`: list of figures.
+- `\/`: exta spacing for italics.
+- `//`: new line.
 
 --- 
 
-## LaTeX
-
-### Document Class
+## Document Class
 
 The **document class** defines the overall structure, layout rules, and default behavior of a LaTeX document. It determines features such as section hierarchy, page layout, title formatting, and availability of chapters.
 
@@ -137,7 +59,8 @@ Basic syntax:
 \documentclass[options]{class}
 ````
 
-#### Common Document Classes
+### Common Document Classes
+
 
 | Class     | Description                                             |
 | --------- | ------------------------------------------------------- |
@@ -155,7 +78,7 @@ Example:
 \documentclass[12pt,a4paper]{article}
 ```
 
-#### Common Options
+### Common Options
 
 **Font size**
 
@@ -234,12 +157,11 @@ Example:
 \documentclass[draft]{article}
 ```
 
-
-### Document Formatting
+## Document Formatting
 
 Document formatting defines the **structure and layout of the content** within the document.
 
-#### Section Hierarchy
+### Section Hierarchy
 
 LaTeX automatically numbers sections and organizes them into a hierarchy.
 
@@ -267,7 +189,7 @@ Unnumbered sections:
 \section*{Introduction}
 ```
 
-#### Table of Contents
+### Table of Contents
 
 Automatically generated from section headings.
 
@@ -281,7 +203,7 @@ Depth can be controlled:
 \setcounter{tocdepth}{2}
 ```
 
-#### Page Layout and Margins
+### Page Layout and Margins
 
 Margins and page layout are typically controlled with the `geometry` package.
 
@@ -307,7 +229,7 @@ Example:
 \usepackage[top=2cm,bottom=2cm,left=2.5cm,right=2.5cm]{geometry}
 ```
 
-#### Paragraph Formatting
+### Paragraph Formatting
 
 Paragraph indentation and spacing can be controlled.
 
@@ -323,7 +245,7 @@ Add spacing between paragraphs:
 \setlength{\parskip}{6pt}
 ```
 
-#### Line Spacing
+### Line Spacing
 
 Line spacing can be modified with the `setspace` package.
 
@@ -339,7 +261,7 @@ Examples:
 \doublespacing
 ```
 
-#### Page Numbering
+### Page Numbering
 
 Page numbering style can be changed.
 
@@ -358,7 +280,7 @@ Available styles:
 | `Alph`   | A, B, C    |
 
 
-#### Columns
+### Columns
 
 Documents can use multiple columns.
 
@@ -376,7 +298,7 @@ Text
 
 (using the `multicol` package)
 
-#### Minipage
+### Minipage
 
 The **`minipage` environment** creates a small page-like block inside a document. It allows content (text, images, tables, etc.) to be placed in a 
 **fixed-width container**, which is especially useful for placing elements **side-by-side**.
@@ -428,7 +350,7 @@ This is explanatory text describing the image shown on the right.
 \end{minipage}
 ```
 
-#### Page Breaks and Layout Control
+### Page Breaks and Layout Control
 
 Force page break:
 
@@ -454,7 +376,7 @@ Column break:
 \columnbreak
 ```
 
-### Fonts
+## Fonts
 
 Fonts in LaTeX can be changed globally or locally. LaTeX provides commands for font families, shapes, and sizes.
 
@@ -479,7 +401,7 @@ Font size commands:
 
 With packages like `fontspec` (XeLaTeX/LuaLaTeX), system fonts can be used.
 
-### Title
+## Title
 
 LaTeX provides built-in commands to define a document title, author, and date.
 
@@ -496,7 +418,7 @@ Example:
 
 `\maketitle` renders the title block in the document.
 
-### Geometry Package (Page Layout and Margins)
+## Geometry Package (Page Layout and Margins)
 
 The **`geometry` package** is the standard tool in LaTeX for configuring **page layout**, including margins, paper size, text area, 
 header/footer spacing, and page orientation. It provides a simple interface for controlling the printable area without manually adjusting low-level 
@@ -516,7 +438,7 @@ A full configuration can be specified directly when loading the package:
 
 This automatically sets all page margins to **2.5 cm** on A4 paper.
 
-#### Core Concept: Page Layout Model
+### Core Concept: Page Layout Model
 
 LaTeX page layout consists of several regions:
 
@@ -537,7 +459,7 @@ LaTeX page layout consists of several regions:
 
 The `geometry` package allows direct control over these components.
 
-#### Basic Margin Configuration
+### Basic Margin Configuration
 
 The most common use is setting margins.
 
@@ -564,7 +486,7 @@ Individual margin control:
 }{geometry}
 ```
 
-#### Paper Size
+### Paper Size
 
 `geometry` supports many predefined paper formats.
 
@@ -594,7 +516,7 @@ Custom paper size:
 ]{geometry}
 ```
 
-#### Text Area Size
+### Text Area Size
 
 Instead of specifying margins, you can define the **text area directly**.
 
@@ -609,7 +531,7 @@ Example:
 
 LaTeX will automatically compute the margins needed.
 
-#### Header and Footer Spacing
+### Header and Footer Spacing
 
 Control space allocated to headers and footers.
 
@@ -633,7 +555,7 @@ Example:
 
 This is often required when using packages like `fancyhdr`.
 
-#### Include Header and Footer in Margin Calculations
+### Include Header and Footer in Margin Calculations
 
 By default, margins only refer to the **text body**. The following options include headers/footers in the margin computation.
 
@@ -654,7 +576,7 @@ Example:
 ]{geometry}
 ```
 
-#### Binding Offset (Books and Theses)
+### Binding Offset (Books and Theses)
 
 When printing double-sided documents, extra space may be needed near the binding.
 
@@ -675,7 +597,7 @@ Useful for:
 * double-sided reports
 
 
-#### Two-Sided Documents
+### Two-Sided Documents
 
 For documents with mirrored margins:
 
@@ -701,7 +623,7 @@ Works best with:
 \documentclass[twoside]{book}
 ```
 
-#### Landscape Orientation
+### Landscape Orientation
 
 Pages can be rotated to landscape format.
 
@@ -715,7 +637,7 @@ Alternatively for specific pages (using other packages):
 \usepackage{pdflscape}
 ```
 
-#### Changing Layout Inside the Document
+### Changing Layout Inside the Document
 
 Geometry settings can also be changed mid-document.
 
@@ -738,7 +660,7 @@ Useful for:
 * appendices
 * title pages
 
-#### Debugging Layout
+### Debugging Layout
 
 The `showframe` option draws visible layout guides.
 
@@ -755,7 +677,7 @@ This displays:
 
 Helpful when adjusting layout precisely.
 
-#### Typical Layout Configurations
+### Typical Layout Configurations
 
 **Academic paper**
 
@@ -786,7 +708,7 @@ Helpful when adjusting layout precisely.
 ]{geometry}
 ```
 
-#### Best Practices
+### Best Practices
 
 * Prefer **`margin`** for simple layouts.
 * Use **`inner` / `outer`** for printed or double-sided documents.
@@ -798,7 +720,7 @@ The `geometry` package greatly simplifies page layout control and is recommended
 
 ```
 ```
-### Headers
+## Headers
 
 Headers and footers are typically controlled using the `fancyhdr` package.
 
@@ -818,7 +740,7 @@ Common elements:
 * Left / center / right footer
 * Page numbers
 
-### Packages
+## Packages
 
 Packages extend LaTeX with additional functionality. They are loaded in the preamble using `\usepackage`.
 
@@ -857,7 +779,7 @@ Packages extend LaTeX with additional functionality. They are loaded in the prea
 \usepackage{bookmark}
 ```
 
-### Text Formatting
+## Text Formatting
 
 Text formatting commands modify the appearance of text.
 
@@ -877,7 +799,7 @@ Formatting can also be applied using declarations:
 {\bfseries Bold text}
 ```
 
-### Line Breaks
+## Line Breaks
 
 Different commands control line and paragraph breaks.
 
@@ -901,7 +823,7 @@ Page break:
 ```
 
 
-### Inline Math
+## Inline Math
 
 Inline math allows mathematical expressions to appear within a line of text.
 
@@ -909,7 +831,7 @@ Inline math allows mathematical expressions to appear within a line of text.
 Hello \(\sin(x)\)
 ```
 
-### Block Math
+## Block Math
 
 Displayed math is centered and separated from the main text.
 
@@ -919,7 +841,7 @@ Displayed math is centered and separated from the main text.
 \]
 ```
 
-#### Spacing Inside Math Environments
+### Spacing Inside Math Environments
 
 LaTeX automatically inserts spacing between mathematical elements, but manual spacing can be added when finer control is needed. This is useful for improving readability in complex formulas.
 
@@ -957,7 +879,7 @@ For automatic spacing around operators, LaTeX usually handles this correctly whe
 ```
 ```
 
-### Math Functions, Parentheses, Subscripts, Superscripts, Sets
+## Math Functions, Parentheses, Subscripts, Superscripts, Sets
 
 LaTeX provides many commands for mathematical notation.
 
@@ -1011,7 +933,7 @@ Number sets (from `amsfonts` or `amssymb`):
 \mathbb{C}
 ```
 
-### Tables (Different Variants)
+## Tables (Different Variants)
 
 Tables in LaTeX are typically created using the **`tabular` environment**, which defines column alignment and structure. Tables are often wrapped inside a 
 **`table` environment** to allow captions, labels, and floating placement.
@@ -1035,7 +957,7 @@ Key symbols:
 | `        | `                    | Vertical line between columns |
 
 
-#### Column Alignment
+### Column Alignment
 
 The column layout is defined in the argument of `tabular`.
 
@@ -1070,11 +992,11 @@ Left & Center & Right \\
 \end{tabular}
 ```
 
-#### Horizontal and Vertical Lines
+### Horizontal and Vertical Lines
 
 LaTeX allows several ways to draw lines in tables.
 
-##### Horizontal lines
+#### Horizontal lines
 
 ```latex
 \hline
@@ -1092,7 +1014,7 @@ A & B \\
 \end{tabular}
 ```
 
-##### Partial horizontal lines
+#### Partial horizontal lines
 
 ```latex
 \cline{start-end}
@@ -1112,7 +1034,7 @@ A & B & C \\
 
 This draws a line only across selected columns.
 
-#### Table Environment
+### Table Environment
 
 The `table` environment allows LaTeX to automatically place tables and enables captions and referencing.
 
@@ -1153,7 +1075,7 @@ Referencing a table:
 Table~\ref{tab:example}
 ```
 
-#### Fixed Width Columns
+### Fixed Width Columns
 
 Columns with a fixed width allow text wrapping.
 
@@ -1170,7 +1092,7 @@ Another long text entry \\
 
 Useful for tables containing paragraphs or descriptions.
 
-#### Table Alignment
+### Table Alignment
 
 Tables are typically centered using:
 
@@ -1188,7 +1110,7 @@ or
 
 Inside the `table` environment, `\centering` is preferred.
 
-#### Multi-Column Cells
+### Multi-Column Cells
 
 Cells can span multiple columns.
 
@@ -1210,7 +1132,7 @@ A & B & C \\
 \end{tabular}
 ```
 
-#### Multi-Row Cells
+### Multi-Row Cells
 
 Rows can span multiple rows using the `multirow` package.
 
@@ -1229,7 +1151,7 @@ Example:
 \end{tabular}
 ```
 
-#### Long Tables (Multi-Page)
+### Long Tables (Multi-Page)
 
 For tables that span multiple pages use `longtable`.
 
@@ -1255,7 +1177,7 @@ A & B \\
 \end{longtable}
 ```
 
-#### Automatically Sized Tables
+### Automatically Sized Tables
 
 `tabularx` allows tables to automatically stretch to the text width.
 
@@ -1278,7 +1200,7 @@ Another long entry \\
 
 `X` columns expand to fill available space.
 
-#### Professional Table
+### Professional Table
 
 For high-quality tables (often used in research papers), the `booktabs` package provides better line commands.
 
@@ -1309,7 +1231,7 @@ A & B & C \\
 
 These produce visually cleaner tables than repeated `\hline`.
 
-#### Colors 
+### Colors 
 
 All elements in a table can be customized to use a specific colour. Again, this functionality is provided by xcolor so you must add
 `\usepackage[table]{xcolor}`
@@ -1366,7 +1288,7 @@ Angola & AO & AGO \\
 
 \end{document}
 ```
-#### Table Best Practices
+### Table Best Practices
 
 Common recommendations:
 
@@ -1379,7 +1301,7 @@ Common recommendations:
 ```
 ```
 
-### Environments: align, equation, enumerate, itemize
+## Environments: align, equation, enumerate, itemize
 
 LaTeX environments define structured blocks.
 
@@ -1409,7 +1331,7 @@ E = mc^2
 \end{equation}
 ```
 
-### Custom Commands and Environments
+## Custom Commands and Environments
 
 Custom macros allow reuse of frequently used expressions.
 
@@ -1435,7 +1357,7 @@ Custom environments:
 
 These help maintain consistent formatting and simplify large documents.
 
-### Definition, Theorem, Proof
+## Definition, Theorem, Proof
 
 LaTeX provides functionality for this kinds of mathematical environments via the package `asmthr`
 
@@ -1460,7 +1382,7 @@ LaTeX provides functionality for this kinds of mathematical environments via the
 \end{proof}
 ```
 
-### Images
+## Images
 
 Images are typically included with the `graphicx` package.
 
@@ -1479,7 +1401,7 @@ Common options:
 * `scale`
 * `angle`
 
-### Vectors, Matrices, Arrays
+## Vectors, Matrices, Arrays
 
 Vectors and matrices are represented using specialized environments.
 
@@ -1514,7 +1436,9 @@ Common matrix environments (from `amsmath`):
 * `bmatrix`
 * `vmatrix`
 
-### Figures
+--- 
+
+## Figures
 
 Figures allow images to be placed with captions and references.
 
@@ -1534,7 +1458,7 @@ Figures can be referenced elsewhere:
 Figure~\ref{fig:example}
 ```
 
-### Centering
+## Centering
 
 Content can be centered using environments or commands.
 
@@ -1554,12 +1478,12 @@ For figures and tables:
 
 This is commonly placed inside `figure` or `table`.
 
-### Including Code Blocks
+## Including Code Blocks
 
 LaTeX provides several ways to include **source code or verbatim text** inside a document. Code environments preserve formatting, 
 spacing, and special characters that would normally be interpreted by LaTeX.
 
-#### Verbatim Environment
+### Verbatim Environment
 
 The simplest way to display code is the **`verbatim` environment**, which prints text exactly as written.
 
@@ -1586,7 +1510,7 @@ Inline verbatim text can be written using:
 
 The delimiter (`|` here) can be replaced with another character if needed.
 
-#### Fancy Verbatim
+### Fancy Verbatim
 
 Vie the `fancyvrb` package we can not especify frames, color and other parameters of our Verbatim environments. Note the capital.
 
@@ -1599,7 +1523,7 @@ Vie the `fancyvrb` package we can not especify frames, color and other parameter
 \end{Verbatim}
 ```
 
-#### Listings Package (Recommended for Code)
+### Listings Package (Recommended for Code)
 
 The **`listings` package** provides a powerful environment for displaying source code with formatting options and optional syntax highlighting.
 
@@ -1618,7 +1542,7 @@ def hello():
 \end{lstlisting}
 ```
 
-#### Specifying Programming Languages
+### Specifying Programming Languages
 
 `listings` supports many languages such as Python, C, Java, and Bash.
 
@@ -1633,7 +1557,7 @@ def square(x):
 
 This enables language-specific formatting.
 
-#### Adding Captions and Labels
+### Adding Captions and Labels
 
 Code blocks can be referenced similarly to figures or tables.
 
@@ -1652,7 +1576,7 @@ Referencing:
 Listing~\ref{lst:python}
 ```
 
-#### Displaying External Source Files
+### Displaying External Source Files
 
 Entire files can be included directly.
 
@@ -1664,7 +1588,7 @@ Example:
 
 This inserts the contents of `script.py` into the document.
 
-#### Basic Formatting Options
+### Basic Formatting Options
 
 Common configuration options:
 
@@ -1691,7 +1615,7 @@ def example():
 \end{lstlisting}
 ```
 
-#### Global Configuration
+### Global Configuration
 
 Default settings can be defined using `\lstset`.
 
@@ -1708,7 +1632,7 @@ Example:
 
 All following code blocks will use these settings unless overridden.
 
-#### Alternative: Minted Package
+### Alternative: Minted Package
 
 The **`minted` package** provides advanced syntax highlighting using the external **Pygments** library.
 
@@ -1727,22 +1651,156 @@ def hello():
 
 Note: `minted` requires compiling with the `-shell-escape` option.
 
-#### Best Practices
+### Best Practices
 
 * Use **`verbatim`** for quick code snippets.
 * Use **`listings`** for structured code blocks with numbering and captions.
 * Use **`minted`** for advanced syntax highlighting in technical documents.
 * Keep code blocks in **monospace fonts** for readability.
 
-### TikZ
+--- 
 
-TikZ is a powerful LaTeX package for creating diagrams, graphs, and vector graphics directly in LaTeX.
+## TikZ
 
-### Footnotes 
+TikZ is a powerful LaTeX package for creating diagrams, graphs, and vector graphics directly in 
+LaTeX.
+
+The minimal requirements are: 
+
+```latex
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{positioning} % more libraries can be added for different use cases
+```
+
+### Basic Drawign 
+
+```latex 
+\tikz \draw (0,0) -- (2,1) -- (3,2)
+```
+
+### Tikz Environment
+
+```latex
+\begin{tikzpicture}
+  \draw (0,0) circle (1); %circle of radius 1
+  \draw (1,1) rectangle (5,4); 
+  \draw (1,1) grid (5,4);  % fills the rectangle
+\end{tikzpicture}
+```
+
+### Thickness
+
+```latex 
+\begin{tikzpicture}
+  \draw[ultra thick] (0,3) -- (2,3);
+  \draw[very thick] (0,2.5) -- (2,2.5);
+  \draw[thick] (0,2) -- (2,2);
+  \draw[thin] (0,1.5) -- (2,1.5);
+  \draw[very thin] (0,1) -- (2,1);
+  \draw[ultra thin] (0,.5) -- (2,.5);
+
+  \draw node at (3, 3) {Ultra Thick};
+  \draw node at (3, 2.5) {Very Thick};
+  \draw node at (3, 2) {Thick};
+  \draw node at (3, 1.5) {Thin};
+  \draw node at (3, 1) {Very Thin };
+  \draw node at (3, 0.5) {Ultra Thin};
+\end{tikzpicture}
+```
+
+### Sphere with arcs, shade and gradients
+
+```latex
+\begin{center}
+    \begin{tikzpicture}[transform canvas={scale=4.0}]  %%[scale=4] ONLY changes distances, not the canvas
+    \draw[blue] (0,1) arc (90:-90:0.5cm and 1cm);
+    \draw[dashed, red] (0,1) arc (90:270:0.5cm and 1cm);
+    \draw (0,0) circle (1cm);
+    \filldraw[red] (0,1) circle  (0.05); %add fill=, and draw= to have separate colours
+    \filldraw[red] (0,-1) circle (0.05);
+    \shade[ball color=blue!10!white,opacity=0.20] (0,0) circle (1cm);
+    \end{tikzpicture}
+\end{center}
+```
+
+### Specifying Styles 
+
+```latex 
+
+\begin{tikzpicture}[
+youngnode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=40},
+oldnode/.style={rectangle, draw=blue!60, fill=blue!5, very thick, minimum size=40},
+]
+
+  %Nodes
+  \node[oldnode]        (SusO)                            { $S_O(t)$};
+  \node[oldnode]        (InfO)       [below=of SusO]      { $I_O(t)$};
+  \node[oldnode]        (RecO)       [below=of InfO]      { $R_O(t)$};
+
+  \node[youngnode]      (SusY)        [left=of SusO]      { $S_Y(t)$};
+  \node[youngnode]      (InfY)        [left=of InfO]      { $I_Y(t)$};
+  \node[youngnode]      (RecY)        [left=of RecO]      { $R_Y(t)$};
+
+  %Lines
+  \draw[->, very thick] (SusO.south east)  to node[right] {$a_{OO}$} (InfO.north east);
+  \draw[->, very thick] (InfO.south)  to node[right] {$b_O$} (RecO.north);
+  \draw[->, very thick] (RecO.east)  .. controls  +(right:17mm) and +(right:17mm)   .. (SusO.east);
+
+  \draw[->, very thick] (SusY.south west)  to node[left] {$a_{YY}$} (InfY.north west);
+  \draw[->, very thick] (InfY.south)  to node[left] {$b_Y$} (RecY.north);
+  \draw[->, very thick] (RecY.west) .. controls  +(left:17mm) and +(left:17mm)   .. (SusY.west);
+
+  \draw[dashed,->, very thick] (InfO.north west)  to  (SusY.south east);
+  \draw[->, very thick] (SusY.south east)  to node[left] {$a_{OY}$} (InfY.north east);
+
+  \draw[->, very thick] (SusO.south west)  to node[right] {$a_{YO}$} (InfO.north west);
+  \draw[dashed,->, very thick] (InfY.north east)  to  (SusO.south west);
+\end{tikzpicture}
+
+```
+
+### Atomata and Graphs
+
+
+### 2D Plots
+
+```latex 
+\begin{tikzpicture}
+
+  \begin{axis}[xmin=-2, xmax=2, ymin=10, ymin=-10, axis lines=middle]
+    \addplot{x^2};  
+    \addplot[color=red, dashed, mark=*, sample=50]{x};
+  \end{axis}
+
+\end{tikzpicture}
+
+\begin{tikzpicture}
+
+  % Axis square
+  \begin{axis}[xmin=-2, xmax=2, ymin=10, ymin=-10]
+    \addplot{x^2};  
+    \addplot[color=red, dashed, mark=*, sample=50]{x};
+  \end{axis}
+
+\end{tikzpicture}
+
+
+```
+
+### 3D Plots 
+
+
+### Geometry
+
+
+--- 
+
+## Footnotes 
 
 You can use footnotes usigin `\footnote{text}`. If you want to define it later you can use `\footnotemark` and later use `\footnotetext{text}`.
 
-### Colors Boxes
+## Colors Boxes
 
 The **`tcolorbox` package** provides highly customizable colored boxes for highlighting content such as definitions, examples, warnings, notes, or code 
 blocks. It is widely used in lecture notes, textbooks, and research documents to visually separate important information.
@@ -1761,7 +1819,7 @@ This is a simple highlighted box.
 \end{tcolorbox}
 ```
 
-#### Basic Customization
+### Basic Customization
 
 `tcolorbox` allows customization of colors, borders, and background.
 
@@ -1793,7 +1851,7 @@ A definition or highlighted explanation.
 \end{tcolorbox}
 ```
 
-#### Styled Information Boxes
+### Styled Information Boxes
 
 Boxes can be styled for specific purposes such as notes, warnings, or examples.
 
@@ -1813,7 +1871,7 @@ Be careful when using this method.
 \end{tcolorbox}
 ```
 
-#### Breakable Boxes
+### Breakable Boxes
 
 Large boxes can span multiple pages using the `breakable` option.
 
@@ -1823,7 +1881,7 @@ Long content that may continue across pages.
 \end{tcolorbox}
 ```
 
-#### Creating Custom Box Environments
+### Creating Custom Box Environments
 
 Reusable box styles can be defined with `\newtcolorbox`.
 
@@ -1847,7 +1905,7 @@ This is an example box used throughout the document.
 
 This allows consistent formatting for recurring elements.
 
-#### Code Blocks with tcolorbox
+### Code Blocks with tcolorbox
 
 `tcolorbox` integrates well with code environments such as `listings`.
 
@@ -1863,19 +1921,15 @@ Example:
 
 This is useful for visually separating code snippets from the surrounding text.
 
-### BibTeX
+## BibTeX
 
 Create a `.bib` file. We also need the `apacite` package.
 
-**Format**:
+- **Format**: `\bibliographystyle{plain}` has to be put in the preamble of the document.
 
-`\bibliographystyle{plain}`
+- **Include in the Document**: `\bibliography{ref.bib}` has to be put in the preamble of the document.
 
-**Include in the Document**
-
-`\bibliography{ref.bib}`
-
-**Creating a reference**: This can be written manually, but often they are directly available online by the 
+- **Creating a reference**: This can be written manually, but often they are directly available online by the 
 sources databases.
 
 ```bib 
@@ -1892,18 +1946,13 @@ sources databases.
 }
 ```
 
-**Citing**: I can reference my sources `\cite{djk}`.
+- **Citing**: I can reference my sources `\cite{djk}`.
 
---- 
+### Citation of Refereces Markers
 
-## AI Usage
-
-AI should only be used for the following tasks:
-
-- **Search Assistant for Literature**
-- **Get a first impression**
-- **Language correction**
-- **Suggestions for better sentence structure**
-- **Summarize**, but be extremly cautious!
+- `@inproceedings`: papers.
+- `@misc`: general or undefined sources.
+- `@software`: libraries, tools or software in general.
+- `@online`: git repos, websites, web-documentation, etc.
 
 
