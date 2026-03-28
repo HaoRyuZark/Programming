@@ -50,6 +50,7 @@ ssh -T git@github.com
 If successful, you'll see a message like:
 > Hi `username`! You've successfully authenticated.
 
+## Initial Configuration 
 
 - `git config --global user.name "Your Name"` – Set your name
 - `git config --global user.email "your.email@example.com"` – Set your email

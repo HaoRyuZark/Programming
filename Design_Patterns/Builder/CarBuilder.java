@@ -3,20 +3,23 @@ public class CarBuilder {
     
     private Car car;
 
-    public void CarBuilder(){
+    public CarBuilder(){
         this.car = new Car();
     }
 
-    public void brand(String brand) {
+    public CarBuilder brand(String brand) {
         car.setBrand(brand);
+        return this;
     }
 
-    public void color(String color) {
+    public CarBuilder color(String color) {
         car.setColor(color);
+        return this;
     }
 
-    public void model(String model) {
-        car.setModel(model);
+    public CarBuilder model(String model) {
+        car.setModel(model); 
+        return this;
     }
     
     public Car build() {

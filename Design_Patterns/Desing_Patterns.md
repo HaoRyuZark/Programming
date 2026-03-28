@@ -3,6 +3,8 @@
 **Desing patterns** are a series of formalized practices tested and verified by developers
 for the struture, behaviour and composition of code in the object oriented development.
 
+As a side note, inside this directory only the most relevant design patterns were coded.
+
 --- 
 
 ## Creational patterns

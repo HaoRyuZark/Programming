@@ -1,5 +1,12 @@
 # Scrum And Agile Development
 
+## Planning 
+
+A big factor before the development of a product can be started is the concept of a planning phase in which
+the foundational architecture, requirements, features, etc. of the product are defined. This phase needs to be kept 
+short and not degradate into extensive planning because then the model of the development would not be agile anymore but 
+a classic planning intensive framework, where small increments are not possible.
+
 ## Agile Development
 
 **Agile** is a collection of values, practices and principles for delivering value, mostly in the form of projects. It is closely
@@ -70,12 +77,19 @@ its behavior accordingly.
 | Internal projects | Software requires strict planning |
 | Both the client and the developers need to communicate together constantly | Only punctual communication |
 
+
 --- 
 
 ## Scrum
 
 It is a method which implements the agile principles. It is empiric, incremental and iterative. The goal is
 to release functional software in short cycles (**sprints**).
+
+Important traits are: 
+
+- The self-organizing team.
+- Inside the team all of the necessary know-how is present.
+
 
 ### Scrum Process
 

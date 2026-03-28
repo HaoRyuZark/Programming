@@ -5,15 +5,47 @@ for the economic development of software its use and maintenance.
 
 --- 
 
-## Goals SWE
+## Goals of Software Engineering
 
-- Quality software
-- Reduction of errors
-- Reduction of work
-- Maximize clients
+- **Quality software**
+- **Reduction of errors**
+- **Reduction of work in time**
+- **Reduction of the cognitive charge**
+- **Maximize clients**
 
 --- 
 
+## Stakeholder 
+
+Term for the individuals inside the software project: developers, 
+investors, product owner, architect, etc.
+
+--- 
+
+## Software Quality 
+
+Capability of sofware product to satisfy steated and implied needs when used under especified 
+conditions.
+
+- **Functional Suitability**: The software performs its tasks correctly. It is the right tool for the job.
+
+- **Performance Efficiency**: It can complete the tasks in an acceptable amount or time.
+
+- **Compatibily**: The system can share information with other systems via Standardized formats, share resources, etc.
+
+- **Interaction Capability**: It is user-friendly. A user should not have internal knowledge about the code to use the software appropietly.
+
+- **Reliability**: Critical functionality can be performed in an specific time frame without interruption or unexprected errors.
+
+- **Security**: The system is resiliant to attackers wanting to steal valuable data.
+
+- **Mantainability**: The system can be extended without major complications (good design).
+
+- **Flexibility**: The system can be addapted for new requirements, use-case or infrastructure.
+
+- **Safety**: The software should not put: health, life, property or the enviroment in danger.
+
+--- 
 
 ## Conding Conventions 
 
@@ -25,33 +57,18 @@ They are mostly decided by the the team and automated with linter, formatters, e
 ## Life cycle of software
 
 1. **Analysis of requirements**
+
 2. **Design and Architecture**
+
 3. **Implementation and unit testing**
+
 4. **Integration and Integration testing**
+
 5. **Deployment and Acceptance testing**
+
 6. **Operation & Maintenance**
-7. **Retirement** (sometimes)
 
---- 
-
-## Stakeholder 
-
-Term for the individuals inside the software project: developers, investors, product owner, architect, etc.
-
---- 
-
-## Software Quality 
-
-Capability of sofware product to satisfy steated and implied needs when used under especified conditions.
-
-- **Functional Suitability**
-- **Performance Efficiency**
-- **Compatibily**
-- **Interaction Capability**
-- **Reliability**
-- **Security** 
-- **Mantainability**
-- **Safety** 
+7. **Retirement**
 
 --- 
 
@@ -60,20 +77,20 @@ Capability of sofware product to satisfy steated and implied needs when used und
 The goal is to minimize the cost of the use of software. The decision is 
 **make or buy**
 
-- **Commercial off the Shelf:** Customization, Software as service
-- **Total Cost of Ownership:** Return of Investment, Costs of the different phases.
+- **Commercial-off-the-Shelf**: With customization for specific customers, and mostly in the form of Software as service.
+- **Total Cost of Ownership**: Return of Investment, Costs of the different phases.
 
 ### Balance of using already existing software 
 
 
 | **Advantages**                                         | **Disadvantages**                                                     |
 | ------------------------------------------------------ | --------------------------------------------------------------------- |
-| ▪ Faster deployment                                    | ▪ Dependence on the vendor: maintenance, further development, support |
-| ▪ Quality improvement through many users               | ▪ Costs of custom software are often underestimated                   |
-| ▪ Development costs are borne by a large customer base | ▪ Custom adaptations are rarely possible                              |
-| ▪ Higher planning reliability                          | ▪ Further development must be coordinated with many stakeholders      |
-| ▪ Total Cost of Ownership (TCO) is generally lower     | ▪ No unique selling point in competition                              |
-|                                                        | ▪ Lock-in effect                                                      |
+|  Faster deployment                                    |  Dependence on the vendor: maintenance, further development, support |
+|  Quality improvement through many users               |  Costs of custom software are often underestimated                   |
+|  Development costs are borne by a large customer base |  Custom adaptations are rarely possible                              |
+|  Higher planning reliability                          |  Further development must be coordinated with many stakeholders      |
+|  Total Cost of Ownership (TCO) is generally lower     |  No unique selling point in competition                              |
+|                                                        |  Lock-in effect                                                      |
 
 
 --- 
@@ -100,7 +117,7 @@ maintained. It has been criticized for not being realistic.
 - **Requirements Analysis**
 - **Desing**
 - **Implementation and Unit Testing**
-- **Integration Testing**
+- **Integration and Integration Testing**
 - **Deployment and Acceptance Testing**
 - **Operation and Maintenance**
 
@@ -115,6 +132,8 @@ maintained. It has been criticized for not being realistic.
 |  Easy to monitor as quasi-milestones in the project |  Project management: cycles are problematic, no milestones between activities |
 |  Transparent process flow                           |                                                                                |
 
+
+The problems with the waterfall model are that it is too rigid and does not allow for changes once the development process has started.
 
 --- 
 
@@ -145,8 +164,6 @@ and feedback from users. It is often used in Agile methodologies.
 
 Note that the concept of the final shape is not defined and the projects just grows with time.
 
-The problems with the waterfall model are that it is too rigid and does not allow for changes once the development process has started.
-
 --- 
 
 ## Incremental Development
@@ -161,279 +178,6 @@ sometimes the first proposals are not well-thought-out and lead to problems late
 
 --- 
 
-
-## Refactoring 
-
-To restructure software code without altering its behavior for the purpose of improving quality attributes, easing future extension or adaptation, or 
-adhering to an architectural style.
-
---- 
-
-## Kanban
-
-Another methodology from Japan. Principles:
-
-- **Visualize the workflow** `Backlog : To-Do : In progress : Testing : Done `
-- **Regulate the number of tickets**
-- **Regulate the flow of tickets to avoid problems like bottlenecks**
-- **Define clear rules**
-- **Optimize the process**
-
---- 
-
-## Requirements Engineering
-
-Is the process of defining how a software product is going to be, work, what it needs, etc. There are functional requirements which are very specific
-and non-functional which are like 'nice-to-haves'
-
-The goal is to have a specific list of requirements for the software product to be deployed and general organization.
-
-### Principles 
-
-- **Cost Orientation:** The cost of each decision has to be stimated. 
-
-- **Stakeholder:** Each stakeholder has an specific role.
-
-- **Mutual Understanding:** Formal standardized documentation.
-
-- **Context:** Specific area of use.
-
-- **Problem -> Requirement -> Solution:** Are always handled together.
-
-- **Validation:** Progress can be validated via the requirement list.
-
-- **Evolution:** Continuous updates to the requirement list.
-
-- **Innovation** Intention to improve the product.
-
-- **Systematic Work** Standardized methodology of work.
-
-### Work Products
-
-- Documented interim or final result  
-- From sketch to contractual specification  
-- **Characteristics:** purpose, presentation, scope & lifespan  
-- **Presentation:** natural language; template-based; model-based; other forms, e.g., prototype  
-
-#### Typical Work Products
-
-- Individual requirement, e.g., *User Story*, *Software Requirements Specification (SRS)*  
-- Set of requirements, e.g., use case, graphical models (e.g., UML), interface description, *Epics*, *Product Backlog*, *Story Map*  
-
-#### Level of Detail
-
-- Depends on the purpose  
-- *Note:* A high level of detail is time-consuming & costly  
-
-#### Early Planning & Clarification
-
-- With stakeholders: work products, presentation, levels of detail  
-
-#### Guidelines
-
-- Work product fits the purpose  
-- Completeness & appropriate structure  
-- No redundancies or inconsistencies  
-- Clarity & consistent terminology  
-- Versioning & traceability
-
-### Natural Language Workproducts
-
-#### Advantages
-
-- Expressiveness & flexibility  
-- Direct; no special tools required  
-- Easier for clients or users to understand  
-
-#### Disadvantages
-
-- Ambiguities, omissions, lack of precision, etc.  
-
-#### Recommendations
-
-- Use short and well-structured sentences  
-- Define and consistently use a uniform technical vocabulary  
-- Avoid vague or ambiguous terms and phrases  
-- Be aware of common sources of error, e.g.:
-  - Incompleteness  
-  - Overuse of nouns  
-  - Conditions  
-  - Passive formulations  
-  - Universal quantifiers  
-  - Nominalizations  
-- **Guideline:** *SOPHIST rule set*, based on *Neuro-Linguistic Programming (NLP)*
-
-### Template- and Model-Based Work Products
-
-#### Predefined Structures
-
-- **Sentence template:** syntactic sentence structure, e.g., *User Story*  
-- **Form template:** specific fields, e.g., *Use Case*  
-- **Document template:** structure for a requirements document, e.g., *ISO 29148*  
-
-#### Advantages
-
-- Consistent structure  
-- Support in capturing important information  
-
-#### Disadvantages
-
-- Focus on form instead of content  
-- Other aspects may be overlooked  
-
-#### Model
-
-- Simplified, abstract representation of reality for specific aspects  
-- Often graphical representation  
-
-**Types:**
-
-- Context models  
-- Models for structure & data  
-- Models for function & process  
-- Models for state & behavior  
-
-**Modeling languages:**  
-
-- Use standardized syntax, especially *UML*  
-
-#### Limitations
-
-- Not every relevant piece of information can be expressed  
-
-#### Challenge
-
-- Integrating and maintaining consistency across various models
-
-
-### Requirements Specification & Functional Specification
-
-#### Requirements Specification (Lastenheft)
-
-- Defined by the **client**
-- Contains the complete set of **requirements** for the **deliveries and services** of a contractor within a project  
-
-#### Functional Specification (Pflichtenheft)
-
-- Developed by the **contractor**
-- Contains **implementation guidelines** based on the client’s Requirements Specification  
-
-#### Challenges with the Requirements Specification (Lastenheft)
-
-- Describes requirements from the **client’s perspective** in their **domain-specific language**  
-- Often created by many different stakeholders, e.g.:
-  - Company management  
-  - Business departments  
-  - IT department  
-  - Works or staff council  
-  - Data protection officer  
-  - Equal opportunity officer  
-- “Non-technicians” often struggle to formally specify requirements  
-  - Leads to **implicit assumptions**, **gaps**, **ambiguities**, and **contradictions**  
-- Includes both:
-  - **Functional requirements**
-  - **Non-functional requirements**, **constraints**, **acceptance criteria**, etc.  
-- Often lacks **clear separation** between these categories
-
-### Prototyping
-
-Prototyping is about creating a simplified version of the end product with some of its capabilities. 
-The goal is to create a testable object and once there some form of the end product the requirements can be 
-adjusted.
-
-#### Rapid Prototype 
-
-Type of prototyping in which emphasis is placed on developing
-prototypes early in the development process to permit early feedback and analysis
-in support of the development process.
-
-### Requirement contrats 
-
-- **Identity:** The requirements are identical.
-
-- **Complementarity:** Implementing one requirement leads to (partial) fulfillment of the other requirements.
-
-- **Neutrality:** The implementation of the requirements is independent of each other.
-
-- **Competition:** Both requirements cannot be implemented to the same extent at the same time.
-
-- **Antinomy:** The requirements are mutually exclusive.
-
-### Priorization 
-
-The categories talk by themselves: **must, should, could won't**
-
-### Agile Requirement Engineering 
-
-In this kind of RE the development team is an active participant of the RE team.The most detailed 
-specification of comes very late during the development, and instead the team work with requirements 
-as possible test cases.
-
-### User Stories 
-
-**User Story:** Simple narrative illustrating the user goals that a software function will satisfy.
-
-Also, a narrative description of a software requirement, function, feature, or quality
-attribute, presented as a narrative of desired user interactions with a software
-system.
-
-#### Sentence Template 
-
-```txt
-As <Rol> I want <Action>, to <Goal>
-```
-
-#### Acceptance Criteria 
-
-After a user story specific criteria can be specified to make the description 
-of features more precisse. They are not test case specifications.
-
-```txt
-As a customer I want to order a pizza via the mobile app, to be delivered to me
-
-Acceptance criteria:
-
-- The pizza menu has to be displayed 
-- The payment possibilities should be presented to the user 
-- I need a notification that my order was taken
-```
-
-### Invest Criteria 
-
-Criteria for a good user story.
-
-**Independent, Negotiable, Valuable, Estimable, Small, Testable**
-
---- 
-
-## Kano Model
-
-For the categorization of requirements. It consists of two axises, one for the happiness and one for the amount of features. There are three 
-ploted lines the **base**, **performance** and **excell** features.
-
---- 
-
-## Approximation of Work
-
-For the economic viability of a project. Can be accomplised via the approximation of an expert, a group or the Delphi-Method. There are also algorithmic methods.
-
-### Delphi-Method
-
-It is done by making different approximation with different parameters of which an statistic is made to analyse. 
-
-### COCOMO
-
-`Constructive Cost Model` is an algorithmic model to approximate the cost of production of software.
-
-It uses the unit of **Delivered Source Instructions(DSI)**, it starts before the project design and ends with the test by the users.
-
-#### Process 
-
-- Stimate the number of **KDSI** (1000 DSI)
-- Stimate complexity: Organic, semidetached or Embeded mode depending on the size of the project.
-- Calculate the stimate.
-
---- 
 
 ## Object Oriented Analysis 
 
@@ -451,279 +195,12 @@ Stands for Unified Modeling Language. Which is a standard for modeling.
 
 --- 
 
- ## Responsibility for One's Craft
-
-### Dunning-Kruger Effect
-
-This cognitive bias describes how people with low ability at a task overestimate their ability. In software development, it reminds us to stay humble, continuously learn, and seek feedback. As skills improve, one often becomes more aware of what they don’t know.
-
-### Principle of Least Surprise
-
-Code should behave in a way that surprises users and developers the least. When behavior is intuitive and consistent with expectations, it reduces cognitive load and errors. For instance, a method named `getUser()` should not delete data.
-
-### Scout Rule
-
-_“Leave the code better than you found it.”_  
-Inspired by the Boy Scouts’ principle, this encourages developers to improve readability, naming, or structure with each change, even in small ways.
-
-### WTF Metric
-
-The “WTFs per minute” metric is a humorous way to measure code quality. Code that is difficult to understand or inconsistent tends to generate more “WTF” reactions from reviewers. The lower the WTF count, the better the code.
-
----
-
----
-
-## Design Principles
-
-### Visual Hierarchy
-
-Elements are arranged to indicate their importance. Techniques include size, color, and positioning.
-
-### Contrast
-
-Use of differing colors, fonts, or shapes to distinguish elements and draw attention to key areas.
-
-### Consistency
-
-Uniform use of design elements, such as fonts, colors, and button styles, helps users learn interfaces quickly.
-
-### Balance
-
-The visual weight of elements should be evenly distributed to prevent clutter and enhance readability.
-
-### Feedback
-
-The system should communicate actions, changes, and errors clearly. Examples include button state changes, loading indicators, or error messages.
-
-### Simplicity
-
-Only include what’s necessary. Avoid overcomplicating interfaces or adding options that aren’t used often.
-
-### Alignment
-
-Proper alignment improves structure and readability. Misaligned content can feel chaotic or unprofessional.
-
-### Proximity
-
-Related items should be grouped together. For example, labels and input fields should be near each other.
-
-### Repetition
-
-Reusing elements and styles builds familiarity and reduces the learning curve for users.
-
----
-
-## Coding Paradigms
-
-### Procedural 
-
-This paradigm is based on procedures which can undestood as series of instructions. The poster-boy for this paradigm is `C`
-
-### Object-Oriented Programming (OOP)
-
-A paradigm based on objects that encapsulate data and behavior. Key principles include inheritance, polymorphism, encapsulation, and abstraction.
-
-### Functional Programming (FP)
-
-A declarative paradigm where computation is done through pure functions and immutability. FP avoids side effects and favors composability and higher-order functions.
-
 ### Architectural Decisions
 
-Choosing the right architecture (e.g., layered, microservices, event-driven) affects scalability, maintainability, and performance. It’s important to consider trade-offs early in the project lifecycle.
-
-### Imperative vs. Declarative
-
--   **Imperative**: Specifies _how_ to perform tasks step-by-step (e.g., for loops).
--   **Declarative**: Focuses on _what_ the outcome should be, leaving the "how" to the underlying system (e.g., SQL, React).
+Choosing the right architecture (e.g., layered, microservices, event-driven) affects scalability, maintainability, and performance. 
+It’s important to consider trade-offs early in the project lifecycle.
 
 --- 
-
-## Continuous Integration (CI)
-
-Continuous Integration (CI) is a software development practice where developers frequently merge their code changes into a shared repository, often multiple times a day. Each merge triggers an automated build and test process to detect integration issues early, ensuring faster feedback and 
-higher software quality. 
-
-Goals:
-
-- **Feature Driven Development**:
-- **Automatic Tests**:
-- **Availability of demo and test-systems**:
-- **Increase of software quality**:
-
-
-### Principles 
-
-- **Shared Code Base:** Maintained via a version-control-system.
-
-- **Automatic translation:** Standardized definition of tests, static checks by each integration.
-
-- **Automatic Distribution and Mirrors:** Division of distributions in DEV, TEST and PROD. Changes are tested 
-in the production environment.
-
-- **Frequent Integration:** Reduces the number of errors in the code-base. (Trunk-Based-Development).
-
-- **Continuous Test Development:** For each change in the code, documentation and anaylsis there is a test or check.
-
-- **Documentation:** Makes it easier for anybody to understand the procduct.
-
-### Key Concepts of CI
-
-* **Frequent Commits:** Developers integrate changes into the main branch frequently.
-* **Automated Builds:** Code is compiled, packaged, and validated automatically.
-* **Automated Testing:** Unit, integration, and regression tests run on every build.
-* **Early Feedback:** Failures are detected quickly and resolved faster.
-* **Collaboration:** Encourages team-wide ownership of code quality.
-
-
-### Phases of CI
-
-1. **Code Commit**
-
-   * Developers push code changes to a shared version control system (e.g., Git).
-   * Trigger for the CI pipeline.
-
-2. **Build Phase**
-
-   * Source code is compiled.
-   * Dependencies are downloaded and packaged.
-   * Artifacts (executables, libraries, containers) are generated.
-
-3. **Test Phase**
-
-   * Unit tests run first to validate code logic.
-   * Integration and regression tests ensure stability.
-   * Security and static code analysis can be included.
-
-4. **Feedback & Reporting**
-
-   * Results of builds/tests are shared with the team.
-   * Developers receive notifications about failures.
-
-5. **Artifact Management**
-
-   * Successful builds produce deployable artifacts stored in artifact repositories.
-
-6. **Deployment (Optional in CI, mandatory in CD)**
-
-   * Artifacts are deployed to staging/test environments for validation.
-   * If extended to **Continuous Deployment (CD)**, production deployment can be automated.
-
-
-### Functions of CI
-
-* **Automation of Builds & Tests:** Eliminates manual intervention, reduces errors.
-* **Early Bug Detection:** Prevents accumulation of defects by testing frequently.
-* **Improved Code Quality:** Enforces coding standards through linting & analysis.
-* **Reduced Integration Risk:** Small incremental changes reduce integration conflicts.
-* **Faster Delivery:** Streamlined pipelines accelerate release cycles.
-* **Collaboration & Transparency:** CI dashboards and logs improve visibility.
-
-
-### DevOps
-
-Is a set of practices, tools, and a cultural philosophy that automate and integrate the processes between 
-software development and IT operations teams.
-
-#### Phases and Tools 
-
-- **Plan:** Jira, Common Sense
-- **Code:** Git, GitHub, Nvim
-- **Build:** Maven, Make, Cargo
-- **Test:** Azure. (Quality Assurance, not code tests)  
-- **Release:** Jenkins 
-- **Deploy:**  Docker, Nix, Kubernetes
-- **Operate:** CHEF, Ansible  
-- **Monitor:** Grafana, Graylog
-
-### Popular CI Tools
-
-#### 1. **Jenkins**
-
-* Open-source automation server.
-* Highly customizable with plugins.
-* Supports pipelines as code.
-
-#### 2. **GitHub Actions**
-
-* CI/CD built into GitHub repositories.
-* Easy YAML-based workflows.
-* Strong community integrations.
-
-#### 3. **GitLab CI/CD**
-
-* Integrated with GitLab platform.
-* Built-in container registry.
-* Supports auto DevOps pipelines.
-
-#### 4. **CircleCI**
-
-* Cloud-native CI/CD platform.
-* Optimized for parallelization.
-* Strong Docker support.
-
-#### 5. **Travis CI**
-
-* Hosted CI/CD service.
-* Simple YAML-based configuration.
-* Free for open-source projects.
-
-#### 6. **Azure DevOps Pipelines**
-
-* Microsoft’s CI/CD solution.
-* Strong integration with Azure cloud.
-* Multi-language and platform support.
-
-
-### Example CI Workflow (Simplified)
-
-```yaml
-# Example GitHub Actions CI Workflow
-name: CI Pipeline
-
-on: [push, pull_request]
-
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Run Tests
-        run: npm test
-```
-
-### Best Practices in CI
-
-* Commit small, frequent changes.
-* Keep builds fast and reliable.
-* Use version control for pipeline configurations.
-* Run tests in parallel to reduce time.
-* Fail fast: stop pipelines early when errors occur.
-* Monitor pipeline health with dashboards.
-* Secure the pipeline (secrets, dependencies, access).
-
-### CI vs. CD
-
-
-| Aspect         | Continuous Integration (CI) | Continuous Delivery/Deployment (CD) |
-| -------------- | --------------------------- | ----------------------------------- |
-| Focus          | Automating build & test     | Automating release & deployment     |
-| Goal           | Detect integration issues   | Deliver software faster & safer     |
-| Deployment     | Not always included         | Always included (staging/prod)      |
-| Risk Reduction | Early bug detection         | Minimized release risk              |
-
-
----
 
 ## Version Control 
 
@@ -958,13 +435,4 @@ software and other serious problems.
 
 --- 
 
-## SaaS
-
-It stands for software as a service. This model of cloud computing focuses on providing a software 
-via the internet under a pricing for tag. It has the advantage that for the customer they do not have to care about the installation, update, etc. 
-
-Even if the initial idea is great for certain services, companies exploit customers with this model. Be ethical and only 
-use it if the application if worth it, not a note taking app.
-
---- 
 

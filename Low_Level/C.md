@@ -244,7 +244,7 @@ Always ensure there’s enough space for the null terminator `('\0')`.
 
 Be careful with buffer overflows—C doesn’t do bounds checking.
 
-Writing to string literals (like char *s = "text";) is undefined behavior.
+Writing to string literals (like `char *s = "text";`) is undefined behavior.
 
 ```c
 #include <stdio.h>
@@ -314,6 +314,11 @@ void c_strings() {
 
 }
 ```
+
+### sizeof vs strlen 
+
+- `sizeof()`: returns the size plus the null terminator.
+- `strlen()`:  return the size of the string without the null terminator.
 
 ---
 
@@ -426,6 +431,67 @@ It is a binary pattern used to modify another binary pattern using bitwise opera
 
 Macros are code which is inserted inside the code before compilation.
 
+### Opeators 
+
+- `#define name_of_macro(opt_param_1, opt_param2, ...)`: `#define` is used to define a macro.
+
+- `#undef`: is used to undefine a macro.
+
+-`\`: this allows us to define multiline macros. Example:
+
+```c 
+#define MAX_bet_INT(A,B) ({   \
+    if (A > B) {              \
+        printf("%d\n", A);    \ 
+    } else {                  \ 
+        printf("%d\n", B);    \ 
+    }                         \
+})
+```
+
+- `#`: The stringinize operator allows us to use our parameters passed to a macros as literal strings. Example: 
+
+```c 
+#define p(name) printf("%s\n",#name);
+```
+
+- `##`: The token parsing operator enables the programmer to combine to tokes inside a macro together. 
+Example:
+
+```c 
+
+#define token_parsing(n) printf("%d\n", token_##n);
+
+int main () {
+    int token_25 = 100;
+    token_parsing(25) // this will be converted to printf("%d\n", token_25);
+    return 0;
+}
+```
+
+- `#pragma`: Used to call specific directives which can have from small to affect large effects on the struture of our code.
+
+- `#error`: Is used to define our own compilation errors inside blocks of conditional compilation.
+
+- `#if`: if-clause as directive. This and the following ones are not meanf for control-flow inside the program 
+but more for conditional compilation. This is very powerful, because depending on the contents of our source code we can choose to 
+compile or not compile certain sections.
+
+- `#ifdef`: is used to check if a macro was already defined.
+
+- `#else`: else-clasuse as directive.
+
+- `#elif`: else-if-clasuse as directive.
+
+- `#ifndef`: checks if a macro was not already defined.
+
+- `#endif`: is used to end if-directives
+
+- `defined`: is a directive for conditional compilation. It tells wherever a macro is defined or not.
+
+
+### Types of Macros
+
 - **Constants**:
 
 ```c
@@ -464,7 +530,7 @@ Example with struct:
     X(Attack)          \
     X(Armored)         \
     X(Female)          \
-    X(Colosus)         \
+    X(Colosal)         \
     X(Beast)
 
 // Actual X-defintion
@@ -489,7 +555,7 @@ Example with enum:
     X(Attack)          \
     X(Armored)         \
     X(Female)          \
-    X(Colosus)         \
+    X(Colosal)         \
     X(Beast)
 
 enum Titans { 
@@ -660,7 +726,7 @@ int main() {
 
 ---
 
-## The volatile keywords
+## The volatile keyword
 
 This keyword is used to prevent the compiler from optimizing certain variables.
 
@@ -683,6 +749,15 @@ void volatile_example() {
 ```
 
 ---
+
+## The static keyword
+
+`static` has mainly two use cases: 
+
+- A `static` variable inside a functions keeps its value between invocation.
+- A `static` global variable is seen ony in the file in which its declared.
+
+--- 
 
 ## Format Specifiers
 
@@ -2470,7 +2545,7 @@ int main() {
 
 ---
 
-## Pragma
+## Pragmas
 
 Pragmas are a kind of preprocessor directive used for giving the compiler more information.
 They are operating system specific, i.e., system call specific.
@@ -2971,7 +3046,7 @@ void random_array() {
 
 ### How Is Work inside Loops Divided
 
-Each thread gets **blocks/chunks** of iterations to work with.
+Each thread gets **blocks/chunks** of iterations to work with. These are mostly assigned using 
 
 #### Schedule
 

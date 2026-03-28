@@ -20,7 +20,7 @@ List of certifications I want to get.
 
 --- 
 
-## For the Industry 
+## For the Tech Industry 
 
 - Certified Tester Foundation Level (QA)
 - Professional Scrum Developer 
@@ -31,8 +31,19 @@ List of certifications I want to get.
 - Certified Professional for Requirements Engineering
 - Certified Professional for Software Architecture
 - OMG Certified UML Professional
- 
+- Comptia A+ 
+- Comptia Networkin+
+- Comptia Security+
+- Cisco CCNA
+- Comptia Linux+
+- Comptia PenTest+
 
+--- 
 
+## For the Financial Industry 
 
+- CFA Institute  (Chartered Financial Analyst)
+- Corporate Financial Institute (FMVA)
+- Global Association of Risk Professional 
+- Project Management Institute (CAMP/PMP)
 

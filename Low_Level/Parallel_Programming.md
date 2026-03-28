@@ -99,7 +99,7 @@ We have the following structure for hardware which allows parallel programs:
 
 - **Off-chip-cache**: bigger quick access memory region
 
-- **RAM**: Big but also slower memory region.
+- **RAM**: Big, but also slower memory region.
 
 
 ### One core Architecture
@@ -269,10 +269,10 @@ Example with closure as anonymous `Callable` class:
 public static Future<Integer> square(final int z) {
     // Using an anonymous class for the closure
     return ForkJoinPool.commonPool().submit(new Callable<Integer>() {
-  public Integer call() {
-   return z * z;
-  }
- });
+          public Integer call() {
+              return z * z;
+          }
+    });
 }
 
 public static void main(String[] args) {
@@ -283,7 +283,7 @@ public static void main(String[] args) {
  try {
 
         res = future.get();
-  System.out.println(res);
+        System.out.println(res);
  
     } catch (InterruptedException | ExecutionException e) {
   e.printStackTrace();
