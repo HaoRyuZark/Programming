@@ -7,7 +7,7 @@
 It is the sequential execution time divided by the parallel execution time.
 
 $$
-  S(n) = \frac{T(s)}{T(n)}
+  S(n) = \frac{T(s)}{T(p)}
 $$
 
 It depends on the number of cores $n$. For example: for 2 cores the speedup should be 
@@ -315,7 +315,7 @@ public static void main(String[] args) throws IOException {
 
  // Streams for communication
 
-    // Using stdout as the input for the other process
+ // Using stdout as the input for the other process
  PrintWriter parameter = new PrintWriter(process.getOutputStream());
     
  Scanner result = new Scanner(process.getInputStream());

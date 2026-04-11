@@ -7,7 +7,7 @@ public class DocumentFactory {
             PDF -> return new PdfDocument(content); 
             TEXT -> return new TextDocument(content); 
             DOCX -> return new DocxDocuement(content);
-            _ -> throw new Exception("No such document type");
+            default -> throw new Exception("No such document type");
         }
     }
 }

@@ -1,6 +1,26 @@
 # Systems Programming
 
-## Size of Variables
+--- 
+
+## Layers of a Computer 
+
+- **Applications**: compilers, editor, guis, etc.
+- **Libraries and Critical Programs**: language Libraries and global executables
+- **OS**: kernel for the intreation with the hardware.
+- **Hardware**: Physical layer.
+
+--- 
+
+## Tasks of an Operating System
+
+- **Process Management**: Handling the life span of a program as well as allowing multitasking.
+- **Memory Management**: Management of the resources of a program.
+- **File system**: Definition of how data is going to be stored, retrived, updated and deleted.
+- **Input/Output**: Handling peripherals for the entering or display of data.
+
+--- 
+
+## Size of Datatypes
 
 - `char`: 1 byte
 - `short`: 2 bytes
@@ -246,8 +266,6 @@ Binary division, often implemented using repeated subtraction, works much like l
 
 ---
 
-# Components of the OS
-
 ## The Stack
 
 Is a memory region that stores local variables, function parameters, and return addresses. It operates in a last-in, first-out (LIFO) manner. The data is 
@@ -363,7 +381,7 @@ The Application Binary Interface (ABI) defines how different components of a bin
 
 ## Processes
 
-A **proces** is an instance of a program with its own memory region.
+A **process** is an instance of a program with its own memory region.
 
 
 ### PCB 

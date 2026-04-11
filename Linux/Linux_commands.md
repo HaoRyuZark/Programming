@@ -70,6 +70,18 @@
 
 ---
 
+- `finger [flags] [user]`
+  - **Function**: Displays information about logged-in users (full name, login time, idle time, home directory, shell).
+  - **Flags**:
+    - `-l`: Long format — more detailed output per user.
+    - `-m`: Match only exact usernames (disable substring matching).
+    - `-p`: Suppress the `.plan` and `.project` file output.
+  - **Parameters**:
+    - `[user]` *(optional)*: Username to look up; shows all logged-in users if omitted.
+  - **Example Usage**: `finger` / `finger john` / `finger -l john@remotehost.com`
+
+---
+
 ## File & Directory Management
 
 ---
@@ -93,6 +105,30 @@
 - `pwd`
   - **Function**: Prints the absolute path of the current working directory.
   - **Example Usage**: `pwd`
+
+--- 
+
+- `chmod [args] [path]`
+  - **Function**: Changes ther permissions of a file. Includes:
+      - `x`: execute
+      - `w`: write 
+      - `r`: read
+      We use `+` or `-` to remove or add permissions. 
+  - **Example Usage**: `chmod +x script.sh`
+
+---
+
+- `chown [flags] <owner>[:<group>] <file>`
+  - **Function**: Changes the ownership (user and optionally group) of a file or directory.
+  - **Flags**:
+    - `-R`: Recursively change ownership of all files in a directory.
+    - `-v`: Verbose — report each file processed.
+    - `-c`: Like `-v`, but only report changes made.
+    - `--from=<owner>:<group>`: Only change ownership if the current owner/group matches.
+  - **Parameters**:
+    - `<owner>[:<group>]` *(required)*: New owner username, optionally with a group (e.g., `john:developers`).
+    - `<file>` *(required)*: File or directory to change.
+  - **Example Usage**: `sudo chown john file.txt` / `sudo chown -R www-data:www-data /var/www/` / `chown john:devs project/`
 
 ---
 
@@ -194,6 +230,35 @@
     - `<target>` *(required)*: The original file or directory to point to.
     - `<link_name>` *(required)*: Name of the new link.
   - **Example Usage**: `ln -s /usr/local/bin/python3 ~/bin/python` / `ln file.txt hardlink.txt`
+
+--- 
+
+- `tar [flags] [path]`
+  - **Function**: Used for compressing and decompressing files and folders. 
+  - **Flags**:
+    - `-c`: create. 
+    - `-x`: extract. 
+    - `-t`: list contents. 
+    - `-z`: use gzip compression. 
+    - `-f`: specify file name. 
+  - **Example Usage**: `tar -czf backup.tar.gz`
+
+---
+
+- `zip [flags] <archive.zip> <files...>`
+  - **Function**: Compresses files and directories into a `.zip` archive.
+  - **Flags**:
+    - `-r`: Recursively include directories.
+    - `-e`: Encrypt the archive with a password.
+    - `-9`: Maximum compression level (slowest).
+    - `-v`: Verbose — show files being added.
+    - `-u`: Update existing entries in the archive.
+    - `-d`: Delete entries from the archive.
+    - `-j`: Junk paths — store only file names, not the directory structure.
+  - **Parameters**:
+    - `<archive.zip>` *(required)*: Name of the zip file to create.
+    - `<files...>` *(required)*: Files or directories to compress.
+  - **Example Usage**: `zip archive.zip file1.txt file2.txt` / `zip -r backup.zip ./docs/` / `zip -e secret.zip sensitive.txt`
 
 ---
 
@@ -351,7 +416,7 @@
 ---
 
 - `locate [flags] <pattern>`
-  - **Function**: Quickly finds files by name using a pre-built database (run `updatedb` to refresh).
+  - **Function**: Quickly finds files by name using a pre-built database (run `sudo updatedb` to refresh).
   - **Flags**:
     - `-i`: Case-insensitive search.
     - `-l <n>`: Limit output to `n` results.
@@ -500,6 +565,27 @@
 
 ---
 
+- `systemctl [flags] <subcommand> [unit]`
+  - **Function**: Controls the systemd service manager — start, stop, enable, and inspect services and system units.
+  - **Flags**:
+    - `--user`: Operate on the user-level systemd instance (not system-wide).
+    - `--no-pager`: Don't pipe output through a pager.
+    - `-l`: Don't truncate unit names or descriptions in output.
+  - **Parameters** (subcommands):
+    - `start <unit>`: Start a service immediately.
+    - `stop <unit>`: Stop a running service.
+    - `restart <unit>`: Stop then start a service.
+    - `reload <unit>`: Reload service configuration without a full restart.
+    - `enable <unit>`: Enable a unit to start automatically at boot.
+    - `disable <unit>`: Prevent a unit from starting at boot.
+    - `status <unit>`: Show the current status and recent logs of a unit.
+    - `is-active <unit>`: Check if a unit is currently running (exit 0 = active).
+    - `list-units`: List all loaded units and their state.
+    - `daemon-reload`: Reload systemd config after editing unit files.
+  - **Example Usage**: `sudo systemctl start nginx` / `sudo systemctl enable --now sshd` / `systemctl status NetworkManager`
+
+---
+
 ## Miscellaneous
 
 ---
@@ -574,6 +660,52 @@
 
 ---
 
+- `whatis <command>`
+  - **Function**: Displays a one-line description of a command from the manual page database (equivalent to `man -f`).
+  - **Parameters**:
+    - `<command>` *(required)*: Command name to look up.
+  - **Example Usage**: `whatis ls` / `whatis grep` / `whatis chmod`
+
+---
+
+- `man [section] <command>`
+  - **Function**: Displays the full manual page for a command, system call, or configuration file.
+  - **Flags**:
+    - `-k <keyword>`: Search man page descriptions for a keyword (equivalent to `apropos`).
+    - `-f <command>`: Show a short description (equivalent to `whatis`).
+    - `-a`: Display all sections matching the name, one after the other.
+  - **Parameters**:
+    - `[section]` *(optional)*: Manual section number (`1`=commands, `5`=config files, `8`=admin commands).
+    - `<command>` *(required)*: Command or topic to look up.
+  - **Example Usage**: `man ls` / `man 5 passwd` / `man -k "compress"` / `man -a intro`
+
+---
+
+- `which <command>`
+  - **Function**: Locates the full path of an executable by searching the directories in `$PATH`.
+  - **Parameters**:
+    - `<command>` *(required)*: Name of the command to locate.
+  - **Example Usage**: `which python3` / `which git` / `which bash`
+
+---
+
+- `wget [flags] <url>`
+  - **Function**: Downloads files from the internet via HTTP, HTTPS, or FTP.
+  - **Flags**:
+    - `-O <file>`: Save the download to a specific file name.
+    - `-P <dir>`: Save files to a specified directory.
+    - `-b`: Run the download in the background.
+    - `-c`: Continue a partially downloaded file (resume).
+    - `-q`: Quiet mode — suppress output.
+    - `-r`: Recursive download (follow links).
+    - `--limit-rate=<rate>`: Throttle download speed (e.g., `500k`, `2m`).
+    - `--no-check-certificate`: Skip SSL certificate verification.
+  - **Parameters**:
+    - `<url>` *(required)*: URL of the file to download.
+  - **Example Usage**: `wget https://example.com/file.zip` / `wget -O myfile.tar.gz https://example.com/archive.tar.gz` / `wget -c -b https://example.com/large.iso`
+
+---
+
 ## Modern & Advanced Tools
 
 ---
@@ -620,19 +752,6 @@
 
 ---
 
-- `mosh [flags] [user@]<host>`
-  - **Function**: Connects to a remote machine like SSH but with better support for roaming and unstable connections (uses UDP).
-  - **Flags**:
-    - `--port <n>`: UDP port to use.
-    - `--ssh <cmd>`: SSH command to use for the initial connection.
-    - `-p <range>`: UDP port range to use.
-  - **Parameters**:
-    - `[user@]` *(optional)*: Remote username.
-    - `<host>` *(required)*: Remote hostname or IP address.
-  - **Example Usage**: `mosh user@192.168.1.10` / `mosh --port 60001 user@server.com`
-
----
-
 - `lshw [flags]`
   - **Function**: Lists detailed hardware configuration (CPU, RAM, storage, NIC, etc.).
   - **Flags**:
@@ -642,20 +761,6 @@
     - `-class <name>`: Filter by hardware class (e.g., `cpu`, `memory`, `disk`).
     - `-businfo`: Show bus info for all devices.
   - **Example Usage**: `sudo lshw -short` / `sudo lshw -class disk`
-
----
-
-- `mtr [flags] <host>`
-  - **Function**: Combines `traceroute` and `ping` into a real-time network diagnostic tool.
-  - **Flags**:
-    - `-r`: Report mode (non-interactive, prints summary).
-    - `-c <n>`: Number of pings to send.
-    - `-n`: Disable DNS resolution (show IPs only).
-    - `--tcp`: Use TCP instead of ICMP.
-    - `--udp`: Use UDP probes.
-  - **Parameters**:
-    - `<host>` *(required)*: Hostname or IP to trace.
-  - **Example Usage**: `mtr google.com` / `mtr -r -c 10 8.8.8.8`
 
 ---
 
@@ -743,6 +848,8 @@
     - `-u <user>`: Monitor processes of a specific user.
   - **Example Usage**: `sudo iotop -o` / `sudo iotop -a -d 2`
 
+Similars: `top`, `btop`, `htop`
+
 ---
 
 - `stat [flags] <file>`
@@ -756,6 +863,24 @@
   - **Example Usage**: `stat ~/.bashrc` / `stat -c "%n %s %y" file.txt`
 
 ---
+
+- `df [flags]`
+  - **Function**: Shows the filesystem siede used, available and where is mounted.
+  - **Flags**:
+      - `h`: shows usage in percentage.
+      - A lot more, but really common.
+  - **Example Usage**: `df -h`
+
+--- 
+
+- `du [flags] [path]`
+  - **Function**: Shows how much space a folder consumes. 
+  - **Flags**:
+      - `-sh`: shows usage in the highest fitting unit, intead of 1 million bytes you get 1 MB.
+      - A lot more, but really common.
+  - **Example Usage**: `du -sh ./Downloads`
+
+--- 
 
 - `dstat [flags]`
   - **Function**: Versatile, real-time resource statistics tool (combines vmstat, iostat, netstat, etc.).
@@ -793,70 +918,6 @@
 
 ---
 
-- `dig [flags] [type] <domain>`
-  - **Function**: DNS lookup tool — queries name servers for DNS records.
-  - **Flags**:
-    - `+short`: Print a terse answer.
-    - `+noall +answer`: Show only the answer section.
-    - `-x <ip>`: Reverse DNS lookup (IP to hostname).
-    - `@<server>`: Query a specific DNS server.
-  - **Parameters**:
-    - `[type]` *(optional)*: Record type: `A`, `AAAA`, `MX`, `TXT`, `NS`, `CNAME` (default: `A`).
-    - `<domain>` *(required)*: Domain to query.
-  - **Example Usage**: `dig google.com` / `dig MX gmail.com` / `dig +short @8.8.8.8 example.com`
-
----
-
-- `dog [flags] [type] <domain>`
-  - **Function**: User-friendly DNS client with colorized output — a modern alternative to `dig`.
-  - **Flags**:
-    - `--short`: Show only record values.
-    - `--json`: Output JSON.
-    - `--tcp` / `--tls`: Use TCP or DNS-over-TLS.
-    - `@<server>`: Query a specific DNS server.
-  - **Parameters**:
-    - `[type]` *(optional)*: Record type: `A`, `AAAA`, `MX`, `TXT`, etc.
-    - `<domain>` *(required)*: Domain to query.
-  - **Example Usage**: `dog example.com` / `dog MX gmail.com @8.8.8.8`
-
----
-
-- `tcpdump [flags] [expression]`
-  - **Function**: Captures and analyzes network packets in real time (requires root).
-  - **Flags**:
-    - `-i <iface>`: Specify network interface (e.g., `eth0`, `any`).
-    - `-n`: Do not resolve hostnames.
-    - `-v` / `-vv` / `-vvv`: Increasing verbosity.
-    - `-w <file>`: Write raw packets to a `.pcap` file.
-    - `-r <file>`: Read packets from a `.pcap` file.
-    - `-c <n>`: Capture only `n` packets then stop.
-  - **Parameters**:
-    - `[expression]` *(optional)*: BPF filter expression (e.g., `port 80`, `host 192.168.1.1`).
-  - **Example Usage**: `sudo tcpdump -i eth0 port 80` / `sudo tcpdump -w capture.pcap -c 100`
-
----
-
-- `tshark [flags]`
-  - **Function**: Terminal-based network protocol analyzer (Wireshark CLI).
-  - **Flags**:
-    - `-i <iface>`: Capture on specified interface.
-    - `-r <file>`: Read a `.pcap` capture file.
-    - `-w <file>`: Write captured packets to file.
-    - `-Y <filter>`: Apply a Wireshark display filter (e.g., `http`, `tcp.port==443`).
-    - `-T <format>`: Output format (`fields`, `json`, `text`, etc.).
-  - **Example Usage**: `sudo tshark -i eth0 -Y "http"` / `tshark -r capture.pcap -T json`
-
----
-
-- `termshark [flags]`
-  - **Function**: Terminal UI for tshark — interactive packet capture viewer in the terminal.
-  - **Flags**:
-    - `-i <iface>`: Interface to capture on.
-    - `-r <file>`: Open a `.pcap` file for inspection.
-  - **Example Usage**: `sudo termshark -i eth0` / `termshark -r capture.pcap`
-
----
-
 - `lsof [flags]`
   - **Function**: Lists open files and the processes that have them open (regular files, sockets, pipes).
   - **Flags**:
@@ -866,22 +927,6 @@
     - `+D <dir>`: Show all open files under a directory.
     - `-t`: Output PIDs only (useful for scripting).
   - **Example Usage**: `sudo lsof -i :8080` / `lsof -u john` / `lsof +D /var/log`
-
----
-
-- `ipcalc <IP/netmask>`
-  - **Function**: Calculates network information from an IP address and subnet mask (range, broadcast, prefix).
-  - **Parameters**:
-    - `<IP/netmask>` *(required)*: IP address with prefix or netmask (e.g., `192.168.1.0/24`).
-  - **Example Usage**: `ipcalc 192.168.1.0/24` / `ipcalc 10.0.0.1/255.255.0.0`
-
----
-
-- `wormhole send <file>`
-  - **Function**: Securely transfers a file to another machine using a one-time human-readable code (Magic Wormhole protocol).
-  - **Parameters**:
-    - `<file>` *(required)*: File or directory to send.
-  - **Example Usage**: `wormhole send archive.tar.gz` *(receiver runs `wormhole receive`)*
 
 ---
 
@@ -909,24 +954,6 @@
 - `lazydocker`
   - **Function**: Terminal UI for managing Docker containers, images, volumes, and networks interactively.
   - **Example Usage**: `lazydocker`
-
----
-
-- `rsync [flags] <source> <destination>`
-  - **Function**: Efficiently transfers and synchronizes files locally or over SSH, sending only changed data.
-  - **Flags**:
-    - `-a`: Archive mode — preserves permissions, timestamps, symlinks, owner, and group.
-    - `-v`: Verbose output.
-    - `-z`: Compress data during transfer.
-    - `-P`: Show progress and keep partial files (`--partial --progress`).
-    - `-n` / `--dry-run`: Simulate without making any changes.
-    - `-e <cmd>`: Specify remote shell (e.g., `-e ssh`).
-    - `--exclude <pattern>`: Exclude files matching a pattern.
-    - `--delete`: Delete files in destination not present in source.
-  - **Parameters**:
-    - `<source>` *(required)*: Source directory or file.
-    - `<destination>` *(required)*: Local path or `user@host:/path`.
-  - **Example Usage**: `rsync -avzP ~/docs/ user@server:/backup/docs/` / `rsync -an --delete src/ dst/`
 
 ---
 
@@ -990,3 +1017,239 @@
     - `rm <model>`: Remove a local model.
     - `serve`: Start the Ollama API server.
   - **Example Usage**: `ollama run llama3` / `ollama list` / `ollama pull mistral`
+
+---
+
+## Networking
+
+---
+
+- `ping [flags] <host>`
+  - **Function**: Tests network reachability of a host by sending ICMP echo request packets and measuring response times.
+  - **Flags**:
+    - `-c <n>`: Send exactly `n` packets then stop.
+    - `-i <sec>`: Interval between packets in seconds (default: 1).
+    - `-t <ttl>`: Set the Time-To-Live value.
+    - `-s <size>`: Set the packet payload size in bytes.
+    - `-q`: Quiet mode — only show the summary.
+    - `-W <sec>`: Timeout in seconds to wait for a reply.
+  - **Parameters**:
+    - `<host>` *(required)*: Hostname or IP address to ping.
+  - **Example Usage**: `ping google.com` / `ping -c 4 8.8.8.8` / `ping -i 0.5 -q 192.168.1.1`
+
+---
+
+- `ssh [flags] [user@]<host> [command]`
+  - **Function**: Connects to a remote machine securely over an encrypted SSH session.
+  - **Flags**:
+    - `-p <port>`: Connect on a non-default port (default: 22).
+    - `-i <key>`: Use a specific private key file for authentication.
+    - `-L <local>:<host>:<remote>`: Local port forwarding.
+    - `-R <remote>:<host>:<local>`: Remote port forwarding.
+    - `-N`: Do not execute a remote command (useful for tunneling only).
+    - `-v`: Verbose mode (useful for debugging connection issues).
+    - `-X`: Enable X11 forwarding.
+  - **Parameters**:
+    - `[user@]` *(optional)*: Remote username; defaults to the local username.
+    - `<host>` *(required)*: Hostname or IP address of the remote machine.
+    - `[command]` *(optional)*: Command to run on the remote host instead of opening a shell.
+  - **Example Usage**: `ssh user@192.168.1.10` / `ssh -p 2222 user@server.com` / `ssh -i ~/.ssh/id_rsa user@host "ls /var/log"`
+
+---
+
+- `mosh [flags] [user@]<host>`
+  - **Function**: Connects to a remote machine like SSH but with better support for roaming and unstable connections (uses UDP).
+  - **Flags**:
+    - `--port <n>`: UDP port to use.
+    - `--ssh <cmd>`: SSH command to use for the initial connection.
+    - `-p <range>`: UDP port range to use.
+  - **Parameters**:
+    - `[user@]` *(optional)*: Remote username.
+    - `<host>` *(required)*: Remote hostname or IP address.
+  - **Example Usage**: `mosh user@192.168.1.10` / `mosh --port 60001 user@server.com`
+
+---
+
+- `ifconfig [interface] [options]`
+  - **Function**: Configures or displays network interface parameters (IP address, netmask, status). Largely superseded by `ip`.
+  - **Flags**:
+    - `up` / `down`: Bring an interface up or down.
+    - `<address>`: Assign an IP address to the interface.
+    - `netmask <mask>`: Set the subnet mask.
+    - `-a`: Show all interfaces, including inactive ones.
+  - **Parameters**:
+    - `[interface]` *(optional)*: Network interface to configure (e.g., `eth0`, `wlan0`); shows all if omitted.
+  - **Example Usage**: `ifconfig` / `ifconfig eth0` / `sudo ifconfig eth0 192.168.1.10 netmask 255.255.255.0`
+
+---
+
+- `ip [flags] <object> <command>`
+  - **Function**: Configures and displays network interfaces, routing, and tunnels — modern replacement for `ifconfig` and `route`.
+  - **Flags**:
+    - `-4` / `-6`: Show/configure IPv4 or IPv6 only.
+    - `-br`: Brief, compact output.
+    - `-c`: Colorize output.
+    - `-json`: Output in JSON format.
+  - **Parameters** (objects):
+    - `addr` (`a`): Manage IP addresses — `ip addr show`, `ip addr add <ip/prefix> dev <iface>`, `ip addr del`.
+    - `link` (`l`): Manage interfaces — `ip link show`, `ip link set <iface> up/down`.
+    - `route` (`r`): Manage routing table — `ip route show`, `ip route add <net> via <gateway>`.
+    - `neigh` (`n`): Show the ARP/neighbor cache.
+  - **Example Usage**: `ip addr show` / `ip -br -c link` / `sudo ip link set eth0 up` / `ip route show`
+
+---
+
+- `ss [flags] [filter]`
+  - **Function**: Dumps socket statistics — a faster, more detailed replacement for `netstat`.
+  - **Flags**:
+    - `-t` / `-u`: Show TCP or UDP sockets.
+    - `-l`: Show only listening sockets.
+    - `-n`: Do not resolve service names.
+    - `-p`: Show process name and PID using the socket.
+    - `-a`: Show all sockets (listening and established).
+    - `-s`: Display summary statistics.
+    - `-e`: Show extended socket info.
+  - **Parameters**:
+    - `[filter]` *(optional)*: Filter expression (e.g., `dport = :80`, `state established`).
+  - **Example Usage**: `ss -tlnp` / `ss -u` / `ss -an state listening` / `ss -tp state established`
+
+---
+
+- `netstat [flags]`
+  - **Function**: Displays network connections, routing tables, interface statistics, and listening ports. Largely replaced by `ss`.
+  - **Flags**:
+    - `-t` / `-u`: Show TCP or UDP connections.
+    - `-l`: Show only listening sockets.
+    - `-n`: Show numeric addresses (skip DNS resolution).
+    - `-p`: Show PID and program name for each socket.
+    - `-r`: Show the routing table.
+    - `-s`: Show per-protocol statistics.
+    - `-a`: Show all sockets (listening and established).
+  - **Example Usage**: `netstat -tlnp` / `netstat -an | grep :80` / `netstat -r`
+
+---
+
+- `resolvectl [subcommand] [args]`
+  - **Function**: Queries and manages the systemd-resolved DNS resolver — resolves hostnames, queries DNS records, and shows resolver configuration.
+  - **Parameters** (subcommands):
+    - `status [iface]`: Show DNS resolver configuration for all interfaces or a specific one.
+    - `query <name>`: Resolve a hostname or perform a reverse IP lookup.
+    - `dns [iface] [server...]`: Show or set the DNS server used by an interface.
+    - `flush-caches`: Flush the DNS resolver cache.
+    - `statistics`: Show resolver cache statistics and query counts.
+  - **Example Usage**: `resolvectl status` / `resolvectl query github.com` / `resolvectl flush-caches`
+
+---
+
+- `dig [flags] [type] <domain>`
+  - **Function**: DNS lookup tool — queries name servers for DNS records.
+  - **Flags**:
+    - `+short`: Print a terse answer.
+    - `+noall +answer`: Show only the answer section.
+    - `-x <ip>`: Reverse DNS lookup (IP to hostname).
+    - `@<server>`: Query a specific DNS server.
+  - **Parameters**:
+    - `[type]` *(optional)*: Record type: `A`, `AAAA`, `MX`, `TXT`, `NS`, `CNAME` (default: `A`).
+    - `<domain>` *(required)*: Domain to query.
+  - **Example Usage**: `dig google.com` / `dig MX gmail.com` / `dig +short @8.8.8.8 example.com`
+
+---
+
+- `dog [flags] [type] <domain>`
+  - **Function**: User-friendly DNS client with colorized output — a modern alternative to `dig`.
+  - **Flags**:
+    - `--short`: Show only record values.
+    - `--json`: Output JSON.
+    - `--tcp` / `--tls`: Use TCP or DNS-over-TLS.
+    - `@<server>`: Query a specific DNS server.
+  - **Parameters**:
+    - `[type]` *(optional)*: Record type: `A`, `AAAA`, `MX`, `TXT`, etc.
+    - `<domain>` *(required)*: Domain to query.
+  - **Example Usage**: `dog example.com` / `dog MX gmail.com @8.8.8.8`
+
+---
+
+- `mtr [flags] <host>`
+  - **Function**: Combines `traceroute` and `ping` into a real-time network diagnostic tool that shows per-hop latency and packet loss.
+  - **Flags**:
+    - `-r`: Report mode (non-interactive, prints summary).
+    - `-c <n>`: Number of pings to send per hop.
+    - `-n`: Disable DNS resolution (show IPs only).
+    - `--tcp`: Use TCP instead of ICMP.
+    - `--udp`: Use UDP probes.
+  - **Parameters**:
+    - `<host>` *(required)*: Hostname or IP to trace.
+  - **Example Usage**: `mtr google.com` / `mtr -r -c 10 8.8.8.8`
+
+---
+
+- `ipcalc <IP/netmask>`
+  - **Function**: Calculates network information from an IP address and subnet mask (range, broadcast address, prefix length, host count).
+  - **Parameters**:
+    - `<IP/netmask>` *(required)*: IP address with prefix or dotted netmask (e.g., `192.168.1.0/24`).
+  - **Example Usage**: `ipcalc 192.168.1.0/24` / `ipcalc 10.0.0.1/255.255.0.0`
+
+---
+
+- `tcpdump [flags] [expression]`
+  - **Function**: Captures and analyzes network packets in real time (requires root).
+  - **Flags**:
+    - `-i <iface>`: Specify network interface (e.g., `eth0`, `any`).
+    - `-n`: Do not resolve hostnames.
+    - `-v` / `-vv` / `-vvv`: Increasing verbosity.
+    - `-w <file>`: Write raw packets to a `.pcap` file.
+    - `-r <file>`: Read packets from a `.pcap` file.
+    - `-c <n>`: Capture only `n` packets then stop.
+  - **Parameters**:
+    - `[expression]` *(optional)*: BPF filter expression (e.g., `port 80`, `host 192.168.1.1`).
+  - **Example Usage**: `sudo tcpdump -i eth0 port 80` / `sudo tcpdump -w capture.pcap -c 100`
+
+---
+
+- `tshark [flags]`
+  - **Function**: Terminal-based network protocol analyzer (Wireshark CLI).
+  - **Flags**:
+    - `-i <iface>`: Capture on specified interface.
+    - `-r <file>`: Read a `.pcap` capture file.
+    - `-w <file>`: Write captured packets to file.
+    - `-Y <filter>`: Apply a Wireshark display filter (e.g., `http`, `tcp.port==443`).
+    - `-T <format>`: Output format (`fields`, `json`, `text`, etc.).
+  - **Example Usage**: `sudo tshark -i eth0 -Y "http"` / `tshark -r capture.pcap -T json`
+
+---
+
+- `termshark [flags]`
+  - **Function**: Terminal UI for tshark — interactive packet capture viewer in the terminal.
+  - **Flags**:
+    - `-i <iface>`: Interface to capture on.
+    - `-r <file>`: Open a `.pcap` file for inspection.
+  - **Example Usage**: `sudo termshark -i eth0` / `termshark -r capture.pcap`
+
+---
+
+- `rsync [flags] <source> <destination>`
+  - **Function**: Efficiently transfers and synchronizes files locally or over SSH, sending only changed data (delta transfer).
+  - **Flags**:
+    - `-a`: Archive mode — preserves permissions, timestamps, symlinks, owner, and group.
+    - `-v`: Verbose output.
+    - `-z`: Compress data during transfer.
+    - `-P`: Show progress and keep partial files (`--partial --progress`).
+    - `-n` / `--dry-run`: Simulate without making any changes.
+    - `-e <cmd>`: Specify remote shell (e.g., `-e ssh`).
+    - `--exclude <pattern>`: Exclude files matching a pattern.
+    - `--delete`: Delete files in destination not present in source.
+  - **Parameters**:
+    - `<source>` *(required)*: Source directory or file (local or `user@host:/path`).
+    - `<destination>` *(required)*: Target path (local or `user@host:/path`).
+  - **Example Usage**: `rsync -avzP ~/docs/ user@server:/backup/docs/` / `rsync -an --delete src/ dst/`
+
+---
+
+- `wormhole send <file>`
+  - **Function**: Securely transfers a file to another machine using a one-time human-readable code (Magic Wormhole protocol). The receiver runs `wormhole receive`.
+  - **Parameters**:
+    - `<file>` *(required)*: File or directory to send.
+  - **Example Usage**: `wormhole send archive.tar.gz` / `wormhole send ~/docs/`
+
+---
+

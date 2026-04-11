@@ -1,5 +1,21 @@
 # Linux Theory
 
+
+## Philosophy 
+
+The Unix-philosophy makes a heavy  emphasis on modularity for all of the individual components in an operating system. 
+Those modules shoudl be independent yet able to work together. Another aspect, code should be keept simple and efficient.
+
+--- 
+
+## Init System
+
+---
+
+## Processes
+
+--- 
+
 ## Enviroment variables 
 
 Like in other operating systems, an enviroment is a varible which affects 
@@ -21,78 +37,99 @@ export syntax and then sourcing.
 
 - To delete an environment variables we can use the command `unset NAME`
 
-- The `PATH` variable is an environment variable containing an ordered list of paths that Linux will search for executables when running a command/binary. 
+### PATH
+
+The `PATH` variable is an environment variable containing an ordered list of paths that Linux will search for executables when running a command/binary. 
 Using these paths means that we don’t have to specify an absolute path when running a binary.
 
    - To modify the path both locally we have to create an `.profile` file using the export 
-      syntax and for the global approach it is very similar but we create the the file in `/etc/profile.d/varname.sh`
+      syntax and for the global approach it is very similar but we create the the file in `/etc/profile.d/varname.sh`.
 
+   - For a non-persistent modification we can use `PATH=$PATH:/path/to/program` + `export PATH`.
+
+   - We can also modify it in the `.bashrc` by putting in our `PATH=$PATH:/path/to/program`.
 ---
+
+## File Descriptor
+
+A **file descriptor (FD)** is a low-level integer handle used by an operating system to uniquely identify an open file or input/output (I/O) resource. File descriptors are central to how operating systems like Unix, Linux, and macOS manage I/O operations, including files, pipes, and sockets.
+
+### Key Characteristics:
+
+* **Integer Identifier**: File descriptors are represented by non-negative integers (e.g., `0`, `1`, `2`).
+* **Resource Handle**: Each FD refers to an open I/O resource, such as a file, socket, or device.
+* **Process-specific**: FDs are unique within a process and are maintained by the process’s file descriptor table.
+
+### Standard File Descriptors:
+
+By default, every process starts with three open file descriptors:
+
+| FD | Name     | Description     |
+| -- | -------- | --------------- |
+| 0  | `stdin`  | Standard input  |
+| 1  | `stdout` | Standard output |
+| 2  | `stderr` | Standard error  |
+
+--- 
 
 ## Types of File Systems in Linux and Their Differences
 
-* **ext2 (Second Extended Filesystem)**
+- **ext2 (Second Extended Filesystem)**
+  - No journaling
+  - Good for flash drives
 
-  * No journaling
-  * Good for flash drives
+- **ext3 (Third Extended Filesystem)**
+  - Journaling enabled (improved reliability)
+  - Backward compatible with ext2
 
-* **ext3 (Third Extended Filesystem)**
+- **ext4 (Fourth Extended Filesystem)**
+  - Most widely used
+  - Supports large files and volumes
+  - Journaling + extents for better performance
 
-  * Journaling enabled (improved reliability)
-  * Backward compatible with ext2
+- **XFS**
+  - High-performance journaling file system
+  - Good for large files and parallel I/O
 
-* **ext4 (Fourth Extended Filesystem)**
+- **Btrfs (B-tree File System)**
+  - Copy-on-write, snapshots, self-healing
+  - Advanced features, but still maturing
 
-  * Most widely used
-  * Supports large files and volumes
-  * Journaling + extents for better performance
+- **FAT32 / exFAT**
+  - File Allocation Table
+  - Compatibility with Windows systems
+  - No journaling
+  - Optimized for high-capacity USB flash drives
 
-* **XFS**
-
-  * High-performance journaling file system
-  * Good for large files and parallel I/O
-
-* **Btrfs (B-tree File System)**
-
-  * Copy-on-write, snapshots, self-healing
-  * Advanced features, but still maturing
-
-* **FAT32 / exFAT**
-
-  * File Allocation Table
-  * Compatibility with Windows systems
-  * No journaling
-
-* **NTFS**
-
-  * New Technology File System
-  * Proprietary Microsoft file system
-  * Supported via drivers (read/write)
+- **NTFS (New Technology File System)**
+  - Proprietary Microsoft file system
+  - Supported via drivers (read/write)
+  - Supports Journaling, file permissions and encryption.
 
 ---
 
 ## What is an Inode and How It Is Used
 
-* An **inode** (index node) is a data structure on a filesystem that stores metadata about a file:
+- An **inode** (index node) is a data structure on a filesystem that stores metadata about a file:
 
-  * File type
-  * Permissions
-  * Owner/group
-  * Size
-  * Timestamps
-  * Pointers to data blocks
+  - File type
+  - Permissions
+  - Owner/group
+  - Size
+  - Timestamps
+  - Pointers to data blocks
 
-* Every file has an inode (except for symbolic links in some filesystems).
+- Every file has an inode (except for symbolic links in some filesystems).
 
-* The inode number is used by the OS to identify files, not the filename.
+- The inode number is used by the OS to identify files, not the filename.
 
 ---
 
 ## The Unix Philosophy
 
-* **Do one thing and do it well**
-* **Work together**: Tools should interact with each other through standard interfaces (e.g., stdin/stdout).
-* **Handle text streams**: Treat everything as a stream of text.
+- **Do one thing and do it well**
+- **Work together**: Tools should interact with each other through standard interfaces (e.g., stdin/stdout).
+- **Handle text streams**: Treat everything as a stream of text.
 
 This philosophy promotes simplicity, modularity, and composability.
 
@@ -100,8 +137,8 @@ This philosophy promotes simplicity, modularity, and composability.
 
 ## What is a File?
 
-* A file is an abstract collection of data stored on disk.
-* In Unix/Linux, **everything is a file**:
+- A file is an abstract collection of data stored on disk.
+- In Unix/Linux, **everything is a file**:
 
   * Regular files
   * Directories
@@ -114,14 +151,14 @@ This philosophy promotes simplicity, modularity, and composability.
 
 ## How Unix Uses Files
 
-* **File Descriptors**: Integer handles for files (`0=stdin`, `1=stdout`, `2=stderr`)
-* **Permissions and Ownership**:
+- **File Descriptors**: Integer handles for files (`0=stdin`, `1=stdout`, `2=stderr`)
+- **Permissions and Ownership**:
 
   * Read (r), Write (w), Execute (x)
   * User, Group, Others
-* **Processes interact with files through system calls**: `open()`, `read()`, `write()`, `close()`
-* Devices and IPC mechanisms are accessed like files
-* **Symlinks**: Short for symbolic link is a special type of file that points to another file or directory. It is 
+- **Processes interact with files through system calls**: `open()`, `read()`, `write()`, `close()`
+- Devices and IPC mechanisms are accessed like files
+- **Symlinks**: Short for symbolic link is a special type of file that points to another file or directory. It is 
 like a pointer. They are useful to for example manage all dotfiles from one place
 
 ---
@@ -139,11 +176,11 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 | `/dev`    | Device files                                       |
 | `/proc`   | Process and kernel info (virtual filesystem)       |
 | `/sys`    | Kernel and hardware interface (virtual filesystem) |
-| `/tmp`    | Temporary files                                    |
+| `/tmp`    | Temporary files for applications                                   |
 | `/var`    | Variable data (logs, spool files)                  |
-| `/usr`    | Secondary hierarchy for user programs and data     |
+| `/usr`    | (Unix System Resources) Secondary hierarchy for user-space programs and data     |
 | `/home`   | User home directories                              |
-| `/lib`    | Essential shared libraries                         |
+| `/lib`    | Essential shared libraries for dynamic linking, etc. Also kernel modules can be found                       |
 | `/opt`    | Optional/add-on software pckgs. Can add your own   |
 | `/mnt`    | Mount point for temporary mounts                   |
 | `/media`  | Mount point for removable media                    |
@@ -156,21 +193,21 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 
 ## Disk Partitions
 
-* **Partition**: A division of a storage device that acts as a separate logical unit
+- **Partition**: A division of a storage device that acts as a separate logical unit
 
-* **Types**:
+- **Types**:
 
   * Primary (up to 4)
   * Extended (contains logical partitions)
   * Logical (within extended)
 
-* **Tools**:
+- **Tools**:
 
   * `fdisk` / `parted`: Manage partitions
   * `lsblk`, `blkid`: View block devices
   * `mount` / `umount`: Attach/detach partitions
 
-* **Partition table types**:
+- **Partition table types**:
 
   * **MBR (Master Boot Record)**
   * **GPT (GUID Partition Table)** - newer, supports more partitions

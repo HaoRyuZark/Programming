@@ -1,3 +1,4 @@
+
 public class BeefBurgerRestaurant extends Restaurant {
 
     @Override 
