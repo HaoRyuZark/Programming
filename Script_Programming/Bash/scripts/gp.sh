@@ -14,8 +14,7 @@ OS="$2"
 PATHS=(
   "$HOME/Homo_Deus/Programming"
   "$HOME/Homo_Deus/Mathematica_Compendium"
-  "$HOME/Homo_Deus/Computer_Science_Compedium"
-  "$HOME/Homo_Deus/Mathematics"
+  "$HOME/Homo_Deus/Mathematics_and_CS/"
   "$HOME/dotfiles"
 )
 
