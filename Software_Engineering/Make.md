@@ -1,6 +1,6 @@
 # Makefiles
 
-Makefiles are  used to automate the build process of `C`, `C++`, and other programming languages.
+**Makefiles** are  used to automate the build process of `C`, `C++`, and other programming languages.
 Flags, compiler options, and other build parameters can be specified in a `Makefile` to control the build process.
 
 ## Variables 

@@ -4431,5 +4431,93 @@ which may be independent of each others. In such case, the steps can be parallel
 - **Data/Domain Decomposition**: When the amount of data is large, we can splitt work across threads becuase each 
 processing unit does not depend on the others.
 
+--- 
 
+## Arena Allocators 
 
+**Arena allocator** is a kinds of using functions to encapsulate the deallocation for compound strucutres. 
+
+Example: 
+
+```c 
+typedef struct Arena {
+    int* arr;
+    int capacity;
+    int current;
+} Arena;
+
+void init_arena(Arena& self, int capacity) {
+    self->arr = malloc(sizeof(int)*capacity);
+    self->current = 0;
+    self->capacity;
+}
+
+void allocate_int(Arena* self, int val) {
+    if (self->current == self->capacity) return;
+    self->arr[self->current++] = val;
+}
+
+void free_arena(Arena* self) {
+    free(self->arr);
+    self->capacity = 0; 
+    self->current = 0;
+}
+
+int get_nth_int(Arena* self, int n) {
+    if (n >= self->capacity || (n >= self->current && self->current < self->capacity)) return -1; 
+    return self->arr[n];
+}
+
+int main() {
+
+    Arena arena; 
+    init_arena(&arena, 3);
+    
+    allocate_int(&arena, 1);
+    allocate_int(&arena, 2);
+    allocate_int(&arena, 3);
+
+    // do stuff 
+
+    free_arena(&arena);
+}
+```
+
+## Generic Dynamic Array in C with Void Pointer and Macros
+
+This approach kinda works and we even get to use the `[]` operator, but it is tricky.
+There are multiple ways of emulate generics in `C` which do not include using miscellaneous tricks, but 
+the approach is technically ok. Also, if for some reason if your plattform or compilar behaves in some special way, this apprach loses 
+portability.
+
+```c 
+
+/*
+    Memory Layaout 
+
+    Header | item_1 | item_2 | ...
+*/
+
+typedef struct Array_Header {
+    size_t length;
+    size_t capacity;
+} Array_Header;
+
+#define array(T) (T*) _array_init(sizeof(T), ARRAY_INITIAL_CAPACITY)
+
+void* _array_init(size_t itemsize, int capacity) {
+    
+    void* ptr = 0;
+    size_t size = itemsize * capacity + sizeof(Array_Header); 
+    Array_Header* header = (Array_Header*)malloc(size);
+
+    if (header) {
+
+        header->length = 0;
+        header->capacity = capacity;
+        ptr = h + 1; // moving the pointer to skip the header which is only internally used.
+    }
+
+    return ptr;
+}
+```

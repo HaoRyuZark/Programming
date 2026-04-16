@@ -1,5 +1,7 @@
 # Programming Paradigms
 
+--- 
+
 ## Imperative vs. Declarative
 
 -   **Imperative**: Specifies _how_ to perform tasks step-by-step (e.g., for loops).

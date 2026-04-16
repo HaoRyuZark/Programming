@@ -54,9 +54,27 @@ Also, a programmer who actually understands their languages and tools is way mor
 
 --- 
 
-## Explainable AI 
+## AI Agents
 
+This are atonomous tasks which after a certain **trigger** like a time at the day or a certain event like a notification, 
+git commit, etc. the ai workflow starts. The agents should also have access to APIs for accessing information or write data. 
 
+Another key point is for the agent to be able to take decisions based on which is the best option for task.
+
+--- 
+
+## Layers of AI Systems 
+
+- **Vector Embedings**: Words are data are embeded as vector which are then used for the math involved for the machine learning. 
+
+- **Vector Database**: They are used for store the embedings and use the similarity search for connecting embedings. 
+
+- **RAG**: Retrival Augemented Generation is a process in which before the AI process the prompt, it is first converted into embedings, then information 
+from the vector Database is returned and finally given to LLM as context which increases the accuracy of the answers.
+
+- **MCP**: Model Content Protocol is a procedure in which LLMs ouput its responses in a very specific way to allow the surrounding system to 
+parse its ouput and based on an specific format make "tool-call" whose output is then eventually retrived to the LLM to know now how to continue the prompt 
+and if the task was accomplished. We can also provide a series of files for infomation to be used as context or as part of reponses.
 
 --- 
 
