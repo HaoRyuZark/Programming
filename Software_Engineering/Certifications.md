@@ -22,6 +22,9 @@ List of certifications I want to get.
 
 ## For the Tech Industry 
 
+- Master Energiewirtschaft & Informatik (FH, optional)
+- Master Artificial Intelligence & Data Science for Decission Making (Maastricht, optional)
+- MBA Harvard (optional)
 - Certified Tester Foundation Level (QA)
 - Professional Scrum Developer 
 - Professional Agile Leadership 

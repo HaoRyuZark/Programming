@@ -215,6 +215,9 @@ print(rect.area())
 
 # Generators 
 
+# They are used to return values, pausing the function and them be resumed if the main thread 
+# tells the function to continue
+
 def simple_generator():
     yield 1
     yield 2
@@ -230,6 +233,29 @@ print(x)
 
 iter_x = iter(x)
 
+# We can also ask a generator to produce a value via the next() method 
+
+gen_obj = simple_generator()
+
+next(gen_obj) # return 1 
+next(gen_obj) # return 2 
+next(gen_obj) # return 3
+# next(gen_obj) now return an iteration error
+
+def prime_generator(start, end):
+    
+    if start > end:
+        return
+
+    for num in range(start, end + 1):
+        limit = int(math.sqrt(num)) + 1
+        for n in range(2, limit):
+
+            if num % n == 0:
+                break;
+            if n == limit:
+                yield num
+ 
 ###############################################################################
 
 # List Comprehensions
@@ -578,11 +604,15 @@ def connect(host: str = "localhost", port: int = 8080):
 
 # Mutltiple Type Hints
 
-def process_data(data: int | str):
+from typing import Union 
+
+def process_data(data: int | str):  # union of tyoes
     if isinstance(data, int):
         print(f"Processing integer: {data}")
     elif isinstance(data, str):
         print(f"Processing string: {data}")
+
+var: Union[float, str] = 10 # variable which can be either a string, a float or all the subtypes of float like int
 
 ###############################################################################
 

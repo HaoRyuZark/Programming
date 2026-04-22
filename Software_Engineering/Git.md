@@ -1,8 +1,10 @@
 # Git
 
-## Commits, Brances and HEAD 
+## Commits, Branches and HEAD 
 
-- **Commits** are the units of storage whic are snapshots of the working directory with an identifer of type hash. 
+- **Commits** are the units of storage which are snapshots of the working directory with an identifier of type
+hash. 
+
 - **Branches** are just pointer to a commit hash. Mostly at the end of a chain.
 - **HEAD** Is a pointer to the current branch. If you checkout to a commit then the HEAD becomes detached because it is not pointer to any  branch.
 
@@ -47,14 +49,16 @@ Go to **GitHub -> Settings -> SSH and GPG keys -> New SSH key**, and paste it th
 ```bash
 ssh -T git@github.com
 ```
+
 If successful, you'll see a message like:
 > Hi `username`! You've successfully authenticated.
 
-## Initial Configuration 
+## Initial Configuration
 
 - `git config --global user.name "Your Name"` – Set your name
 - `git config --global user.email "your.email@example.com"` – Set your email
 - `git config --global color.ui auto` – Enable colored output
+- `git config pull.rebase false` - When pulling merge the branches
 - `git config --list` – List all configured settings
 
 ## Creating and Cloning Repositories
@@ -154,8 +158,15 @@ git remote add origin git@github.com:your-username/your-repo.git
 ```bash
 git push -u origin main
 ```
+
 > If your default branch is `master`, replace `main` with `master`.
 
 ---
 
+## Merge Conflicts
 
+**Merge conflicts** are when two divergent branches can not reconciliate due to changes being made in the same files on the
+different branches. They mostly does not happen when working solo, but with a team.
+
+Resolving them consist on mostly going through the conflicted files and then deciding what to add and
+what to remove.
