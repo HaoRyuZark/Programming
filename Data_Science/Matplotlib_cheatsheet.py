@@ -15,6 +15,45 @@ from collections import Counter
 
 ##################################################################################################
 
+# Color Mapping 
+
+from gapminder import gapminder
+
+data = gapminder
+
+gapminder.head()
+
+Y = data["lifeExp"]
+X = data["gdpPercap"]
+
+continent_codes = data["continent"].astype("category").cat.codes
+
+plt.scatter(X,Y, c=continent_codes, cmap="viridis")
+plt.title("GDPpC and Life Expectancy per Continent")
+plt.xlabel('gdpPercap')
+plt.ylabel('lifeExp')
+plt.colorbar(label="continents")
+
+# More clear approach 
+
+Y = data["lifeExp"]
+X = data["gdpPercap"]
+continents = data["continent"].unique()
+
+for continent in continents:
+    mask = data["continent"] == continent
+    plt.scatter(data.loc[mask, "gdpPercap"], 
+                data.loc[mask, "lifeExp"], 
+                label=continent)
+
+plt.title("GDPpC and Life Expectancy per Continent")
+plt.xlabel("gdpPercap")
+plt.ylabel("lifeExp")
+plt.legend(title="Continent")
+plt.show()
+
+##################################################################################################
+
 # scale 
 
 # It is used to control the scaling of various plot elements, such as line widths, marker sizes, and font sizes.

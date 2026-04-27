@@ -223,6 +223,58 @@ public class Sevlet extends HttpServlet {
 
 --- 
 
+## Wiremock
+
+**WireMock** is a tool for mocking APIs which allows developers to simulate HTTP-based APIs, so they can test how their systems behave without 
+needing the actual external services to be available.
+
+WireMock lets you:
+
+- Stub HTTP(S) requests (simulate expected responses).
+
+- Record and replay actual requests to external services.
+
+- Verify that certain requests were made (useful in testing).
+
+- Simulate network conditions (timeouts, delays, etc.).
+
+The two main functionalities which we use are **stubFor()** and **verify()**.
+
+-> **stubFor()**: This for to tell WireMock how it should respond to a specific HTTP request.
+
+For example:
+
+```java
+
+stubFor(get(urlEqualTo("/hello"))
+  .willReturn(aResponse()
+    .withStatus(200)
+    .withBody("Hello, World!")));
+
+```
+
+-> **verify()**: This for verifying what happened during the call of **stubFor()**.
+
+For example:
+
+```java
+
+@Test
+public void testApiCall() {
+  stubFor(post(urlEqualTo("/api"))
+    .willReturn(aResponse().withStatus(200)));
+
+  // Simulate app sending request to /api
+  myApp.sendApiCall();
+
+  // Verify it was made
+  verify(postRequestedFor(urlEqualTo("/api")));
+}
+
+```
+
+--- 
+
 ## Spring Container
 
 --- 

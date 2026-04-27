@@ -170,7 +170,14 @@ Common protocols include:
 A **port** is a communication endpoint. They are identified by a number and for the operating system, they are a logical construct to identify a process or a
 type of network service. Note that the at the hardware level we also have ports for audio, video, etc., but this are completely different ports.
 
-Ports are regions of memory in the address-space of the operating system. Thus, the OS is responsible for them.
+- Ports are regions of memory in the address-space of the operating system. Thus, the OS is responsible for them.
+- Ports in a networking context are alwyas binded with an IP-Address. `IP-Address:Port`
+
+### Assigned Ports
+
+- **System ports (Well-known)**: (0-1023). Standardized for protocols and system communication. (Server-side, can also be the own computer)
+- **User ports (Registered)**: (1024-49151). Can be registered by companies or developers for specific services. (Server-side)
+- **Dynamic ports  (Private)**: (49152-65535). Free to use. (Client-side).
 
 ---
 
@@ -461,6 +468,11 @@ and commonly port 22 for the connection.
 | Packet length -- Padding Amount -- Payload Padding -- Message Authentication |
 ```
 
+- **Packet Length**: Size of the package including the headers.
+- **Padding Amount**: Bruh.
+- **Payload**: Actual Data.
+- **Message Authentication**: Cryptographic code.
+
 Everything between packet length and message authentication is encrypted.
 
 ---
@@ -505,12 +517,34 @@ For inter-network-communication we have **routers** which connect switches and r
 
 ## MAC Addresses
 
+
+
 ---
 
 ## Sub-netting
 
+
 ---
+
+## Cookies
+
+**Cookies** are a mechanism to keep track of an client in a server. They are a number mostly 
+passed as headers inside HTTPS headers. Once a server inserted a cookie in a response then the browser 
+adds the cookie to all of the clients request to tell the server who the client is.
+
+- **First Party Cookies**: Set by the direct server in the current connection.
+- **Third Party Cookies**: Set by another server which are used by different server to track a user.
+
+### Cookies Policy
+
+Is a disclosure made by the website about how cookies are used and how he can manage the cookies.
+
+--- 
 
 ## Security
 
+
+
 ---
+
+

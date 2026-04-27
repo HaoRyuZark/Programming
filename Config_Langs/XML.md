@@ -60,6 +60,34 @@ The **DOM** or **Document Object Model** is a structure which represents the con
 
 This is done by checking that the tags are properly closed, the obligatory tags are not empty, etc.
 
+--- 
+
 ## XML Schema
 
-Schemas are a way of defining the structure and order of an xml file. Most of the times not important.
+Schemas are a way of defining the structure and order of an xml file. Most of the times not important, but quite 
+interesting to be able to defined the the necessary fields in such a precisse way.
+
+--- 
+
+## XML Attributes
+
+Attributes are used for meta data, and can technically be equivalent to single non nested values of an object. 
+In contrast to elements they are only single valued and as strings do not allow nesting.
+
+```xml
+<woman name="Maria">
+    <husband profession="Programmer"> 
+        <man name="Pedro">  
+        </man> 
+    </husband>
+</woman>
+```
+
+--- 
+
+## Miscellaneous
+
+XML comes with beig suite of tools and other utilities for querying documents, validate schemas, create hyperlinks, styling and a lot 
+more. Learning them depends on the context and use case. It is imporant to notice that other formats such as JSON, YAML and TOML 
+are nowadays more used to its simplicity.
+

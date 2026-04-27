@@ -130,6 +130,8 @@ print(c4)
 
 # Inheritance
 
+# Python allows both single and multiple Inheritance
+
 class Vehicle:
 
     def __init__(self, make: str, model: str):
@@ -138,16 +140,43 @@ class Vehicle:
 
     def info(self) -> str:
         return f"{self.make} {self.model}"
-    
+
+# By polymorphism instances of this class can be traated as Cars or Vehicles
 class Car(Vehicle): 
     
     def __init__(self, make: str, model: str, doors: int):
-        super().__init__(make, model)
+        super().__init__(make, model) # calling parent constructor
         self.doors = doors
 
     def info(self) -> str:
         return f"{super().info()}, Doors: {self.doors}"
 
+
+############################################################################### 
+
+# Ducktyping 
+
+# Another way of achiving polymorphism by enforcing objects to have a minimum necessary attributes or methods
+
+class Person:
+    alive = True 
+    def be(self):
+        print("Be")
+
+class Otaku(Person): 
+    likes= "Anime" 
+
+class Normie(Person):
+    has_a_girlfriend = True 
+
+class Element:
+    def be(self): # elements satisfies the minimal requirement for the functionality implemented in the loop below
+        print("Be")
+
+duck_list = [Otaku(), Normie(), Element()]
+
+for e in duck_list:
+    e.be()  
 
 ############################################################################### 
 

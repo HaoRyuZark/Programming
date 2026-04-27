@@ -1,6 +1,7 @@
 # VSCode Keyboard Shortcuts Cheat Sheet
 
-> **Setup notes:** Vim extension active. Many default Vim `Ctrl+*` overrides have been **disabled** — standard VSCode bindings take priority for most `Ctrl` combos. `ctrl+'` opens Copilot Chat.
+> **Setup notes:** Vim extension active. Many default Vim `Ctrl+*` overrides have been **disabled** — standard VSCode bindings take 
+priority for most `Ctrl` combos. 
 
 ---
 
@@ -16,6 +17,7 @@
 | `Ctrl+R` | Open Recent | |
 | `Ctrl+Shift+E` | Focus Explorer | |
 | `Ctrl+Shift+F` | Focus Search | |
+| `Ctrl+P Enter @` | Searches by Components in the current file | |
 | `Ctrl+Shift+G` | Focus Source Control | |
 | `Ctrl+Shift+D` | Focus Debug | |
 | `Ctrl+Shift+X` | Focus Extensions | |
@@ -161,6 +163,8 @@
 | `Ctrl+Shift+Y` | Toggle Debug Console | |
 | `Ctrl+\`` | Toggle Terminal | |
 | `Ctrl+Shift+\`` | New Terminal | |
+| `Super + Ctrl + -> or <-` | Resize workbench |
+| `Super + Ctrl + up or down` | Resize terminal |
 
 ---
 
@@ -175,6 +179,8 @@
 | `Ctrl+Shift+V` | Paste into Terminal | |
 | `Ctrl+PageDown/PageUp` | Next / Previous Terminal | |
 | `Ctrl+F` | Find in Terminal | |
+| `Ctrl+-> or <-` | Move between words in the terminal | |
+
 
 ---
 
@@ -220,7 +226,6 @@
 
 | Shortcut | Action | Notes |
 |---|---|---|
-| `Ctrl+'` | Open Copilot Chat Panel | **Custom binding** |
 | `Ctrl+Alt+I` | Open Copilot Chat | |
 | `Ctrl+I` | Inline Chat (in editor) | |
 | `Ctrl+Enter` | Submit with Codebase | |

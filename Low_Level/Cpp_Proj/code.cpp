@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <iterator>
 #include <mutex>
 #include <ostream>
 #include <random>
@@ -315,6 +316,34 @@ void oop_concepts() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Virutal functions 
+
+// Why? 
+// They are used to achive dynamic polymorphism. Which is the ability to call a derive class function using a base clas pointer.
+
+
+class BaseVir {
+public:
+    virtual void func() { // now depending on the type of the pointer or reference a different version is called
+        std::cout << "Ahh" << std::endl;
+    }
+};
+
+class DerivedVir: public BaseVir {
+    public:
+        void func() {
+        std::cout << "Ahhh from Derived" << std::endl;
+    }
+}; 
+
+void testing_virtuals() {
+    DerivedVir d;
+    BaseVir &b = d;
+    b.func(); // calls the DerivedVir version
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Inheritance and Polymorphism
 
 class Base {
@@ -328,7 +357,7 @@ class Base {
         }
 
     virtual ~Base() {
-            // Virtual destructor
+            // Virtual destructor: this allows us to delete a child class using a pointer to a parent class: else is undefined behavior
         }
 };
 
@@ -360,12 +389,18 @@ class AnotherBase {
         }
 };
 
+
 class MultiDerived : public Base, public AnotherBase {
     public:
-        void show1() override {
-            std::cout << "MultiDerived class show function called." << std::endl;
+        void show() {
+            Base::show(); // due to the method being in both parents, we need to specify which one to call
         }
 };
+
+// Also similarly can the same be done for static and non-static variables or constants. W prefix with the desired path of 
+// inheritance. MultiDerived.AnotherBase::x;
+
+class MultiDerived2 : public Base, public AnotherBase {}; 
 
 void multiple_inheritance() {
 
@@ -376,11 +411,65 @@ void multiple_inheritance() {
     AnotherBase* anotherBasePtr = &multiObj;
     anotherBasePtr->display(); // Calls AnotherBase's display function
     
-    multiObj.Base::show(); // is we do not specify the parent class we will have abiguity due to the show function being defined in both parent classes
+    multiObj.show(); 
+
+    MultiDerived2 anotherMulti;
+    anotherMulti.AnotherBase::show(); // if we do not specify the parent class we will have abiguity due to the show function being defined in both parent classes
 }
 
 // There is also virtual inheritance which allows us to when having a diamond problem in which 
 // we call a function which also in the subclasses we can just reference the original class at the top of the hierarchy 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Different Modes of Inheritance
+
+// public: class Derived : public Base (inheriting only public members and protected due to its functionality)
+
+// private: class Derived : private Base (inheriting public and protected members as private)
+
+// protected: class Derived : protected Base (inheriting public and protected members as protected)
+
+// virutal + otherMode: this one allows to take the instance of the **most derived class**. In a multiple diamond inheritance context. We would 
+// take the variation of top level class of the diamond
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Chain of method calling
+using namespace std;
+
+class A {
+public:
+    A() { cout << "A constructor\n"; }
+    void show() { cout << "A::show()\n"; }
+};
+
+class B : public A {
+public:
+    B() { cout << "B constructor\n"; }
+};
+
+class C : public B {
+public:
+    C() { cout << "C constructor\n"; }
+    void show() { cout << "C::show()\n"; }
+};
+
+class D : public C {
+public:
+    D() { cout << "D constructor\n"; }
+};
+
+class E : public D {
+public:
+    E() { cout << "E constructor\n"; }
+};
+
+void test_chain_method() {
+    E obj; // constructor are called form A to E
+    obj.show(); // calls C's version because the method was not overwritten and is not virtual ->
+    //          // no runtime polymorphism
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -826,6 +915,9 @@ void template_examples() {
 // The process when a method using a vtable functions is obj-vtbale->method. Due to this reason 
 // Inheritance can hurt performance
 
+// Static Dispatch 
+// when they are multiple functions with the same name but different arguments. Which function is to be called 
+// is determined at compile time based on the arguments.
 
 // Dynamic Dispatch
 // When a virtual function is called through a base class pointer or reference, the 

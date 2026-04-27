@@ -1,6 +1,22 @@
 import numpy as np 
 
 
+def _find_max(i, n, matrix): 
+    max_idx = -1
+    max = float("inf")
+
+    for j in range(i + 1, n):
+        if matrix[j][i] > max and matrix[j][i] != 0:
+            max = matrix[j][i]
+            max_idx = j
+
+    return max_idx
+
+def _permute_pivot(i, n, matrix, p): 
+    j = _find_max(i, n, matrix) 
+    matrix[[i, j]] = matrix[[j, i]]
+    p[i], p[j] = p[j], p[i]
+
 def _permute(i, n, matrix, p):
     for j in range(i + 1, n):
         if matrix[j][i] != 0:
