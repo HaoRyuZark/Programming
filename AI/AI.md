@@ -54,6 +54,20 @@ Also, a programmer who actually understands their languages and tools is way mor
 
 --- 
 
+## When to Use and Don't Use AI
+
+
+| Use | Do not | 
+|:-----|:--------|
+| Boilerplate code | Architectural Decisions | 
+| Asking for Syntax | Learning new conepts | 
+| Writting tests | Security Critical Code | 
+| Refactoring and repetitive patterns | Complex Logic | 
+| Finding erros | Performance optimizations | 
+
+
+--- 
+
 ## AI Agents
 
 This are atonomous tasks which after a certain **trigger** like a time at the day or a certain event like a notification, 
@@ -75,6 +89,9 @@ from the vector Database is returned and finally given to LLM as context which i
 - **MCP**: Model Content Protocol is a procedure in which LLMs ouput its responses in a very specific way to allow the surrounding system to 
 parse its ouput and based on an specific format make "tool-call" whose output is then eventually retrived to the LLM to know now how to continue the prompt 
 and if the task was accomplished. We can also provide a series of files for infomation to be used as context or as part of reponses.
+
+- **Skills**: They are markdown files which describe a number of commands for the AI to use. They can also come with scripts for using certain tools. 
+The code is executed by the agent program.
 
 --- 
 
@@ -331,6 +348,85 @@ so that they only access the necessary tools.
 
 --- 
 
+## Copilot Participants
 
+These are specialized agents that can be reached by writing `@participant_name` in the chat. 
 
+- `@workspace`: Understands your entire project structure, files, and dependencies. Useful for cross-file reasoning.
+- `@terminal`: Helps with shell commands, scripts, CLI tools, and debugging terminal output.
+- `@vscode`: Answers questions about the editor itself (settings, extensions, shortcuts, debugging UI).
+- `@git`: Assists with version control tasks like commits, branches, merges, and resolving conflicts.
+- `@github`: Helps with pull requests, issues, workflows, and repository management.
+- `@docs`: Focuses on official documentation lookup and summarization.
+- `@tests`: Specialized in testing strategies, frameworks, and improving test coverage.
+- `@security`: Reviews code for vulnerabilities and suggests secure practices.
+- `@performance`: Analyzes bottlenecks and suggests optimizations.
+- `@database`: Helps with SQL queries, schema design, and database performance.
+- `@api`: Assists with API design, integration, and debugging HTTP requests.
+- `@frontend`: Focused on UI/UX, styling, and frontend frameworks.
+- `@backend`: Helps with server-side logic, architecture, and scalability.
 
+**Example:**
+
+```text
+@workspace Where is the user authentication logic implemented?
+
+@terminal How do I find processes using port 3000?
+
+@git Create a new branch from main and switch to it
+
+@security Review this function for vulnerabilities
+```
+
+---
+
+## Copilot Commands
+
+Commands can be invoked by typing `/command` in the chat to quickly perform common tasks.
+
+- `/doc`: Generate documentation for selected code.
+- `/explain`: Provide a detailed explanation of code.
+- `/fix`: Fix errors in the selected code.
+- `/tests`: Generate unit tests.
+- `/new`: Create a new project or file structure.
+- `/refactor`: Improve code structure and readability without changing behavior.
+- `/optimize`: Suggest performance improvements.
+- `/comment`: Add inline comments to code.
+- `/clean`: Remove unused code and simplify logic.
+- `/convert`: Convert code from one language or framework to another.
+- `/review`: Perform a code review with suggestions.
+- `/debug`: Help identify and resolve bugs.
+- `/scaffold`: Generate boilerplate code for a feature or module.
+- `/lint`: Fix linting and formatting issues.
+- `/commit`: Generate a commit message based on changes.
+- `/changelog`: Generate a changelog from recent commits.
+- `/deps`: Analyze and update dependencies.
+- `/api`: Generate or document API endpoints.
+- `/sql`: Generate or optimize SQL queries.
+- `/ui`: Generate UI components.
+- `/config`: Help create or modify configuration files.
+- `/`: Show available commands (help menu).
+
+**Example:**
+
+```text
+/explain
+Explain what this function does and identify any edge cases.
+
+/fix
+Fix the TypeScript errors in this file.
+
+/tests
+Generate Jest tests for this module.
+
+/refactor
+Refactor this function to improve readability and reduce duplication
+```
+
+--- 
+
+## Other Tools 
+
+- **CodeRabbit** :Code reviwer software for git commits.
+- **Claude Code**: Similar to copilot, general porpuse coding.
+- **OpenClaw**: Agent which access to full computer. **Dangerous!!!**

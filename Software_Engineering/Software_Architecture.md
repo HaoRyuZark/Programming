@@ -107,12 +107,6 @@ It is critical for the participants to support async IO, else this architecture 
 
 --- 
 
-## Domain Driven Design 
-
-
-
---- 
-
 ## Microservices 
 
 This are applications wich consists on smaller application which handle parts of the functionality of the main application. 
@@ -148,5 +142,3 @@ API-handlers, data processing, payments, etc.
 
 
 --- 
-
-

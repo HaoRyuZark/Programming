@@ -155,13 +155,16 @@ A protocol is a set of rules and practices for transmitting data across a networ
 
 Common protocols include:
 
-- **Adress Resolution Protocol ARP:** Used for the mapping to MAC addresses.
+- **Address Resolution Protocol ARP:** Used for the mapping to MAC addresses.
 - **Ethernet:** Used for the direct connection in a network.
 - **Internet Control Protocol:** It is for testing reachability and other manners across the internet.
 
 ---
 
 ## Networks Components
+
+
+
 
 ---
 
@@ -171,7 +174,7 @@ A **port** is a communication endpoint. They are identified by a number and for 
 type of network service. Note that the at the hardware level we also have ports for audio, video, etc., but this are completely different ports.
 
 - Ports are regions of memory in the address-space of the operating system. Thus, the OS is responsible for them.
-- Ports in a networking context are alwyas binded with an IP-Address. `IP-Address:Port`
+- Ports in a networking context are always bind with an IP-Address. `IP-Address:Port`
 
 ### Assigned Ports
 
@@ -179,13 +182,30 @@ type of network service. Note that the at the hardware level we also have ports 
 - **User ports (Registered)**: (1024-49151). Can be registered by companies or developers for specific services. (Server-side)
 - **Dynamic ports  (Private)**: (49152-65535). Free to use. (Client-side).
 
+### Common Ports
+ 
+- **80**: HTTP
+- **443**: HTTPS
+- **21**: FTP 
+- **25**: SMTP
+- **22**: SFTP/SSH
+- **53**: DNS
+
+### Port Forwarding 
+
+It is a technique used for allowing external devices access to a local network. When a request reaches a router then it gets 
+redirected to correct computer and port.
+
 ---
 
 ## Sockets
 
-Sockets are an abstraction provided by the operating system to enable communication
+Sockets are an abstraction provided by the operating system, i.e a software object/API; to enable communication
 between different processes either on the same machine or over a network. They act as
-endpoints in a two-way communication channel. **Socket = Protocol + IP Address + Port Number**.
+endpoints in a two-way communication channel. **Socket { Protocol, IP Address, Port Number, file_descriptor}**.
+
+When calling a socket API one mostly gets an object or just a file descriptor which references the region where the data is going 
+to be put for transfer or receiving.
 
 Sockets operate primarily at the **Transport** layer of the **OSI** model. They are called from the
 **Application** layer asking to send or receive data. Then the socket wrap it via **TCP/UDP** and send it to
@@ -193,9 +213,29 @@ the **Network** layer.
 
 They are handled by the operating system and commonly provided by **libc**.
 
----
+### Types Of Sockets
 
-## File Descriptors and Sockets
+- **Datagram**: Uses UDP.
+- **Stream**: Uses TCP.
+
+### Socket Life Cycle
+
+```txt
+
+   Server Side                        Client Side
+   ------------                      ------------
+   [Socket() (creation)]            [Socket () (creation)]
+        ↓                                ↓
+[bind() (bind to port)]              [Connect Request]
+        ↓                                  ↓
+[listen() (listening for connections)]  [connect()]
+        ↓                                |
+[accept()]                             [Data Transfer]
+        ↓                                |
+[Data Transfer read() or write()] <-----> [Data Transfer read() or write()]
+```
+
+### File Descriptors and Sockets
 
 In networking, **sockets are treated like files**. When you create a socket using `socket()`, the system returns a file descriptor that you can use for reading
 and writing data:
@@ -229,7 +269,8 @@ Failing to close file descriptors can lead to **resource leaks**, limiting how m
 
 It as framework for working with networks. It stands for **Open System Interconnection**. It consist of the following layers:
 
-- **Application:**  It provides network services (https, etc.) for the users by providing protocols like Brave. It also includes the (`GET`, `POST`, `DELETE`) operations.
+- **Application:**  It provides network services (https, etc.) for the users by providing protocols like Brave. It also includes the (`GET`, `POST`, `DELETE`) 
+operations.
 
 - **Presentation:** Performs the task of syntax processing. This means to translate data from the application format to network format and vice versa.
 Encryption happens here.
@@ -400,53 +441,6 @@ Client Side                        Server Side
 
 ---
 
-## Unix Domain Sockets
-
-**Unix Domain Sockets (UDS)** are a method of inter-process communication (IPC) that allows data exchange between processes running on the same host. Unlike network sockets that use IP addresses and port numbers, Unix Domain Sockets use file system pathnames as their addressing mechanism.
-
-### Key Characteristics
-
-- **Local Communication Only**: UDS can only be used for communication between processes on the same machine.
-- **Performance**: They offer lower latency and higher throughput compared to TCP/IP sockets due to bypassing the network stack.
-- **Security**: Access control is enforced through standard file system permissions.
-- **Socket Types**: Supports `SOCK_STREAM` (like TCP), `SOCK_DGRAM` (like UDP), and `SOCK_SEQPACKET`.
-
-### Typical Use Cases
-
-- Communication between a web server (e.g., Nginx) and an application server (e.g., uWSGI or Gunicorn).
-- Fast, secure IPC in containerized or tightly controlled environments.
-- Replacement for loopback TCP connections where performance and security are critical.
-
-### Example
-
-Here’s how to create a Unix domain socket in Python:
-
-```python
-import socket
-import os
-
-server_address = '/tmp/uds_socket'
-
-# Make sure the socket does not already exist
-try:
-    os.unlink(server_address)
-except FileNotFoundError:
-    pass
-
-# Create a UDS socket
-sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-
-# Bind the socket to the address
-sock.bind(server_address)
-
-# Listen for incoming connections
-sock.listen(1)
-
-print(f"Listening on {server_address}")
-```
-
----
-
 ## Command ip link
 
 In linux the `ip link` command will return three device names
@@ -456,6 +450,64 @@ In linux the `ip link` command will return three device names
 - `Wifi card`
 
 ---
+
+## HTTP & HTTPS
+
+It stands for **Hyper Text Transport Protocol**; the **S** stands for **Secure** and refers to the data 
+being encrypted. This is a TCP-based protocol which consists on the following 
+life-cycle of a connection.
+
+```txt
+               CLient             Server 
+               ------             ------
+               |                  |
+TCP Handshake  | SYN              |
+               |----------------->|
+               |                  |
+               |  SYN ACK         |
+               | <----------------|
+               |                  |
+               |  ACK             |
+               |----------------->| Connection Established
+               |                  |
+Certificate    |   Certificate    |
+               | <----------------|
+               |                  |
+               |  Encrypted Data  |
+               | <--------------> |
+               |                  | 
+```
+
+- The **SYNC** and **ACK** packages do not really contain data, but instead just meta data for checking the connection.
+
+- The main use is for webpages and the information transferred in those.
+
+---
+
+## SSL
+
+
+--- 
+
+## TLS
+
+
+--- 
+
+## DNS
+
+**Domain Name System** is a method of mapping domain names in plain text to actual IP-Address of a server.
+
+### Steps
+
+1. Check if the IP address is stored if not, then 
+
+2. The request is redirected to a **resolver** which also checks for the IP-Address, but if not found then: it communicates with a **root** server which tells our 
+resolver to which **TLD Top Level Domain Server** to talk which finally tells the resolver the IP. If not, then
+
+3. The resolver is redirected to an specific **Athoriative Name Server** which always know the IP address
+
+--- 
 
 ## SSH
 
@@ -479,13 +531,85 @@ Everything between packet length and message authentication is encrypted.
 
 ## IP Addresses
 
-An **IP-Address** is the identity of each host.
+An **IP-Address**, (Internet Protocol Address) is the identity of each computer. Means they are unique.
+
+### IPv4
+
+They are 32-bit long with 2**32 possible addresses.
+
+- Divided into 4 octets of 8 bits
+
+Example:
+
+```text 
+192.0.2.146
+```
+
+### IPv6
+
+They were implemented to adapt for the demand of new address, due to IPv4 being 
+to limited. They are 128-bit long with 2**128 possible addresses
+
+- Divived into 8 segments of 16 bits, hextets.
+- Encoded in hex.
+
+Example:
+
+```text 
+2001:db8:0:1:1234:0:561:1:2
+```
+
+### Public and Private IPs
+
+- **Private**: 
+   - Only visible in the local network. 
+   - Assigned by the wifi-card.
+   - It is also unique.
+   - Not routable for the internet.
+
+- **Public**: 
+   - Assined by the internet service provider. 
+   - It is also unique.
+   - Routable for the internet.
+
+The process which translates from private to public and viceversa is the so called **Network Address Translation (NAT)**, which 
+does exactly what the name implies and adds a layer of security by masking the private address.
+
+### Static and Dynamic IPs
+
+- **Static**:
+   - Do not change
+   - Are manually assigned by an admin.
+   - Ideal for hosting servers and long-term services.
+
+- **Dynamic**:
+   - Dynamically assigned by a network.
+   - Flexible.
+   - Widely used for consumer devices.
 
 ---
+
+## MAC Addresses
+
+**Media Access Control Address** is a 48-bit address used in the local network assigned by the fabricant.
+
+### Structure 
+
+They consists of: 
+
+- 6 hextets.
+
+- Starting from the left, the first 3 hextets are used for the **Organizationally Identifier (OUI)**, which is used for the identification 
+of the manufacturer. 
+
+- The other 3 are for the **Network Interface Controller (NIC)**, which is used for the actual networking identification tasks.
+
+--- 
 
 ## Repeater
 
 A **repeater** its a device which regenerates signals, it is used to prevent signal decay.
+
 
 ---
 

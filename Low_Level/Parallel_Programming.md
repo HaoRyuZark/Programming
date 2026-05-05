@@ -166,6 +166,54 @@ way to inform the operating system that specific regions of a program can be exe
 
 ---
 
+## Unix Domain Sockets
+
+**Unix Domain Sockets (UDS)** are a method of inter-process communication (IPC) that allows data exchange between processes running on the same host. Unlike network sockets that use IP addresses and port numbers, Unix Domain Sockets use file system pathnames as their addressing mechanism.
+
+### Key Characteristics
+
+- **Local Communication Only**: UDS can only be used for communication between processes on the same machine.
+- **Performance**: They offer lower latency and higher throughput compared to TCP/IP sockets due to bypassing the network stack.
+- **Security**: Access control is enforced through standard file system permissions.
+- **Socket Types**: Supports `SOCK_STREAM` (like TCP), `SOCK_DGRAM` (like UDP), and `SOCK_SEQPACKET`.
+
+### Typical Use Cases
+
+- Communication between a web server (e.g., Nginx) and an application server (e.g., uWSGI or Gunicorn).
+- Fast, secure IPC in containerized or tightly controlled environments.
+- Replacement for loopback TCP connections where performance and security are critical.
+
+### Example
+
+Here’s how to create a Unix domain socket in Python:
+
+```python
+import socket
+import os
+
+server_address = '/tmp/uds_socket'
+
+# Make sure the socket does not already exist
+try:
+    os.unlink(server_address)
+except FileNotFoundError:
+    pass
+
+# Create a UDS socket
+sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+# Bind the socket to the address
+sock.bind(server_address)
+
+# Listen for incoming connections
+sock.listen(1)
+
+print(f"Listening on {server_address}")
+```
+
+---
+--- 
+
 ## Parallel Patterns
 
 ### Master Worker

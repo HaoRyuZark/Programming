@@ -589,22 +589,6 @@ of the OS by regarding the specific software for all peripherals to the fabrican
 - Assembler: Takes the assembly file and generates an object file which consists of headers and the binary machine structions. It is not executable. 
 - Linker: Takes the object file/s and links them togethter to create an executable.
 
----
-
-## Ports
-
-A **port** is a communication endpoint. They are identified by a number and for the operating system, they are a logical construct to identify a process or a
-type of network service. Note that the at the hardware level we also have ports for audio, video, etc., but this are completely different ports.
-
-- Ports are regions of memory in the address-space of the operating system. Thus, the OS is responsible for them.
-- Ports in a networking context are alwyas binded with an IP-Address. `IP-Address:Port`
-
-### Assigned Ports
-
-- **System ports (Well-known)**: (0-1023). Standardized for protocols and system communication. (Server-side, can also be the own computer)
-- **User ports (Registered)**: (1024-49151). Can be registered by companies or developers for specific services. (Server-side)
-- **Dynamic ports  (Private)**: (49152-65535). Free to use. (Client-side).
-
 --- 
 
 ## Memory Mapped IO 
@@ -639,4 +623,30 @@ It is responsible for launching the OS. It reads an specific sector in the disk 
 In unix systems there is a routine called `init()` which is used to be ran after the kernel is load into memory to load the first process 
 which is in **user mode**. This process is also find as `systemd` or other init systems depending on how this has to behave. 
 
+--- 
+
+## Files 
+
+A file, strictely speaking is sequence of bytes which represents data when read with an specific rules (program). It can be read or written to; in
+some cases it can even be executed by the cpu as a programm.
+
+In Unix, everything is treated like a file, which means that some regions of memory are dedicated for input and output. Even hardware components are 
+viewed as file (Memory Map IO).
+
+### File Format
+
+A file is a set of rules which define how to parse a file. For example the first n-bytes until a line break represent different 
+metadata (headers). Then with the information of the headers the file can be properly processed.
+
+Typical formats:
+
+- **Images**: JPEG, PNG GIF, WEBP, SVG.
+- **Execs**: EXEC, MSI, APK, ELF4.
+- **Document**: PDF, DOCS, TXT, Markdown.
+- **Presentations**: PPTX, PDF.
+- **Spreadsheet**: CSV, XLSX.
+- **Video**: MP4, MKV, MOV, AVI.
+- **Audio**: MP3, WAC M4A, FLAC.
+- **Compressed**: ZIP, RAR, 7ZIP. 
+- **Plain Text**: TXT, C, CPP, JSON, YAML, TOML, every programming language file.
 
