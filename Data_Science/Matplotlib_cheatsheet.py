@@ -87,6 +87,7 @@ with open("data.csv", "./") as data:
 
 X_data = np.random.random(50) * 100
 Y_data = np.random.random(50) * 100
+Z_data = np.random.random(50) * 100
 
 plt.style.use('seaborn-deep') # adding a style
 
@@ -102,6 +103,14 @@ plt.title("Scatter Plot Example")
 plt.xlabel("X Axis")
 plt.ylabel("Y Axis")
 plt.show()
+
+# Scatter plot with different bubble size
+
+plt.scatter(X_data, Y_data, S=Z_data, color='blue', marker='o' )
+plt.title("Scatter (Thicc) Plot Example")
+plt.xlabel("X Axis")
+plt.ylabel("Y Axis")
+
 
 ##################################################################################################
 

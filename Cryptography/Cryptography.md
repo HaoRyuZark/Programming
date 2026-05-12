@@ -66,20 +66,52 @@ A **HMAC** is just an standard way of combining the message with the secret key.
 
 --- 
 
+## Psedu Random Functions
+
+They transform a **secret** and a **label** into a deterministic, arbitrary-length value indistinguishable from random data.
+
+They are used for: 
+
+- Generate unlimited keys from a single secret key.
+- Generate psudo-random numbers. 
+
+--- 
+
+## Key Derivation Function
+
+It is a PRF but more secure and computationaly expensive. It requieres a **salt** which is an extra secret to be added.
+
+Used for: 
+
+- Making password storage more secure and adding a second layer of security.
+
+--- 
+
 ## Asymetric Cryptography
 
-Different keys are used to perform and reverse/verify/complete an operation.
+Different keys, a pulbic and a private key are used to perform and reverse/verify/complete an operation.
 
-Mostly used for: 
+The main operations are: encryption (RSA), signatures (DSA) and key exchanges (DH).
+
+### Asymetric Encryption
+
+The public key is used for the encryption and the private key of the other party is used for the decryption.
+
+### Sigantures
+
+Operations that guarantees data has not changed since it was signed.
+
+The private key is used for the creatation and the public key for the verification.
+
+#### RSA Signature Verification
+
+- The data is hashed and the digest is encryptd with the private key. 
+- On the other end, the same data is hashed again and the signature is decrypted with the public key.
+- If both digest math then the data has not been manipulated.
 
 --- 
 
-## RSA
+## Key Exchange
 
 --- 
 
-## DSA
-
---- 
-
-##

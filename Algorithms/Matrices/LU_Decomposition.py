@@ -1,5 +1,5 @@
 import numpy as np 
-
+import math
 
 def _find_max(i, n, matrix): 
     max_idx = -1
@@ -74,10 +74,48 @@ def lu_decomposition(matrix, b):
                 matrix[j][k] -= l_ik * matrix[i][k]
 
     b = _permute_b(b, p)
-
     y = _solve_Ly(matrix, b, n)
+    x =  _solve_Ux(matrix, y, n)
+    
+    return after_iteration(get_L(matrix), get_U(matrix), x, b, epsi=0.001)
+    
 
-    return _solve_Ux(matrix, y, n)
+def get_L(matrix):
+    L = np.copy(matrix) 
+    n, m = matrix.shape
+
+    for i in range(0, n):
+        for j in range(i, n):
+                L[i][j] = 0    
+        L[i][i] = 1
+    return L
+
+def get_U(matrix):
+    U = np.copy(matrix) 
+    n, m = matrix.shape
+
+    for i in range(1, n):
+        for j in range(0, i):
+            U[i][j] = 0
+    return U
+
+def magnitude(vector): 
+    return math.sqrt(sum(pow(element, 2) for element in vector))
+
+def after_iteration(L, U, x, b, epsi):
+
+    A = L @ U
+    x_k = x.copy()
+
+    while True:
+        r_k = b - A @ x_k
+        p_k = np.linalg.solve(A, r_k)
+        x_k += p_k
+
+        if magnitude(p_k) / magnitude(x_k) < epsi:
+            break
+
+    return x_k
 
 def test_2by2():
     A2 = [[2, 3],

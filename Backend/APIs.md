@@ -258,13 +258,17 @@ of request-response, it allows continuous data exchange by just establishing the
 
 ## Sorting
 
-**Sorting** is the process of arranging data in a specific order, typically ascending or descending, based on one or more attributes. In the context of APIs, sorting can be applied to the results of data retrieval operations to enhance usability and data presentation.
+**Sorting** is the process of arranging data in a specific order, typically ascending or descending, based on one or more attributes. In the context of APIs, sorting can
+be applied to the results of data retrieval operations to enhance usability and data presentation.
 
 ---
 
 ## Pagination
 
-**Pagination** is the process of dividing a large set of data into smaller, manageable chunks or pages. In the context of APIs, pagination is used to limit the amount of data returned in a single response, improving performance and reducing bandwidth usage. Clients can request specific pages of data, allowing for efficient navigation through large datasets.
+**Pagination** refers to the process of dividing a large set of data into smaller, manageable chunks or pages. It is used to limit the amount of 
+data returned in a single response, improving performance and reducing bandwidth usage. 
+
+Clients can request specific pages of data, allowing for efficient navigation through large datasets.
 
 Example:
 
@@ -273,6 +277,25 @@ GET /api/users?page=2&size=10 HTTP/1.1
 Host: example.com
 Accept: application/json
 ```
+
+### Trade-Offs
+
+When designing the API the **page size** should be adjusted to not exagerate the amount of requests necessary from a client. 
+
+### Types Of Pagination
+
+- **Offset-based**: We used a page attribute or an offset with a limit. Then when a request is made we can return data besed on the page number assigned to the 
+data in the database. The mapping can be assigned with the row numbers and an ordering.
+
+**Example**:
+
+Query: 
+
+```sql 
+SELECT * FROM users LIMIT 10 OFFSET 20;
+```
+
+Response:
 
 ```http
 Response:
@@ -292,6 +315,11 @@ Content-Type: application/json
     ]
 }
 ```
+
+The problems of using this approach are that the query can become slower, new items can messed up the order resulting into inconsisten results. In contrast it is very 
+easy to implement.
+
+- **Cursor-based**: This is used with the help of cursor (index) which is used to iterate over the rows in the database. The idenx is embeded into the request.
 
 ---
 
