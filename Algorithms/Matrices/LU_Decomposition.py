@@ -2,20 +2,21 @@ import numpy as np
 import math
 
 def _find_max(i, n, matrix): 
-    max_idx = -1
-    max = float("inf")
+    max_idx = i
+    max_val = abs(matrix[i][i])
 
     for j in range(i + 1, n):
-        if matrix[j][i] > max and matrix[j][i] != 0:
-            max = matrix[j][i]
+        if abs(matrix[j][i]) > max_val:
+            max_val = abs(matrix[j][i])
             max_idx = j
 
     return max_idx
 
 def _permute_pivot(i, n, matrix, p): 
     j = _find_max(i, n, matrix) 
-    matrix[[i, j]] = matrix[[j, i]]
-    p[i], p[j] = p[j], p[i]
+    if i != j:
+        matrix[[i, j]] = matrix[[j, i]]
+        p[i], p[j] = p[j], p[i]
 
 def _permute(i, n, matrix, p):
     for j in range(i + 1, n):
@@ -60,7 +61,7 @@ def lu_decomposition(matrix, b):
     for i in range(0, n - 1):
 
         if matrix[i][i] == 0:
-            _permute(i, n, matrix, p)
+            _permute_pivot(i, n, matrix, p)
 
         for j in range(i + 1, n):
 

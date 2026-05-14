@@ -9,6 +9,13 @@ multiple computers.
 
 **Hosts** are any device which sends or receive traffic.
 
+Every host needs four items for internet connectivity: 
+
+- **IP-address**: the host's identity.
+- **Subnetmask**: the size of the host's network.
+- **Default Gateway**: router's IP-address.
+- **DNS Server IP-addr**: Translates domain names to IPs.
+
 ---
 
 ## Client Server Model
@@ -161,13 +168,6 @@ Common protocols include:
 
 ---
 
-## Networks Components
-
-
-
-
----
-
 ## Ports
 
 A **port** is a communication endpoint. They are identified by a number and for the operating system, they are a logical construct to identify a process or a
@@ -222,17 +222,18 @@ They are handled by the operating system and commonly provided by **libc**.
 
 ```txt
 
-   Server Side                        Client Side
-   ------------                      ------------
-   [Socket() (creation)]            [Socket () (creation)]
-        ↓                                ↓
-[bind() (bind to port)]              [Connect Request]
-        ↓                                  ↓
-[listen() (listening for connections)]  [connect()]
-        ↓                                |
-[accept()]                             [Data Transfer]
-        ↓                                |
-[Data Transfer read() or write()] <-----> [Data Transfer read() or write()]
+   Server Side                               Client Side
+   ------------                              ------------
+
+   [Socket() (creation)]                     [Socket() (creation)]
+        |                                          |
+   [bind() (bind to port)]                   [Connect Request]
+        |                                          |
+   [listen() (listening for connections)]    [connect()]
+        |                                          |
+   [accept()]                                [Data Transfer]
+        |                                          |
+   [Data Transfer read() or write()] <-----> [Data Transfer read() or write()]
 ```
 
 ### File Descriptors and Sockets
@@ -269,24 +270,40 @@ Failing to close file descriptors can lead to **resource leaks**, limiting how m
 
 It as framework for working with networks. It stands for **Open System Interconnection**. It consist of the following layers:
 
-- **Application:**  It provides network services (https, etc.) for the users by providing protocols like Brave. It also includes the (`GET`, `POST`, `DELETE`) 
+7. **Application:**  It provides network services (https, etc.) for the users by providing protocols like Brave. It also includes the (`GET`, `POST`, `DELETE`) 
 operations.
 
-- **Presentation:** Performs the task of syntax processing. This means to translate data from the application format to network format and vice versa.
+6. **Presentation:** Performs the task of syntax processing. This means to translate data from the application format to network format and vice versa.
 Encryption happens here.
 
-- **Session:** It supports the construction direction and construction of connections of devices. For example: authentication handling.
+5. **Session:** It supports the construction direction and construction of connections of devices. For example: authentication handling.
 
-- **Transport:**  This layer takes care of the transport of data across the network via protocols. It determines how much data to send,
-how fast, if it was send correctly, etc..
+> The previous 3 layer can also be compress into one Application layer.
 
-- **Network:** It provides the functional and procedurals means of transfering packages. It decides which physical path the data will take. It handles across
+4. **Transport:**  This layer takes care of the transport of data across the network via protocols. It determines how much data to send,
+how fast, if it was send correctly (via the correct protocol, ports, ...), etc. 
+
+- Service to Service (function)
+- TCP/UDP Porst (addressing)
+
+3. **Network:** It provides the functional and procedurals means of transfering packages. It decides which physical path the data will take. It handles across
 the routing of the data and the mapping from logical addresses and physical addresses.
 
-- **Data Link:** It receives the data and packages it into frames which are going to be send to the respective targets. It can
-also detect errors occurred at the physical layer and correct hem via algorithms.
+- End to End (function)
+- IP Addresses (addressing)
+- Routers, Hosts (devices)
 
-- **Physical:** This layer consist on the electrical part of the network. In general the hardware which handles the raw bits.
+2. **Data Link:** It receives the data and packages it into frames which are going to be send to the respective targets. It can
+also detect errors occurred at the physical layer and correct them via algorithms.
+
+- Hop to Hop  (function)
+- MAC Addresses (addressing)
+- Switches (devices)
+
+1. **Physical:** This layer consist on the electrical part of the network. In general the hardware which handles the raw bits.
+
+- Transport of bits (function)
+- Cables, WiFi, Hubs (devices)
 
 ---
 
@@ -295,6 +312,15 @@ also detect errors occurred at the physical layer and correct hem via algorithms
 This term refers to the actual, intended data transmitted in a network communication without the headers and extra information.
 
 ---
+
+## DHCP 
+
+The **Dynamic Host Configuration Protocol** provides a host with an IP, SM, DG and DNS server dynamically.
+This is the protocol responsible for providing access to the internet when a device is connected to the internet by just plugin 
+the ethernet cable or the wifi password.
+
+--- 
+
 
 ## TCP/IP
 
@@ -330,11 +356,9 @@ also detect errors occurred at the physical layer and correct hem via algorithms
 
 ---
 
-## ARP
+## Encapsulation & Decapsulation
 
----
 
-## Encapsultaion & Decapsulation
 
 ---
 
@@ -346,9 +370,12 @@ send data over the Internet. Each has its own characteristics, strengths, and id
 ### TCP (Transmission Control Protocol)
 
 TCP is a **connection-oriented** protocol, meaning it establishes a reliable connection between sender and receiver before data transfer begins. It ensures that data is delivered **accurately and in the correct order**. For this it uses a **three-way handshake** which constist of:
-**SYN ->**, **<-SYN ACK** and finally **ACK->**.
 
-**Key features of TCP:**
+**SYN ->** 
+**<-SYN ACK** 
+**ACK->**
+
+Key features of TCP:
 
 - **Reliable**: Uses acknowledgments (ACKs), retransmissions, and checksums to ensure data arrives intact.
 - **Ordered**: Guarantees the sequence of data packets.
@@ -356,22 +383,100 @@ TCP is a **connection-oriented** protocol, meaning it establishes a reliable con
 - **Flow control**: Manages the rate of data transmission to avoid overwhelming the receiver.
 - **Connection-based**: Requires a handshake (three-way handshake) before data is exchanged.
 
-**Common use cases:** Web browsing (HTTP/HTTPS), email (SMTP, IMAP, POP3), file transfers (FTP), and other applications requiring reliable communication.
+#### TCP Header
+
+```txt 
+Source Port (16 bits) | Destination Port (16 bits)
+Sequence Number (32 bits)
+Acknowledgment Number (32 bits)
+Data Offset (4 bits) | Reserved (3 bits) | Flags (9 bits)
+Window Size (16 bits)
+Checksum (16 bits) | Urgent Pointer (16 bits)
+```
+
+- **Source Port**: The port number of the sender.
+- **Destination Port**: The port number of the receiver.
+- **Sequence Number**: Used to keep track of the order of packets. If a packet is lost, the receiver can request a retransmission.
+- **Acknowledgment Number**: Used to acknowledge the receipt of packets. 
+- **Data Offset**: Indicates where the data begins.
+- **Flags**: Control flags (e.g., SYN, ACK, FIN).
+- **Window Size**: Used for flow control. It indicates how much data the sender can send before waiting for an acknowledgment.
+- **Checksum**: Used for error-checking the header and data.
+
+#### SYNC Packet Layout
+
+```txt
+Source Port (16 bits) | Destination Port (16 bits)
+Sequence Number (32 bits) | SYN Flag (1 bit) | Other Flags (8 bits)
+```   
+
+#### ACK Packet Layout
+
+```txt
+Source Port (16 bits) | Destination Port (16 bits)
+Sequence Number (32 bits) | ACK Flag (1 bit) | Other Flags (8 bits)
+Acknowledgment Number (32 bits)
+```
+
+#### When are ACKS sent?
+
+After receiving a packet, the receiver sends an ACK back to the sender to confirm receipt.
+
+#### The Reset Flag 
+
+The **Reset (RST)** flag is used to abruptly terminate a connection. It can be sent by either the client or the 
+server when they want to immediately close the connection without going through the normal FIN-ACK sequence. This can happen in cases of errors, unexpected conditions, or when a connection is refused.
+
+#### Timeout and Retransmission
+
+If a sender does not receive an ACK within a certain time frame, it assumes the packet 
+was lost and retransmits it. This process continues until an ACK is received or a maximum number of retransmissions is reached.
+
+#### Graceful Connection Termination
+
+To gracefully terminate a TCP connection, the following sequence of messages is typically exchanged:
+
+1. The client sends a **FIN** (Finish) packet to the server, indicating that it has finished sending data.
+2. The server responds with an **ACK** to acknowledge the FIN.
+3. The server then sends its own **FIN** packet to the client, indicating that it has also finished sending data.
+4. The client responds with an **ACK** to acknowledge the server's FIN, completing the termination process.
+
+#### Ungraceful Connection Termination
+
+In an ungraceful termination, one side simply closes the connection without following the proper FIN-ACK sequence. This can lead to issues such as:
+
+- The other side may not be aware that the connection has been closed, leading to potential resource leaks.
+- Data that was in transit may be lost, as there is no acknowledgment of receipt.
+- The server may continue to wait for data from the client, leading to timeouts or hanging
 
 ### UDP (User Datagram Protocol)
 
 UDP is a **connectionless** protocol that sends data without establishing a connection first. It prioritizes **speed over reliability**, making it faster but less reliable than TCP.
 
-**Key features of UDP:**
+Key features of UDP:
 
 - **Unreliable**: No guarantee of delivery, order, or duplication protection.
 - **No handshakes**: Sends data without establishing a connection.
 - **Lightweight**: Less overhead compared to TCP.
 - **Broadcast and multicast support**: Useful for sending data to multiple recipients at once.
 
+#### UDP Header
+
+```txt 
+Source Port (16 bits) | Destination Port (16 bits)
+Length (16 bits)
+Checksum (16 bits)
+```
+
+- **Source Port**: The port number of the sender.
+- **Destination Port**: The port number of the receiver.
+- **Length**: The length of the UDP header and data.
+- **Checksum**: Used for error-checking the header and data.
+
 **Common use cases:** Online gaming, video streaming, voice over IP (VoIP), DNS queries, and other time-sensitive applications where speed is more critical than accuracy.
 
 ### Summary
+
 
 | Feature              | TCP                           | UDP                          |
 |----------------------|-------------------------------|------------------------------|
@@ -379,6 +484,7 @@ UDP is a **connectionless** protocol that sends data without establishing a conn
 | Reliability          | Reliable (ACKs, retransmissions) | Unreliable (no ACKs)        |
 | Speed                | Slower due to overhead         | Faster, minimal overhead     |
 | Use cases            | Web, email, file transfer      | Gaming, streaming, VoIP      |
+
 
 Choosing between TCP and UDP depends on the needs of the application—**reliability and order** with TCP, or **speed and simplicity** with UDP.
 
@@ -404,15 +510,15 @@ Client Side                        Server Side
 ------------                      ------------
 
    [Socket()]                      [Socket () (creation)]
-        ↓                                ↓
+        |                                |
 [Connect Request]                    [bind() (bind to port)]
-        ↓                                ↓
+        |                                |
    [connect()] ----------------> [listen() (listening for connections)]
-        |                                ↓
+        |                                |
         |                            [accept()]
-        ↓                                ↓
+        |                                |
    [Data Transfer] <----------->  [Data Transfer read() or write()]
-        ↓                                ↓
+        |                                |
    [close()]  <------------------     [close()]
 ```
 
@@ -493,6 +599,7 @@ Certificate    |   Certificate    |
 
 
 --- 
+## MAC Addresses
 
 ## DNS
 
@@ -610,7 +717,6 @@ of the manufacturer.
 
 A **repeater** its a device which regenerates signals, it is used to prevent signal decay.
 
-
 ---
 
 ## Hub
@@ -627,23 +733,73 @@ other if and only if necessary, other data emitted by the hub does not cross the
 
 ---
 
-## Switch
+## Switches
 
-**Switches** are a combination of hubs and bridges design to redirect data to the right receiver within a network.
+**Switching** is the process of moving data withing networks. **Switches** are a combination of hubs and bridges design to redirect data to the right receiver within a network, 
+also they do switching. 
+
+- They use a layer 2 header which consists on the source and destination MAC-addresses.
+- They mantain a MAC-Adress Table for matching switch ports to MAC-adresses.
+
+Actions: 
+
+- **Learn**: Update the table with mappings when a packet comes from another hub.
+
+- **Flood**: Duplicate and send frame out all switch ports. This is not a broadcast, since they are performed using and special MAC-adress `ffff.ffff.ffff` while 
+flooding only is a send accross all of the open ports of the switch.
+
+- **Forward**: Once an extensive table has been filled, the data gets forwarded without the flood operation.
 
 ---
 
-## Router
+## Node
+
+A **node** is a device that implements IPv6.
+
+--- 
+
+## Routers
 
 For inter-network-communication we have **routers** which connect switches and router of two or more different networks.
+A node that forwards IPv6 packets not addressed to itself.
+
+- They maintain a map of all the networks they know about (**routing table**).
+- **Routes** are the starts bit sequences of an network. 
+
+### Population Methods For The Routing Table
+
+- **Directly Connected**: Routes for networks which are attached.
+- **Static Routes**: Routes manually provided by an administrator.
+- **Dynamic Routes**: Routes learned automatically from other routes.
+
+### Router Hierarchy
+
+Routers are commonly deployed in hierarchical structure accomplished via subnetting. In this process parts of
+IP-addresses are interpreted depending on the how many octets are going to be used to identify a network. 
+
+### Default Route
+
+It is an special route mostly written as `0.0.0.0 /0`. The adress is just zero and the subnetmask is to read 0 octets of the IP-addr. 
+This route is used as "for everythin else, go here" for leaf routes in a tree-structure.
 
 ---
 
-## MAC Addresses
+## ARP
 
-
+**Address Resolution Protocol**, is a protocol used for resolving IP to MAC mappings.
 
 ---
+
+## FTP 
+
+--- 
+
+## SMTP
+
+--- 
+
+
+--- 
 
 ## Sub-netting
 
