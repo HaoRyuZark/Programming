@@ -650,3 +650,36 @@ Typical formats:
 - **Compressed**: ZIP, RAR, 7ZIP. 
 - **Plain Text**: TXT, C, CPP, JSON, YAML, TOML, every programming language file.
 
+--- 
+
+## Character Encodings
+
+These are ways of mapping bytes to characters. 
+
+### ASCII
+
+Supports only English characters plus punctuation, numbers and some special codes.
+
+- Stores all characters in 7 bits.
+- Wide used in systems.
+
+The ASCII table looks like this
+
+```
+
+```
+
+### Unicode
+
+This is a universal standard for encoding all existing characters on earth plus emojis and way more.
+It uses the concept of mapping **code points** to sequences of bytes. For example we could map a letter e with an accent 
+to a singe byte or a the byte of e plus the byte of the accent.
+
+The implementation depends on the algorithm.
+
+The mapping is done is done from one **graphene** a unit of human writting to one or more code points.
+
+### UTF-8
+
+This version of **UTF** is a way of translating code points to 1 or 4 bytes.
+

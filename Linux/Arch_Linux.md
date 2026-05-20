@@ -235,7 +235,99 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
    lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
-   julia nm-connection-editor`
+   julia nm-connection-editor wine`
+
+**Packet plus purpose:**
+
+- texlive
+- fastetch 
+- 7zip
+- make
+- kitty 
+- neovim 
+- python 
+- pip 
+- stow 
+- npm 
+- python   
+- wl-clippboard 
+- wofi 
+- xorg-wayland 
+- luarocks 
+- linux-lts 
+- lua 
+- wayland 
+- nodejs 
+- waybar 
+- rust 
+- jdk-open-jdk 
+- htop 
+- man-db 
+- man-pages 
+- openssh 
+- git 
+- yazi 
+- vi 
+- zathura 
+- zathura-pdf-poppler
+- julia 
+- noto-fonts
+- noto-fonts-emoji 
+- noto-fonts-cjk 
+- ttf-linux-libertine 
+- wget 
+- ruby 
+- composer 
+- php
+- xdotool 
+- biber
+- pipewire 
+- pipewire-alsa 
+- pipewire-pulse 
+- wireplumber 
+- pavucontrol 
+- lm_sensors 
+- btop
+- clamav 
+- sxiv 
+- bleachbit 
+- reflector 
+- jupyterlab 
+- jupyter-notebook 
+- python-numpy 
+- python-pandas 
+- python-matplotlib 
+- python-pygame
+- tk 
+- nm-connection-editor 
+- iwd 
+- modemmanager 
+- usb_modeswitch 
+- timeshift 
+- tmux 
+- otf-font-awesome
+- fzf 
+- bat 
+- lsd 
+- tldr 
+- lazygit 
+- swayidle 
+- thunar 
+- autotiling 
+- starship 
+- python-scikit-learn 
+- docker pyright
+- lua-language-server 
+- bash-language-server 
+- texlab 
+- postgresql 
+- clang 
+- pacman-contrib 
+- ghc 
+- cabal-install
+- julia 
+- nm-connection-editor 
+- wine
 
 ---
 

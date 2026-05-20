@@ -18,6 +18,32 @@ In theory, hashing should be impossible to revert, but can be brute-forced.
 
 - Typical algorithms: SHA224, SHA3-224, SHA3-512, SHA246.
 
+```js 
+const { createHash } = require('crypto');
+
+function hash(input) {
+    return createHash('sha256').update(input).digest('hex');
+}
+```
+
+--- 
+
+## Salt
+
+It is a random value added to a value to make the value we hash more harder to be already in a dictionary.
+
+```js 
+const { scryptSync, randomBytes } = require('crypto');
+
+function getSalt(bytes, format) { 
+    return randomBytes(bytes).toString(format);
+}
+
+function hash(input, salt, bytes, format) {
+    return scryptSync(input, salt, bytes).toString(format);
+}
+```
+
 ---
 
 ## Encryption
@@ -111,7 +137,65 @@ The private key is used for the creatation and the public key for the verificati
 
 --- 
 
-## Key Exchange
+## Key Exchanges
+
+The **key exchange** is the critical process of sharing a secret between two actors. This process varies depending on the 
+algorithm and the situation and is accomplished via one or more complex mathematical operations which allows for the key pairs to 
+be generated.
+
+### Diffie-Hellman 
+
+It is the industry standard algorithm used for key exachanges.
+
+Steps: 
+
+1. Peers publicly agree on a mutual starting value.
+2. Peers generate a private value which is never shared.
+3. Peers calculate a public value which is meant to be shared with the other peers.
+4. They combine theit private value with the shared public value.
+5. The generated value is the seed used to generate for the public and private keys.
+
+```txt
+                                    Public Space
+      Alive                                                       Bob
+   |-------------------------|                                |-------------------------|
+   |                         | Agree upon two numbers:        |                         |
+   |                         | P: Prime Number: x             |                         |
+   |                         | G: Generator of P: y           |                         | 
+   | prv_a                   |                                |  prv_b                  |
+   | (G^prv_a) mod P = pub_a |                                | (G^prv_b) mod P = pub_B |
+   |                         |  Values get Exchanged          |                         |
+   |                         |                                |                         |
+   | (pub_b^prv_a) mod P     |                                | (pub_a^prv_b) mod P     |
+   |         =               |                                |       =                 |
+   |     Shared Secret       |                                |   Shared Secret         |
+
+```
 
 --- 
+
+## Anti-Replay 
+
+It provides a built-sequence number to prevent attackers to used sended packets to be re-used.
+
+--- 
+
+## Non-Repudiation
+
+It is a byproduct of integrity and authentication. The sender cannot deny sending a message.
+
+---
+
+## Cipher Suites
+
+A cypher suite defines the protocols and rules used for a communication or use case in which encryption is needed: 
+
+- **Key Exchange**: ECDHE, DHE, ECDH, DH, RSA, PSK.
+- **Authentication**: ECDSA, RSA, DSS, PSK.
+- **Encryption**: CHACHA20, AES-256-GCM, 3DES-CBC, RC4-128.
+- **Hashing**: Poly1305, SHA256, MD5.
+
+The algorithms change all the time so do not attach to much to the names.
+
+Example: `TLS_DHE_RSA_WITH_AES_256_CBC_SHA`.
 

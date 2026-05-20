@@ -31,13 +31,13 @@ It is a model which assigns roles to the computers connected in a network for an
 ## Proxies
 
 A **proxy** is a computer system which acts as an intermediary between a client requesting a resource and
-a server providing the resource.
+a server providing the resource. This helps keep the IP address secret for the internet except for the proxy.
 
 - **Forward Proxy**: Proxy for the anonymisation/in-between-storage of the client-requests or the response of the server.
 The anonymity part is not always obligatory, hence there are also **transparent proxies**.
 
-- **Reverse Proxy**: They act as if tey would be the ordinary server, but they are sending the request to the
-actual server to be further processed.
+- **Reverse Proxy**: They act as if tey would be the ordinary server, but they are sending the responses to the clients. The 
+real requests are still processed by the real server, but the proxy acts as the entry point.
 
 ---
 
@@ -111,7 +111,7 @@ Note: if all computers have the same rank, then the network is considered **regu
 
 - **Ring**: Chain where the last computer is connected to the first.
 
-- **Chordale Ring**: Ring with some tetraedic connection inside.
+- **Chordale Ring**: Ring with some tetradic connection inside.
 
 - **Barrel Ring**: Ring where also each node is connected to another if they are separated by two nodes.
 
@@ -129,34 +129,393 @@ Note: if all computers have the same rank, then the network is considered **regu
 
 - **Internat**: Planet, 10000km.
 
----
 
-## Local Area Networks
+### Local Area Networks
 
 Mostly used for individual homes or organizations. The computers are mostly connected directly to each other,
 and it can be accessed remotely using a **VPN** (Virtual Private Network).
 
----
 
-## Metropolitan Area Network
+### Metropolitan Area Network
 
 Conglomeration of multiple LANs where the networks are not directly connected, but with the use of extra components.
 
----
 
-## Wide Area Network
+### Wide Area Network
 
 Used mostly by large organization across long distances allowing for point to point communication via points of presence.
 
----
 
-## Global Area Network
+### Global Area Network
 
 The same as the WAN but on a much larger scale. It can also be a conglomerate of WANs.
 
 ---
 
-## Network Protocols
+## OSI Model
+
+It as framework for working with networks. It stands for **Open System Interconnection**. It consist of the following layers:
+
+7. **Application:**  It provides network services (https, etc.) for the users by providing protocols like Brave. It also includes the (`GET`, `POST`, `DELETE`) 
+operations.
+
+6. **Presentation:** Performs the task of syntax processing. This means to translate data from the application format to network format and vice versa.
+Encryption happens here.
+
+5. **Session:** It supports the construction direction and construction of connections of devices. For example: authentication handling.
+
+> The previous 3 layer can also be compress into one Application layer.
+
+4. **Transport:**  This layer takes care of the transport of data across the network via protocols. It determines how much data to send,
+how fast, if it was send correctly (via the correct protocol, ports, ...), etc. 
+
+- Service to Service (function)
+- TCP/UDP Ports (addressing)
+
+3. **Network:** It provides the functional and procedural means of transferring packages. It decides which physical path the data will take. It handles across
+the routing of the data and the mapping from logical addresses and physical addresses.
+
+- End to End (function)
+- IP Addresses (addressing)
+- Routers, Hosts (devices)
+
+2. **Data Link:** It receives the data and packages it into frames which are going to be send to the respective targets. It can
+also detect errors occurred at the physical layer and correct them via algorithms.
+
+- Hop to Hop  (function)
+- MAC Addresses (addressing)
+- Switches (devices)
+
+1. **Physical:** This layer consist on the electrical part of the network. In general the hardware which handles the raw bits.
+
+- Transport of bits (function)
+- Cables, WiFi, Hubs (devices)
+
+---
+
+## IP Addresses
+
+An **IP-Address**, (Internet Protocol Address) is the identity of each computer. Means they are unique.
+
+### IPv4
+
+They are 32-bit long with 2**32 possible addresses.
+
+- Divided into 4 octets of 8 bits
+
+Example:
+
+```text 
+192.0.2.146
+```
+
+### IPv6
+
+They were implemented to adapt for the demand of new address, due to IPv4 being 
+to limited 2^32. They are 128-bit long with 2^128 possible addresses
+
+- Divided into 8 segments of 16 bits, hextets.
+- Encoded in hex.
+
+Example:
+
+```text 
+2001:db8:0:1:1234:0:561:1:2
+```
+
+### Public and Private IPs
+
+- **Private**: 
+   - Only visible in the local network. 
+   - Assigned by the wifi-card.
+   - It is also unique.
+   - Not routable for the internet.
+
+`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16` are the private IP ranges, which are reused across different local networks, 
+thus they are not unique globally.
+
+
+|Classs | Range | Subnetmask |
+|:-----:|--------|-----------|
+|A | 10.0.0.0 - 10.255.255.255 | 255.0.0.0 |
+|B | 172.16.0.0 - 172.31.0.0| 255.255.0.0 |
+|C | 192.168.0.0 - 192.168.225.255.255 | 255.255.255.0 |
+
+
+- **Public**: 
+   - Assigned by the internet service provider. 
+   - It is also unique.
+   - Routable for the internet.
+
+The process which translates from private to public and vice versa is the so called **Network Address Translation (NAT)**, which 
+does exactly what the name implies and adds a layer of security by masking the private address.
+
+> No traffic between private to private is allowed, but traffic between private to public and public to private is allowed.
+
+
+### Classes of IPv4 
+
+
+|Classs | Range | Subnetmask | Purpose |
+|:-----:|--------|-----------|----------|
+|A | 1.0.0.0 - 126.255.255.255 | 255.0.0.0 | |
+| loopback | 127.0.0.0 - 125.255.255.255 | 255.0.0.0  | |
+|B | 128.0.0.0 - 191.255.0.0| 255.255.0.0 | |
+|C | 192.0.0.0 - 223.255.255.0 | 255.255.255.0 | |
+|D | 224.0.0.0 - 239.255.255.255 | | |
+|E | 240.0.0.0 - 255.255.255.255| | |
+
+
+### Static and Dynamic IPs
+
+- **Static**:
+   - Do not change
+   - Are manually assigned by an admin.
+   - Ideal for hosting servers and long-term services.
+
+- **Dynamic**:
+   - Dynamically assigned by a network.
+   - Flexible.
+   - Widely used for consumer devices.
+
+---
+
+## Network Address Translation NAT
+
+**NAT** is a method used in networks to translate private IP addresses to public IP addresses and vice versa. It allows multiple devices on a local network 
+to share a single public IP address when accessing the internet.
+
+- **NAT** modifies the layer 3 (Network layer) header of the packets as they pass through a router or firewall, changing the source or destination IP address.
+
+- **PAT (Port Address Translation)** modifies both the layer 3 (Network layer) and layer 4 (Transport layer) headers, changing the source or destination IP address and port numbers to allow multiple devices to share a single public IP address.
+
+### Static vs Dynamic
+
+- **Static**: Explicit mapping between pre-translation and post-translation attributes.
+- **Dynamic**: Mapping is created on-the-fly as needed, without pre-configuration, but the admin defines the pre and post-translation attributes.
+Only the translation is done by the device.
+
+### Static NAT
+
+- The purpose is to make an internal resource externally accessible.
+- Inbound packet: destination is translated.
+- Outbound packet: source is translated.
+- Packets are translated in both directions.
+- Does not conserve addresses, as each internal resource requires a unique public IP address.
+
+### Static PAT
+
+- Similar to the static NAT, but it also translates the port number.
+- Multiple servers can use one public IP address, but they must use different port numbers to distinguish between them.
+- Conserves address-space.
+
+### Dynamic NAT
+
+The same as static NAT, but the mapping is created on-the-fly as needed, without pre-configuration, but the admin defines the pre and post-translation attributes.
+
+- Mostly unused, as it does not conserve addresses and it is not flexible.
+- Can be used for lazy static NAT.
+
+### Dynamic PAT
+
+Is similar to the dynamic NAT, but it also translates the port number. Multiple servers can use one public IP address, but they must use different port numbers to distinguish between them. 
+Conserves address-space.
+
+- Traffic is unidirectional, meaning that only outbound traffic is translated. Inbound traffic is not allowed unless a static mapping is created for it.
+- The ports in the outbound side is also randomized.
+- Each shared public IP address allows 65.000 simultaneous connections.
+
+### Policy NAT
+
+This is the **translation decision** based on matching both source and destination. For example given a packet with the destination 
+address of `192.168.1.10` and the source address of `45.168.1.1`,  because our destination starts with `192.168.*.*` we decide to map our source in the router to 
+`10.200.1.1` and then send the packet to the destination. This is a destination-based policy NAT. We can also have source-based policy NAT, where the decision is made based on the source address instead of the destination.
+
+### Twice NAT
+
+This is a combination of both source and destination-based policy NAT, where the decision is made based on both the source and destination addresses. 
+For example, given a packet with the destination address of `192.168.1.10` and the source address of `45.168.1.1`, we can decide to map our source in the router to 
+`10.200.1.1` and then send the packet to the destination. This is a twice NAT.
+
+The use of this is for example when we have two companies with the same private IP address range and they want to communicate with each other, thus they need to use twice NAT to avoid address conflicts.
+
+--- 
+
+## MAC Addresses
+
+**Media Access Control Address** is a 48-bit address used in the local network assigned by the fabricant.
+
+### Structure 
+
+They consists of: 
+
+- 6 hextets.
+
+- Starting from the left, the first 3 hextets are used for the **Organizationally Identifier (OUI)**, which is used for the identification 
+of the manufacturer. 
+
+- The other 3 are for the **Network Interface Controller (NIC)**, which is used for the actual networking identification tasks.
+
+--- 
+
+## Subnetting
+
+**Subnetting** is the process of taking a network and dividing it into sub-networks.
+
+Attributes of each sub-network:
+
+- **Network ID** First IP address of the sub-network. 
+
+- **Broadcast IP**: Last IP address in each sub-network.
+
+- **Number of IP addresses**: Number of addresses in the sub-network.
+
+- **First Host IP**: IP after the network ID.
+
+- **Last Host IP**: IP before the broadcast IP.
+
+- **CIDR/Subnet Mask**: Notation to represent the subnet mask. `11111111.11111111.11111111.00000000` can be represented as `/24` or `255.255.255.0`.
+
+### The Subnett Mask
+
+The **subnetmask** tells us whihc part of the IP-address is a part of the **network address**. It is a sequence of 4 octes which 
+consists on the number of a sequence of 1 and zeros.
+
+```txt
+11111111.11111111.11111111.00000000 (bin)
+
+255.255.255.0 (dec)
+```
+
+The portion which consists only of zeroes is the **host portion**. Those bits are free to be any number in the range 1 to 255 giving s more 
+addresses to work with inside the network.
+
+The mask can be have different sizes depending on the network adrress. This is can be marked as `/x`, where x tells us how 
+many bits starting from left to the right of the network address are being read.
+
+```txt
+11111111.11111111.11111111.00000000 -> /24
+```
+
+### Wildcard Mask
+
+This is a subnetmask where the bits are inverted, meaning that the bits which are `1` in the subnet mask are `0` in the wildcard mask and vice versa. 
+For example, if we have a subnet mask of `255.255.255.0`, the wildcard mask would be `0.0.0.255`.
+
+### Host Size
+
+Given a subnet mask, we can determine the number of host inside a network by rasing 2 to the power of the number of zeros in 
+the subnetmask minus 2 because the first address and last address are reserved for the network id and the broadcast address.
+
+### The Increment
+
+The **increment** is the last positional power of 2 (starting from the left) in the current byte in the subnetmask we which was flipped while subnneting.
+
+For example:
+
+```md
+11111111.11111111.11111111.00000000 -> /24
+   gets converted to 
+11111111.11111111.11111111.1**1**000000 -> /26 (255.255.255.192)
+```
+
+With increment: **64**.
+
+### Performing Subnetting 
+
+To get more subnetworkrs from our local network we need to work with our host portion of our address.
+For example if from our original network from one network to 4 networks we would do the following:
+
+```txt
+11111111.11111111.11111111.00000000 -> /24
+   gets converted to 
+11111111.11111111.11111111.11000000 -> /26 (255.255.255.192)
+```
+
+Example: 
+
+Subnett the the following network `192.168.1.0` to a 5 networks.
+
+1. We need 5 networks which means that we need to flip 5 bits which will result into 8 networks
+
+```txt
+11111111.11111111.11111111.11100000 -> /27 (255.255.255.224)
+```
+
+Hence, our increment is **32** giving us the following addresses:
+
+1. 192.168.1.0   to 192.168.1.31
+2. 192.168.1.32  to 192.168.1.63
+3. 192.168.1.64  to 192.168.1.95
+4. 192.168.1.96  to 192.168.1.127
+5. 192.168.1.128 to 192.168.1.159
+6. 192.168.1.160 to 192.168.1.191
+7. 192.168.1.192 to 192.168.1.223
+8. 192.168.1.224 to 192.168.1.255
+
+With a host size of $2^5 - 2 = 30$
+
+The process can also be done based on the number of hosts which are going to be inside a subnetwork.
+
+### Reverse Subnetting
+
+Given a subnet mask and an IP-address we need to find the increment and relevant addresses.
+
+This is better explained with an example: `172.17.16.255 / 255.255.240.0`
+
+```md
+255.255.240.0 
+
+11111111.11111111.111**1**0000.00000000
+```
+
+
+Our increment is 16 
+
+Now we can create our ranges 
+
+
+1. 172.17.0.0 to 172.17.15.255
+2. 172.16.0.0 to 172.17.31.255
+
+and so on for for 14 times more or 16 in total.
+
+### Subnetting Cheatsheet
+
+
+|Group Size (# of addresses) |128 | 64 | 32 | 16 | 8 | 4 | 2 | 1 |
+|-----------|-----|-----|-----|-----|-----|-----|-----|-----|
+|Subnet Mask| 128 | 192 | 224 | 240 | 248 | 252 | 254 | 255 |
+|CIDR| /25 | /26 | /27 | /28 | /29 | /30 | /31 | /32 |
+| Number of Bits to Flip |7 | 6 | 5| 4 |3 | 2 | 1 | 0 |
+
+
+How it was calculated:
+
+1. Start with 1, double until your reach 128 (right to left)
+2. Subtract each number from 256 to get the subnet mask.
+3. From /32, list CIDR notation until /25.
+
+**Example:** 
+
+Given `10.1.55 /28` find all the sub-network information.
+
+- We start with the CIDR notation, which is `/28`, hence we look at the cheatsheet and find that the subnet mask is `255.255.255.240`.
+
+- Then we calculate the number of IP addresses in the sub-network, which is `2^(32-28) = 16`. Or the same as the group size.
+
+- For the network ID we take the first 3 octets of the given IP address and starting from `0` we add the group size until we reach a number which is bigger than the given IP address 
+at that octet. In our case we have `0, 16, 32, 48, 64`, hence the network ID is `48` because `48` is the biggest number which is smaller than `55`. The number after is the next network ID, which is `64`. 
+
+- The broadcast IP is the last IP address in the sub-network, which is `10.1.55.63`.
+
+- The first host IP is the IP address after the network ID, which is `10.1.55.49`.
+
+- The last host IP is the IP address before the broadcast IP, which is `10.1.55.62`.
+
+--- 
+
+## Network Protocol Definition
 
 A protocol is a set of rules and practices for transmitting data across a network.
 
@@ -195,6 +554,15 @@ type of network service. Note that the at the hardware level we also have ports 
 
 It is a technique used for allowing external devices access to a local network. When a request reaches a router then it gets 
 redirected to correct computer and port.
+
+### Port Security
+
+It allows to control which source MAC-Addresses are allowed to enter an specific switch port.
+It cab be done in the following ways:
+
+- Limiting the set of MAC-addresses for the port.
+- Limiting the number of devices per port.
+- Allowing only a certain list of MAC-addressess. 
 
 ---
 
@@ -266,47 +634,6 @@ Failing to close file descriptors can lead to **resource leaks**, limiting how m
 
 ---
 
-## OSI Model
-
-It as framework for working with networks. It stands for **Open System Interconnection**. It consist of the following layers:
-
-7. **Application:**  It provides network services (https, etc.) for the users by providing protocols like Brave. It also includes the (`GET`, `POST`, `DELETE`) 
-operations.
-
-6. **Presentation:** Performs the task of syntax processing. This means to translate data from the application format to network format and vice versa.
-Encryption happens here.
-
-5. **Session:** It supports the construction direction and construction of connections of devices. For example: authentication handling.
-
-> The previous 3 layer can also be compress into one Application layer.
-
-4. **Transport:**  This layer takes care of the transport of data across the network via protocols. It determines how much data to send,
-how fast, if it was send correctly (via the correct protocol, ports, ...), etc. 
-
-- Service to Service (function)
-- TCP/UDP Porst (addressing)
-
-3. **Network:** It provides the functional and procedurals means of transfering packages. It decides which physical path the data will take. It handles across
-the routing of the data and the mapping from logical addresses and physical addresses.
-
-- End to End (function)
-- IP Addresses (addressing)
-- Routers, Hosts (devices)
-
-2. **Data Link:** It receives the data and packages it into frames which are going to be send to the respective targets. It can
-also detect errors occurred at the physical layer and correct them via algorithms.
-
-- Hop to Hop  (function)
-- MAC Addresses (addressing)
-- Switches (devices)
-
-1. **Physical:** This layer consist on the electrical part of the network. In general the hardware which handles the raw bits.
-
-- Transport of bits (function)
-- Cables, WiFi, Hubs (devices)
-
----
-
 ## Payload
 
 This term refers to the actual, intended data transmitted in a network communication without the headers and extra information.
@@ -321,7 +648,6 @@ the ethernet cable or the wifi password.
 
 --- 
 
-
 ## TCP/IP
 
 **Transmission Control Protocol / Internet Protocol** is a collection of protocol which determine how data
@@ -332,7 +658,7 @@ is formatted, transported and used in networks.
 - **Transport:**  This layer takes care of the transport of data across the network via protocols. It determines how much data to send,
 how fast, if it was send correctly, etc.. Defines **Segments**.
 
-- **Network:** It provides the functional and procedurals means of transfering packages. It decides which physical path the data will take. It handles across
+- **Network:** It provides the functional and procedural means of transferring packages. It decides which physical path the data will take. It handles across
 the routing of the data and the mapping from logical addresses and physical addresses. Defines **frames**.
 
 - **Data Link:** It receives the data and packages it into frames which are going to be send to the respective targets. It can
@@ -342,9 +668,16 @@ also detect errors occurred at the physical layer and correct hem via algorithms
 
 ### Frames
 
-### Segments
+A **frame** is a layer 2 PDU (Protocol Data Unit) which consists of a header, payload and trailer. 
+The header contains the destination and source MAC addresses, while the trailer includes error-checking information (CRC).
 
 ### Packets
+
+A **packet** is a layer 3 PDU (Protocol Data Unit) used in the network layer. It consists of a header and a payload. The header contains source and destination IP addresses, which are used for routing the packet across the network.
+
+### Segments
+
+A **segment** is a layer 4 PDU (Protocol Data Unit) used in the transport layer. It contains a header and a payload. The header includes information such as source and destination ports, sequence numbers, and acknowledgment numbers, which are essential for ensuring reliable data transfer.
 
 ---
 
@@ -358,8 +691,6 @@ also detect errors occurred at the physical layer and correct hem via algorithms
 
 ## Encapsulation & Decapsulation
 
-
-
 ---
 
 ## UDP and TCP
@@ -369,7 +700,8 @@ send data over the Internet. Each has its own characteristics, strengths, and id
 
 ### TCP (Transmission Control Protocol)
 
-TCP is a **connection-oriented** protocol, meaning it establishes a reliable connection between sender and receiver before data transfer begins. It ensures that data is delivered **accurately and in the correct order**. For this it uses a **three-way handshake** which constist of:
+TCP is a **connection-oriented** protocol, meaning it establishes a reliable connection between sender and receiver before data transfer begins. It ensures that data is delivered 
+**accurately and in the correct order**. For this it uses a **three-way handshake** which consists of:
 
 **SYN ->** 
 **<-SYN ACK** 
@@ -547,16 +879,6 @@ Client Side                        Server Side
 
 ---
 
-## Command ip link
-
-In linux the `ip link` command will return three device names
-
-- `lo` for the loop back device
-- `Ethernet Plug`
-- `Wifi card`
-
----
-
 ## HTTP & HTTPS
 
 It stands for **Hyper Text Transport Protocol**; the **S** stands for **Secure** and refers to the data 
@@ -590,16 +912,65 @@ Certificate    |   Certificate    |
 
 ---
 
-## SSL
+## Transport Layer Security (TLS) & Secure Sockets Layer (SSL)
 
+**SSL/TLS** creates a secure, protected "tunnel" across the internet via encryption, hashing and the public key infrastructure to ensure 
+confidentiality, integrity and authentication. The acronyms refer to 2 version of the same protocol.
+
+### Actors
+
+- **Client**: 
+   - Entity initatin the TLS handshake.
+   - Optionally authenticated.
+
+- **Server**:
+   - Entity receiving the the TLS handshake.
+   - Always authenticated.
+
+- **Certificate Authority**:
+   - Provides certificates for servers.
+   - The generated certificate lins an asymmetric key parit to a specific indentity.
+   - The certificate is also signed by the CA.
+
+The combination of these 3 is called a **PKI public key infrastructure**.
+
+### TLS/SSL Handshake
+
+1. The certificate autority provides a signed certificate with a public and private key.
+
+2. The server generates its own set or private and public key. Then it generates a **Certificate Signing Request (CSR)** which includes the 
+public key and it is signed with the private key of the server.
+
+3. The CA inspects and validates the certificate. The certifacate is signed with the private key of the CA. It also inlcudes the public key of the server.
+
+4. The server can use the certifacte to validate its identity.
+
+5. Clients already have a signed certificate which includes the public key of the CA.
+
+6. The clients requests the cerficate of the server by chekcing the sign with the CA's public key.
+
+7. The handshake then creates a pair of public and private keys (**Session Keys**) used by both the client and server for asymmetric encryption. 
+
+### HTTP Strict Transport Security HSTS
+
+**HSTS** instructs the browser that a site should always be HTTPS. This ensures that SSL can not be fooled 
+by tricks like having a man in the middle acting as the server.
+
+This is accomplished via a the `max-age` directive in http requests which ensures that a maximum time of response 
+needs to specified for the the site.
+
+Example:
+
+```http 
+Strict-Transport-Security: max-age=63072000
+Strict-Transport-Security: includeSubDomains
+Strict-Transport-Security: preload 
+```
+
+Because of the first visit still being vulnerable. A concetp called **HSTS Preload** was developed, which 
+consists on a static list of HSTS sites maintained by the browsers locally.
 
 --- 
-
-## TLS
-
-
---- 
-## MAC Addresses
 
 ## DNS
 
@@ -612,7 +983,7 @@ Certificate    |   Certificate    |
 2. The request is redirected to a **resolver** which also checks for the IP-Address, but if not found then: it communicates with a **root** server which tells our 
 resolver to which **TLD Top Level Domain Server** to talk which finally tells the resolver the IP. If not, then
 
-3. The resolver is redirected to an specific **Athoriative Name Server** which always know the IP address
+3. The resolver is redirected to an specific **Authoritative Name Server** which always know the IP address
 
 --- 
 
@@ -636,83 +1007,6 @@ Everything between packet length and message authentication is encrypted.
 
 ---
 
-## IP Addresses
-
-An **IP-Address**, (Internet Protocol Address) is the identity of each computer. Means they are unique.
-
-### IPv4
-
-They are 32-bit long with 2**32 possible addresses.
-
-- Divided into 4 octets of 8 bits
-
-Example:
-
-```text 
-192.0.2.146
-```
-
-### IPv6
-
-They were implemented to adapt for the demand of new address, due to IPv4 being 
-to limited. They are 128-bit long with 2**128 possible addresses
-
-- Divived into 8 segments of 16 bits, hextets.
-- Encoded in hex.
-
-Example:
-
-```text 
-2001:db8:0:1:1234:0:561:1:2
-```
-
-### Public and Private IPs
-
-- **Private**: 
-   - Only visible in the local network. 
-   - Assigned by the wifi-card.
-   - It is also unique.
-   - Not routable for the internet.
-
-- **Public**: 
-   - Assined by the internet service provider. 
-   - It is also unique.
-   - Routable for the internet.
-
-The process which translates from private to public and viceversa is the so called **Network Address Translation (NAT)**, which 
-does exactly what the name implies and adds a layer of security by masking the private address.
-
-### Static and Dynamic IPs
-
-- **Static**:
-   - Do not change
-   - Are manually assigned by an admin.
-   - Ideal for hosting servers and long-term services.
-
-- **Dynamic**:
-   - Dynamically assigned by a network.
-   - Flexible.
-   - Widely used for consumer devices.
-
----
-
-## MAC Addresses
-
-**Media Access Control Address** is a 48-bit address used in the local network assigned by the fabricant.
-
-### Structure 
-
-They consists of: 
-
-- 6 hextets.
-
-- Starting from the left, the first 3 hextets are used for the **Organizationally Identifier (OUI)**, which is used for the identification 
-of the manufacturer. 
-
-- The other 3 are for the **Network Interface Controller (NIC)**, which is used for the actual networking identification tasks.
-
---- 
-
 ## Repeater
 
 A **repeater** its a device which regenerates signals, it is used to prevent signal decay.
@@ -733,24 +1027,44 @@ other if and only if necessary, other data emitted by the hub does not cross the
 
 ---
 
+## Ethernet
+
+**Ethernet** is a family of networking technologies used for LANs. It is concerned with the physical and data link layers.
+For example, it defines the frame structure, the MAC addressing, and the method of access to the shared medium (CSMA/CD).
+
+- **Ethernet frames** consist of a header, payload, and trailer. The header contains the destination and source MAC addresses, while the trailer includes error-checking information (CRC).
+
+- **CSMA/CD (Carrier Sense Multiple Access with Collision Detection)** is a protocol used in Ethernet networks to manage access to the shared communication medium. It allows devices to detect collisions and retransmit data when necessary, ensuring efficient communication in a network with multiple devices.
+
+- **Ethernet Cable**: is a type of network cable used to connect devices in an Ethernet network. It typically consists of twisted pairs of copper wires and is used for wired connections.
+
+--- 
+
 ## Switches
 
 **Switching** is the process of moving data withing networks. **Switches** are a combination of hubs and bridges design to redirect data to the right receiver within a network, 
 also they do switching. 
 
 - They use a layer 2 header which consists on the source and destination MAC-addresses.
-- They mantain a MAC-Adress Table for matching switch ports to MAC-adresses.
+- They maintain a **MAC-Addresses Table** for matching switch ports to MAC-addresses.
 
 Actions: 
 
 - **Learn**: Update the table with mappings when a packet comes from another hub.
 
-- **Flood**: Duplicate and send frame out all switch ports. This is not a broadcast, since they are performed using and special MAC-adress `ffff.ffff.ffff` while 
-flooding only is a send accross all of the open ports of the switch.
+- **Flood**: Duplicate and send the frame out all switch ports. This is not a broadcast, since they are performed using and special MAC-address `ffff.ffff.ffff` while 
+flooding only is a send across all of the open ports of the switch.
 
 - **Forward**: Once an extensive table has been filled, the data gets forwarded without the flood operation.
 
 ---
+
+## Modem
+
+A **modem** is a device that modulates and demodulates signals for communication over telephone lines or other communication mediums.
+It is used to connect a local network to the internet by converting digital data from the computer into analog signals for transmission and vice versa.
+
+--- 
 
 ## Node
 
@@ -762,6 +1076,8 @@ A **node** is a device that implements IPv6.
 
 For inter-network-communication we have **routers** which connect switches and router of two or more different networks.
 A node that forwards IPv6 packets not addressed to itself.
+
+**Gateway** is a term also used for routers, but it is more general and can refer to any device that acts as an entry point to another network, not necessarily a router.
 
 - They maintain a map of all the networks they know about (**routing table**).
 - **Routes** are the starts bit sequences of an network. 
@@ -779,16 +1095,101 @@ IP-addresses are interpreted depending on the how many octets are going to be us
 
 ### Default Route
 
-It is an special route mostly written as `0.0.0.0 /0`. The adress is just zero and the subnetmask is to read 0 octets of the IP-addr. 
-This route is used as "for everythin else, go here" for leaf routes in a tree-structure.
+It is an special route mostly written as `0.0.0.0 /0`. The address is just zero and the subnetmask is to read 0 octets of the IP-addr. 
+This route is used as "for everything else, go here" for leaf routes in a tree-structure.
 
 ---
+
+## Network Architecture
+
+This term refers to the way a network is structured which can be mostly categorized into 3 tiers depending on the number of layers.
+
+- **Access Layer**: The individual devices connected to one of multiple switches, which are connected to the router/s. Cheap, but fragile for 
+businesses use except for very small stores. Used for homes. (**Tier 1**).
+
+- **Distribution Layer**: In this layer one or multiple **distribution switches** are connected to the ordinary the switches. They act as the 
+in between the layer to distribute traffic accordingly from the routers. More expensive, but also more reliable. Suited for small to medium size businesses.
+(**Tier 2**).
+
+- **Core Layer**: Adds an even more powerfull to distribute the traffic even more efficient. Expensive and only for big businesses. (**Tier 3**).
+
+--- 
 
 ## ARP
 
 **Address Resolution Protocol**, is a protocol used for resolving IP to MAC mappings.
 
+A workflow of ARP is as follows:
+
+1. A host needs to send a packet to another host on the same local network, but it only knows the destination's IP address.
+2. The host broadcasts an ARP request to all devices on the local network, asking "Who has this IP address? Tell me your MAC address."
+3. The device with the matching IP address responds with an ARP reply, providing its MAC address to the requester.
+4. The requesting host receives the ARP reply and updates its ARP table with the new IP-to-MAC mapping, allowing it to send the packet directly to the destination using the resolved MAC address.
+
+### ARP Packet Structure
+
+```txt
+| Hardware Type (16 bits) | Protocol Type (16 bits) |
+| Hardware Size (8 bits) | Protocol Size (8 bits) |
+| Opcode (16 bits) |
+| Sender MAC Address (48 bits) |
+| Sender IP Address (32 bits) |
+| Target MAC Address (48 bits) |
+| Target IP Address (32 bits) |
+```
+
+- **Hardware Type**: Specifies the type of hardware (e.g., Ethernet).
+- **Protocol Type**: Specifies the type of protocol (e.g., IPv4).
+- **Hardware Size**: Length of the hardware address (e.g., 6 for Ethernet).
+- **Protocol Size**: Length of the protocol address (e.g., 4 for IPv4).
+- **Opcode**: Indicates whether the message is a request (1) or a reply (2).
+- **Sender MAC Address**: The MAC address of the sender.
+- **Sender IP Address**: The IP address of the sender.
+- **Target MAC Address**: The MAC address of the target (unknown in requests).
+- **Target IP Address**: The IP address of the target.  
+
 ---
+
+## Complete Data Flow in a Network Communication
+
+We have two networks with switches and routers, and a computer in each network. The data flow for a communication between the two computers would be as follows:
+
+
+```txt
+                     DNS Server + Other Servers
+                             |
+                             | 
+      Computer A (Source)    |                    Computer B (Destination)
+      -----------------      |                    -----------------
+                |            |                              | 
+                |            |                              |
+Computer 2 --- Switch A      |                         Switch B --- Other Computer
+                |            |                              |
+                |            |                              |
+             Router A _______|                            Router B
+                |                                           |
+                |                                           |
+             Internet                                    Internet
+                |                                           |
+                |___________________________________________|
+```
+
+1. Computer A wants to communicate with Computer B, but it only knows the domain name of Computer B. 
+It sends a DNS query to the DNS server to resolve the domain name to an IP address. This is done by sending 
+a sending a UDP packet to the switch A, which then forwards it to Router A, which then sends it to the DNS server.
+
+2. The DNS server responds with the IP address of Computer B, which is sent back to Computer A through the same path.
+
+3. Now that Computer A has the IP address of Computer B, it can send data to Computer B. It creates a TCP connection to Computer B's IP address and sends the data.
+This TCP packet is sent to Switch A, which forwards it to Router A, which then sends it through the internet to Router B, which then forwards it to Switch B, and finally to Computer B.
+
+4. Computer B receives the TCP packet, processes it, and can send a response back to Computer A using the same path in reverse.
+
+--- 
+
+## Firewall
+
+--- 
 
 ## FTP 
 
@@ -796,15 +1197,8 @@ This route is used as "for everythin else, go here" for leaf routes in a tree-st
 
 ## SMTP
 
---- 
-
 
 --- 
-
-## Sub-netting
-
-
----
 
 ## Cookies
 
@@ -821,10 +1215,5 @@ Is a disclosure made by the website about how cookies are used and how he can ma
 
 --- 
 
-## Security
-
-
-
----
 
 
