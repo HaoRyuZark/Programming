@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt 
+from numpy.typing import NDArray
 import pandas as pd
 
 class PCA:
@@ -8,6 +9,9 @@ class PCA:
         self.k = k 
         self.components = None 
         self.mean = None
+        self.eig_vecs = np.array([])
+        self.eig_vals = np.array([])
+        self.pve:NDArray[np.number] = np.array([])
 
     def fit(self, X):
         
@@ -17,20 +21,25 @@ class PCA:
 
         cov = np.cov(X_standardize.T) 
 
-        eigval, eigvec = np.linalg.eig(cov)
+        eig_vals, eig_vecs = np.linalg.eig(cov)
 
-        eigvec = eigvec.T
+        eig_vecs = eig_vecs.T
         
-        sorted_indices = np.argsort(eigval)[::-1]
+        sorted_indices = np.argsort(eig_vals)[::-1]
         
-        eigval = eigval[sorted_indices]
-        eigvec = eigvec[sorted_indices]
+        self.eig_vals = eig_vals[sorted_indices]
+        self.eig_vecs = eig_vecs[sorted_indices]
         
-        self.components = eigvec[:self.k]
+        self.components = eig_vecs[:self.k]
 
     def transform(self, X):
         X = X - self.mean 
         return X @ self.components
 
+    
+    def pve(self):
+        self.pve = self.eig_vals / np.sum(self.eig_vals)
+        return self.pve
 
-
+    def cum_pve(self):
+        return np.cumsum(self.pve)

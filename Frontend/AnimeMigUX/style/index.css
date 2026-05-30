@@ -1,0 +1,71 @@
+
+/* General Styles */
+* {
+    color: white;
+    background-color: #0B2545;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+button {
+    border-radius: 5%;
+    background-color: #134174;
+}
+
+#upper_title {
+    display: inline;
+    background-color: #134174;
+    font-weight: bold;
+    padding: 10px;
+}
+
+#goto_main_bttn {
+    height:200px;
+    width: 500px;
+    font-size: 30;
+}
+
+/* Id Based Styles */
+#main_header {
+    background-color: #13315C;
+    height: 4em;
+    border: 0px;
+    display: grid;
+}
+
+#main_flex_container {
+    background-image: url("../resources/main_site_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 60em;
+    display: flexbox;
+    justify-content: center;
+}
+
+#main_footer {
+    display: flex;
+    background-color: #F4E04D;
+    background: black;
+    height:150px;
+    justify-content: center;
+}
+
+#main_footer > div {
+    background-color: #F4E04D;
+}
+
+#main_footer > a{
+    background-color: #F4E04D;
+}
+
+
+
+#main_title {
+    display: inline;
+    width: 20em;
+    height: 10em;
+}
+
+.generic_text {
+    display: inline;
+    border: 4px;
+}

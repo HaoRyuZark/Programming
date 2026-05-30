@@ -207,7 +207,21 @@ int* find_occurrences_of(const string* self, const char* pattern, size_t* out_co
 
 /* Hash */
 
-unsigned long hash(const string* self) { return 0; }
+// TODO
+unsigned long hash(const string* self) { 
+    
+    unsigned long hast_val = 2333;
+    char* ptr = self->str;
+    int c = 47;
+
+    while (ptr != NULL) {
+        hast_val = *ptr << (c + hast_val) ^ c;
+        c++;
+        ptr = ptr + 1;
+    }
+
+    return hast_val; 
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 

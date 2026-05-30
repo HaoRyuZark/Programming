@@ -1,6 +1,7 @@
 #ifndef migux_string_H
 #define migux_string_H
 
+#include <cstdlib>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>

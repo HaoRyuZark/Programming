@@ -641,3 +641,12 @@ plt.figure(figsize=(8,6))
 sb.lmplot(x='total_bill', y='tip', hue='sex', data=tips_df, 
           scatter_kws={'s': 100, 'linewidth': 0.5, 'edgecolor': 'w'})
 
+
+#####################################################################################
+
+# Parallel Coordinates
+
+data = pd.DataFrame(np.random.rand(100, 3))
+
+pd.plotting.parallel_coordinates(data, "Index", color=("#556270", "#4ECDC4", "#C7F464"))
+

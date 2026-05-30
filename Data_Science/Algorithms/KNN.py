@@ -15,7 +15,6 @@ def euclidean_dist(x,y):
 
 
 class KNN:
-
     def __init__(self, k=3, func=euclidean_dist):
         self.k = k
         self.dis_func =  func

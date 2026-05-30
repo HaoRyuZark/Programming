@@ -2,15 +2,6 @@ import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt 
 
-"""
-
-- We want to minimize the cost function 
-- We assume that we can separate the data linearly 
-
--> cost(w, b) = 1/N sum[(wX + b - y)^2]
-
-"""
-
 class Linear_Regression:
 
     def __init__(self, learning_rate=0.001, n_iters=1000):
@@ -27,12 +18,13 @@ class Linear_Regression:
         n_samples, n_features = X_train.shape 
 
         for _ in range(0, self.n_iters):
-            
+           
+            # [w_1 x_1 + b, ....]
             y_pred = X_train @ self.weights + self.bias 
             
             # Derivatives of the loss function
-            dw = (1/n_samples) * (X_train.T @ (y_pred - y_train))
-            db = (1/n_samples) * np.sum(y_pred - y_train)
+            dw = (1/n_samples) * (X_train.T @ (y_pred - y_train)) # vectorized operation
+            db = (1/n_samples) * np.sum(y_pred - y_train)  # vectorized operation
 
             self.weights = self.weights - self.learning_rate * dw
             self.bias = self.bias - self.learning_rate * db

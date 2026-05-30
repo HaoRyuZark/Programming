@@ -82,42 +82,166 @@ In Spring, a **Bean** is an object that is instantiated, assembled, and managed 
 ## Common Annotations
 
 - `@Bean` - Declares a Spring Bean which can be injected into other components. Used at method level inside a class with `@Configuration`
+
+```java
+```
+
 - `@Component` - Marks a class as a Spring-managed component. Used at class level.
+
+```java
+```
+
 - `@Configuration` - Indicates a class contains Spring Bean definitions
+
+```java
+```
+
 - `@Service` - Specialization of @Component for service layer classes
+
+```java
+```
+
 - `@Controller` - Specialization of @Component for web controllers
+
+```java
+```
+
 - `@RestController` - Combines @Controller and @ResponseBody for RESTful web services
+
+```java
+```
+
 - `@Repository` - Specialization of @Component for data access layer classes
+
+```java
+```
+
 - `@Autowired` - Automatically injects a Spring Bean into a field, constructor, or method
+
+```java
+```
+
 - `@Value` - Injects values from properties files or environment variables
+
+```java
+```
+
 - `@Qualifier` - Specifies which bean to inject when multiple options exist  
+
+```java
+```
+
 - `@Primary` - Marks a bean as the primary choice  
+
+```java
+```
+
 - `@Scope` - Defines the bean's lifecycle scope (singleton, prototype, etc.)  
+
+```java
+```
+
 - `@SpringBootApplication` - Combines @Configuration, @EnableAutoConfiguration, and @ComponentScan for main application class
+
+```java
+```
+
 - `@EnableAutoConfiguration` - Enables Spring Boot's auto-configuration feature
+
+```java
+```
+
 - `@ComponentScan` - Configures component scanning directives for use with @Configuration
+
+```java
+```
+
 - `@ConditionalOnBean` - Conditionally creates a bean based on the presence of another bean
+
+```java
+```
 - `@ConditionalOnMissingBean` - Conditionally creates a bean if another bean is not present
+
+```java
+```
+
 - `@ConditionalOnProperty` - Conditionally creates a bean based on a property value
+
+```java
+```
+
 - `@ConditionalOnClass` - Conditionally creates a bean if a specific class is present on the classpath
+
+```java
+```
+
 - `@ConditionalOnMissingClass` - Conditionally creates a bean if a specific class is not present on the classpath
+
+```java
+```
+
 - `@ConfigurationProperties` - Binds properties from application.properties or application.yml to a Java class
+
+```java
+```
 
 --- 
 
-## Test Annotations
+## Common Test Annotations
 
 - `@SpringBootTest` - Loads the full application context for integration tests. We can also specify which classes and arguments to use.
+```java
+```
+
 - `@MockBean` - Creates a mock bean for testing purposes
+```java
+```
+
 - `@Test` - Marks a method as a test case
+
+```java
+```
+
 - `@BeforeEach` - Runs before each test method
+
+```java
+```
+
 - `@AfterEach` - Runs after each test method
+
+```java
+```
+
 - `@BeforeAll` - Runs once before all test methods
+
+```java
+```
+
 - `@AfterAll` - Runs once after all test methods
+
+```java
+```
+
 - `@DisplayName` - Provides a custom name for test methods
+
+```java
+```
+
+
 - `@Nested` - Groups related test methods together
+
+```java
+```
+
 - `@InjectMocks` - Injects mock beans into the class under test
+
+```java
+```
+
 - `@Mock` - Creates a mock object for testing
+
+```java
+```
 
 --- 
 
