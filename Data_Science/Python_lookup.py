@@ -1,3 +1,13 @@
+
+
+###############################################################################
+
+# GIL 
+
+# The global interpreter lock is mutex which allows only one thread to run python code at the time
+# The reason for this, it to make the reference counting system to be thread-safe, but it has the effect that true parallelism is impossible.
+# The GIL is progressively being removed to increase the performance.
+
 ###############################################################################
 
 # Data Types 

@@ -23,8 +23,8 @@ class Logistic_Regression:
             
             y_pred = self.sigmoid(self.theta(X))
               
-            dw = (1/n_samples) * (X.T @ (y_pred - y)) # vector
-            db = (1/n_samples) * np.sum((y_pred - y)) # number
+            dw = (1/n_samples) * (X.T @ (y_pred - y)) # outputs vector
+            db = (1/n_samples) * np.sum((y_pred - y)) # outputs number
 
             self.weights = self.weights - (self.learning_rate * dw)
             self.bias = self.bias - (self.learning_rate * db)

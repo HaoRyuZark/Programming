@@ -8,21 +8,132 @@ import numpy as np
 
 --- 
 
+## Numpy Array Object 
+
+This is the main object onto which most of the operations are performed. 
+The dimensions are called axes with 0 for rows, 1 for columns, 2 for depth, etc.
+
+### Attributes of the Numpy Array 
+
+- `ndarray.ndim`: number of dimensions.
+
+- `ndarray.shape`: dimensions of the array.
+
+- `ndarray.size`: total number of elements in the array.
+
+- `ndarray.dtype`: object with information about the data type.
+
+- `ndarray.itemsize`: size in bytes of the each element.
+
+- `ndarray.data`: address of the buffer with the actual elements. 
+
+
+```python 
+import numpy as np
+data: np.ndarray = np.array([[1, 2, 3] for _ in range(3)])
+
+print(data)
+print(f"Dimensions: {data.ndim}")
+print(f"Shape: {data.shape}")
+print(f"Size : {data.size}")
+print(f"dtype : {data.dtype}")
+print(f"itemsize : {data.itemsize}")
+print(f"data: {data.data}")
+```
+
+### Axis 
+
+**Axis** is a common parameter of different numpy and pandas features. It is used to 
+define the axis a function should act onto. For example for a 2d array we have 2 dimension 0 and 1. 
+
+```python
+
+# 3 by 3 matrix with three rows with [1,2,3]
+axis_example = np.array([np.arange(3) for _ in range(3)]) 
+
+# axis=0: rows
+# axis=1: cols 
+
+# Mean vector
+m = np.mean(axis_example, axis=1) # adds every row vector and divides its by n
+
+# Sum of the rows
+m = np.mean(axis_example, axis=0) # adds every column vector and divides its by n
+
+# Axis  Axis -> (1)
+#   |   [[1   3   4],
+#   "   [1   1   1 ],
+#  (0)  [0   2   4]]
+```
+
+#### Example: Axises for 4D array
+
+- **axis = 0**: act on the 3d arrays.
+- **axis = 1**: act on the 2d arrays in each 3d array.
+- **axis = 2**: act on the rows in each 2d array.
+- **axis = 3**: act on the col in each 2d array.
+
+### Member Functions
+
+--- 
+
 ## Array & Matrices Initialization
 
-Basic Initialization techinques: 
+Basic Initialization techniques: 
 
 - `np.array()`:
+
+
+Example: 
 
 ```python 
 arr1 = np.array([1, 2, 3])            # create array from list
 arr2 = np.array([[1, 2], [3, 4]])     # 2D array
-ele = arr2[0,0]                       #accesing element at [0][0]
+
+ele = arr2[0,0]                       #accessing element at [0][0]
+```
+
+### Array Creation with specified data type 
+
+Example: 
+
+```python
+floating_zeros = np.array((4, 4), dtype=np.float64)
+rang = np.arange(0, 100, 2, dtype=np.int8)
+```
+
+### Creating An Array With An Specific Dimensions
+
+Example: 
+
+```python
+data2: np.ndarray = np.array([1, 2, 3, 4], ndmin=2)
+```
+### Other types of Array Creation
+
+- `np.arange()`:
+- `np.linspace()`:
+- `np.logspace()`: 
+- `np.ones()`:
+- `np.zeros()`:
+- `np.eye()`:
+- `np.empty(shape, dtype)`:
+
+```python 
+arr3 = np.zeros((2, 3))               # 2x3 matrix of zeros
+arr4 = np.ones((3, 2))                # 3x2 matrix of ones
+arr5 = np.eye(3)                      # 3x3 identity matrix
+arr7 = np.linspace(0, 1, 5)           # 5 points between 0 and 1 inclusive
+arr8 = np.logspace(-9, 3, num=13)     # array with numbers evely spaces on a logarithmic scale
 ```
 
 --- 
 
 ## Indexing
+
+Each axis gets is own index for using `[start:stop:step, start:stop:end, ...]`
+
+Example: 
 
 ```python 
 arr2d = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
@@ -39,6 +150,13 @@ print("Select multiple elements:\n", arr2d[[0,2],[1,2]]) # elements at (0,1) and
 --- 
 
 ## View & Copy 
+
+Sometimes when working with arrays, the data is copied and sometimes not, depending on the type of operation.
+For example assigning an array to another variable it is just a **view**, which is an object pointing to the same data, a **shallow copy**. 
+This means that changes to the view affect the main object.
+
+To create a **deep copy** we use the `np.copy()` to replicate the object.
+
 
 - `view()`:
 
@@ -59,104 +177,17 @@ print("Original array:", original)
 print("View after modification:", view)
 print("Copy after modification:", copy)
 
+a = np.array([[ 0,  1,  2,  3],
+              [ 4,  5,  6,  7],
+              [ 8,  9, 10, 11]])
+c = a 
 
+c = c.reshape(2, 6) # c has another perspective of a's data but it still points to the same data
+c[0 ,4] = 66666 # affects a but it changes the element a[1, 0]
 ```
+ 
 --- 
-
-## Identity Matrix
-
-- `np.eye()`:
-
-```python 
-arr5 = np.eye(3)                      # 3x3 identity matrix
-```
-
---- 
-
-## Points in a Range 
-
-- `np.linspace()`:
-
-```python 
-arr7 = np.linspace(0, 1, 5)           # 5 points between 0 and 1 inclusive
-```
-
---- 
-
-## Ones and Zeroes 
-
-- `np.zeros()`
-
-- `np.ones()`
-
-```python 
-arr3 = np.zeros((2, 3))               # 2x3 matrix of zeros
-arr4 = np.ones((3, 2))                # 3x2 matrix of ones
-```
-
---- 
-
-## Points in a range in a logarithmic scale 
-
-- `np.logspace()`: 
-
-```python 
-arr8 = np.logspace(-9, 3, num=13)     # array with numbers evely spaces on a logarithmic scale
-```
-
---- 
-
-## Accessing Attributes 
-
-- `shape`:
-- `dtype`:
-- `ndim`:
-- `size`:
-
-```python 
-print("Array:", arr)
-print("Shape:", arr.shape)
-print("Data type:", arr.dtype)
-print("Number of dimensions:", arr.ndim)
-print("Size (total elements):", arr.size)
-```
-
---- 
-
-## Axis 
-
-**Axis** is a common parameter of different numpy and pandas features. It is used to 
-define the axis a function should act onto. For example for a 2d array we have 2 dimension 0 and 1. 
-
-```python
-
-# 3 by 3 matrix with three rows with [1,2,3]
-axis_example = np.array([np.arange(3) for _ in range(3)]) 
-
-# axis=0: rows
-# axis=1: cols 
-
-# Mean vector 
-m = np.mean(axis_example, axis=1)
-
-# Sum of the rows
-m = np.mean(axis_example, axis=0)
-
-# Axis  Axis -> (1)
-#   |   1   3   4
-#   "   1   1   1 
-#  (0)  0   2   4
-```
-
-### Example: Axises for 4D array
-
-- **axis = 0**: act on the 3d arrays.
-- **axis = 1**: act on the 2d arrays in each 3d array.
-- **axis = 2**: act on the rows in each 2d array.
-- **axis = 3**: act on the col in each 2d array.
-
---- 
-
+ 
 ## Sorting 
 
 - `np.sort()`:
@@ -210,13 +241,11 @@ print("Choice", rng.choice(arr4, size=(3,3))) # the size allows us to choose the
 
 --- 
 
-## Reshape & Flatten 
+## Reshape, Flatten & Ravel
 
-- `np.arange()`:
+- `np.reshape()`: Changes the shape of the array to the new specified dimensions as as long as the elements can be ordered in that manner.
 
-- `np.reshape()`:
-
-- `flatten()`:
+- `flatten()`: Given a n-dimensional array, `flatten` returns all elements items inside as a single list.
 
 - `ravel()`:
 
@@ -245,7 +274,7 @@ print("Column vector:", col_vec)
 
 ## Transpose & Swap Axes
 
-- `.T`:
+- `.T` or `np.transpose()`:
 
 - `swapaxes()`:
 
@@ -355,6 +384,18 @@ print("Dot product:", np.dot(arr10, arr11))
 print("Root:", np.sqrt(arr10))
 print("Rounding:", np.round(arr11))
 ```
+--- 
+
+## Trigonometry 
+
+--- 
+
+## Argmax & Argmin
+
+- `np.argmax()`
+- `np.argmin()`
+
+--- 
 
 ## Dot 
 
