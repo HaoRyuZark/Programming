@@ -683,3 +683,23 @@ The mapping is done is done from one **graphene** a unit of human writting to on
 
 This version of **UTF** is a way of translating code points to 1 or 4 bytes.
 
+--- 
+
+## Memory Hirarchy 
+
+--- 
+
+## Data Corruption & Life Expectancy 
+
+- **SSD**: The life expectancy can vary from 5 ot 10 years. They can retain data for up to 2 years if not powered on.
+
+- **HDD**: They should last 4 to 7 years depending on the use, and enviroment. On the other side they can ratain data for at least 
+20 years.
+
+- **Flash Drive**: One year at max for both.
+
+### Data Corruption Mitigation 
+
+- Backups.
+- Re-writing contents.
+

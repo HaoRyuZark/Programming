@@ -10,6 +10,23 @@
 
 ###############################################################################
 
+# Closures 
+
+# They are first class functions which can capture variables of the scope in which they are defined 
+
+def closure_example(s:str):
+    message = "Hello "
+
+    def add_world():
+        print(message + s)
+    
+    return add_world
+
+func = closure_example("world")
+func()
+
+###############################################################################
+
 # Data Types 
 
 num: int = 10
@@ -60,7 +77,7 @@ def apply_function(func, value):
 
 # Classes and Objects 
 
-class Person:
+class Person_2:
 
     def __init__(self, name: str, age: int):
         self.name = name
@@ -70,9 +87,9 @@ class Person:
         return f"Hello, my name is {self.name} and I am {self.age} years old."
 
     def __add__(self, other): # operator overloading
-        return Person(f"{self.name} & {other.name}", self.age + other.age)
+        return Person_2(f"{self.name} & {other.name}", self.age + other.age)
 
-person = Person("Alice", 30)
+person = Person_2("Alice", 30)
 print(person.greet())
 
 ############################################################################### 
@@ -80,6 +97,8 @@ print(person.greet())
 # dunder methods
 
 # Dunder methods allow customization of class behavior for built-in operations.
+
+# TODO: add a list of all dunder methods with their corresponding explanation
 
 class Point:
 

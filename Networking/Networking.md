@@ -243,7 +243,7 @@ thus they are not unique globally.
 
 
 - **Public**: 
-   - Assigned by the internet service provider. 
+   - Assigned by the internet service provider for the router.
    - It is also unique.
    - Routable for the internet.
 
@@ -251,7 +251,6 @@ The process which translates from private to public and vice versa is the so cal
 does exactly what the name implies and adds a layer of security by masking the private address.
 
 > No traffic between private to private is allowed, but traffic between private to public and public to private is allowed.
-
 
 ### Classes of IPv4 
 
@@ -277,6 +276,11 @@ does exactly what the name implies and adds a layer of security by masking the p
    - Dynamically assigned by a network.
    - Flexible.
    - Widely used for consumer devices.
+
+### Assignment Of Ip Addresses
+
+- **Automatic Prive IP Adressing**: uses 169.254.0 to 169.254.255.255 without the first and last 256 adresses. It uses ARP to check than an adress is not in used in the 
+local network.
 
 ---
 
@@ -972,25 +976,63 @@ consists on a static list of HSTS sites maintained by the browsers locally.
 
 --- 
 
+## Domains
+
+
+--- 
+
 ## DNS
 
 **Domain Name System** is a method of mapping domain names in plain text to actual IP-Address of a server.
 
+- The IP-address of the resolver of the **resolver** is hardcoded into the router by the internet service provider. 
+the goes for the address of the **root**, **tld** and **authoritative name** server in the **resolver**.
+
+- The **stub resolver** is the client dns running in you computer. 
+
+- The **recursive resolver** is a DNS server which does not know the IP-address if not chached but it knows the addresses of the **root** servers. 
+
+- **Root Servers** know the right **ANS** servers to ask for the given ip address. 
+
+- The **Authoritative Name Server** is the one server containing the actual ip address which knows the targets ip address.
+
+### Root Servers 
+
+
 ### Steps
 
-1. Check if the IP address is stored if not, then 
+1. The stup resolver checks the cache and if the IP is not in the cache a request is triggered to hardcoded IP-address of the one program used to 
+ask for the domain.
 
-2. The request is redirected to a **resolver** which also checks for the IP-Address, but if not found then: it communicates with a **root** server which tells our 
-resolver to which **TLD Top Level Domain Server** to talk which finally tells the resolver the IP. If not, then
+2. A request is triggered to the recursive resolver which will the **root** server of an specific **top level domain** like `.com`
 
-3. The resolver is redirected to an specific **Authoritative Name Server** which always know the IP address
+3. The resolver is redirected to an specific **Authoritative Name Server** which always know the IP address.
+
+4. The address is given to recursive resolver. 
+
+5. The resolver returns the id to the computer. 
+
+### Structure 
+
+- **Top Level Domain**: This is the portion at the end of the url commonly: `.com, .org, .io`
+- **Second Level Domain**:
+- 
+
+```text 
+   aaaaaaaaaaaaaaaaaa.google.com
+                              |
+                     Top level domain
+```
+
+### Zone Files 
+
 
 --- 
 
 ## SSH
 
 Secure shell is a protocol used for providing a secure encrypted connection to a remote machine. It uses asymmetric encryption
-and commonly port 22 for the connection.
+and commonly **port 22** for the connection.
 
 ### Layout
 
@@ -1013,30 +1055,17 @@ A **repeater** its a device which regenerates signals, it is used to prevent sig
 
 ---
 
-## Hub
-
-A **hub** is a multi-port-repeater which allows to connect all devices in a network indirectly via itself.
-
----
-
 ## Bridge
 
 They sit between hub-connected host which allow to regulate the data send by hubs. For example: if we have to
 networks connected via two hubs, the bridge between the two ensures that only data from one network reaches the
 other if and only if necessary, other data emitted by the hub does not cross the bridge.
 
----
+--- 
 
-## Ethernet
+## Hub 
 
-**Ethernet** is a family of networking technologies used for LANs. It is concerned with the physical and data link layers.
-For example, it defines the frame structure, the MAC addressing, and the method of access to the shared medium (CSMA/CD).
-
-- **Ethernet frames** consist of a header, payload, and trailer. The header contains the destination and source MAC addresses, while the trailer includes error-checking information (CRC).
-
-- **CSMA/CD (Carrier Sense Multiple Access with Collision Detection)** is a protocol used in Ethernet networks to manage access to the shared communication medium. It allows devices to detect collisions and retransmit data when necessary, ensuring efficient communication in a network with multiple devices.
-
-- **Ethernet Cable**: is a type of network cable used to connect devices in an Ethernet network. It typically consists of twisted pairs of copper wires and is used for wired connections.
+A **hub** is a device which redirects data in a local network, but it always send the data to all devices instead of being selective like a swithc. 
 
 --- 
 
@@ -1061,8 +1090,8 @@ flooding only is a send across all of the open ports of the switch.
 
 ## Modem
 
-A **modem** is a device that modulates and demodulates signals for communication over telephone lines or other communication mediums.
-It is used to connect a local network to the internet by converting digital data from the computer into analog signals for transmission and vice versa.
+A **modem** demodulates incomning analog signals into a digital signal and modulates outcoming signals as analog signals. 
+Inside home networks routers, modems and even swithces are put into one device. 
 
 --- 
 
@@ -1081,6 +1110,7 @@ A node that forwards IPv6 packets not addressed to itself.
 
 - They maintain a map of all the networks they know about (**routing table**).
 - **Routes** are the starts bit sequences of an network. 
+- They assign an ip address to every computers in the local network. 
 
 ### Population Methods For The Routing Table
 
@@ -1099,6 +1129,30 @@ It is an special route mostly written as `0.0.0.0 /0`. The address is just zero 
 This route is used as "for everything else, go here" for leaf routes in a tree-structure.
 
 ---
+
+## Default Gateway
+
+The **default gateway** is commonly the address of the router which allows us to communicate with outside networks. 
+When the target is in the same network the address of the switch is used instead for the communication. 
+
+### Use with the Subnetmask 
+
+Using the subnetmask it is determined which devices are inside the network. This is configured by the admin.
+
+--- 
+
+## Ethernet
+
+**Ethernet** is a family of networking technologies used for LANs. It is concerned with the physical and data link layers.
+For example, it defines the frame structure, the MAC addressing, and the method of access to the shared medium (CSMA/CD).
+
+- **Ethernet frames** consist of a header, payload, and trailer. The header contains the destination and source MAC addresses, while the trailer includes error-checking information (CRC).
+
+- **CSMA/CD (Carrier Sense Multiple Access with Collision Detection)** is a protocol used in Ethernet networks to manage access to the shared communication medium. It allows devices to detect collisions and retransmit data when necessary, ensuring efficient communication in a network with multiple devices.
+
+- **Ethernet Cable**: is a type of network cable used to connect devices in an Ethernet network. It typically consists of twisted pairs of copper wires and is used for wired connections.
+
+--- 
 
 ## Network Architecture
 
@@ -1122,9 +1176,13 @@ in between the layer to distribute traffic accordingly from the routers. More ex
 A workflow of ARP is as follows:
 
 1. A host needs to send a packet to another host on the same local network, but it only knows the destination's IP address.
-2. The host broadcasts an ARP request to all devices on the local network, asking "Who has this IP address? Tell me your MAC address."
+
+2. The host broadcasts an ARP request to all devices on the local network (broadcast), asking "Who has this IP address? Tell me your MAC address."
+
 3. The device with the matching IP address responds with an ARP reply, providing its MAC address to the requester.
-4. The requesting host receives the ARP reply and updates its ARP table with the new IP-to-MAC mapping, allowing it to send the packet directly to the destination using the resolved MAC address.
+
+4. The requesting host receives the ARP reply and updates its ARP table with the new IP-to-MAC mapping, allowing it to send the packet directly to the destination using 
+the resolved MAC address.
 
 ### ARP Packet Structure
 
@@ -1147,6 +1205,15 @@ A workflow of ARP is as follows:
 - **Sender IP Address**: The IP address of the sender.
 - **Target MAC Address**: The MAC address of the target (unknown in requests).
 - **Target IP Address**: The IP address of the target.  
+
+### Types of ARP Entries 
+
+- **Dynamic**: Updated via a broadcast request during the update process. 
+- **Static**: Manually entered in the table via the **arp** command using the targets ip and mac-address: 
+
+```bash 
+arp -s ip_addr mac_addr
+```
 
 ---
 

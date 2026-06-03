@@ -91,6 +91,7 @@ let obj  = { x: 1 };
 let fn   = function() {};
 ```
 
+
 **Checking types:**
 ```js
 typeof 42           // "number"
@@ -382,7 +383,7 @@ const val = (1, 2, 3); // val = 3
 
 ### Functions
 
-Functions are **first-class citizens** in JavaScript — they can be assigned, passed, and returned like any value.
+Functions are **first-class citizens** in JavaScript which means that they can be assigned, passed, and returned like any value.
 
 ```js
 // Function declaration — hoisted (can call before definition)
@@ -983,8 +984,6 @@ form.addEventListener("submit", (e) => {
 });
 ```
 
-
-
 ---
 
 ## Object-Oriented Programming
@@ -1058,6 +1057,36 @@ Object.defineProperty(person, "id", {
   configurable: false  // cannot delete or redefine
 });
 ```
+
+### Prototypes
+
+Every object has a hidden `[[Prototype]]` link forming the **prototype chain**.
+
+```js
+// Prototype chain lookup
+const arr = [1, 2, 3];
+// arr → Array.prototype → Object.prototype → null
+
+// Object.create — create object with specific prototype
+const proto = {
+  greet() {
+    return `Hi, I'm ${this.name}`;
+  }
+};
+
+const alice = Object.create(proto);
+alice.name = "Alice";
+alice.greet(); // "Hi, I'm Alice"
+
+// Check prototype chain
+Object.getPrototypeOf(alice) === proto; // true
+proto.isPrototypeOf(alice);             // true
+
+// hasOwnProperty vs inherited
+alice.hasOwnProperty("name");   // true  — own property
+alice.hasOwnProperty("greet");  // false — inherited
+```
+
 
 ### Classes
 
@@ -1163,35 +1192,6 @@ class Temperature extends Comparable(Serializable(Object)) {
   }
   valueOf() { return this.celsius; }
 }
-```
-
-### Prototypes
-
-Every object has a hidden `[[Prototype]]` link forming the **prototype chain**.
-
-```js
-// Prototype chain lookup
-const arr = [1, 2, 3];
-// arr → Array.prototype → Object.prototype → null
-
-// Object.create — create object with specific prototype
-const proto = {
-  greet() {
-    return `Hi, I'm ${this.name}`;
-  }
-};
-
-const alice = Object.create(proto);
-alice.name = "Alice";
-alice.greet(); // "Hi, I'm Alice"
-
-// Check prototype chain
-Object.getPrototypeOf(alice) === proto; // true
-proto.isPrototypeOf(alice);             // true
-
-// hasOwnProperty vs inherited
-alice.hasOwnProperty("name");   // true  — own property
-alice.hasOwnProperty("greet");  // false — inherited
 ```
 
 ---

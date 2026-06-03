@@ -1,5 +1,9 @@
 # Git
 
+**Git** is distributed version control system. In contrast to a central version controld system in which there is only one source of truth in the
+for of a central repository which takes cares of the version; in a distributed one, each developer has its own source of truth, and also there is a 
+central server which acts as the source of truth to which developers updload their changes.
+
 ## Commits, Branches and HEAD 
 
 - **Commits** are the units of storage which are snapshots of the working directory with an identifier of type
@@ -110,6 +114,7 @@ If successful, you'll see a message like:
 ## Resetting and Reverting
 
 - `git checkout <commit>` – Visit old commits. Due to the detached HEAD no changes should be made because they will get lost.
+- `git checkout` – Un-does the changes of the current pre-commit changes.
 - `git reset <file>` – Unstage a file
 - `git reset --hard <commit>` – Reset to a specific commit (deletes changes)
 - `git reset --soft <commit>` – Reset to a commit but keep changes staged and the working directory unchanged.
@@ -170,3 +175,18 @@ different branches. They mostly does not happen when working solo, but with a te
 
 Resolving them consist on mostly going through the conflicted files and then deciding what to add and
 what to remove.
+
+--- 
+
+## gitignore
+
+The `.gitignore` file is used to declare files or kinds o files we want git to not keep track of. 
+
+```git 
+*.env
+*.txt
+```
+
+
+
+
