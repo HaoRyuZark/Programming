@@ -1,708 +1,1065 @@
-# NumPy 
+# NumPy
 
-## Import 
+## Import
 
-```python 
+```python
 import numpy as np
 ```
 
---- 
+---
 
-## Numpy Array Object 
+## NumPy Array Object
 
-This is the main object onto which most of the operations are performed. 
-The dimensions are called axes with 0 for rows, 1 for columns, 2 for depth, etc.
+This is the main object on which most operations are performed.
+The dimensions are called axes, with 0 for rows, 1 for columns, 2 for depth, etc.
 
-### Attributes of the Numpy Array 
+### Attributes of the NumPy Array
 
 - `ndarray.ndim`: number of dimensions.
 
-- `ndarray.shape`: dimensions of the array.
+- `ndarray.shape`: tuple describing the array dimensions.
 
 - `ndarray.size`: total number of elements in the array.
 
 - `ndarray.dtype`: object with information about the data type.
 
-- `ndarray.itemsize`: size in bytes of the each element.
+- `ndarray.itemsize`: size in bytes of each element.
 
-- `ndarray.data`: address of the buffer with the actual elements. 
+- `ndarray.data`: address of the buffer containing the actual elements.
 
-
-```python 
+```python
 import numpy as np
 data: np.ndarray = np.array([[1, 2, 3] for _ in range(3)])
 
 print(data)
-print(f"Dimensions: {data.ndim}")
-print(f"Shape: {data.shape}")
-print(f"Size : {data.size}")
-print(f"dtype : {data.dtype}")
-print(f"itemsize : {data.itemsize}")
+print(f"Dimensions: {data.ndim}")    # 2
+print(f"Shape: {data.shape}")        # (3, 3)
+print(f"Size: {data.size}")          # 9
+print(f"dtype: {data.dtype}")        # int64
+print(f"itemsize: {data.itemsize}")  # 8
 print(f"data: {data.data}")
 ```
 
-### Axis 
+### Axis
 
-**Axis** is a common parameter of different numpy and pandas features. It is used to 
-define the axis a function should act onto. For example for a 2d array we have 2 dimension 0 and 1. 
+**Axis** is a common parameter in different NumPy and pandas functions. It defines which axis a function should act on. For a 2D array we have 2 dimensions: 0 and 1.
 
-```python
+#### 2D Array Example
 
-# 3 by 3 matrix with three rows with [1,2,3]
-axis_example = np.array([np.arange(3) for _ in range(3)]) 
-
-# axis=0: rows
-# axis=1: cols 
-
-# Mean vector
-m = np.mean(axis_example, axis=1) # adds every row vector and divides its by n
-
-# Sum of the rows
-m = np.mean(axis_example, axis=0) # adds every column vector and divides its by n
-
-# Axis  Axis -> (1)
-#   |   [[1   3   4],
-#   "   [1   1   1 ],
-#  (0)  [0   2   4]]
-```
-
-#### Example: Axises for 4D array
-
-- **axis = 0**: act on the 3d arrays.
-- **axis = 1**: act on the 2d arrays in each 3d array.
-- **axis = 2**: act on the rows in each 2d array.
-- **axis = 3**: act on the col in each 2d array.
-
-### Member Functions
-
---- 
-
-## Array & Matrices Initialization
-
-Basic Initialization techniques: 
-
-- `np.array()`:
-
-
-Example: 
-
-```python 
-arr1 = np.array([1, 2, 3])            # create array from list
-arr2 = np.array([[1, 2], [3, 4]])     # 2D array
-
-ele = arr2[0,0]                       #accessing element at [0][0]
-```
-
-### Array Creation with specified data type 
-
-Example: 
+- `axis=0`: acts along rows (reduces rows, producing one result per column).
+- `axis=1`: acts along columns (reduces columns, producing one result per row).
 
 ```python
-floating_zeros = np.array((4, 4), dtype=np.float64)
-rang = np.arange(0, 100, 2, dtype=np.int8)
+# 3x3 matrix where each row is [0, 1, 2]
+axis_example = np.array([np.arange(3) for _ in range(3)])
+
+# Mean across rows → one value per column
+m0 = np.mean(axis_example, axis=0)  # [0. 1. 2.]
+
+# Mean across columns → one value per row
+m1 = np.mean(axis_example, axis=1)  # [1. 1. 1.]
 ```
 
-### Creating An Array With An Specific Dimensions
+#### Example: Axes for a 4D Array
 
-Example: 
+- **axis = 0**: acts on the 3D arrays.
+- **axis = 1**: acts on the 2D arrays inside each 3D array.
+- **axis = 2**: acts on the rows inside each 2D array.
+- **axis = 3**: acts on the columns inside each 2D array.
+
+---
+
+## Array & Matrix Initialization
+
+### Basic Initialization
+
+- `np.array(object, dtype=None, ndmin=0)`: creates an ndarray from a Python sequence.
+  - `object`: a list, tuple, or nested sequence.
+  - `dtype`: desired data type (e.g., `np.float64`, `np.int32`). Inferred if not specified.
+  - `ndmin`: minimum number of dimensions the result must have.
 
 ```python
-data2: np.ndarray = np.array([1, 2, 3, 4], ndmin=2)
+arr1 = np.array([1, 2, 3])               # 1D array
+arr2 = np.array([[1, 2], [3, 4]])         # 2D array
+
+ele = arr2[0, 0]                          # 1 — element at row 0, col 0
+
+arr_min2d = np.array([1, 2, 3], ndmin=2) # shape (1, 3) instead of (3,)
 ```
-### Other types of Array Creation
 
-- `np.arange()`:
-- `np.linspace()`:
-- `np.logspace()`: 
-- `np.ones()`:
-- `np.zeros()`:
-- `np.eye()`:
-- `np.empty(shape, dtype)`:
+### Array Creation with a Specified Data Type
 
-```python 
+```python
+floating_zeros = np.zeros((4, 4), dtype=np.float64)  # 4x4 matrix of float64 zeros
+rang = np.arange(0, 100, 2, dtype=np.int8)            # even numbers 0..98 as int8
+```
+
+### Other Types of Array Creation
+
+- `np.arange(start=0, stop, step=1, dtype=None)`: similar to Python's `range()` but returns an ndarray.
+  - `start`: start of the interval (inclusive, default 0).
+  - `stop`: end of the interval (exclusive).
+  - `step`: spacing between values (default 1).
+  - `dtype`: data type of the output array.
+
+- `np.linspace(start, stop, num=50, endpoint=True, dtype=None)`: returns evenly spaced numbers over a specified interval.
+  - `start`: start of the sequence.
+  - `stop`: end of the sequence.
+  - `num`: number of evenly spaced samples (default 50).
+  - `endpoint`: if `True`, `stop` is the last sample (default `True`).
+
+- `np.logspace(start, stop, num=50, base=10.0, dtype=None)`: returns numbers evenly spaced on a logarithmic scale.
+  - `start`: exponent for the start value (`base ** start`).
+  - `stop`: exponent for the stop value (`base ** stop`).
+  - `num`: number of samples (default 50).
+  - `base`: base of the logarithmic scale (default 10).
+
+- `np.ones(shape, dtype=float)`: returns a new array filled with ones.
+  - `shape`: int or tuple of ints defining the shape.
+  - `dtype`: data type (default `float`).
+
+- `np.zeros(shape, dtype=float)`: returns a new array filled with zeros.
+  - `shape`: int or tuple of ints defining the shape.
+  - `dtype`: data type (default `float`).
+
+- `np.eye(N, M=None, k=0, dtype=float)`: returns a 2D identity-like matrix.
+  - `N`: number of rows.
+  - `M`: number of columns (default equals `N`).
+  - `k`: index of the diagonal (0 = main, positive = above, negative = below).
+
+- `np.empty(shape, dtype=float)`: returns an uninitialized array of a given shape. Values are whatever happens to be in memory — use with care.
+  - `shape`: int or tuple of ints.
+  - `dtype`: data type (default `float`).
+
+- `np.full(shape, fill_value, dtype=None)`: returns a new array filled with a given value.
+  - `shape`: int or tuple of ints.
+  - `fill_value`: scalar value to fill the array with.
+
+```python
 arr3 = np.zeros((2, 3))               # 2x3 matrix of zeros
 arr4 = np.ones((3, 2))                # 3x2 matrix of ones
 arr5 = np.eye(3)                      # 3x3 identity matrix
-arr7 = np.linspace(0, 1, 5)           # 5 points between 0 and 1 inclusive
-arr8 = np.logspace(-9, 3, num=13)     # array with numbers evely spaces on a logarithmic scale
+arr6 = np.eye(3, k=1)                 # identity with diagonal shifted one above the main
+arr7 = np.linspace(0, 1, 5)           # [0.0, 0.25, 0.5, 0.75, 1.0]
+arr8 = np.logspace(-9, 3, num=13)     # 13 values from 1e-9 to 1e3 on a log scale
+arr9 = np.full(5, 7)                  # [7, 7, 7, 7, 7]
+arr10 = np.arange(0, 10, 2)           # [0, 2, 4, 6, 8]
+arr11 = np.empty((2, 2))              # uninitialized 2x2 array
 ```
 
---- 
+---
 
-## Indexing
+## View & Copy
 
-Each axis gets is own index for using `[start:stop:step, start:stop:end, ...]`
+Sometimes when working with arrays, the data is copied and sometimes it is not, depending on the type of operation.
+Assigning an array to another variable creates just a **view** — an object pointing to the same data (a **shallow copy**).
+Changes to the view affect the original.
 
-Example: 
+To create a **deep copy**, use `copy()` to fully replicate the array.
 
-```python 
-arr2d = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
+- `arr.view(dtype=None)`: returns a new array that looks at the same data.
+  - `dtype`: if provided, the new array interprets the same memory with a different data type.
 
-# Index specific rows and columns
-rows = np.array([0, 1, 2])
-cols = np.array([2, 1, 0])
-print("Advanced indexing result:", arr2d[rows, cols]) # [30, 50, 70]
+- `arr.copy(order='C')`: returns a full deep copy of the array.
+  - `order`: memory layout — `'C'` (row-major) or `'F'` (column-major).
 
-# Using integer array indexing
-print("Select multiple elements:\n", arr2d[[0,2],[1,2]]) # elements at (0,1) and (2,2)
-```
+- `arr.base`: attribute used to check if an array is a view or a copy. Returns `None` if it is not a view, or the base array if it is.
 
---- 
-
-## View & Copy 
-
-Sometimes when working with arrays, the data is copied and sometimes not, depending on the type of operation.
-For example assigning an array to another variable it is just a **view**, which is an object pointing to the same data, a **shallow copy**. 
-This means that changes to the view affect the main object.
-
-To create a **deep copy** we use the `np.copy()` to replicate the object.
-
-
-- `view()`:
-
-- `copy()`:
-
-```python 
+```python
 original = np.array([1, 2, 3, 4, 5])
 
 view = original.view()
-
-copy = original.copy()
-copy = np.copy(original)
+copy = original.copy()   # also: np.copy(original)
 
 view[0] = 99
 copy[1] = 88
 
-print("Original array:", original)
-print("View after modification:", view)
-print("Copy after modification:", copy)
+print("Original:", original)  # [99, 2, 3, 4, 5] — affected by the view change
+print("View:", view)           # [99, 2, 3, 4, 5]
+print("Copy:", copy)           # [1, 88, 3, 4, 5] — independent
+
+print("view.base is original:", view.base is original)  # True
+print("copy.base is None:", copy.base is None)          # True
 
 a = np.array([[ 0,  1,  2,  3],
               [ 4,  5,  6,  7],
               [ 8,  9, 10, 11]])
-c = a 
 
-c = c.reshape(2, 6) # c has another perspective of a's data but it still points to the same data
-c[0 ,4] = 66666 # affects a but it changes the element a[1, 0]
+c = a.reshape(2, 6)  # reshape returns a view when possible
+c[0, 4] = 66666      # modifies a[1, 0] since they share memory
+print("Original a after view change:\n", a)
 ```
- 
---- 
- 
-## Sorting 
 
-- `np.sort()`:
+### Operations That Create Views
 
-```python 
+- Reassigning an array to another variable.
+- Reshaping.
+- Basic (simple) indexing and slicing.
+
+### Operations That Create Copies
+
+- Advanced indexing (boolean or fancy indexing).
+- Mathematical operations (produce new arrays).
+- Normal array creation.
+
+---
+
+## Indexing
+
+Each axis gets its own index using `[start:stop:step, start:stop:step, ...]`. This means we can
+access elements with the notation `arr[i, j, k]` instead of `arr[i][j][k]`, which also allows slicing.
+
+```python
+arr2d = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
+
+print(arr2d[0, 1])    # 20 — row 0, col 1
+print(arr2d[-1, -1])  # 90 — last row, last col
+```
+
+### Advanced Indexing
+
+Triggered when an array or list is used for indexing. Always returns a copy.
+
+```python
+arr2d = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
+
+# Pair up indices: selects (0,2), (1,1), (2,0)
+rows = np.array([0, 1, 2])
+cols = np.array([2, 1, 0])
+print("Diagonal-like selection:", arr2d[rows, cols])  # [30, 50, 70]
+
+# Select elements at (0,1) and (2,2)
+print("Multiple elements:", arr2d[[0, 2], [1, 2]])    # [20, 90]
+```
+
+---
+
+## Slicing
+
+General form: `arr[start:stop:step, start:stop:step, ...]` — applicable to all dimensions.
+
+- `start`: index to begin (default 0).
+- `stop`: index to end (exclusive).
+- `step`: increment between indices (default 1); use -1 for reverse order.
+
+```python
+arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+print("First row:", arr[0])                   # [1, 2, 3]
+print("Second column:", arr[:, 1])            # [2, 5, 8]
+print("Top-left 2x2:\n", arr[:2, :2])         # [[1,2],[4,5]]
+print("All cols except first:\n", arr[:, 1:]) # [[2,3],[5,6],[8,9]]
+
+# Step examples
+arr9 = np.arange(10)
+print("Every second element:", arr9[::2])     # [0, 2, 4, 6, 8]
+print("From index 2 to 8:", arr9[2:9])        # [2, 3, 4, 5, 6, 7, 8]
+print("Reversed:", arr9[::-1])                # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+```
+
+---
+
+## Boolean Array
+
+A boolean condition applied to an array returns an array of booleans of the same shape.
+
+```python
+scores = np.array([i for i in range(1, 101)])
+mask = scores <= 50
+print(mask)           # [True, True, ..., False, False]
+print(scores[mask])   # [1, 2, ..., 50]
+```
+
+---
+
+## Filtering
+
+NumPy provides different ways to select elements from arrays.
+
+- `arr[condition]`: **boolean indexing** — returns elements where `condition` is `True`.
+  Example: `arr[arr[:, 1] > 18]` returns all rows where the second column is greater than 18.
+
+- `np.where(condition, x, y)`: returns elements from `x` where `condition` is `True`, otherwise from `y`.
+  - `condition`: boolean array or expression.
+  - `x`: values to use where condition is `True`.
+  - `y`: values to use where condition is `False`.
+
+- `np.all(a, axis=None)`: returns `True` if all elements along the given axis evaluate to `True`.
+  - `a`: input array.
+  - `axis`: axis to reduce over. If `None`, checks all elements.
+
+- `np.any(a, axis=None)`: returns `True` if any element along the given axis evaluates to `True`.
+  - `a`: input array.
+  - `axis`: axis to reduce over.
+
+```python
+arr = np.arange(10)
+
+print("Boolean mask (> 5):", arr > 5)                        # [F F F F F F T T T T]
+print("Even numbers:", arr[arr % 2 == 0])                    # [0 2 4 6 8]
+print("Greater than 5:", arr[arr > 5])                       # [6 7 8 9]
+print("where (>1 keep, else 0):", np.where(arr > 1, arr, 0)) # [0 0 2 3 4 5 6 7 8 9]
+print("All > 0:", np.all(arr > 0))                           # False (0 is in arr)
+print("Any > 8:", np.any(arr > 8))                           # True
+```
+
+---
+
+## Sorting
+
+- `np.sort(a, axis=-1, kind=None)`: returns a sorted copy of the array.
+  - `a`: input array.
+  - `axis`: axis along which to sort (default -1, the last axis). Use `None` to sort the flattened array.
+  - `kind`: sorting algorithm — `'quicksort'`, `'mergesort'`, `'heapsort'`, `'stable'`.
+
+```python
 unsorted = np.array([3, 1, 4, 1, 5, 9, 2])
 sorted_arr = np.sort(unsorted)
-print("Unsorted:", unsorted)
-print("Sorted:", sorted_arr)
+print("Unsorted:", unsorted)    # original unchanged
+print("Sorted:", sorted_arr)    # [1, 1, 2, 3, 4, 5, 9]
+
+mat = np.array([[3, 1], [2, 4]])
+print("Sort each row:", np.sort(mat, axis=1))  # [[1, 3], [2, 4]]
+print("Sort each col:", np.sort(mat, axis=0))  # [[2, 1], [3, 4]]
 ```
 
---- 
+### Sorting Indexes
 
-## Sorting Indexes
+- `np.argsort(a, axis=-1, kind=None)`: returns the indices that would sort the array.
+  - `a`: input array.
+  - `axis`: axis along which to sort (default -1).
+  - `kind`: sorting algorithm (same options as `np.sort`).
 
-- `np.argsort()`:
-
-```python 
+```python
 sort_indices = np.argsort(unsorted)
-print("Sort indices:", sort_indices)
-print("Sorted using indices:", unsorted[sort_indices])
+print("Sort indices:", sort_indices)                 # [1, 6, 3, 0, 2, 4, 5]
+print("Sorted via indices:", unsorted[sort_indices]) # [1, 1, 2, 3, 4, 5, 9]
 ```
 
---- 
+---
 
-## Random numbers
+## Random Numbers
 
-- `np.random.default_rng()`:
+- `np.random.default_rng(seed=None)`: creates a new random number Generator (preferred modern API).
+  - `seed`: integer seed for reproducibility. If `None`, the generator is randomly seeded.
 
-- `np.random.randint()`:
+- `rng.integers(low, high=None, size=None, dtype=np.int64)`: random integers from `low` (inclusive) to `high` (exclusive).
+  - `low`: lower bound (inclusive).
+  - `high`: upper bound (exclusive). If `None`, values are drawn from `[0, low)`.
+  - `size`: shape of the output.
 
-- `np.random.randn()`:
+- `rng.random(size=None)`: uniform floats in `[0, 1)`.
+  - `size`: shape of the output.
 
-- `np.random.rand()`:
+- `rng.standard_normal(size=None)`: samples from the standard normal distribution N(0, 1).
+  - `size`: shape of the output.
 
-- `choice()`:
+- `rng.choice(a, size=None, replace=True, shuffle=True)`: random sample from an array or range.
+  - `a`: input array or int (if int, samples from `np.arange(a)`).
+  - `size`: shape of the output.
+  - `replace`: whether sampling is with replacement.
+  - `shuffle`: whether to shuffle the result.
 
-```python 
-rng = np.random.default_rng()           # way to create random generator
-mat = np.random.randint(0, 50, (3, 3))  # 3x3 matrix with random integers between 0 and 49
+Legacy API (still widely used):
 
-rand1 = np.random.rand(3)             # uniform [0,1)
-rand2 = np.random.randn(3)            # normal distribution
-rand3 = np.random.randint(0, 10, 5)   # random integers between 0 and 9
+- `np.random.randint(low, high=None, size=None, dtype=int)`: random integers (legacy).
+- `np.random.rand(*d)`: uniform `[0, 1)` with shape `d` (legacy).
+- `np.random.randn(*d)`: standard normal with shape `d` (legacy).
+- `np.random.choice(a, size=None, replace=True)`: random sample (legacy).
 
-print("Random uniform:", rand1)
-print("Random normal:", rand2)
-print("Random integers:", rand3)
-print("Choice", rng.choice(arr4, size=(3,3))) # the size allows us to choose the dimentsions of the choise in this case 3 by 3 array 
+```python
+rng = np.random.default_rng(seed=42)           # reproducible generator
+
+mat = rng.integers(0, 50, (3, 3))              # 3x3 matrix, integers in [0, 49]
+rand1 = rng.random(3)                          # uniform [0, 1), shape (3,)
+rand2 = rng.standard_normal(3)                 # N(0,1), shape (3,)
+rand3 = rng.choice(np.arange(10), size=5, replace=False)  # 5 unique values from 0..9
+
+print("Random integers:\n", mat)
+print("Uniform [0,1):", rand1)
+print("Standard normal:", rand2)
+print("Choice (no replace):", rand3)
+
+# Legacy API
+rand_legacy = np.random.randint(0, 10, 5)  # random ints in [0, 9]
 ```
 
---- 
-
-## Reshape, Flatten & Ravel
-
-- `np.reshape()`: Changes the shape of the array to the new specified dimensions as as long as the elements can be ordered in that manner.
-
-- `flatten()`: Given a n-dimensional array, `flatten` returns all elements items inside as a single list.
-
-- `ravel()`:
-
-```python 
-arr = np.arange(12)
-print("Original:", arr)
-
-reshaped = arr.reshape(3, 4)         # the reshape only works if the total number of elements matchs
-print("Reshaped (3x4):\n", reshaped)
-
-reshaped = arr.reshape(2, 3, 4)     # in this case we repeat the process two times given us the old output of an array -> [reshaped, reshaped]
-print("Reshaped again:\n", reshaped)
-
-flattened = reshaped.flatten()
-print("Flattened:", flattened)
-
-raveled = reshaped.ravel() # similar to flatten but returns a view if possible
-print("Raveled:", raveled)
-
-col_vec = np.arange(12).reshape(-1, 1) # when passing -1 numpy figures out the other dimension
-col_vec = np.arange(12).reshape(12, 1) # same result as above
-print("Column vector:", col_vec)
-```
-
---- 
-
-## Transpose & Swap Axes
-
-- `.T` or `np.transpose()`:
-
-- `swapaxes()`:
-
-```python 
-mat = np.array([[1, 2, 3], [4, 5, 6]])
-print("Original matrix:\n", mat)
-print("Transpose:\n", mat.T)
-
-arr3d = np.arange(24).reshape(2, 3, 4)
-print("Original 3D shape:", arr3d.shape)
-print("Swap axes (0 and 2):", arr3d.swapaxes(0, 2).shape)
-```
-
---- 
-
-## Concatenation & Stacking 
-
-- `np.concatenate()`:
-
-- `np.vstack()`:
-
-- `np.hstack()`:
-
-- `np.dstack()`:
-
-- `np.column_stack()`:
-
-```python 
-a = np.array([[1, 2], [3, 4]])
-b = np.array([[5, 6]])
-
-concat = np.concatenate((a, b), axis=0)
-print("Concatenated along rows:\n", concat)
-
-stacked_v = np.vstack((a, b))
-print("Stacked vertically:\n", stacked_v)
-
-stacked_h = np.hstack((a, np.array([[7], [8]])))
-print("Stacked horizontally:\n", stacked_h)
-
-stacked_d = np.dstack((a, a))
-print("Stacked depth-wise:\n", stacked_d)
-
-column_stack = np.column_stack((a, b))
-print("Stacked side by side:\n", stacked_d)
-```
-
---- 
-
-## Blocks 
-
-Numpy blocks allows us to construct matrices using other matrices as lego blocks 
-The only criteria is that the dimenions match together.
-
-- `np.block()`:
-
-```python 
-b = np.block([[np.eye(2) * 2, np.zeros((2,3))], [np.ones((3,2)), np.eye(3) * 3]])
-```
-
---- 
-
-## Slicing 
-
-General form: `arr[start:stop:step, ..]` we can apply this to all dimensions becuase of the access via arr[idx_dim1, idx_dim2, ..]
-
-- `start`: index to begin (default 0)
-- `stop`: index to end (exclusive)
-- `step`: increment between indices (default 1)
-
-```python 
-arr8 = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-
-print("Original:\n", arr8)
-print("First row:", arr8[0])                     # row 0
-print("Second column:", arr8[:, 1])              # all rows, col 1
-print("Top-left 2x2 subarray:\n", arr8[:2, :2])  # rows 0-1, cols 0-1
-print("Select column 0", arr2[:, 0])
-print("Selection only all cols except the first\n", arr[0:, 1:] )
-
-# Examples with step
-arr9 = np.arange(10)
-
-print("Original:", arr9)
-print("Every second element:", arr9[::2])        # step = 2
-print("From index 2 to 8:", arr9[2:9])            # start=2, stop=9
-print("Reversed array:", arr9[::-1])             # negative step
-```
-
---- 
-
-## Arithmetic
-
-```python 
-arr10 = np.array([1, 2, 3])
-arr11 = np.array([4, 5, 6])
-
-print("Scalar multiplication:", arr10 * 2)
-print("Scalar addition:", arr10 + 2)
-
-print("Add:", arr10 + arr11)
-print("Subtract:", arr11 - arr10)
-print("Multiply:", arr10 * arr11)
-print("Power:", arr10 ** arr11)
-print("Divide:", arr11 / arr10)
-print("Dot product:", np.dot(arr10, arr11))
-print("Root:", np.sqrt(arr10))
-print("Rounding:", np.round(arr11))
-```
---- 
-
-## Trigonometry 
-
---- 
-
-## Argmax & Argmin
-
-- `np.argmax()`
-- `np.argmin()`
-
---- 
-
-## Dot 
-
-- `np.dot()`:
-
---- 
-
-## Outher 
-
-- `np.outher()`:
-
---- 
-
-## Matrix Multiplication 
-
-- `@`:
-
-```python 
-
-```
-
---- 
-
-## Boolean Array 
-
-```python 
-scores = np.array([i for i in range(1,101)])
-print(scores <= 50) # prints a boolen array 
-```
-
---- 
+---
 
 ## Broadcasting
 
-This allows NumPy to perform operations on arrays with different shapes by virtually expanding dimensions 
-so they mathc the larger array's shape. 
+This allows NumPy to perform operations on arrays with different shapes by virtually expanding dimensions
+to match the larger array's shape.
 
-For this to work the dimensions should mathc or one of them has to 1. 
+**Broadcasting rule**: two dimensions are compatible if they are equal or one of them is 1.
 
-- Works: (4,4) (4,1) at least one dimension matches or is 1.
+> Works: `(4, 4)` and `(4, 1)` — the second dimension of the second array is 1, so it broadcasts.
 
-- Fails: (2,4) (3, 5) no dimensions match.
+> Fails: `(2, 4)` and `(3, 5)` — no dimensions match or are 1.
 
-
-```python 
-arr12 = np.array([1, 2, 3])
-
-print("Broadcast add scalar:", arr12 + 5)
-print("Broadcast multiply scalar:", arr12 * 2)
-
-matrix = np.ones((3, 3))
-vec = np.array([1, 2, 3])
-print("Matrix + Vector broadcasting:\n", matrix + vec)
-```
-
---- 
-
-## Aggreate Functions 
-
-- `sum()`:
-
-- `mean()`:
-
-- `max()`:
-
-- `min`:
+When broadcasting applies, the smaller array is left-padded with size-1 dimensions until shapes match.
 
 ```python
-arr13 = np.array([[1, 2, 3], [4, 5, 6]])
-print("Sum:", arr13.sum())
-print("Column-wise sum:", arr13.sum(axis=0))
-print("Row-wise sum:", arr13.sum(axis=1))
-print("Mean:", arr13.mean())
-print("Max:", arr13.max())
-print("Min:", arr13.min())
+arr = np.array([1, 2, 3])
+
+print("Add scalar:", arr + 5)         # [6, 7, 8]
+print("Multiply scalar:", arr * 2)    # [2, 4, 6]
+
+matrix = np.ones((3, 3))
+vec = np.array([1, 2, 3])             # shape (3,) → broadcasts to (3, 3)
+print("Matrix + row vector:\n", matrix + vec)
+
+col_vec = np.array([[1], [2], [3]])   # shape (3, 1) → broadcasts to (3, 3)
+print("Matrix + col vector:\n", matrix + col_vec)
 ```
 
---- 
+### Boolean broadcasting with np.where
 
-## Filtering 
+```python
+ages = np.array([12, 24, 35, 45, 60, 72])
+labels = np.array(["Minor", "Adult"])
+result = np.where(ages > 18, labels[1], labels[0])
+print("Labels:", result)  # ['Minor' 'Adult' 'Adult' 'Adult' 'Adult' 'Adult']
 
-Numpy provides different version for getting different views of our arrays. 
 
-- **Boolean Indexing**:
+### Assignment broadcasting 
 
-- **Boolean Condition**:
-
-- `np.where()`:
-
-```python 
-arr14 = np.arange(10)
-
-print("Original:", arr14)
-print("Array of booleans, based on a boolean condition (greater than 5):", arr14 > 5)
-print("Even numbers:", arr14[arr14 % 2 == 0])
-print("Greater than 5:", arr14[arr14 > 5])
-print("Array with elements which obey the condition:", np.where(arr14 > 1, arr14, 0))
+```python
+arr = np.array([[1, 2, 3] for _ in range(3)])
+arr[:,0] = 10 # assigning the value 10 to all of the first column element
 ```
 
---- 
+---
 
-## Linear Algebra 
+## Array Manipulation
 
-- `np.linalg.det()`:
+### Reshape, Flatten & Ravel
 
-- `np.linalg.inv()`:
+- `arr.reshape(shape)` or `np.reshape(a, newshape)`: changes the shape of the array without changing its data, as long as the total number of elements is preserved. Use `-1` for one dimension to let NumPy infer its size.
+  - `shape`: tuple of ints defining the new shape.
 
-- `np.linalg.eig()`:
+- `arr.flatten(order='C')`: returns a 1D copy of the array.
+  - `order`: `'C'` (row-major), `'F'` (column-major), `'A'` (Fortran if Fortran-contiguous, else C).
 
-- `np.linalg.matrix_rank()`:
+- `arr.ravel(order='C')`: returns a 1D array (a view if possible, otherwise a copy).
+  - `order`: same as `flatten`.
 
-- `np.linalg.norm()`:
+- `np.transpose(a, axes=None)` or `arr.T`: reverses or permutes the axes of an array.
+  - `a`: input array.
+  - `axes`: tuple permuting the axes. If `None`, reverses all axes.
 
-- `np.linalg.solve()`:
+```python
+arr = np.arange(12)
 
-```python 
+reshaped = arr.reshape(3, 4)        # 3 rows, 4 cols — same 12 elements
+print("Reshaped (3x4):\n", reshaped)
+
+auto_reshaped = arr.reshape(3, -1)  # NumPy infers 4 columns
+print("Auto-reshaped (3x?):\n", auto_reshaped)
+
+reshaped3d = arr.reshape(2, 3, 2)   # 3D: 2 blocks of 3x2
+print("Reshaped (2,3,2):\n", reshaped3d)
+
+flattened = reshaped.flatten()      # always a copy
+print("Flattened:", flattened)
+
+raveled = reshaped.ravel()          # view if possible
+print("Raveled:", raveled)
+
+col_vec = np.arange(4).reshape(-1, 1)  # shape (4, 1)
+print("Column vector:\n", col_vec)
+
+mat = np.array([[1, 2, 3], [4, 5, 6]])
+print("Transposed:\n", mat.T)          # shape (3, 2)
+```
+
+### Removing Duplicates
+
+- `np.unique(ar, return_index=False, return_inverse=False, return_counts=False, axis=None)`: returns the sorted unique elements of an array.
+  - `ar`: input array.
+  - `return_index`: if `True`, also returns the indices of the first occurrence of each unique value.
+  - `return_inverse`: if `True`, also returns the indices to reconstruct the original array.
+  - `return_counts`: if `True`, also returns the count of each unique value.
+  - `axis`: axis along which to operate. If `None`, the array is flattened first.
+
+```python
+arr = np.array([3, 1, 2, 1, 3, 3, 2])
+print("Unique:", np.unique(arr))  # [1, 2, 3]
+
+unique_vals, counts = np.unique(arr, return_counts=True)
+print("Unique:", unique_vals)  # [1, 2, 3]
+print("Counts:", counts)       # [2, 2, 3]
+```
+
+### Concatenation & Stacking
+
+- `np.concatenate((a1, a2, ...), axis=0)`: joins a sequence of arrays along an existing axis.
+  - `(a1, a2, ...)`: tuple of arrays — must have the same shape except along `axis`.
+  - `axis`: axis along which to concatenate (default 0).
+
+- `np.vstack(tup)`: stacks arrays vertically (row-wise). Equivalent to `concatenate(..., axis=0)`.
+  - `tup`: sequence of arrays — must have the same number of columns.
+
+- `np.hstack(tup)`: stacks arrays horizontally (column-wise). Equivalent to `concatenate(..., axis=1)` for 2D arrays.
+  - `tup`: sequence of arrays — must have the same number of rows.
+
+- `np.dstack(tup)`: stacks arrays depth-wise (along the third axis).
+  - `tup`: sequence of arrays.
+
+- `np.column_stack(tup)`: stacks 1D arrays as columns into a 2D array, or 2D arrays column-wise.
+  - `tup`: sequence of 1D or 2D arrays.
+
+```python
+a = np.array([[1, 2], [3, 4]])
+b = np.array([[5, 6]])
+
+concat = np.concatenate((a, b), axis=0)     # same as vstack here
+print("Concatenated (axis=0):\n", concat)   # [[1,2],[3,4],[5,6]]
+
+stacked_v = np.vstack((a, b))
+print("Vertically stacked:\n", stacked_v)   # [[1,2],[3,4],[5,6]]
+
+col = np.array([[7], [8]])
+stacked_h = np.hstack((a, col))
+print("Horizontally stacked:\n", stacked_h) # [[1,2,7],[3,4,8]]
+
+stacked_d = np.dstack((a, a))
+print("Depth stacked shape:", stacked_d.shape)  # (2, 2, 2)
+
+x = np.array([1, 2, 3])
+y = np.array([4, 5, 6])
+print("Column stack:\n", np.column_stack((x, y)))  # [[1,4],[2,5],[3,6]]
+```
+
+### Blocks
+
+NumPy blocks allow us to construct matrices from other matrices as building blocks.
+The only requirement is that dimensions match along the joining direction.
+
+- `np.block(arrays)`: assembles an nd-array from a nested list of blocks.
+  - `arrays`: nested list of arrays forming the block matrix.
+
+```python
+# Build a block matrix:
+# [2I | 0 ]
+# [1  | 3I]
+b = np.block([
+    [np.eye(2) * 2,   np.zeros((2, 3))],
+    [np.ones((3, 2)), np.eye(3) * 3   ]
+])
+print("Block matrix:\n", b)
+```
+
+### Index-Based Array Creation
+
+- `arr[np.where(condition)]`: creates an array from the elements where a condition is satisfied.
+
+```python
+arr = np.array([10, 20, 30, 40, 50])
+result = arr[np.where(arr > 25)]
+print("Elements > 25:", result)  # [30, 40, 50]
+```
+
+### Clip
+
+- `np.clip(a, a_min, a_max, out=None)`: limits the values in an array to the range `[a_min, a_max]`.
+  - `a`: input array.
+  - `a_min`: minimum value — values below this are set to `a_min`.
+  - `a_max`: maximum value — values above this are set to `a_max`.
+
+```python
+arr = np.array([-3, -1, 0, 2, 5, 8])
+print("Clipped:", np.clip(arr, 0, 5))  # [0, 0, 0, 2, 5, 5]
+```
+
+---
+
+## Element-Wise Operations
+
+```python
+arr10 = np.array([1, 2, 3])
+arr11 = np.array([4, 5, 6])
+
+print("Add:", arr10 + arr11)           # [5, 7, 9]
+print("Subtract:", arr11 - arr10)      # [3, 3, 3]
+print("Multiply:", arr10 * arr11)      # [4, 10, 18]
+print("Power:", arr10 ** arr11)        # [1, 32, 729]
+print("Divide:", arr11 / arr10)        # [4.0, 2.5, 2.0]
+print("Floor divide:", arr11 // arr10) # [4, 2, 2]
+print("Modulo:", arr11 % arr10)        # [0, 1, 0]
+```
+
+---
+
+## Scalar Operations (Simple Broadcasting)
+
+```python
+arr = np.array([1, 2, 3])
+
+print("Scalar multiplication:", arr * 2)   # [2, 4, 6]
+print("Scalar addition:", arr + 2)         # [3, 4, 5]
+print("Scalar power:", arr ** 2)           # [1, 4, 9]
+print("Square root:", np.sqrt(arr))        # [1.0, 1.414, 1.732]
+print("Absolute value:", np.abs(arr - 5)) # [4, 3, 2]
+```
+
+---
+
+## Aggregate Functions
+
+- `arr.sum(axis=None)` or `np.sum(a, axis=None)`: sum of array elements.
+  - `axis`: axis along which to sum. If `None`, sums all elements.
+
+- `arr.mean(axis=None)` or `np.mean(a, axis=None)`: arithmetic mean.
+  - `axis`: axis along which to compute the mean.
+
+- `arr.max(axis=None)` or `np.max(a, axis=None)`: maximum value.
+  - `axis`: axis along which to find the max.
+
+- `arr.min(axis=None)` or `np.min(a, axis=None)`: minimum value.
+  - `axis`: axis along which to find the min.
+
+- `arr.prod(axis=None)` or `np.prod(a, axis=None)`: product of all elements.
+  - `axis`: axis along which to compute the product.
+
+- `arr.cumsum(axis=None)`: cumulative sum of elements.
+  - `axis`: axis along which to accumulate. If `None`, works on the flattened array.
+
+```python
+arr = np.array([[1, 2, 3], [4, 5, 6]])
+
+print("Total sum:", arr.sum())                   # 21
+print("Column-wise sum (axis=0):", arr.sum(axis=0))  # [5, 7, 9]
+print("Row-wise sum (axis=1):", arr.sum(axis=1))     # [6, 15]
+print("Mean:", arr.mean())                       # 3.5
+print("Max:", arr.max())                         # 6
+print("Min:", arr.min())                         # 1
+print("Product:", arr.prod())                    # 720
+print("Cumulative sum:", arr.cumsum())           # [1, 3, 6, 10, 15, 21]
+```
+
+---
+
+## Mathematical Functions
+
+NumPy provides universal functions (ufuncs) for element-wise mathematical operations.
+
+```python
+# Exponential & logarithm
+print("exp:", np.exp(np.array([0, 1, 2])))         # [1.0, e, e²]
+print("log (natural):", np.log(np.array([1, np.e])))  # [0.0, 1.0]
+print("log2:", np.log2(np.array([1, 2, 4])))       # [0.0, 1.0, 2.0]
+print("log10:", np.log10(np.array([1, 10, 100])))  # [0.0, 1.0, 2.0]
+
+# Rounding
+arr = np.array([1.2, 1.5, 1.7, -1.2, -1.7])
+print("floor:", np.floor(arr))  # [ 1.,  1.,  1., -2., -2.]
+print("ceil:", np.ceil(arr))    # [ 2.,  2.,  2., -1., -1.]
+print("round:", np.round(arr))  # [ 1.,  2.,  2., -1., -2.]
+print("abs:", np.abs(arr))      # [1.2, 1.5, 1.7, 1.2, 1.7]
+
+# Square root & power
+print("sqrt:", np.sqrt(np.array([4, 9, 16])))      # [2., 3., 4.]
+print("power:", np.power(np.array([2, 3]), 3))     # [8, 27]
+```
+
+---
+
+## Trigonometry
+
+NumPy uses **radians** by default. Use `np.deg2rad()` and `np.rad2deg()` to convert.
+
+```python
+angles_deg = np.array([0, 30, 45, 60, 90, 180])
+angles_rad = np.deg2rad(angles_deg)
+
+print("sin:", np.sin(angles_rad))   # [0.0, 0.5, 0.707, 0.866, 1.0, 0.0]
+print("cos:", np.cos(angles_rad))   # [1.0, 0.866, 0.707, 0.5, 0.0, -1.0]
+print("tan:", np.tan(angles_rad))   # [0.0, 0.577, 1.0, 1.732, large, 0.0]
+
+# Inverse trig (output in radians)
+print("arcsin:", np.arcsin(np.array([0, 0.5, 1])))   # [0.0, π/6, π/2]
+print("arccos:", np.arccos(np.array([1, 0.5, 0])))   # [0.0, π/3, π/2]
+print("arctan:", np.arctan(np.array([0, 1])))        # [0.0, π/4]
+print("arctan2(y=1, x=1):", np.arctan2(1, 1))        # π/4
+
+# Hyperbolic
+print("sinh:", np.sinh(np.array([0, 1])))  # [0.0, 1.175]
+print("cosh:", np.cosh(np.array([0, 1])))  # [1.0, 1.543]
+print("tanh:", np.tanh(np.array([0, 1])))  # [0.0, 0.762]
+
+# Convert back to degrees
+print("π/2 in degrees:", np.rad2deg(np.pi / 2))  # 90.0
+```
+
+---
+
+## Statistical Functions
+
+- `np.mean(a, axis=None)`: arithmetic mean.
+  - `a`: input array.
+  - `axis`: axis to reduce.
+
+- `np.median(a, axis=None)`: median value (middle value when sorted).
+  - `a`: input array.
+  - `axis`: axis to reduce.
+
+- `np.var(a, axis=None, ddof=0)`: variance.
+  - `a`: input array.
+  - `axis`: axis to reduce.
+  - `ddof`: delta degrees of freedom (use `ddof=1` for sample variance).
+
+- `np.std(a, axis=None, ddof=0)`: standard deviation.
+  - `a`: input array.
+  - `axis`: axis to reduce.
+  - `ddof`: delta degrees of freedom (use `ddof=1` for sample std).
+
+- `np.min(a, axis=None)` / `np.max(a, axis=None)`: minimum / maximum value.
+  - `a`: input array.
+  - `axis`: axis to reduce.
+
+- `np.ptp(a, axis=None)`: peak-to-peak (max − min).
+  - `a`: input array.
+  - `axis`: axis to reduce.
+
+- `np.percentile(a, q, axis=None)`: returns the q-th percentile.
+  - `a`: input array.
+  - `q`: percentile value(s) in the range [0, 100].
+  - `axis`: axis to reduce.
+
+- `np.quantile(a, q, axis=None)`: same as percentile but `q` is in the range [0, 1].
+  - `a`: input array.
+  - `q`: quantile value(s) in the range [0, 1].
+
+- `np.argmax(a, axis=None)`: returns the index of the maximum value.
+  - `a`: input array.
+  - `axis`: axis along which to operate.
+
+- `np.argmin(a, axis=None)`: returns the index of the minimum value.
+  - `a`: input array.
+  - `axis`: axis along which to operate.
+
+```python
+arr = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+print("Mean:", np.mean(arr))              # 5.0
+print("Median:", np.median(arr))          # 5.0
+print("Variance:", np.var(arr))           # 6.666...
+print("Std Dev:", np.std(arr))            # 2.581...
+print("Min:", np.min(arr))               # 1
+print("Max:", np.max(arr))               # 9
+print("Range (ptp):", np.ptp(arr))       # 8
+
+print("25th percentile:", np.percentile(arr, 25))  # 3.0
+print("50th percentile:", np.percentile(arr, 50))  # 5.0
+print("75th percentile:", np.percentile(arr, 75))  # 7.0
+
+print("Quantiles:", np.quantile(arr, [0, 0.25, 0.5, 0.75, 1]))  # [1. 3. 5. 7. 9.]
+
+print("Index of max:", np.argmax(arr))   # 8
+print("Index of min:", np.argmin(arr))   # 0
+```
+
+### Covariance and Correlation
+
+- `np.cov(m, y=None, rowvar=True, ddof=1)`: estimates the covariance matrix.
+  - `m`: 1D or 2D array — each row is a variable, each column is an observation.
+  - `y`: additional set of variables with the same shape as `m`.
+  - `rowvar`: if `True` (default), each row is a variable; if `False`, each column is.
+  - `ddof`: delta degrees of freedom (default 1 for an unbiased estimate).
+
+- `np.corrcoef(x, y=None, rowvar=True)`: Pearson correlation coefficient matrix, values in `[-1, 1]`.
+  - `x`: 1D or 2D array of variables.
+  - `y`: additional set of variables.
+  - `rowvar`: if `True` (default), each row is a variable.
+
+```python
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 6, 8, 10])  # perfect linear relationship
+
+print("Covariance matrix:\n", np.cov(x, y))
+# [[ 2.5  5. ]
+#  [ 5.  10. ]]
+
+print("Correlation matrix:\n", np.corrcoef(x, y))
+# [[1. 1.]
+#  [1. 1.]]  (perfect positive correlation)
+```
+
+### Standardization & Z-Scores
+
+```python
+arr = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+z_scores = (arr - np.mean(arr)) / np.std(arr)
+print("Z-scores:", z_scores)
+# Mean of z-scores ≈ 0, std ≈ 1
+```
+
+### Random Sampling
+
+```python
+rng = np.random.default_rng(42)
+arr = np.arange(1, 10)
+
+rand_sample = rng.choice(arr, size=5, replace=False)
+print("Sample (no replacement):", rand_sample)
+
+rand_sample_repl = rng.choice(arr, size=5, replace=True)
+print("Sample (with replacement):", rand_sample_repl)
+
+# Bootstrap sampling (resampling with replacement, same size as original)
+bootstrap = rng.choice(arr, size=len(arr), replace=True)
+print("Bootstrap sample:", bootstrap)
+```
+
+---
+
+## Splitting
+
+- `np.vsplit(ary, indices_or_sections)`: splits an array into multiple sub-arrays vertically (row-wise).
+  - `ary`: input array.
+  - `indices_or_sections`: int (number of equal splits) or 1D array of split indices.
+
+- `np.hsplit(ary, indices_or_sections)`: splits an array into multiple sub-arrays horizontally (column-wise).
+  - `ary`: input array.
+  - `indices_or_sections`: int or 1D array of split indices.
+
+- `np.repeat(a, repeats, axis=None)`: repeats elements of an array.
+  - `a`: input array.
+  - `repeats`: int or array of ints — number of times each element is repeated.
+  - `axis`: axis along which to repeat. If `None`, the array is flattened first.
+
+- `np.tile(A, reps)`: constructs an array by tiling (repeating) `A`.
+  - `A`: input array.
+  - `reps`: int or tuple — number of repetitions along each axis.
+
+```python
+arr = np.arange(9).reshape(3, 3)
+print("Original:\n", arr)
+
+split_rows = np.vsplit(arr, 3)         # 3 separate arrays of shape (1, 3)
+print("Vsplit:", [s.shape for s in split_rows])
+
+split_cols = np.hsplit(arr, 3)         # 3 separate arrays of shape (3, 1)
+print("Hsplit:", [s.shape for s in split_cols])
+
+arr2 = np.array([1, 2, 3])
+print("Repeat each element 2x:", np.repeat(arr2, 2))  # [1, 1, 2, 2, 3, 3]
+print("Tile array 3x:", np.tile(arr2, 3))             # [1, 2, 3, 1, 2, 3, 1, 2, 3]
+print("Tile as 2x3:", np.tile(arr2, (2, 3)))          # [[1,2,3,1,2,3,1,2,3],[...]]
+```
+
+---
+
+## Linear Algebra
+
+- `np.dot(a, b)`: dot product of two arrays. For 2D arrays, equivalent to matrix multiplication.
+  - `a`, `b`: input arrays.
+
+- `a @ b`: matrix multiplication operator (equivalent to `np.matmul`). Preferred over `np.dot` for matrices.
+
+- `np.outer(a, b)`: outer product of two 1D arrays — produces an `(N, M)` matrix.
+  - `a`: 1D array of length N.
+  - `b`: 1D array of length M.
+
+- `np.linalg.det(a)`: determinant of a square matrix.
+  - `a`: square matrix (N×N).
+
+- `np.linalg.inv(a)`: multiplicative inverse of a square matrix.
+  - `a`: square non-singular matrix.
+
+- `np.linalg.eig(a)`: eigenvalues and right eigenvectors of a square matrix.
+  - `a`: square matrix.
+  - Returns: `(eigenvalues, eigenvectors)` — each column of `eigenvectors` is an eigenvector.
+
+- `np.linalg.matrix_rank(M, tol=None)`: matrix rank computed via SVD.
+  - `M`: matrix to evaluate.
+  - `tol`: threshold below which singular values are considered zero.
+
+- `np.linalg.norm(x, ord=None, axis=None)`: matrix or vector norm.
+  - `x`: input array.
+  - `ord`: type of norm (e.g., `2` for Euclidean, `'fro'` for Frobenius, `np.inf` for max absolute row sum).
+  - `axis`: axis along which to compute the norm.
+
+- `np.linalg.solve(a, b)`: solves the linear system `a @ x = b`.
+  - `a`: coefficient matrix (N×N, must be non-singular).
+  - `b`: ordinate array (shape N or N×M).
+
+- `np.linalg.svd(a, full_matrices=True)`: Singular Value Decomposition — factorizes `a` into `U @ diag(s) @ Vh`.
+  - `a`: input matrix.
+  - `full_matrices`: if `True`, returns full-sized U and Vh.
+
+```python
+arr1 = np.array([1, 2, 3])
+arr2 = np.array([4, 5, 6])
+
+print("Dot product:", np.dot(arr1, arr2))          # 32
+print("Outer product:\n", np.outer(arr1, arr2))    # 3x3 matrix
+
 mat = np.array([[1, 2], [3, 4]])
+mat2 = np.array([[5, 6], [7, 8]])
 
-# Determinant
-det = np.linalg.det(mat)
-print("Determinant:", det)
+print("Matrix multiply (@):\n", mat @ mat2)        # [[19,22],[43,50]]
+print("Determinant:", np.linalg.det(mat))          # -2.0
+print("Inverse:\n", np.linalg.inv(mat))
 
-# Inverse
-inv = np.linalg.inv(mat)
-print("Inverse:\n", inv)
-
-# Eigenvalues and Eigenvectors
 eigvals, eigvecs = np.linalg.eig(mat)
 print("Eigenvalues:", eigvals)
 print("Eigenvectors:\n", eigvecs)
 
+# Diagonalization: A = P D P⁻¹
+D = np.diag(eigvals)
+P = eigvecs
+reconstructed = P @ D @ np.linalg.inv(P)
+print("Reconstructed matrix:\n", np.round(reconstructed))  # ≈ [[1,2],[3,4]]
 
-# Diagonalization (if possible)
-# A = P D P^-1 where D is diagonal with eigenvalues, P is matrix of eigenvectors
-if np.linalg.matrix_rank(eigvecs) == mat.shape[0]:
-    D = np.diag(eigvals)
-    P = eigvecs
-    P_inv = np.linalg.inv(P)
-    reconstructed = P @ D @ P_inv
-    print("Diagonal matrix D:\n", D)
-    print("Reconstructed matrix from diagonalization:\n", reconstructed)
-
-
-# Matrix multiplication
-mat2 = np.array([[5, 6], [7, 8]])
-print("Matrix multiplication:\n", np.dot(mat, mat2))
-
-
-# Norms
-print("Frobenius norm:", np.linalg.norm(mat))
-
-
-# Solve linear systems Ax = b
-
+# Solve Ax = b
 A = np.array([[3, 1], [1, 2]])
 b = np.array([9, 8])
 x = np.linalg.solve(A, b)
-print("Solution of Ax=b:", x)
+print("Solution x:", x)                            # [2. 3.]
+
+print("Frobenius norm:", np.linalg.norm(mat))      # ≈ 5.477
+print("Euclidean norm of vec:", np.linalg.norm(arr1))  # ≈ 3.742
+
+# SVD
+U, s, Vh = np.linalg.svd(mat)
+print("Singular values:", s)
 ```
 
---- 
+### Transpose & Swap Axes
 
-## Statistical Functions 
+- `arr.T` or `np.transpose(a, axes=None)`: reverses the axes of an array.
+  - `a`: input array.
+  - `axes`: if specified, a permutation of axis indices (e.g., `(2, 0, 1)` for a 3D array).
 
-- `np.mean()`:
-
-- `np.median()`:
-
-- `np.var()`:
-
-- `np.std()`:
-
-- `np.min()`:
-
-- `np.max()`:
-
-- `np.ptp()`:
-
-- `np.percentile()`:
-
-- `np.quantile()`:
-
-```python 
-arr = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
-
-print("Mean:", np.mean(arr))
-print("Median:", np.median(arr))
-print("Variance:", np.var(arr))
-print("Standard Deviation:", np.std(arr))
-print("Min:", np.min(arr))
-print("Max:", np.max(arr))
-print("Range:", np.ptp(arr)) # max - min
-
-print("25th percentile:", np.percentile(arr, 25))
-print("50th percentile (median):", np.percentile(arr, 50))
-print("75th percentile:", np.percentile(arr, 75))
-print("Quantiles (0,25,5,75, 1):", np.quantile(arr, [0,25,5,75, 1]))
-```
-
---- 
-
-## Covariance and Correlation 
-
-- `np.cov()`:
-
-- `np.corrcoef()`:
+- `arr.swapaxes(axis1, axis2)`: interchanges two axes.
+  - `axis1`, `axis2`: axes to swap.
 
 ```python
-x = np.array([1, 2, 3, 4, 5])
-y = np.array([2, 4, 6, 8, 10])
+mat = np.array([[1, 2, 3], [4, 5, 6]])
+print("Original shape:", mat.shape)    # (2, 3)
+print("Transposed:\n", mat.T)          # shape (3, 2)
 
-print("Covariance matrix:\n", np.cov(x, y))
-print("Correlation matrix:\n", np.corrcoef(x, y))
+arr3d = np.arange(24).reshape(2, 3, 4)
+print("Original shape:", arr3d.shape)                               # (2, 3, 4)
+print("Swapaxes(0,2) shape:", arr3d.swapaxes(0, 2).shape)           # (4, 3, 2)
+print("Transpose(2,0,1) shape:", np.transpose(arr3d, (2, 0, 1)).shape)  # (4, 2, 3)
 ```
 
---- 
+---
 
-## Standardization & Z-scores
+## Input & Output
+
+- `np.loadtxt(fname, delimiter=None, dtype=float, skiprows=0, usecols=None)`: loads data from a text file.
+  - `fname`: file path or file object.
+  - `delimiter`: string separating values (e.g., `','`).
+  - `dtype`: data type for the resulting array.
+  - `skiprows`: number of rows to skip at the beginning.
+  - `usecols`: columns to read (e.g., `(0, 2)` for the first and third columns).
+
+- `np.savetxt(fname, X, delimiter=' ', fmt='%.18e', header='')`: saves an array to a text file.
+  - `fname`: file path.
+  - `X`: 1D or 2D array to save.
+  - `delimiter`: string separating columns.
+  - `fmt`: format string for each element (e.g., `'%d'` for integers, `'%.4f'` for 4 decimal places).
+
+- `np.genfromtxt(fname, delimiter=None, dtype=float, filling_values=np.nan, names=None)`: loads data from a text file, handling missing values gracefully.
+  - `fname`: file path.
+  - `delimiter`: string separating values.
+  - `filling_values`: value used for missing entries.
+  - `names`: if `True`, reads column names from the first valid line.
+
+- `np.save(file, arr)`: saves a single array to a binary `.npy` file.
+  - `file`: file path (`.npy` extension is added automatically).
+  - `arr`: array to save.
+
+- `np.load(file)`: loads a `.npy` or `.npz` file.
+  - `file`: path to the file.
+
+- `np.savez(file, **kwargs)`: saves multiple arrays to a compressed `.npz` archive.
+  - `file`: file path (`.npz` is added automatically).
+  - `**kwargs`: named arrays to save.
 
 ```python
-z_scores = (arr - np.mean(arr)) / np.std(arr)
-print("Z-scores:", z_scores)
-```
+arr = np.array([[1, 2, 3], [4, 5, 6]])
 
---- 
+# Text files
+np.savetxt('data.csv', arr, delimiter=',', fmt='%d')
+loaded = np.loadtxt('data.csv', delimiter=',')
+print("Loaded from CSV:\n", loaded)
 
-## Random Sampling 
-
-```python 
-np.random.seed(42)
-rand_sample = np.random.choice(arr, size=5, replace=False)
-print("Random sample (no replacement):", rand_sample)
-
-rand_sample_repl = np.random.choice(arr, size=5, replace=True)
-print("Random sample (with replacement):", rand_sample_repl)
-
-# Example of bootstrap sampling (resampling with replacement)
-bootstrap_sample = np.random.choice(arr, size=len(arr), replace=True)
-print("Bootstrap sample:", bootstrap_sample)
-```
-
---- 
-
-## Splitting 
-
-- `np.vsplit()`:
-
-- `np.hsplit()`:
-
-- `np.repeat()`:
-
-- `np.tile()`:
-
-```python 
-arr_split = np.arange(9).reshape(3, 3)
-print("Original array:\n", arr_split)
-
-split_rows = np.vsplit(arr_split, 3)
-print("Split into rows:", split_rows)
-
-split_cols = np.hsplit(arr_split, 3)
-print("Split into cols:", split_cols)
-
-arr2 = np.array([1, 2, 3])
-print("Repeat elements:", np.repeat(arr2, 2))
-print("Tile array:", np.tile(arr2, 3))
-```
-
---- 
-
-## Input 
-
-- `np.loadtxt()`:
-
-- `np.loadcsv()`:
-
-- `np.genfromtxt()`:
-
-- add More
-
-```python 
-data = np.loadtxt('data.csv', delimiter=',') # uncomment when file exists
-print("Data from file:\n", data)
-
-# Using genfromtxt for missing values
 data = np.genfromtxt('data.csv', delimiter=',', filling_values=0)
+
+# Binary files (faster and lossless)
+np.save('array.npy', arr)
+loaded_npy = np.load('array.npy')
+print("Loaded from .npy:\n", loaded_npy)
+
+# Multiple arrays in one file
+np.savez('arrays.npz', a=arr, b=arr * 2)
+archive = np.load('arrays.npz')
+print("Keys:", list(archive.keys()))  # ['a', 'b']
+print("a:\n", archive['a'])
 ```
 
---- 
+---
 
-## Vectorized operations
+## Vectorized Operations
 
-A lot of opertions in numpy can act on whole vectors instead of single elements. This can improve performance by avoiding loops 
+Many operations in NumPy act on whole arrays instead of single elements, avoiding the overhead of Python loops.
 
-- `np.vectorize()`:
+- `np.vectorize(pyfunc, otypes=None, excluded=None)`: vectorizes a Python function so it accepts array input.
+  - `pyfunc`: the Python function to vectorize.
+  - `otypes`: output data types (optional, e.g., `[float]`).
+  - `excluded`: set of argument names or indices that are not vectorized.
 
-```python 
+```python
 def is_even(x):
     return 1 if x % 2 == 0 else 0
 
-vectorized_is_even = np.vectorize(is_even) # now this new function can act on vector, optimizing performance
+vec_is_even = np.vectorize(is_even)
+
+arr = np.arange(10)
+print("Even mask:", vec_is_even(arr))  # [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+
+# For simple cases, direct array operations are faster than np.vectorize
+even_mask = (arr % 2 == 0).astype(int)
+print("Even mask (direct):", even_mask)  # same result
 ```
 
---- 
+---
 
-## Custom Datatypes 
+## Custom Datatypes
 
-```python 
-dt = np.dtype(np.int32) # used for declearing datatypes as dictionaries
+NumPy supports structured arrays with custom field names and types.
+
+```python
+# Basic dtype declaration
+dt = np.dtype(np.int32)
+print("dtype:", dt)
+
+# Structured array (like a table with named columns)
+person_dtype = np.dtype([('name', 'U20'), ('age', np.int32), ('score', np.float64)])
+people = np.array([('Alice', 30, 95.5), ('Bob', 25, 87.2)], dtype=person_dtype)
+print("Names:", people['name'])   # ['Alice' 'Bob']
+print("Ages:", people['age'])     # [30 25]
+print("Scores:", people['score']) # [95.5 87.2]
+```
+
+---
+
+## Type Conversion
+
+- `arr.astype(dtype)`: casts the array to a different data type.
+  - `dtype`: target data type (e.g., `np.float64`, `np.int32`, `np.bool_`).
+
+```python
+arr = np.array([1.7, 2.9, 3.1])
+print("As int:", arr.astype(np.int32))    # [1, 2, 3] — truncates, does not round
+print("As bool:", arr.astype(np.bool_))   # [True, True, True]
+
+int_arr = np.array([0, 1, 255], dtype=np.uint8)
+print("uint8:", int_arr)
+print("As float32:", int_arr.astype(np.float32))  # [0.0, 1.0, 255.0]
 ```

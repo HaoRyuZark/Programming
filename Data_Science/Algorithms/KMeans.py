@@ -10,12 +10,12 @@ class KMeans:
         self.clusters = [[] for _ in range(self.K)] # list of list of indices for each cluster
         self.centroids = [] 
 
-    def predict(self, X):
+    def trasform(self, X):
 
         self.X = X
         self.n_samples, self.n_features = self.X.shape
 
-        # Choose some random indices in form our samples
+        # Choose some random indices from our samples
         random_samples_indx = np.random.choice(self.n_samples, self.K, replace=False)
 
         # Choose the current data point as the centroid
@@ -25,13 +25,13 @@ class KMeans:
         for _ in range(self.n_iters):
 
             # assign samples to the centroids 
-            self.clusters = self.create_clusters(self.centroids)
+            self.clusters = self.create_clusters()
 
             if self.plot_steps:
                 self.plot()
 
             # Update centroids
-            centroids_old = self.centroids
+            centroids_old = np.copy(self.centroids)
             self.centroids = self._get_centroids(self.clusters)
 
             if self._is_converged(centroids_old, self.centroids):
@@ -43,21 +43,18 @@ class KMeans:
 
         return self._get_clusters_labels(self.clusters)
 
-    def create_clusters(self, centroids):
+    def create_clusters(self):
         clusters = [[] for _ in range(self.K)]
 
-        for idx, sample in enumerate(self.X):
-            centroid_idx = self._closest_centroid(self.centroids, sample)
+        for idx in range(self.n_samples):
+            centroid_idx = self._closest_centroid(idx)
             clusters[centroid_idx].append(idx)
         
         return clusters
 
-    def _closest_centroid(self, centroids, sample):
-        dists = [self._distance(sample, c) for c in centroids]
-        return np.argmin(dists)
-
-    def _distance(self, x,y):
-        return np.linalg.norm(x - y)
+    def _closest_centroid(self, idx):       
+        dist = np.linalg.norm(self.centroids - self.X[idx], axis=1)
+        return np.argmin(dist)
 
     def _get_centroids(self, clusters):
 
@@ -76,8 +73,8 @@ class KMeans:
 
 
     def _is_converged(self, centroids_old, centroids_new):
-        return np.equal(centroids_old, centroids_new)
- 
+        return np.allclose(centroids_new, centroids_old, atol=1e-6)
+
     def _get_clusters_labels(self, clusters):
 
         # each sample will get the label of the cluster it was assigned to 

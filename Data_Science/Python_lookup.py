@@ -181,7 +181,30 @@ class Car(Vehicle):
         return f"{super().info()}, Doors: {self.doors}"
 
 
-############################################################################### 
+
+# Method Resolution Order MRO
+
+# When traversing the inheritance chains DFS; the order in which is used 
+# for the start is in the order of the classes in the parenthesis (c_1, c_2, c_3, ...)
+
+# When invoking a method or accessing an attribute, we first match in the search is used
+
+class A: 
+    num = 10 
+
+class B(A):
+    pass
+
+class C(A):
+    num = 1 
+
+class D(B, C):
+    pass
+
+print(D.mro())
+print(D.num)
+
+############################################################################## 
 
 # Ducktyping 
 
@@ -688,6 +711,9 @@ def outer_function(msg: str) -> Callable:
 
 # Async IO 
 
+# When a function is prefixed with the async keyword it returns a corutine object (promise in js) which 
+# needs to be awaited for, for the event loop to handle it propertly, means for the corruntine to be started
+
 import asyncio
 
 async def async_function():
@@ -695,7 +721,39 @@ async def async_function():
     await asyncio.sleep(1)
     print("Async function completed")
 
-asyncio.run(async_function())
+async def async_function2():
+    print("Async function2 started")
+    await asyncio.sleep(1)
+    print("Async function2 completed")
+
+
+async def async_demo():
+    asyncio.run(async_function())
+    await asyncio.gather(async_function(), async_function2()) # running n number of functions at the same time
+
+    task = asyncio.create_task(async_function())
+
+    try: 
+        await asyncio.wait_for(task, 2)
+    except asyncio.TimeoutError | asyncio.CancelledError:
+        print("Either error or timeout")
+
+# locks 
+
+lock = asyncio.Lock() # mutex
+
+shared_resource = 0
+
+async def modify_shared_resource():
+    global shared_resource
+
+    async with lock: 
+        print("Accessing shared resource")
+        shared_resource += 1 
+        await asyncio.sleep(1)
+        print("Accessing shared resource")
+
+# When using aync IO we need to obligaroty denote our main function with async to be able to call await inside, and then use asycio.run(main())
 
 ###############################################################################
 

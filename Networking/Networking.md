@@ -284,7 +284,7 @@ local network.
 
 ---
 
-## Network Address Translation NAT
+## Network Address Translation (NAT)
 
 **NAT** is a method used in networks to translate private IP addresses to public IP addresses and vice versa. It allows multiple devices on a local network 
 to share a single public IP address when accessing the internet.
@@ -533,7 +533,7 @@ Common protocols include:
 
 ## Ports
 
-A **port** is a communication endpoint. They are identified by a number and for the operating system, they are a logical construct to identify a process or a
+A **port** is a communication endpoint commonly used to identify an application in a communication. They are identified by a number and for the operating system, they are a logical construct to identify a process or a
 type of network service. Note that the at the hardware level we also have ports for audio, video, etc., but this are completely different ports.
 
 - Ports are regions of memory in the address-space of the operating system. Thus, the OS is responsible for them.
@@ -652,9 +652,9 @@ the ethernet cable or the wifi password.
 
 --- 
 
-## TCP/IP
+## Transmission Control Protocol / Internet Protocol (TCP/IP)
 
-**Transmission Control Protocol / Internet Protocol** is a collection of protocol which determine how data
+**TCP/IP** is a collection of protocol which determine how data
 is formatted, transported and used in networks.
 
 - **Application Layer**: Is the data which is going to be send.
@@ -697,14 +697,14 @@ A **segment** is a layer 4 PDU (Protocol Data Unit) used in the transport layer.
 
 ---
 
-## UDP and TCP
+## UDP & TCP
 
 When it comes to computer networking, **UDP (User Datagram Protocol)** and **TCP (Transmission Control Protocol)** are two core transport layer protocols used to
 send data over the Internet. Each has its own characteristics, strengths, and ideal use cases.
 
-### TCP (Transmission Control Protocol)
+### Transmission Control Protocol (TCP)
 
-TCP is a **connection-oriented** protocol, meaning it establishes a reliable connection between sender and receiver before data transfer begins. It ensures that data is delivered 
+**TCP** is a **connection-oriented** protocol, meaning it establishes a reliable connection between sender and receiver before data transfer begins. It ensures that data is delivered 
 **accurately and in the correct order**. For this it uses a **three-way handshake** which consists of:
 
 **SYN ->** 
@@ -785,9 +785,16 @@ In an ungraceful termination, one side simply closes the connection without foll
 - Data that was in transit may be lost, as there is no acknowledgment of receipt.
 - The server may continue to wait for data from the client, leading to timeouts or hanging
 
-### UDP (User Datagram Protocol)
+#### The Sliding Window Protocol
 
-UDP is a **connectionless** protocol that sends data without establishing a connection first. It prioritizes **speed over reliability**, making it faster but less reliable than TCP.
+Instead of one frame at the time and waiting of an acknowledgment, the **sliding window protocol** uses an array 
+with a number of entries being equal to the number of frames to be sent after splitting the packet; and then sends groups 
+of frames each time an acknowledgment is received the "window" is slided to send another next frame and so on. If no acknolegment 
+arraives, the the window stays in place, until the acknowledgment is recieved or an external condition terminates the communication.
+
+### User Datagram Protocol (UDP)
+
+**UDP** is a **connectionless** protocol that sends data without establishing a connection first. It prioritizes **speed over reliability**, making it faster but less reliable than TCP.
 
 Key features of UDP:
 
@@ -883,10 +890,10 @@ Client Side                        Server Side
 
 ---
 
-## HTTP & HTTPS
+## Hyper Text Transport Protocol / Secure (HTTP & HTTPS)
 
-It stands for **Hyper Text Transport Protocol**; the **S** stands for **Secure** and refers to the data 
-being encrypted. This is a TCP-based protocol which consists on the following 
+**TCP** and **HTTPS** the **S** stands for **Secure** and refers to the data being encrypted; are protocol 
+for sending data across the internet. This is a TCP-based protocol which consists on the following 
 life-cycle of a connection.
 
 ```txt
@@ -913,6 +920,34 @@ Certificate    |   Certificate    |
 - The **SYNC** and **ACK** packages do not really contain data, but instead just meta data for checking the connection.
 
 - The main use is for webpages and the information transferred in those.
+
+### Headers 
+
+An HTTP header is a field of an HTTP request or response that passes additional context and metadata
+about the request or response. 
+
+Example: 
+
+```http 
+content-type:text/html 
+http-method:GET
+```
+
+### Status Code
+
+In this protocol a **status code** needs to be send to describe the status of the operation. 
+
+- **1xx** Informationall
+- **2xx** The request was successful.
+- **3xx** The client is redirected to a different resource.
+- **4xx** The request contains some kind of error.
+- **5xx** THe server errored while fulfilling the request.
+
+### Request
+
+
+### Response
+
 
 ---
 
@@ -1128,6 +1163,14 @@ IP-addresses are interpreted depending on the how many octets are going to be us
 It is an special route mostly written as `0.0.0.0 /0`. The address is just zero and the subnetmask is to read 0 octets of the IP-addr. 
 This route is used as "for everything else, go here" for leaf routes in a tree-structure.
 
+### Routing 
+
+When a pacakge is send across the internet which is connection of networks via routers; the way routers know how to pass the package to 
+the right router is accomplised via shortest parth algorithms as well as well as hardcoded adress to distributor servers.
+
+- Router groups are divided into local areas which know a range of IP adresses which minimizes the amount of
+computation and memory requiered for the routing table processes.
+
 ---
 
 ## Default Gateway
@@ -1258,12 +1301,32 @@ This TCP packet is sent to Switch A, which forwards it to Router A, which then s
 
 --- 
 
-## FTP 
+## File Transfer Protocol FTP 
+
+**FTP** is the standard for exchanging files on **port 22**. The setup is done by setting up a server 
+with a number of files accesible for user which should have **no rights** for the server except for viewing and downloading.
+
+- The domain looks like `ftp.some_computer.com`
+- The data is in plain text.
+- **SFTP** is FTP but with encryption.
+- FTP are connection oriented.
+- **TFTP** is a protocol done for transfering file in a local area network and it is connectionless.
+- It can be accessed using an FTP-client like **FileZilla**.
 
 --- 
 
-## SMTP
+## POP & IMAP
 
+--- 
+
+## Simple Mail Transfer Protocol SMTP
+
+**SMTP** us a protocol used for sending emails. 
+
+An email is send to the SMTP server of the sender which forwards the email to SMTP server of the receiver to then 
+be finally then be sent to the receivers computer.
+
+- It uses TCP. 
 
 --- 
 

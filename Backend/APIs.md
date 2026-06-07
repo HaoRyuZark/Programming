@@ -155,7 +155,19 @@ components:
 
 ## Open API
 
+**OpenApi** is an specification in the form of a yaml file used to define how the service API looks like, what is returned, what is spected, mandatory fields, 
+urls, examples etc. The standard is availble online with how endpoints should be declared in the yaml file. It also allows developer to use tools like Swagger to visualize their 
+definitions.
+
 Example:
+
+```yaml 
+
+```
+
+It can also be used to generate code from the definition in a specific language. 
+
+> Note: It only supports RESTful APIs
 
 ---
 
@@ -355,11 +367,38 @@ Accept: application/json
 
 ---
 
-## Authentication vs Authorization
+## Authentication & Authorization
 
-**Authentication** is the process of verifying the identity of a user or system, ensuring that they are who they claim to be. Common authentication methods include username/password combinations, API keys, OAuth tokens, and biometric verification.
+**Authentication** is the process of verifying the identity of a user or system, ensuring that they are who they claim to be. Common authentication methods include 
+username/password combinations, API keys, JWT, OAuth tokens, and biometric verification.
 
-**Authorization** is the process of determining whether an authenticated user or system has the necessary permissions to access a specific resource or perform a particular action. Authorization typically occurs after authentication and involves checking access control lists (ACLs), roles, or policies to grant or deny access.
+**Authorization** is the process of determining whether an authenticated user or system has the necessary permissions to access a 
+specific resource or perform a particular action. Authorization typically occurs after authentication and involves checking access control lists (ACLs), roles, or policies to grant or deny access.
+
+### API Keys
+
+This a single unique key used to authorize an user or appliation for using and API. They are mostly passed in the request header when a
+request is triggered.
+
+### JSON Web Token (JWT)
+
+This is a string with 3 parts used to grant access to a service and keep the "user" validated as long the session runs instead
+doing an authentication check for accessing the resource.
+
+- **Headers**: Type of token and ecryption. 
+- **Payload**: Actual encrypted token plus the expiration date.
+- **Signature**: Digital signature of the token.
+
+The token is packed in the `Authorization: Bearear<token>` header and sent to the server, where only the signature is checked.
+
+### Sessions 
+
+These are stateful server-side handled authentication. 
+
+1. User fills a login form 
+2. The server checks the credentials and crates a session in the database.
+3. The session id is end to the client. 
+4. The client puts the session id in the cookies maps. 
 
 ---
 
