@@ -236,5 +236,26 @@ Essential commands:
 
 ---
 
+## Desktop Environments
 
+A desktop environment is a collection of applications and libraries that provide a graphical user interface (GUI) for interacting with the operating system.
+
+Common desktop environments for Linux include:
+
+- **GNOME**: Modern, user-friendly, and widely used (e.g., Ubuntu)
+- **KDE Plasma**: Highly customizable and feature-rich (e.g., Kubuntu)
+- **XFCE**: Lightweight and fast, ideal for older hardware (e.g., Xubuntu)
+- **LXDE/LXQt**: Extremely lightweight, minimal resource usage (e.g., Lubuntu)
+- **Cinnamon**: Traditional desktop experience with modern features (e.g., Linux Mint)
+- **MATE**: Fork of GNOME 2, classic desktop experience (e.g., Ubuntu MATE)
+
+--- 
+
+## Window Managers & Compositors
+
+A window manager is a system software that controls the placement and appearance of windows within a graphical user interface (GUI). It 
+is responsible for managing the layout, behavior, and interactions of application windows on the screen.
+
+A compositor is a system software that provides advanced graphical effects, such as transparency, shadows, and animations, by combining multiple window 
+buffers into a single image before displaying it on the screen. Some window managers include built-in compositors, while others rely on external compositors.
 

@@ -694,6 +694,9 @@ print(df_numeric.map(lambda x: round(x, 2)))
 - `groupby_obj.filter(func)`: returns rows from groups where `func` returns `True`.
   - `func`: a function that takes a group DataFrame and returns a boolean.
 
+- `values_counts()`: counts occurrences of unique values in a Series (can be used on groupby objects to count within groups).
+
+
 ```python
 # Basic aggregation
 print(df.groupby("Category").mean(numeric_only=True))

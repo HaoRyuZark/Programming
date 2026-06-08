@@ -703,3 +703,16 @@ This version of **UTF** is a way of translating code points to 1 or 4 bytes.
 - Backups.
 - Re-writing contents.
 
+--- 
+
+## API, ABI and ISA
+
+- **API**: The application programming interface is a set of rules and definitions for using external applications or libraries. It defines  
+how to use the external code via function calls, data structures, and protocols. We can also define our own API for our code to be used by other people.
+As an example, when using any of the functions of the C standard library, we are using an API provided by the library.
+
+- **ABI**: The application binary interface defines how different components of a binary program interact at the machine level. An example is 
+the x86-64 ABI, which specifies how functions receive parameters, how the stack is managed, and how system calls are made on x86-64 architecture for intel and amd.
+
+- **ISA**: The instruction set architecture is the set of instructions that a CPU can execute. It defines the machine language that the CPU understands. 
+Examples include x86, ARM, and RISC-V.
