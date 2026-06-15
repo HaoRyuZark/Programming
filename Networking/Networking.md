@@ -1067,9 +1067,9 @@ ask for the domain.
 ## SSH
 
 Secure shell is a protocol used for providing a secure encrypted connection to a remote machine. It uses asymmetric encryption
-and commonly **port 22** for the connection.
+and commonly **port 22** for the connection. It uses either a password or asymmetric encryption for connection without using a password.
 
-### Layout
+### Layout Of An SSH Packet
 
 ```txt
 | Packet length -- Padding Amount -- Payload Padding -- Message Authentication |
@@ -1080,7 +1080,34 @@ and commonly **port 22** for the connection.
 - **Payload**: Actual Data.
 - **Message Authentication**: Cryptographic code.
 
-Everything between packet length and message authentication is encrypted.
+Everything between packet length and message authentication is encrypted with asymmetric encryption.
+
+Example use case: 
+
+- **Creating key**:
+
+```bash 
+ssh-key-gen
+```
+
+- **Sharing The Key**:
+
+```bash 
+ssh-copy-id <host>
+```
+
+- **Adding SSH to skip enter the passphrase for the Key**:
+
+```bash 
+ssh-add
+```
+
+- **Connecting**:
+
+```bash 
+ssh <user>@<adresss of te host>
+```
+
 
 ---
 

@@ -1,6 +1,6 @@
 # Manual Linux Setup
 
-Documentatiion for seeting up Arch Linux with the necessary tools and configurations for development.
+Documentation for setting up Arch Linux with the necessary tools and configurations for development.
 
 ## Hardware
 
@@ -25,6 +25,8 @@ Recommended CPUs:
 - Intel Core i7-4900MQ (47W, one of the fastest officially supported CPUs)
 - Intel Core i7-4910MQ (47W, enthusiast option)
 - Intel Core i7-4980HQ (SR1ZY PGA-modded version only, requires custom adapter and additional cooling considerations)
+
+For the i-5 series, the best option is the i5-4300M (37W) for a good balance of performance and power consumption.
 
 #### RAM Upgrade
 
@@ -106,7 +108,7 @@ Recommended US backlit keyboards:
 
 ### ThinkPad T480
 
-The T480 is often considered the last "modern" highly-upgradeable ThinkPad.
+The T480 is considered the last "modern" highly-upgradeable ThinkPad.
 
 #### CPU
 
@@ -269,13 +271,13 @@ And to disconnect if needed: `[iwd]# station device disconnect`
 - `n` Creates a new partition - `Enter` - `Enter` - `+4G` - `Y` if prompted
 - `n` Creates a new partition - `Enter` - `Enter` - `Enter` - `Y` if prompted
 
-**Optional** because we are going to format them manually anyway
+-*Optional** because we are going to format them manually anyway
 
 - `t` Mark a partition with a type - `2` - `82` For the swap type 
 - `t` Mark a partition with a type - `3` - `48` For the linux file system type
 - `t` Mark a partition with a type - `1` - `1` For the boot type
 
-**Finally**
+-*Finally**
 
 - `w` Write and quit
 
@@ -459,9 +461,9 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
    lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
-   julia nm-connection-editor wine utftex xdotool w3m w3m-img conda`
+   julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes`
 
-**Packet plus purpose:**
+-*Packet plus purpose:**
 
 - texlive
 - fastetch 
@@ -556,6 +558,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - xdotool
 - w3m w3m-img
 - conda
+- kubernetes
 
 ---
 
@@ -583,6 +586,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `yay -S asm-lsp`
 - `rustup component add rust-analyzer`
 - `yay -S tex-fmt`
+- `cargo install --git https://github.com/itsjunetime/tdf.git`
 
 ---
 
@@ -597,9 +601,9 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 
 - Initial Configuration:
 
-* `clamconf -g freshclam.conf > freshclam.conf`
-* `clamconf -g clamd.conf > clamd.conf`
-* `clamconf -g clamav-milter.conf > clamav-milter.conf`
+- `clamconf -g freshclam.conf > freshclam.conf`
+- `clamconf -g clamd.conf > clamd.conf`
+- `clamconf -g clamav-milter.conf > clamav-milter.conf`
 
 #### clamd.conf
 
@@ -1538,13 +1542,17 @@ clone the necessary repositories from github or use stow.
 - `cd dotfiles`
 - `stow */`
 
-#### Functionality
+#### Stow Functionality
 
-1. To add files to stow use create a mirror of the original struture from the home directory to that file. 
+- **First Setup**: `stow -D */` to remove the stow links and `stow */` to create the stow links.
 
-2. Copy the file or directory to stow 
+- **Adding files to stow and updating**:
 
-3. Run `stow --adopt .` inside the dotfiles directory
+  1. To add files to stow use create a mirror of the original struture from the home directory to that file. 
+
+  2. Copy the file or directory to stow 
+
+  3. Run `stow --adopt .` inside the dotfiles directory
 
 ---
 
@@ -1667,58 +1675,58 @@ In linux the `ip link` command will return three device names
 
 Pacman was used for almost all examples, but Yay can also be used.
 
-* **Installing packages**:
+- **Installing packages**:
   `pacman -S package_name1 package_name2 ...`
 
-* **Installing groups**:
+- **Installing groups**:
   `pacman -S gnome`
 
-* **Removing packages**:
+- **Removing packages**:
   `pacman -R gnome`
 
-* **Removing packages with dependencies**:
+- **Removing packages with dependencies**:
   `pacman -Rs gnome`
 
-* **Updating the official packages**:
+- **Updating the official packages**:
   `pacman -Syu`
 
-* **Updating the official and unofficial packages**:
+- **Updating the official and unofficial packages**:
   `yay -Syu`
 
-* **Searching for a package in the official repos**:
+- **Searching for a package in the official repos**:
   `pacman -Ss package_name`
 
-* **Searching for a package in AUR (yay)**:
+- **Searching for a package in AUR (yay)**:
   `yay -Ss package_name`
 
-* **Viewing installed packages**:
+- **Viewing installed packages**:
   `pacman -Q`
 
-* **Viewing explicitly installed packages**:
+- **Viewing explicitly installed packages**:
   `pacman -Qe`
 
-* **Viewing dependencies of a package**:
+- **Viewing dependencies of a package**:
   `pacman -Qi package_name`
 
-* **Cleaning the package cache (remove all except the latest version)**:
+- **Cleaning the package cache (remove all except the latest version)**:
   `pacman -Sc`
 
-* **Cleaning the package cache completely**:
+- **Cleaning the package cache completely**:
   `pacman -Scc`
 
-* **Installing a local package file (.pkg.tar.zst)**:
+- **Installing a local package file (.pkg.tar.zst)**:
   `pacman -U ./package_file.pkg.tar.zst`
 
-* **Reinstalling a package**:
+- **Reinstalling a package**:
   `pacman -S package_name`
 
-* **Removing orphaned packages**:
+- **Removing orphaned packages**:
   `pacman -Rns $(pacman -Qtdq)`
 
-* **Editing and building packages from AUR with yay**:
+- **Editing and building packages from AUR with yay**:
   `yay -G aur_package_name && cd aur_package_name && makepkg -si`
 
-* **Eliminate Orphan Packages**:
+- **Eliminate Orphan Packages**:
   `sudo pacman -Qdtq | sudo pacman -Rns -`
 
 ---

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans as km
 
 class KMeans:
 
@@ -53,8 +54,7 @@ class KMeans:
         return clusters
 
     def _closest_centroid(self, idx):       
-        dist = np.linalg.norm(self.centroids - self.X[idx], axis=1)
-        return np.argmin(dist)
+        return np.argmin(np.linalg.norm(self.centroids - self.X[idx], axis=1))
 
     def _get_centroids(self, clusters):
 
@@ -115,3 +115,63 @@ class KMeans:
             total_variance += variance
 
         return total_variance
+
+
+################################################################################################
+
+# Cluster Validation
+
+# usgin scikitlearn
+
+def get_min_dist_idx(x, centroids):
+    return np.argmin([np.linalg.norm(x - c) for c in centroids])
+
+
+def _get_comembership_matrix(X_valid, train_centroids):
+    n_samples, m_features = X_valid.shape
+    return np.array([[1 if 
+                    get_min_dist_idx(X_valid[i], train_centroids) == get_min_dist_idx(X_valid[j], train_centroids)
+                    else 0 
+                    for j in range(n_samples)
+                    ] 
+                    for i in range(n_samples)])
+
+def _get_prediction_strength(M, validate_labels, k):
+
+    ps = np.zeros(k)
+
+    for l in range(k):
+        member_idxs = np.where(validate_labels == l)[0]
+        size = len(member_idxs)
+
+        if size < 2: 
+            ps[l] = np.nan
+        else:
+            sub_m = M[np.ix_(member_idxs, member_idxs)]
+            pair_sum = np.sum(sub_m) - np.trace(sub_m)
+            ps[l] = pair_sum / (size * (size - 1)) 
+
+    return np.nanmin(ps)
+
+def validate_clusters(k, X_train, X_valid):
+
+    ps = np.zeros(k)    
+
+    for i in range(1,k):
+
+        kmeans = km(n_clusters=i, random_state=40, n_init=10).fit(X_train)
+        train_labels = np.copy(kmeans.labels_)
+        train_centroids = np.copy(kmeans.cluster_centers_)
+
+        kmeans.fit(X_valid)
+        test_labels = np.copy(kmeans.labels_)
+        test_centroids = np.copy(kmeans.cluster_centers_)
+
+        M = _get_comembership_matrix(X_valid, train_centroids)
+        ps[i  - 1] = _get_prediction_strength(M, test_labels, k)
+
+        return ps
+
+
+
+

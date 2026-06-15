@@ -407,3 +407,4 @@ These are stateful server-side handled authentication.
 **Rate limiting** is a technique used to control the number of requests a client can make to an API within a specified time period. It helps prevent abuse, ensures fair usage, and protects the server from being overwhelmed by excessive requests. Rate limiting can be implemented using various strategies, such as fixed window, sliding window, or token bucket algorithms.
 
 ---
+

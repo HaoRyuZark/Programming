@@ -1,6 +1,6 @@
 # Pandas
 
-Library for working with tabular data, which uses numpy under the hood, this means that all of the numpy 
+Library for working with tabular data, which uses numpy under the hood, this means that all of the NumPy 
 functionality like broadcasting, indexing, etc. are also valid pandas syntax.
 
 ## Import
@@ -22,7 +22,7 @@ A one-dimensional labeled array (label + data) that can hold any data type.
 
 #### Attributes
 
-- `s.index`: the index (row labels) of the Series.
+- `s.index`: the index (row labels) of the Series. Can be seen as the unnamed column.
 - `s.values`: the underlying NumPy array of values.
 - `s.dtype`: data type of the elements.
 - `s.name`: name of the Series.
@@ -92,6 +92,28 @@ df.sum(axis=0)  # sum of each column
 df.sum(axis=1)  # sum of each row
 ```
 
+### Indexes
+
+The **index** is the label/identifier  of a row, which by default is an range from 0 to n.
+
+- `df.set_index(label, inplace=False)`: will update the index labels and based on the `inplace=Bool` parameter 
+will change the DataFrame or return a copy.
+
+  - `label`: array-lie (column) to be used as the new index.
+  - `inplace`: will determine if another Dataframe will be used with the new index.
+
+- `df.reset_index(inplace=False)`: if an index was changed, it resets it to the default integer range.
+
+- `df.sort_index(ascending=True, inplace=False)`: sorts the row indexes.
+
+```python 
+df.set_index("email", inplace=True)
+df.reset_index(inplace=True)
+df.sort_index(ascending=False, inplace=True)
+```
+
+> Note that `iloc` uses the real internal index of the array while `loc` uses the index label.
+
 ---
 
 ## Creating Series & DataFrames
@@ -131,7 +153,8 @@ df4 = pd.DataFrame(df1)
 
 ## Reading Data
 
-- `pd.read_csv(filepath, sep=',', header='infer', index_col=None, usecols=None, dtype=None, nrows=None, skiprows=None, na_values=None, parse_dates=False, encoding='utf-8')`: reads a CSV file into a DataFrame.
+- `pd.read_csv(filepath, sep=',', header='infer', index_col=None, usecols=None, dtype=None, nrows=None, skiprows=None, na_values=None, parse_dates=False, encoding='utf-8')`: 
+reads a CSV file into a DataFrame.
   - `filepath`: path to the file or URL.
   - `sep`: delimiter character (use `\t` for TSV files).
   - `header`: row number to use as column names (default `'infer'`).
@@ -288,7 +311,7 @@ print(df.memory_usage(deep=True))
 ### `loc` and `iloc`
 
 - `df.loc[row_label, col_label]`: label-based selection. Accepts labels for row and columns in the format `[row_labels, col_labels]`, slices, boolean arrays, and callables. The stop in a slice is **inclusive**.
-  - `row_label`: row index label, slice, or list of labels.
+  - `row_label`: row index label, slice (last index is inclusive), or list of labels.
   - `col_label`: column name, slice, or list of column names.
 
 - `df.iloc[row_pos, col_pos]`: position-based selection. Accepts integers, slices, and lists of integers. The stop in a slice is **exclusive**.
@@ -299,7 +322,8 @@ print(df.memory_usage(deep=True))
 
 - `df.iat[row_pos, col_pos]`: fast scalar access by position (single cell).
 
-> **Key difference**: if you sort the DataFrame, the original index labels stay with their rows. `loc` uses those labels as keys, while `iloc` always uses the physical row position regardless of the index.
+> **Key difference**: if you sort the DataFrame, the original index labels stay with their rows. `loc` uses those labels as keys, while `iloc` always uses the physical 
+row position regardless of the index.
 
 ```python
 df = pd.DataFrame({
@@ -309,13 +333,14 @@ df = pd.DataFrame({
 }, index=["a", "b", "c", "d"])
 
 # loc — by label
-print(df.loc["a"])                        # row with label "a"
-print(df.loc["a":"c"])                    # rows a to c (inclusive)
-print(df.loc["a", "Name"])               # single cell by label
+print(df.loc["a"])                            # row with label "a"
+print(df.loc["a":"c"])                        # rows a to c (inclusive)
+print(df.loc["a", "Name"])                    # single cell by label
 print(df.loc[["a", "c"], ["Name", "Score"]])  # subset
 
 # iloc — by position
 print(df.iloc[0])                         # first row
+print(df.iloc[[0, 1]])                    # first and second row
 print(df.iloc[0:2])                       # rows 0 and 1
 print(df.iloc[0, 1])                      # cell at row 0, col 1
 print(df.iloc[:, 0:2])                    # all rows, first two columns
@@ -332,7 +357,13 @@ print(df[["Name", "Score"]])             # multiple columns → DataFrame
 
 ### Iterating 
 
-You can use the following syntax at the cost of performance for iterating over the data: 
+You can use the following syntax at the cost of performance for iterating over the data:
+
+- `df.iterrows()`: iterates over rows as `(index, Series)` pairs. Each row is returned as a Series — dtypes may be upcast to accommodate mixed types. Considerably slower than vectorized operations; avoid on large DataFrames.
+
+- `df.itertuples(index=True, name='Pandas')`: iterates over rows as named tuples. Faster than `iterrows()` and preserves column dtypes.
+  - `index`: if `True`, includes the row index as the first field of the tuple.
+  - `name`: name of the returned named tuple class. Pass `None` to return plain tuples.
 
 ```python 
 
@@ -370,8 +401,16 @@ for index, row in df.iterrows():
 
 - `df.notnull()` / `df.notna()`: returns a boolean DataFrame with `True` where values are not NaN.
 
+- `&` `~` and `|`: these are not bit-wise operators, but they act as `&&`, `^` and `||` in other programming languages. They are use to concatenate filters, due 
+to the fact that we can not use the default python Booleans for such condition-concatenation
+
 ```python
+
+# Boolean array
+filt = df["Age"] > 25
+
 # Single condition
+print(df[filt])
 print(df[df["Age"] > 25])
 
 # Multiple conditions — use & (and), | (or), ~ (not), with parentheses
@@ -429,7 +468,43 @@ df["Rank"] = df["Score"].rank(method="dense", ascending=False)
 
 ## Adding & Modifying Columns
 
+- `df["new_col"] = list_expr`: adds a column with the specified name using a expression which produces a list (series).
+
+- `s.apply(func, convert_dtype=True, args=())`: applies a function element-wise to each value of a Series.
+  - `func`: callable that receives a scalar and returns a scalar or a new Series.
+  - `convert_dtype`: if `True`, tries to find a better matching dtype for the result.
+  - `args`: extra positional arguments passed to `func` after each element.
+
+- `df.applymap(func)` (deprecated in pandas 2.1+ — use `df.map(func)` instead): applies a function element-wise to every cell in a DataFrame.
+  - `func`: callable that receives a scalar and returns a scalar.
+
+- `pd.cut(x, bins, labels=None, right=True, include_lowest=False, duplicates='raise')`: bins continuous values into discrete intervals with fixed-width edges.
+  - `x`: 1D array-like to bin.
+  - `bins`: int (number of equal-width bins computed from data range) or sequence of bin edges.
+  - `labels`: labels for the resulting bins. Length must equal the number of resulting bins. If `False`, returns integer bin indices.
+  - `right`: if `True`, intervals are closed on the right — `(a, b]` (default).
+  - `include_lowest`: if `True`, the first interval is left-closed — `[a, b]`.
+  - `duplicates`: `'raise'` or `'drop'` — how to handle duplicate bin edges.
+
+- `pd.qcut(x, q, labels=None, duplicates='raise')`: quantile-based binning — divides data into equal-frequency bins so that each bin contains approximately the same number of observations.
+  - `x`: 1D array-like.
+  - `q`: int (number of quantiles) or list of quantile boundaries in [0, 1] (e.g., `[0, 0.25, 0.5, 0.75, 1]`).
+  - `labels`: labels for the resulting bins. If `False`, returns integer bin indices.
+  - `duplicates`: `'raise'` or `'drop'` — how to handle duplicate bin edges that arise from the data distribution.
+
+- `df.assign(**kwargs)`: adds new columns to a DataFrame and returns a new object — the original is not modified.
+  - `**kwargs`: column names as keywords. Values can be scalars, arrays, or callables. Callables receive the current DataFrame as their argument, allowing columns assigned earlier in the same call to be referenced.
+
+- `df.rename(mapper=None, index=None, columns=None, axis=None, inplace=False, errors='ignore')`: renames axis labels.
+  - `columns`: dict mapping `{old_name: new_name}` for column labels.
+  - `index`: dict mapping `{old_label: new_label}` for row index labels.
+  - `axis`: axis targeted by `mapper` — `0` or `'index'` for rows, `1` or `'columns'` for columns.
+  - `inplace`: if `True`, modifies in place; otherwise returns a new DataFrame.
+  - `errors`: `'raise'` if a label is not found, or `'ignore'` to silently skip missing labels.
+
 ```python
+
+# Adding A Column Directly
 df["Total"] = df["Attack"] + df["Defense"]               # new column from arithmetic
 df["Total"] = df.iloc[:, 2:5].sum(axis=1)                # row-wise sum of a range
 
@@ -470,6 +545,25 @@ df["Gender"] = df["Gender"].map({"M": "Male", "F": "Female"})
 ```
 
 ---
+
+## Adding Rows 
+
+- `df.append(other, ignore_index=False, verify_integrity=False, sort=False)`: appends rows of the other, creating a new object.
+  - `other`: a DataFrame or Series/dict-like object, or list of these which  is the data to append. 
+  - `ignore_index`: if True, the resulting axis will be labeled 0, 1, …, n - 1
+  - `verify_integrity`: if True, raise ValueError on creating index with duplicates.
+  - `sort`: Sort columns if the columns of self and other are not aligned.
+
+```python 
+# Basic append
+df.append({'first': 'Tony'}, ignore_index=True)
+
+# append multiple rows
+new_rows = pd.DataFrame([{'first': 'Tony'}, {'first': 'Steve'}])
+df = df.append(new_rows, ignore_index=True)
+```
+
+--- 
 
 ## Removing Columns & Rows
 
@@ -541,6 +635,13 @@ df = df.reset_index(drop=True)
 -  `df["col"].interpolate(method='linear', limit_direction='forward', inplace=False)`: fills NaN values using interpolation.
    - `method`: interpolation method — `'linear'`, `'time'`, `'index'`, etc.
    - `limit_direction`: direction to fill — `'forward'`, `'backward'`, or `'both'`.
+
+- `df.remove_duplicates(subset=None, keep='first', inplace=False)`: removes duplicate rows.
+  - `subset`: column(s) to consider for identifying duplicates.
+  - `keep`: which occurrence to keep — `'first'`, `'last'`, or `False` (drop all duplicates).
+
+-  `df["col"].str.strip(to_strip=None)`: removes leading and trailing characters from string columns.
+   - `to_strip`: characters to remove (default is whitespace).
 
 ```python
 # Remove rows with any missing value
@@ -678,13 +779,82 @@ print(df_numeric.map(lambda x: round(x, 2)))
 
 ---
 
+## Aggregate Functions
+
+We can apply this funcions to a DataFrame or Series to get summary statistics:
+
+- `df.describe(percentiles=None, include=None, exclude=None)`: generates descriptive statistics for each of the columns.
+  - `percentiles`: list of percentiles to include (default `[0.25, 0.5, 0.75]`).
+  - `include`: dtypes to include — `'all'` to include object columns.
+  - `exclude`: dtypes to exclude.
+
+- `df.sum(axis=0, skipna=True)`: sum of values.
+
+- `df.mean(axis=0, skipna=True)`: mean of values.
+
+- `df.median(axis=0, skipna=True)`: median of values.
+
+- `df.min(axis=0, skipna=True)`: minimum value.
+
+- `df.max(axis=0, skipna=True)`: maximum value.
+
+- `df.count(axis=0)`: number of non-NaN values.
+
+- `df.nunique(axis=0, dropna=True)`: number of unique values.
+
+- `df.value_counts(subset=None, normalize=False, sort=True, dropna=True)`: counts occurrences of unique rows (or use on a Series for value frequency).
+  - `subset`: columns to consider for counting.
+  - `normalize`: if `True`, returns relative frequencies.
+  - `sort`: if `True`, sorts by counts.
+  - `dropna`: if `True`, ignores NaN values.
+
+- `df.corr(method='pearson', min_periods=1)`: pairwise correlation of columns.
+
+```python 
+print(df.describe())                     # summary stats for numeric columns
+print(df.sum(numeric_only=True))          # sum of numeric columns
+print(df.mean(numeric_only=True))         # mean of numeric columns 
+print(df["Score"].median())              # median of a single column
+print(df.min(numeric_only=True))          # min of numeric columns
+print(df.max(numeric_only=True))          # max of numeric columns
+print(df.count())                        # count of non-NaN values per column
+print(df.nunique())                      # unique values per column
+print(df["Category"].value_counts())      # frequency of each category
+print(df.corr())                          # pairwise correlation of columns
+```
+
+--- 
+
 ## GroupBy & Aggregations
 
-- `df.groupby(by, axis=0, sort=True, dropna=True)`: groups the DataFrame by one or more columns.
+GroupBy is a concept from SQL that allows us to perform aggregation on subsets of the data which share a common characteristic. 
+For example: grouping a dataset by country and then calculating the avarage income for each country.
+
+- `df.groupby(by, axis=0, sort=True, dropna=True)`: returns a groupBy object which contains the groups formed based on the condition.
   - `by`: column name, list of column names, or a function.
   - `sort`: if `True`, sort group keys.
   - `dropna`: if `True`, groups with NaN keys are excluded.
 
+
+-  `groupby_obj.get_group(name)`: returns the group corresponding to the given name.
+
+- `groupby_obj.groups`: a dict mapping group names to row indices.
+
+- `groupby_obj.size()`: returns the size of each group.
+
+- `groupby_obj.count()`: counts non-NaN values in each group.
+
+- `groupby_obj.mean()`, `groupby_obj.sum()`, `groupby_obj.min()`, `groupby_obj.max()`, etc.: standard aggregation functions applied to each group.
+
+- `groupby_obj["col"]`: access a specific column within each group.
+
+- `groupby_obj.loc[name]`: access a specific group by name (similar to `get_group` but returns a view if possible).
+
+- `groupby_obj.iloc[name]`: access a specific group by integer position (similar to `get_group` but returns a view if possible).
+
+- `groupby_obj["col"].agg(func)`: applies an aggregation function to a specific column within each group.
+  - `func`: function, string alias (e.g., `'mean'`), list, or dict mapping column names to aggregations.
+ 
 - `groupby_obj.agg(func)`: aggregates groups using one or more functions.
   - `func`: function, string alias (e.g., `'mean'`), list, or dict mapping column names to aggregations.
 
@@ -972,8 +1142,17 @@ df["ScoreQuartile"] = pd.qcut(df["Score"], q=4, labels=["Q1", "Q2", "Q3", "Q4"],
 
 A MultiIndex (hierarchical index) lets you have multiple levels of row or column labels, which is useful for grouped or panel data.
 
-- `pd.MultiIndex.from_tuples(tuples, names=None)`: creates a MultiIndex from a list of tuples.
-- `pd.MultiIndex.from_product(iterables, names=None)`: creates a MultiIndex from the Cartesian product of iterables.
+- `pd.MultiIndex.from_arrays(arrays, sortorder=None, names=None)`: creates a MultiIndex from multiple 1D arrays, one per level.
+  - `arrays`: list of array-like sequences, each representing one level of the index.
+  - `names`: list of names for each index level.
+
+- `pd.MultiIndex.from_tuples(tuples, sortorder=None, names=None)`: creates a MultiIndex from a list of tuples, where each tuple represents one entry across all levels.
+  - `tuples`: list of tuples, each containing the index values for one row across all levels.
+  - `names`: list of names for each index level.
+
+- `pd.MultiIndex.from_product(iterables, sortorder=None, names=None)`: creates a MultiIndex from the Cartesian product of multiple iterables — generates all possible combinations.
+  - `iterables`: list of iterables — one per level.
+  - `names`: list of names for each index level.
 
 ```python
 # Creating a MultiIndex DataFrame

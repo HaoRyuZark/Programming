@@ -1,7 +1,6 @@
 # Databases
 
-A quick reference guide for common SQL commands, concepts and
-databases in general.
+A quick reference guide for common SQL commands, concepts and databases in general.
 
 ---
 
@@ -52,6 +51,27 @@ situations.
 
 ---
 
+## Types Of Databases
+
+- **Relational**: Orders data in rows and columns which may share relations via shared columns. Uses relational algebra as foundation. Examples: PostgreSQL, 
+MySQL, Microsoft SQL Server. (The focus of this reference).
+
+- **Key-Value**: Stores data in a key-value pairs like a hashmap. Examples Redis, Amazon Dynamo DB. 
+
+- **Column Bases**: Stores data in columns e.g. Apache Cassandra, Amazon Redshift. 
+
+- **Graph**: Uses concepts from graph theory to organize data e.g. Neo4J 
+
+- **Document Based**: Organizes data into documents which represent objects.
+
+--- 
+
+## Storage 
+
+Data is mostly stored in pages in the disk which are organize with indices in a **B-tree** data-structure.
+
+--- 
+
 ## Types of Relations 
 
 - **One to One:** (1 to 1) in Min-Max Notation (1,1) - (1,1), in Chen Notatation 1--1
@@ -92,10 +112,9 @@ This architecture brings us the following advantages:
 
 ## Creating a SQL Database 
 
-Inside your sql file you can start with 
+Inside your SQL file you can start with 
 
 ```sql
-
 -- Creation
 CREATE DATABASE database_name; 
 
@@ -110,26 +129,22 @@ USE database_name;
 ## SQL Data Types
 
 - **Numeric**:
-
   - `INT` – whole numbers
   - `DECIMAL(p, s)` – fixed-point (precision, scale)
   - `FLOAT`, `REAL` – approximate values
 
 - **String**:
-
   - `CHAR(n)` – fixed length
   - `VARCHAR(n)` – variable length
   - `TEXT` – long text
 
 - **Date/Time**:
-
   - `DATE` – YYYY-MM-DD
   - `TIME` – HH\:MM\:SS
   - `DATETIME` – YYYY-MM-DD HH\:MM\:SS
   - `TIMESTAMP` – auto-updated date/time
 
 - **Boolean**:
-
   - `BOOLEAN` or `TINYINT(1)` (0 = false, 1 = true)
 
 Example:
@@ -183,7 +198,8 @@ CREATE TABLE orders (
 
 ## Dropping Tables
 
-- `DROP TABLE` deletes a table and all its data.
+`DROP TABLE table_name` deletes a table and all its data. If there exists dependencies with other tables via weak entities, these 
+tables will also be deleted.
 
 Example:
 
@@ -195,9 +211,9 @@ DROP TABLE users;
 
 ## Altering Tables
 
-- Use `ALTER TABLE` to modify an existing table.
-- Add, remove, or rename columns.
-- Add or remove constraints.
+Use `ALTER TABLE table anem` to modify an existing table by
+
+- Add `ADD`, remove `DROP`, or rename columns, constrains, ros.
 
 Examples:
 
@@ -243,7 +259,8 @@ CREATE TABLE products (
 
 ## Creating Tables
 
-- Use `CREATE TABLE` to define a new table.
+Use `CREATE TABLE(attr1 type opt, attr2, ..., CONSTRAINT constraint_name <constraint> ...)` to define a new table with its attributes, 
+constrains, keys, etc.
 
 Example:
 
@@ -259,15 +276,16 @@ CREATE TABLE users (
 
 ## On Delete
 
-- Defines what happens when a referenced row is deleted.
+Defines what happens when a referenced row is deleted.
 
 Example:
 
 ```sql
+-- when the row/whole table is deleted we set the order_id in the the users table to NULL
 CREATE TABLE orders (
     order_id INT PRIMARY KEY,
     user_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL  
 );
 ```
 
@@ -275,11 +293,12 @@ CREATE TABLE orders (
 
 ## On Cascade
 
-- Automatically deletes or updates child rows when parent row changes.
+Automatically deletes or updates child rows when parent row changes.
 
 Example:
 
 ```sql
+-- the row get deleted if a user which references the order is deleted
 CREATE TABLE orders (
     order_id INT PRIMARY KEY,
     user_id INT,
@@ -289,12 +308,121 @@ CREATE TABLE orders (
 
 ---
 
-## Functions
+## SQL SELECT
+
+Selecting is by far the most common operation in sql and thus, also the most complex. There are a lot of variations for  
+the SELECT statements
+
+The common structure looks like:
+
+```sql 
+SELECT col1, col2, ..., cols3 AS 'this is an alias' FROM table_1 p "(this p refers o the relation which is going to be created from a JOIN or subquery, thus 
+it is optinal)" WHERE cond1, cond2, cond3;
+```
+
+We can also declare custom columns by using row attributes and combining them into one column `name, gdp/population`.
+
+- `SELECT` retrieves data from a table.
+
+- `SELECT 1` retrieves 1 for each of the rows matching some criteria.
+
+- `FROM` specifies the table.
+
+- `WHERE` filters rows.
+
+- `ORDER BY col_name` sorts results, we can specify: `ASC`, `DESC`. We can also use a concept called **nested sorting** which consists of applying different sorts on our data 
+one after the other.
+
+- `GROUP BY`  it sorts multiple matching rows into groups determined by an specific criteria. This is mostly used for aggregating data.
+
+- `LIMIT` restricts number of rows.
+
+- `LIKE 'pattern'` is used to specify patterns in text using `'%letters%'` `%` is a wild card for any character any number of times and `_` a wild card 
+for exactly one character.
+
+- `DISTINC` if used after the SELECT keyword it eliminate duplicates.
+
+- `OR AND NOR NOT` we can use this boolean algebra  operations after the WHERE clause to specify conditions.
+
+**Syntax Order**: 
+
+```sql 
+SELECT DISTINC TOP n 
+    col1, 
+    col2, 
+    agggregate_func(col2)
+FROM table 
+WHERE 
+    cond1 AND cond2 ... 
+GROUP BY 
+    col1 
+HAVING 
+    func(col2)
+ORDER BY col1 ASC/DESC
+
+```
+
+**Execution Order** 
+
+1. `FROM` 
+2. `WHERE`
+3. `GROUP BY` 
+4. `HAVING`
+5. `SELECT DISTINC`
+6. `ORDER BY`
+7. `TOP`
+
+Examples: 
+
+```sql
+-- Simple select all
+SELECT * FROM users;
+
+-- Select two attributes of the 5 rows with the smaller age (select the 5 youngest)
+SELECT name, age FROM users WHERE age > 18 ORDER BY age DESC LIMIT 5;
+
+-- Attribute plus custom column using a where
+SELECT name, gdp/population FROM users WHERE gdp >= 10000000;
+
+-- Order by the most recent and by name
+SELECT winner, yr, subject FROM nobel WHERE winner LIKE 'Sir%' ORDER BY yr DESC,  winner
+
+-- Nested Sorting (First sorted the countris and then sort the country groups by score)
+SELECT * from customers ORDER BY country ASC ORDER BY score DESC
+
+-- Show the 1984 winners and subject ordered by subject and winner name; but list chemistry and physics last.
+SELECT winner, subject FROM nobel WHERE yr = 1984 ORDER BY subject IN ('chemistry','physics'), subject, winner; -- because IN () returns in this case 0 or 1 they go last
+
+-- Select using renaming and alises
+SELECT e.name as 'Employee' FROM Employee e WHERE e.salary > (SELECT m.salary FROM Employee m WHERE e.managerId = m.id);
+
+-- More Elegant solutions of the previous query using joins
+SELECT e.name as 'Employee' FROM Employee e INNER JOIN Employee m ON e.managerId = m.id WHERE e.salary > m.salary;
+
+-- Returning duplicated rows
+SELECT e.email as 'Email' FROM Person e GROUP BY email HAVING COUNT(email) > 1;
+
+-- Select the customers which have never make an order
+SELECT name as 'Customers' FROM Customers LEFT JOIN Orders ON Customers.id = Orders.customerId WHERE Orders.customerId IS NULL; 
+
+````
+
+
+### More SELECT Functions
 
 - **Aggregate functions**: `COUNT`, `SUM`, `AVG`, `MAX`, `MIN` can be used inside SELECT statements to create complex queries
+
 - **String functions**: `UPPER`, `LOWER`, `CONCAT`, `LEFT`, `RIGHT`
+
 - **Date functions**: `NOW`, `CURDATE`
+
 - **Math Functions**: `ROUND`, `FLOOR`, `CEIL`
+
+- **Comparison**: this includes all of the classic comparisons `<, > >= <=, ==, <>(not equal in PostgreSQL), !=,  AND, OR, NOT`
+
+- **Range**: `BETWEEN lower AND upper` checks if a value is a inclusive range.
+
+- **Membership**: `IN, NOT IN (val1, val2, ...)` checks if a value or is not in a list.
 
 Example:
 
@@ -340,8 +468,6 @@ SELECT p.product_id, IFNULL(ROUND(SUM(p.price * u.units)/SUM(u.units), 2), 0) as
 FROM Prices p 
     LEFT JOIN UnitsSold u ON p.product_id = u.product_id AND u.purchase_date BETWEEN p.start_date AND p.end_date 
 GROUP BY p.product_id;
-
-
 ```
 
 --- 
@@ -379,60 +505,6 @@ SELECT MAX(num) as num FROM MyNumbers n WHERE num IN(SELECT num FROM myNumbers G
 
 --- 
 
-## SQL SELECT
-
-Selecting is by far the most common operation in sql and thus, also the most complex. There are a lot of variations for  
-the SELECT statements
-
-The common structure looks like:
-
-```sql 
-SELECT col1, col2, ..., cols3 AS 'this is an alias' FROM table_1 p "(this p refers o the relation which is going to be created from a JOIN or subquery, thus 
-it is optinal)" WHERE cond1, cond2, cond3;
-```
-
-The common keywords are 
-
-- `SELECT` retrieves data from a table
-- `SELECT 1` retrives 1 for each of the rows matching some criteria 
-- `FROM` specifies the table
-- `WHERE` filters rows
-- `ORDER BY` sorts results, we can specify: `ASC`, `DESC`
-- `GROUP BY`  it sorts mutiple matching eows into groups determined by an specific criteria
-- `LIMIT` restricts number of rows
-- `LIKE` is used to specify patterns in text using `'%letters%'` % is a wild card for any character any number of times 
-- `DISTINC` if used after the SELECT keyword it eliminate duplicates.Example:
-- `OR AND NOR` we can use this boolean algebra  operations after the WHERE clause to specify conditions
-
-Examples: 
-
-```sql
--- Simple select
-SELECT name, age FROM users WHERE age > 18 ORDER BY age DESC LIMIT 5;
-
-SELECT name, gdp/population FROM users WHERE gdp >= 10000000;
-
--- Order by the most recent and by name
-SELECT winner, yr, subject FROM nobel WHERE winner LIKE 'Sir%' ORDER BY yr DESC,  winner
-
--- Show the 1984 winners and subject ordered by subject and winner name; but list chemistry and physics last.
-SELECT winner, subject FROM nobel WHERE yr = 1984 ORDER BY subject IN ('chemistry','physics'), subject, winner; -- because IN () returns in this case 0 or 1 they go last
-
--- Select using renaming and alises
-SELECT e.name as 'Employee' FROM Employee e WHERE e.salary > (SELECT m.salary FROM Employee m WHERE e.managerId = m.id);
-
--- More Elegant solutions of the previous query using joins
-SELECT e.name as 'Employee' FROM Employee e INNER JOIN Employee m ON e.managerId = m.id WHERE e.salary > m.salary;
-
--- Returning duplicated rows
-SELECT e.email as 'Email' FROM Person e GROUP BY email HAVING COUNT(email) > 1;
-
--- Select the customers which have never make an order
-SELECT name as 'Customers' FROM Customers LEFT JOIN Orders ON Customers.id = Orders.customerId WHERE Orders.customerId IS NULL; 
-
-````
-
----
 
 ## EXISTS
 
@@ -452,21 +524,48 @@ WHERE NOT EXISTS (
 
 --- 
 
-## Union
+## UNION
 
-Combines results of two queries and removes duplicates (`UNION ALL` keeps them).
+Combines results of two queries and removes duplicates (`UNION ALL` keeps them). The syntax is `SELECT_ST 1 UNION SELECT_2`
 
 Example:
 
 ```sql
+-- return a list of all the names from both customers and suppliers.
 SELECT name FROM customers
 UNION
 SELECT name FROM suppliers;
 ```
 
-The query above will return a list of all the names from both customers and suppliers.
+We can use aliases to rename our columns if necessary due to the fact that the **first select statement determines the shape of the output**.
 
 ---
+
+## EXCEPT or MINUS
+
+Is used as set-minus.
+
+```sql 
+-- return customers which are not employees
+SELECT name FROM customers 
+EXCEPT
+SELECT name FROM employees
+```
+
+--- 
+
+## INTERSECT
+
+Is used as a set intersection.
+
+```sql 
+-- return customers which are also employees
+SELECT name FROM customers 
+INTERSECT
+SELECT name FROM employees
+```
+
+--- 
 
 ## CASE 
 
@@ -485,45 +584,89 @@ AS 'triangle' FROM Triangle;
 
 ## Joins
 
-They are used to combining rows from two or more tables based on a related column between them.
+They are used to combining rows from two or more tables based on a related column between them. It consist on a Cartesian product 
+of the relational algebra plus a selection.
 
-- **INNER JOIN**: only matching rows 
+**Syntax**: 
 
 ```sql 
+SELECT t1.attr, t2.attr, ... FROM table1 t1 join_type JOIN table2 t2 ON <condition>
+```
+
+We also use **aliases** for the table `table t` to avoid conflicts between column names. We can also use the table name, but they are 
+often longer than an alias.
+
+Types:
+
+- **INNER JOIN**: only matching rows based on a condition
+
+```sql 
+-- select the user-id and email of user which created a product 
 SELECT u.id, u.email, p.name FROM users u INNER JOIN product p ON u.id = p.created.by
 ```
 
-- **LEFT JOIN**: all left table + matches. This means that in this case if a user has not created a product it will be still be retrived but with null values 
-for the columns related to the product
+- **LEFT JOIN**: all left table + matches. This means that in this case if a user has not created a product it will be still be retrieved but with null values 
+for the columns related to the product.
 
 ```sql 
-SELECT u.id, u.email, p.name FROM users u LEFT JOIN product p ON u.id = p.created.by
-
+-- all mathches of the inner join plus all the data of the user table
+SELECT u.id, u.email, p.name FROM users u LEFT JOIN product p ON u.id = p.createdBy
 ```
 
-- **RIGHT JOIN**: all right table + matches. Similar to the left join this time products with no creato will also be displayed
+The order matters in the condition, start with the left table for the selection and the condition.
+
+- **RIGHT JOIN**: all right table + matches. Similar to the **left** join this time products with no creator will also be displayed.
 
 ```sql
-SELECT u.id, u.email, p.name FROM users u RIGHT JOIN product p ON u.id = p.created.by
+-- all mathches of the inner join plus all the data of the product table
+SELECT u.id, u.email, p.name FROM users u RIGHT JOIN product p ON u.id = p.createdBy
 ```
 
-- **CROSS JOIN**: It returns the cartesian product of the two tables 
+The order matters in the condition, start with the **right** table for the selection and the condition.
+
+- **FULL JOIN**: Returns both matches and miss-matches. 
 
 ```sql
+-- all combinations between all rows
+SELECT u.id, u.email, p.id, p.name FROM users u FULL JOIN product p ON u.id = p.createdBy
+```
+
+- **CROSS JOIN**: It returns the Cartesian product of the two tables 
+
+```sql
+-- all combinations between all rows
 SELECT u.id, u.email, p.id, p.name FROM users u CROSS JOIN product p
 ```
 
-Examples: 
+- **LEFT OUTER JOIN**: It returns all tuples from the left relation with not matches on the right. 
+
+```sql 
+-- Left Outer Join:
+SELECT * FROM T LEFT OUTER JOIN S ON T.a = S.d;
+```
+
+- **RIGHT OUTER JOIN**: It returns all tuples from the right relation with not matches on the left.
+
+```sql 
+-- Right Outer Join:
+SELECT * FROM T RIGHT OUTER JOIN S ON T.a = S.d;
+```
+
+- **FULL OUTER JOIN**: It returns all tuples from both relations which are not in the inner join.
+
+```sql 
+-- Full Outer Join:
+SELECT * FROM T FULL OUTER JOIN S ON T.a = S.d;
+```
+
+**Examples**: 
 
 ```sql
 SELECT users.name, orders.order_id
 FROM users
 INNER JOIN orders ON users.id = orders.user_id;
-```
 
-Another example: "Find all branches and the names of their managers"
-
-```sql
+-- Another one
 SELECT employee.emp_id, employee.first_name, branch.branch_name 
 FROM employee 
 JOIN 
@@ -533,15 +676,30 @@ ON employee.emp_id = branch.mgr_id
 
 --- 
 
+## Static Values
+
+**Static values** in SQL are used mostly as placeholders or default values when creating, inserting or modifying data when a certain condition is meet.
+
+Example: 
+
+```sql 
+-- returns a table with an unnamed column containg the value 1
+SELECT 1;
+
+-- Selects id, and name from the customer table and appends two new unnamed columns with NULL and 'Unknown' as default values
+SELECT id, first_name, NULL, 'Unknown' FROM customers
+```
+
+--- 
+
 ## Inserting
 
-- Use `INSERT INTO` to add data. The sentence is build with `INSERT INTO tabe (col1, col2, ..) VALUES(val1, val2, val3)`
+`INSERT INTO` is used to add data. The sentence is build with `INSERT INTO table (col1, col2, ..) VALUES(val1, val2, val3)`
 
 Example:
 
 ```sql
-INSERT INTO users (id, name, age) 
-VALUES (1, 'Alice', 25);
+INSERT INTO users (id, name, age) VALUES (1, 'Alice', 25);
 ```
 
 or if you insert a complete row you can just write
@@ -549,37 +707,40 @@ or if you insert a complete row you can just write
 ```sql
 
 -- Inserting multiple rows
-INSERT INTO users
-VALUES (1, 'Alice', 25), (2, 'Bob', 20);
+INSERT INTO users VALUES (1, 'Alice', 25), (2, 'Bob', 20);
+
+-- Inserting data from the customer to the users table 
+
+INSERT INTO users (id, first_name, birthday, phone)
+    SELECT id, first_name, NULL, 'Unknown' FROM customers
+
 ```
 
 ---
 
 ## Updating
 
-- Use `UPDATE` to modify existing data.
+`UPDATE table_name SET attr1 = val1, attr2 = val2 WHERE <condition>` is used to modify existing data.
+
 - Always use `WHERE` to avoid updating all rows.
 
 Example:
 
 ```sql
-UPDATE users 
-SET age = 26 
-WHERE id = 1;
+UPDATE users SET age = 26 WHERE id = 1;
 ```
 
 ---
 
 ## Deleting
 
-- Use `DELETE` to remove rows.
+Use `DELETE FROM table_name WHERE <condition>` to remove rows.
 
 Example:
 
 ```sql
 -- Simple deleted statement based on a conditon. It is also possible to delete in more complex ways but the simpler the better
-DELETE FROM users 
-WHERE age < 18;
+DELETE FROM users WHERE age < 18;
 ```
 
 --- 
@@ -623,7 +784,7 @@ END;
 
 ## Updating 
 
-To update we speify the table the column and under which condition we want to update.
+To update we specify the table the column and under which condition we want to update.
 
 ```sql
 UPDATE accounts SET balance = balance - 100 WHERE id = 1;

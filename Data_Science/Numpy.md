@@ -232,6 +232,37 @@ print("Diagonal-like selection:", arr2d[rows, cols])  # [30, 50, 70]
 print("Multiple elements:", arr2d[[0, 2], [1, 2]])    # [20, 90]
 ```
 
+### ix_ 
+
+- `np.ix_(*args)`: takes N 1D sequences and returns N outputs of dimension N such that 
+the shape is 1 in al but one dimension. In other words it takes 1D index arrays and turn them into 
+arrays that can be used to select the **Cartesian product** of those indices.
+
+This can be used for indexing and array on very specific indices like for example sub-matrices. 
+
+```python 
+import numpy as np
+
+a = np.arange(10).reshape(2, 5)
+
+# 2 by 5
+# array([[0, 1, 2, 3, 4],
+#        [5, 6, 7, 8, 9]])
+
+# we want to select the elements at in the rows 0, 1 and the column 2, 4
+ixgrid = np.ix_([0, 1], [2, 4])
+
+#(array([[0], [1]]), 
+  array([[2, 4]]))
+
+# ixgrid[0].shape, ixgrid[1].shape
+# ((2, 1), (1, 2))
+
+a[ixgrid]
+# array([[2, 4],
+#        [7, 9]])
+```
+
 ---
 
 ## Slicing
@@ -420,7 +451,7 @@ ages = np.array([12, 24, 35, 45, 60, 72])
 labels = np.array(["Minor", "Adult"])
 result = np.where(ages > 18, labels[1], labels[0])
 print("Labels:", result)  # ['Minor' 'Adult' 'Adult' 'Adult' 'Adult' 'Adult']
-
+````
 
 ### Assignment broadcasting 
 
@@ -432,6 +463,59 @@ arr[:,0] = 10 # assigning the value 10 to all of the first column element
 ---
 
 ## Array Manipulation
+
+### Append, Insert & Delete
+
+- `np.append(arr, values, axis=None)`: appends values to the end of an array.
+  - `arr`: target arr 
+  - `values`: values to be appended at a copy of arr. It must be the same shape as arr. If 
+  axis is not specified, this arr gets flattend before use.
+  - `axis`: Optional argument to specify along which axis values are appended.
+
+- `np.insert(arr, obj, values, axis=None)`: inserts values along the given axis before the given indices.
+  - `arr`: input array. 
+  - `obj`: slice, list, etc. containing the index or indices before which values are inserted.
+  - `values`: array of values to be inserted. 
+  - `axis`: axis along which the values are inserted. If not specified then arr gets flattend.
+
+- `np.delete(arr, obj, axis=None)`: returns a new array without the target of deletion.
+  - `arr`: input array. 
+  - `obj`: slice, list, etc. containing the index or indices of sub-arrays to remove along the specified axis. 
+  -`axis`: the axis along which to delete the sub-array defined by obj. If axis is None, obj is applied to the flattened array. 
+
+```python 
+
+np.append([1, 2, 3], [[4, 5, 6], [7, 8, 9]])
+# [1, 2, 3, 4, 5, 6, 7, 8 ,9]
+
+np.append([[1, 2, 3], [4, 5, 6]], [[7, 8, 9]], axis=0)
+#[[1, 2, 3],
+# [4, 5, 6],
+# [7, 8, 9]])
+
+a = np.arange(6).reshape(3, 2)
+# [[0, 1],
+#  [2, 3],
+#  [4, 5]]
+
+np.insert(a, 1, 6)
+# [0, 6, 1, 2, 3, 4, 5]
+
+np. insert(a, 1, 6, axis=1)
+# [0, 6, 1],
+# [2, 6, 3],
+# [4, 6, 5]]
+
+arr = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12]])
+# [[ 1,  2,  3,  4],
+#  [ 5,  6,  7,  8],
+#  [ 9, 10, 11, 12]])
+
+np.delete(arr, 1, 0)
+# [[ 1,  2,  3,  4],
+#  [ 9, 10, 11, 12]])
+
+```
 
 ### Reshape, Flatten & Ravel
 
@@ -549,6 +633,11 @@ b = np.block([
 ])
 print("Block matrix:\n", b)
 ```
+
+### Sub-matrices
+
+
+
 
 ### Index-Based Array Creation
 
@@ -888,6 +977,13 @@ print("Tile as 2x3:", np.tile(arr2, (2, 3)))          # [[1,2,3,1,2,3,1,2,3],[..
 - `np.linalg.svd(a, full_matrices=True)`: Singular Value Decomposition — factorizes `a` into `U @ diag(s) @ Vh`.
   - `a`: input matrix.
   - `full_matrices`: if `True`, returns full-sized U and Vh.
+
+- `np.trace(a, offset=0, axis1=0, axis2=1, dtype=None, out=None):` If `a` is a 2d array it returns the diagonal sum, else returns an array of sums along the diagonals.
+  - `a`: input matrix.
+  - `offset`: offset of the diagonal from the main diagonal.
+  - `axis1=0, axis2=1`: axes used for 2D diagonal sum, given that the array has a higher dimension. 
+  - `dtype`: determines the data type of the returned array or accumulator
+  - `out`: array into which the output is placed,
 
 ```python
 arr1 = np.array([1, 2, 3])

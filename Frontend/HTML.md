@@ -1606,6 +1606,13 @@ A complete blog-style page combining all of the above:
 
 --- 
 
+## HTML Injections
+
+This is a technique which occurs when accepting HTML from the user as input is not properly sanitize by 
+allowing script tags, protocols or even defining custom input fields.
+
+--- 
+
 
 ## Full Example 
 
