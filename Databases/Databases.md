@@ -763,6 +763,46 @@ WHERE id IN (
 
 --- 
 
+## Stored Procedures
+
+**Stored procedures** are a way of storing common routines which consist on multiple queries which can take parameters. 
+
+```sql 
+CREATE OR ALTER PROCEDURE my_stored_procedure(@param1 datatype, @param2 datatype) 
+AS  $$
+BEGIN 
+    SELECT col1, col2 FROM table_name WHERE col1 = @param1;
+END; $$;
+
+-- The way it is called depends on the server
+CALL my_stored_procedure('migu', 'leo');
+EXEC my_stored_procedure('migu', 'leo');
+```
+
+They can be useful to reduce the number of queries send by the application to the database, but they can become very complex making the development process 
+slower as well as being harder to version control.
+
+--- 
+
+## Dynamic SQL
+
+**Dynamic SQL** is way of creating sql statements at runtime by passing the necessary parameters to a string which then gets executed. It 
+can be used in combination with stored procedures which already accept parameters to allow for even more flexibility.
+
+```sql 
+
+```
+
+--- 
+
+## SQL Functions 
+
+```sql 
+
+```
+
+--- 
+
 ## Triggers
 
 Run automatically when an event occurs.
@@ -851,7 +891,6 @@ Only one write
 ## Schema Example
 
 ```sql
-
 CREATE TABLE IF NOT EXISTS maps (
     id INTEGER,
     name VARCHAR(50) NOT NULL,

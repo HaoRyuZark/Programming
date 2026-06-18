@@ -21,6 +21,24 @@ Is a parameter which determines how likely the model is to consider lower-probab
 
 --- 
 
+## Vector Embedings 
+
+These are words, or data which is converts into a vector form (numbers), to be stored in a vector database which 
+uses similarity measurements to organize the embedings.
+
+--- 
+
+## Retrieval Augmented Generation (RAG)
+
+**RAG** is the process of using vector embedings for enhancing the accuracy of LLMs by storing the embedings in 
+vector database for the model to use based on the similarity of the prompt to the embedings in the database.
+
+- **Retrieval**: Using semantic search for the embedings of the prompt and vector in the database.
+- **Augmented**: The vector embedings are append to the prompt to enhance the context.
+- **Generation**: Using the enhanced prompt and context, the LLM delivers an output using the information.
+
+--- 
+
 ## AI Skills 
 
 - **Prompt Engineering**: process of giving an LLM context in a structured way to optimize outputs.
