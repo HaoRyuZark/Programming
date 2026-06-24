@@ -161,6 +161,14 @@ CREATE TABLE employees (
 
 --- 
 
+## Casting
+
+We can **cast** values with the following syntax:
+
+- `CAST(arg AS type)`
+
+--- 
+
 ## Keys
 
 - **Primary Key**: uniquely identifies each row.
@@ -405,24 +413,105 @@ SELECT e.email as 'Email' FROM Person e GROUP BY email HAVING COUNT(email) > 1;
 -- Select the customers which have never make an order
 SELECT name as 'Customers' FROM Customers LEFT JOIN Orders ON Customers.id = Orders.customerId WHERE Orders.customerId IS NULL; 
 
-````
+```
+
+--- 
+
+## Aggregate Functions 
+
+- `COUNT`: 
+- `SUM`:
+- `AVG`:
+- `MAX`:
+- `MIN`:
+
+--- 
+
+## String functions
+
+- `UPPER(str) LOWER(str)`: converts to upper/lower case. 
+- `CONCAT(str, ..., strn)`: combines two strings or more strings into one. 
+- `LEFT(str, n)`: get the first n  characters from the left.
+- `RIGHT(str, n)`: get the first n  characters from the right.
+- `SUBSRING(str, start, end)`: extract the substring from start to end.
+- `REPLACE(str, pattern, replacement)`: replaces the pattern with a string.
+- `TRIM(str)`: removes trailing spaces.
+- `LEN(str)`: returns the length of the string.
+
+--- 
+
+## Date functions
+
+A **DateTime** has the format `YYYY.MM.DD hh:mm:ss` while a **Date** or **Time** only consists on the 
+corresponding portions.
+
+- `NOW`: 
+- `CURDATE`:
+- `DAY(date)`: get day.
+- `MONTH(date)`: get month.
+- `YEAR(date)`: get year.
+- `DATEPART(part, date)`: (part: year, month, day, hour, quarter, weekday, week) extracts the specified part
+- `DATENAME(part, date)`: (part: month, weekday)
+- `DATETRUNC(part, date)`: keeps the date until the specified part, the rest gets reseted to its minimal initial value.
+- `EOMONTH(date)`: returns the last day of a month.
+- `DATEADD(part, interval, date)`: adds or subtracts a DateTime value a certain interval.
+- `DATEDIFF(part, start_date, end_date)`: returns the difference between two dates in the specified part
+- `ISDATE(value)`: returns 1 if the value is a date.
+
+```sql 
+```
 
 
-### More SELECT Functions
+### Formatting 
 
-- **Aggregate functions**: `COUNT`, `SUM`, `AVG`, `MAX`, `MIN` can be used inside SELECT statements to create complex queries
+**Formatting** is used to convert within date/times-formats using the following syntax:
 
-- **String functions**: `UPPER`, `LOWER`, `CONCAT`, `LEFT`, `RIGHT`
+- `FORMAT(value, format_str)`
 
-- **Date functions**: `NOW`, `CURDATE`
+The formats can be found in the internet. 
 
-- **Math Functions**: `ROUND`, `FLOOR`, `CEIL`
+### Converting 
 
-- **Comparison**: this includes all of the classic comparisons `<, > >= <=, ==, <>(not equal in PostgreSQL), !=,  AND, OR, NOT`
+Converts a DateTime value another datatype. 
 
-- **Range**: `BETWEEN lower AND upper` checks if a value is a inclusive range.
+- `CONVERT(data_type, date)`
 
-- **Membership**: `IN, NOT IN (val1, val2, ...)` checks if a value or is not in a list.
+--- 
+
+## Math Functions 
+
+- `ROUND(num, n)`: rounds up n decimal places. 
+- `FLOOR(num, n)`: rounds down n decimal places
+- `CEIL(num)`:
+- `ABS(num)`: absolute value
+--- 
+
+## Comparison 
+
+SQL includes all of the classic comparisons `<, > >= <=, ==, <>(not equal in PostgreSQL), !=,  AND, OR, NOT`
+
+--- 
+
+## NULL Functions 
+
+- `ISNULL(val, replacement)`: replaces the null with a placeholder.
+- `COALESCE(val1, val2, ..., replacement)`: returns the first non-null value from a list.
+- `NULLIF(val1, val2)`: return null if they are equal, else val1.
+- `IS NULL, IS NOT NULL` return 1 or 0 depending on the input.
+These functions should be used before performing any kind of operation on the data like joining, mathematical manipulation since 
+NULL values lead to errors in such cases.
+
+--- 
+
+## Range 
+
+- `BETWEEN lower AND upper`: checks if a value is a inclusive range.
+
+--- 
+
+## Membership 
+
+- `IN, NOT IN (val1, val2, ...)` checks if a value or is not in a list.
 
 Example:
 
@@ -742,6 +831,18 @@ Example:
 -- Simple deleted statement based on a conditon. It is also possible to delete in more complex ways but the simpler the better
 DELETE FROM users WHERE age < 18;
 ```
+
+--- 
+
+## Window Functions 
+
+**Window functions** are special functions which allows us 
+
+- `PARTIAON BY`:
+- `ORDER BY`:
+- `ROW_NUMBER`:
+- `RANK`:
+- `DENSE_RANK`:
 
 --- 
 

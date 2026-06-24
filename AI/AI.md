@@ -338,6 +338,11 @@ to worse and worse code quality.
 - **Comment Level Documentation**: Once you have written a function or a medium-size file, tell the AI with some context to generate the documentation for it 
 and review the results. 
 
+### Agentic Support 
+
+Most agentic enviroments already provide commands `\command` which enhance the requests to the LLM by adding necessary context. This can enhance the quality 
+of the individual phases.
+
 --- 
 
 ## Agentic Workflow

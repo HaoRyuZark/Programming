@@ -1,7 +1,7 @@
-# Desing Pattern
+# Design Pattern
 
-**Desing patterns** are a series of formalized practices tested and verified by developers
-for the struture, behaviour and composition of code in the object oriented development.
+**Design patterns** are a series of formalized practices tested and verified by developers
+for the structure, behaviour and composition of code in the object oriented development.
 
 As a side note, inside this directory only the most relevant design patterns were coded.
 
@@ -9,19 +9,19 @@ As a side note, inside this directory only the most relevant design patterns wer
 
 ## Creational patterns
 
-They define how objectes are created.
+They define how objects are created.
 
 --- 
 
 ## Behavioral Patterns
 
-How objects intereact with each other. 
+How objects interact with each other. 
 
 --- 
 
-## Strutural Patterns
+## Structural Patterns
 
-How objets are composed either via composition or inheritance.
+How objects are composed either via composition or inheritance.
 
 --- 
 

@@ -153,7 +153,7 @@ df4 = pd.DataFrame(df1)
 
 ## Reading Data
 
-- `pd.read_csv(filepath, sep=',', header='infer', index_col=None, usecols=None, dtype=None, nrows=None, skiprows=None, na_values=None, parse_dates=False, encoding='utf-8')`: 
+- `pd.read_csv(filepath, sep=',', header='infer', index_col=None, usecols=None, dtype=None, nrows=None, skiprows=None, na_values=None, parse_dates=False, format=None, encoding='utf-8')`: 
 reads a CSV file into a DataFrame.
   - `filepath`: path to the file or URL.
   - `sep`: delimiter character (use `\t` for TSV files).
@@ -165,6 +165,7 @@ reads a CSV file into a DataFrame.
   - `skiprows`: number of rows or list of row indices to skip.
   - `na_values`: additional strings to recognize as NaN.
   - `parse_dates`: list of columns to parse as datetime.
+  - `format`: date format to be used, given a `parse_dates=True` 
 
 - `pd.read_excel(io, sheet_name=0, header=0, index_col=None, usecols=None, dtype=None)`: reads an Excel file.
   - `io`: path or URL to the Excel file.
@@ -211,20 +212,202 @@ df = pd.read_html("https://example.com", match="Revenue")[0]  # table containing
 
 ## Writing & Exporting Data
 
-- `df.to_csv(path_or_buf, sep=',', index=True, header=True, columns=None, encoding='utf-8')`: writes a DataFrame to a CSV file.
-  - `path_or_buf`: file path or buffer. If `None`, returns a string.
-  - `sep`: field delimiter.
+### CSV
+
+- `df.to_csv(path_or_buf, sep=',', index=True, header=True, columns=None, encoding='utf-8', na_rep='', float_format=None, date_format=None, mode='w', compression='infer', quoting=None, quotechar='"', lineterminator=None, chunksize=None)`: writes a DataFrame to a CSV file.
+  - `path_or_buf`: file path or file-like object. If `None`, returns the CSV as a string.
+  - `sep`: field delimiter (default `','`). Use `'\t'` for TSV.
+  - `index`: if `False`, the row index is not written to the file.
+  - `header`: if `False`, column names are omitted. Can also be a list of strings to rename columns on export.
+  - `columns`: list of column names to include; omits all others.
+  - `na_rep`: string representation of missing values (default `''`).
+  - `float_format`: format string for floating-point numbers (e.g., `'%.4f'` for 4 decimal places).
+  - `date_format`: strftime format string for datetime columns (e.g., `'%Y-%m-%d'`).
+  - `mode`: file open mode — `'w'` (overwrite, default) or `'a'` (append).
+  - `compression`: compression to apply — `'infer'` (from file extension), `'gzip'`, `'bz2'`, `'zip'`, `'xz'`, or `None`.
+  - `quoting`: controls quoting behaviour — use `csv.QUOTE_ALL`, `csv.QUOTE_MINIMAL`, etc.
+  - `quotechar`: character used to quote fields (default `'"'`).
+  - `chunksize`: number of rows to write at a time (useful for very large DataFrames).
+
+```python
+import csv
+
+df = pd.DataFrame({
+    "Name":  ["Alice", "Bob", "Carol"],
+    "Age":   [30, 25, 35],
+    "Score": [95.5123, 87.2456, 92.0789],
+    "Date":  pd.to_datetime(["2024-01-15", "2024-02-20", "2024-03-10"]),
+})
+
+# Basic — no index column
+df.to_csv("output.csv", index=False)
+
+# Tab-separated with 2 decimal places and custom date format
+df.to_csv("output.tsv", sep="\t", index=False,
+          float_format="%.2f", date_format="%d/%m/%Y")
+
+# Only specific columns, missing values as "N/A"
+df.to_csv("output.csv", columns=["Name", "Score"],
+          na_rep="N/A", index=False)
+
+# Rename columns on export
+df.to_csv("output.csv", header=["name", "age", "score", "date"], index=False)
+
+# Compressed output (extension is inferred automatically)
+df.to_csv("output.csv.gz", index=False, compression="gzip")
+df.to_csv("output.csv.zip", index=False, compression="zip")
+
+# Append mode — add rows to an existing file
+df.to_csv("log.csv", mode="a", header=False, index=False)
+
+# Return as a string instead of writing to disk
+csv_string = df.to_csv(index=False)
+print(csv_string)
+
+# Quote all fields to handle embedded commas
+df.to_csv("output.csv", index=False, quoting=csv.QUOTE_ALL)
+```
+
+### Excel
+
+- `df.to_excel(excel_writer, sheet_name='Sheet1', index=True, header=True, startrow=0, startcol=0, na_rep='', float_format=None, columns=None, freeze_panes=None, engine=None)`: writes a DataFrame to an Excel `.xlsx` file.
+  - `excel_writer`: file path string or a `pd.ExcelWriter` object. Use `ExcelWriter` when writing multiple sheets or applying formatting.
+  - `sheet_name`: name of the target worksheet (default `'Sheet1'`).
   - `index`: if `False`, the row index is not written.
-  - `header`: if `False`, column names are not written.
-  - `columns`: list of columns to write.
+  - `header`: if `False`, column names are omitted. Can be a list of strings to rename on export.
+  - `startrow` / `startcol`: zero-based row and column offset where the data begins — useful for leaving space for titles or other content.
+  - `na_rep`: string used for missing values (default `''`).
+  - `float_format`: format string for floating-point numbers (e.g., `'%.2f'`).
+  - `columns`: subset of columns to write.
+  - `freeze_panes`: tuple `(row, col)` — freezes rows above and columns to the left of this cell (e.g., `(1, 0)` freezes the header row).
+  - `engine`: underlying engine — `'openpyxl'` (default for `.xlsx`) or `'xlsxwriter'`.
 
-- `df.to_excel(excel_writer, sheet_name='Sheet1', index=True, header=True, startrow=0, startcol=0)`: writes to an Excel file.
-  - `excel_writer`: path or ExcelWriter object (use ExcelWriter to write multiple sheets).
-  - `sheet_name`: name of the target sheet.
+- `pd.ExcelWriter(path, engine=None, mode='w', if_sheet_exists='error', datetime_format=None, date_format=None)`: context manager for writing to a single Excel file, enabling multiple sheets and engine-level formatting.
+  - `path`: output file path.
+  - `engine`: `'openpyxl'` or `'xlsxwriter'`.
+  - `mode`: `'w'` (overwrite) or `'a'` (append sheets to an existing file — requires `openpyxl`).
+  - `if_sheet_exists`: behaviour when the target sheet already exists in append mode — `'error'`, `'new'`, `'replace'`, `'overlay'`.
+  - `datetime_format` / `date_format`: strftime format strings applied to datetime/date columns.
 
-- `df.to_json(path_or_buf, orient=None, lines=False, indent=None)`: writes to a JSON file.
-  - `orient`: output format — `'records'`, `'split'`, `'index'`, `'columns'`, `'values'`.
-  - `lines`: if `True`, writes one JSON object per line.
+```python
+# Simple single-sheet export
+df.to_excel("output.xlsx", sheet_name="Results", index=False)
+
+# Freeze header row and two decimal places
+df.to_excel("output.xlsx", index=False, float_format="%.2f",
+            freeze_panes=(1, 0))
+
+# Write multiple sheets in one file
+with pd.ExcelWriter("report.xlsx") as writer:
+    df.to_excel(writer, sheet_name="Data",  index=False)
+    df.describe().to_excel(writer, sheet_name="Stats")
+    df[df["Score"] > 90].to_excel(writer, sheet_name="Top Scorers", index=False)
+
+# Append a new sheet to an existing workbook (openpyxl required)
+with pd.ExcelWriter("report.xlsx", engine="openpyxl",
+                    mode="a", if_sheet_exists="replace") as writer:
+    df.to_excel(writer, sheet_name="Updated Data", index=False)
+
+# Start data at row 2, col 1 (leave room for a title)
+with pd.ExcelWriter("styled.xlsx", engine="openpyxl") as writer:
+    df.to_excel(writer, sheet_name="Sheet1", startrow=1, startcol=0, index=False)
+    ws = writer.sheets["Sheet1"]
+    ws["A1"] = "Monthly Sales Report"   # write a title above the data
+
+# xlsxwriter engine — add a chart
+with pd.ExcelWriter("chart.xlsx", engine="xlsxwriter") as writer:
+    df.to_excel(writer, sheet_name="Data", index=False)
+    workbook  = writer.book
+    worksheet = writer.sheets["Data"]
+
+    chart = workbook.add_chart({"type": "column"})
+    chart.add_series({
+        "name":       "Score",
+        "categories": ["Data", 1, 0, len(df), 0],   # Name column
+        "values":     ["Data", 1, 2, len(df), 2],   # Score column
+    })
+    worksheet.insert_chart("E2", chart)
+
+# Custom datetime format
+with pd.ExcelWriter("dated.xlsx", datetime_format="DD/MM/YYYY") as writer:
+    df.to_excel(writer, index=False)
+```
+
+### JSON
+
+- `df.to_json(path_or_buf=None, orient=None, date_format='epoch', double_precision=10, force_ascii=True, date_unit='ms', default_handler=None, lines=False, compression='infer', index=True, indent=None, storage_options=None)`: serialises a DataFrame to JSON.
+  - `path_or_buf`: file path or file-like object. If `None`, returns the JSON as a string.
+  - `orient`: JSON structure format:
+    - `'records'` — `[{col: val, ...}, ...]` — list of row objects (most common, REST-API friendly).
+    - `'columns'` — `{col: {index: val, ...}, ...}` — default when `orient` is `None`.
+    - `'index'`   — `{index: {col: val, ...}, ...}` — dict of row dicts keyed by index.
+    - `'split'`   — `{"columns": [...], "index": [...], "data": [[...]]}` — compact, full round-trip.
+    - `'values'`  — `[[val, ...], ...]` — bare 2D array, no labels.
+    - `'table'`   — JSON Table Schema format with dtype metadata; perfect for exact round-trips.
+  - `date_format`: `'epoch'` (milliseconds since Unix epoch, default) or `'iso'` (ISO 8601 string).
+  - `double_precision`: number of decimal places for floating-point values (default 10).
+  - `force_ascii`: if `True`, non-ASCII characters are escaped (default `True`). Set to `False` to preserve Unicode.
+  - `date_unit`: time unit for epoch timestamps — `'s'`, `'ms'`, `'us'`, `'ns'`.
+  - `lines`: if `True`, writes one JSON object per line (JSON Lines / NDJSON format) — requires `orient='records'`.
+  - `compression`: `'infer'` (from extension), `'gzip'`, `'bz2'`, `'zip'`, `'xz'`, or `None`.
+  - `index`: if `False`, the index is not included in `'split'` and `'table'` formats.
+  - `indent`: number of spaces for pretty-printing (default `None` — compact output).
+
+```python
+df = pd.DataFrame({
+    "Name":  ["Alice", "Bob", "Carol"],
+    "Age":   [30, 25, 35],
+    "Score": [95.5123, 87.2456, 92.0789],
+    "Date":  pd.to_datetime(["2024-01-15", "2024-02-20", "2024-03-10"]),
+})
+
+# records — most readable, suits REST APIs
+df.to_json("output.json", orient="records", indent=2)
+# [
+#   {"Name": "Alice", "Age": 30, "Score": 95.5123, "Date": 1705276800000},
+#   ...
+# ]
+
+# records with ISO dates instead of epoch milliseconds
+df.to_json("output.json", orient="records", date_format="iso", indent=2)
+
+# split — lossless round-trip (index + columns + data)
+df.to_json("output.json", orient="split", indent=2)
+
+# table — includes full dtype metadata, best for exact round-trips
+df.to_json("schema.json", orient="table", indent=2)
+df_rt = pd.read_json("schema.json", orient="table")   # dtypes preserved
+
+# index — dict-of-dicts keyed by row index
+df.to_json("output.json", orient="index", indent=2)
+
+# values — bare 2D array (no column/index labels)
+df.to_json("output.json", orient="values")
+
+# JSON Lines / NDJSON — one object per line, ideal for streaming / log ingestion
+df.to_json("output.ndjson", orient="records", lines=True)
+# {"Name":"Alice","Age":30,"Score":95.5123,"Date":1705276800000}
+# {"Name":"Bob","Age":25,"Score":87.2456,"Date":1708387200000}
+
+# Preserve Unicode characters (e.g., accented names)
+df.to_json("output.json", orient="records", force_ascii=False, indent=2)
+
+# Limit float precision
+df.to_json("output.json", orient="records", double_precision=2, indent=2)
+
+# Compressed output
+df.to_json("output.json.gz", orient="records", compression="gzip")
+
+# Return as a string (no file written)
+json_str = df.to_json(orient="records", indent=2)
+print(json_str)
+
+# Round-trip: write then read back
+df.to_json("round_trip.json", orient="records", date_format="iso")
+df_back = pd.read_json("round_trip.json", orient="records")
+```
+
+### Other Formats
 
 - `df.to_parquet(path, engine='auto', index=True, compression='snappy')`: writes to a Parquet file.
   - `path`: output file path.
@@ -236,17 +419,6 @@ df = pd.read_html("https://example.com", match="Revenue")[0]  # table containing
   - `if_exists`: action if the table already exists — `'fail'`, `'replace'`, `'append'`.
 
 ```python
-df.to_csv("output.csv", index=False)
-df.to_csv("output.tsv", sep="\t", index=False)
-
-df.to_excel("output.xlsx", sheet_name="Results", index=False)
-
-# Multiple sheets
-with pd.ExcelWriter("output.xlsx") as writer:
-    df.to_excel(writer, sheet_name="Data", index=False)
-    df.describe().to_excel(writer, sheet_name="Stats")
-
-df.to_json("output.json", orient="records", indent=2)
 df.to_parquet("output.parquet", compression="gzip")
 ```
 
@@ -1043,48 +1215,288 @@ df[["roll_mean", "roll_std"]] = df["HP"].rolling(5).agg(
 
 ---
 
-## Time Series
+## Time Series & Dates
+
+### Date Format Codes
+
+These `strftime`/`strptime` format codes are used in `pd.to_datetime(format=...)`, `dt.strftime(...)`, and `pd.read_csv(date_format=...)`.
+
+| Code | Meaning | Example |
+|------|---------|---------|
+| `%Y` | 4-digit year | `2024` |
+| `%y` | 2-digit year | `24` |
+| `%m` | Month as zero-padded number | `01` – `12` |
+| `%B` | Full month name | `January` |
+| `%b` | Abbreviated month name | `Jan` |
+| `%d` | Day of month, zero-padded | `01` – `31` |
+| `%H` | Hour (24-hour clock), zero-padded | `00` – `23` |
+| `%I` | Hour (12-hour clock), zero-padded | `01` – `12` |
+| `%p` | AM or PM | `AM`, `PM` |
+| `%M` | Minute, zero-padded | `00` – `59` |
+| `%S` | Second, zero-padded | `00` – `59` |
+| `%f` | Microseconds, zero-padded | `000000` – `999999` |
+| `%A` | Full weekday name | `Monday` |
+| `%a` | Abbreviated weekday name | `Mon` |
+| `%j` | Day of year, zero-padded | `001` – `366` |
+| `%W` | Week number of year (Monday as first day) | `00` – `53` |
+| `%U` | Week number of year (Sunday as first day) | `00` – `53` |
+| `%Z` | Time zone name | `UTC`, `EST` |
+| `%z` | UTC offset | `+0000`, `-0500` |
+| `%%` | Literal `%` character | `%` |
+
+### Parsing Dates
 
 - `pd.to_datetime(arg, format=None, errors='raise', unit=None, utc=False)`: converts argument to datetime.
   - `arg`: string, list, array, or Series.
-  - `format`: strftime format string (e.g., `'%Y-%m-%d'`). Parsing is faster when specified.
-  - `errors`: `'raise'`, `'coerce'` (invalid becomes NaT), or `'ignore'`.
-  - `unit`: unit of numeric timestamps — `'s'`, `'ms'`, `'us'`, `'ns'`.
+  - `format`: strftime format string (e.g., `'%Y-%m-%d'`). Providing it speeds up parsing significantly.
+  - `errors`: `'raise'`, `'coerce'` (invalid becomes `NaT`), or `'ignore'`.
+  - `unit`: unit for numeric timestamps — `'s'`, `'ms'`, `'us'`, `'ns'`.
+  - `utc`: if `True`, returns UTC-localized timestamps.
 
-- `pd.date_range(start=None, end=None, periods=None, freq='D', tz=None)`: generates a fixed-frequency DatetimeIndex.
-  - `start` / `end`: start and end of the range.
-  - `periods`: number of periods to generate.
-  - `freq`: frequency string — `'D'` (day), `'H'` (hour), `'M'` (month end), `'MS'` (month start), `'B'` (business day), `'W'` (week), `'Q'` (quarter end).
+- `pd.Timestamp(ts_input, tz=None)`: represents a single point in time (a scalar datetime). Equivalent to Python's `datetime` but with pandas integration.
+  - `ts_input`: string, datetime, or integer.
+  - `tz`: timezone string (e.g., `'UTC'`, `'Europe/Berlin'`).
 
-- `df.resample(rule, axis=0, closed=None, label=None)`: resamples time-series data to a different frequency (requires DatetimeIndex).
-  - `rule`: offset string for the target frequency (e.g., `'M'`, `'W'`, `'Q'`).
-  - `closed`: which side of each interval is closed — `'left'` or `'right'`.
-  - `label`: which side to use for the interval label.
+- `pd.Timedelta(value, unit=None)`: represents a duration (difference between two datetimes).
+  - `value`: integer, string (e.g., `'5 days'`), or timedelta object.
+  - `unit`: time unit when `value` is numeric — `'D'`, `'h'`, `'m'`, `'s'`, `'ms'`, `'us'`, `'ns'`.
 
 ```python
-# Parse dates
+# Parse a column from strings
 df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d")
-df["Date"] = pd.to_datetime(df["Date"], errors="coerce")  # invalid → NaT
+df["Date"] = pd.to_datetime(df["Date"], errors="coerce")   # invalid → NaT
 
-# Date range
-dates = pd.date_range(start="2024-01-01", periods=12, freq="MS")  # monthly
-print(dates)
+# Mixed formats — let pandas infer each value
+df["Date"] = pd.to_datetime(df["Date"], format="mixed")
 
-# Set DatetimeIndex and resample
-df = df.set_index("Date")
-monthly_mean = df.resample("M").mean()
-weekly_sum = df.resample("W").sum()
-quarterly = df.resample("Q").agg({"Score": "mean", "Age": "count"})
+# Numeric Unix timestamps
+df["Date"] = pd.to_datetime(df["timestamp_col"], unit="s")  # seconds since epoch
 
-# Extract date components
-df["Year"] = df.index.year
-df["Month"] = df.index.month
-df["DayOfWeek"] = df.index.day_name()
-df["Quarter"] = df.index.quarter
+# Single timestamp
+ts = pd.Timestamp("2024-06-15 14:30:00")
+ts_tz = pd.Timestamp("2024-01-01", tz="UTC")
 
-# Shift and lag
-df["Score_lag1"] = df["Score"].shift(1)   # previous value
-df["Score_diff"] = df["Score"].diff(1)    # first difference
+# Timedelta arithmetic
+delta = pd.Timedelta("3 days 4 hours")
+df["Deadline"] = df["Date"] + delta
+df["Days_since"] = pd.Timestamp("today") - df["Date"]
+```
+
+### Parsing Dates When Reading Files
+
+When reading files, you can instruct pandas to parse date columns directly, avoiding an extra conversion step.
+
+- `pd.read_csv(..., parse_dates=[col], date_format=fmt)`: parses the specified columns as datetime during reading.
+  - `parse_dates`: list of column names or indices to parse as dates. Pass a list of lists to combine multiple columns into one datetime column.
+  - `date_format`: explicit strftime format string — speeds up parsing and avoids ambiguity (e.g., `'%d/%m/%Y'`).
+
+- `pd.read_excel(..., parse_dates=[col])`: same behaviour for Excel files.
+
+```python
+# Basic — let pandas infer the format
+df = pd.read_csv("data.csv", parse_dates=["Date"])
+
+# Specify exact format for speed and correctness
+df = pd.read_csv("data.csv", parse_dates=["Date"], date_format="%d/%m/%Y")
+
+# Combine two columns (year + month) into one datetime column
+df = pd.read_csv("data.csv", parse_dates={"Date": ["Year", "Month"]})
+
+# Read with a datetime index
+df = pd.read_csv("data.csv", parse_dates=["Date"], index_col="Date")
+
+# Excel
+df = pd.read_excel("data.xlsx", parse_dates=["OrderDate"], date_format="%Y%m%d")
+```
+
+### `dt` Accessor — Datetime Properties & Methods
+
+Once a column holds `datetime64` values, the `.dt` accessor exposes all datetime properties and methods vectorized over the entire Series.
+
+#### Properties
+
+- `s.dt.year` / `s.dt.month` / `s.dt.day`: year, month (1–12), day (1–31).
+- `s.dt.hour` / `s.dt.minute` / `s.dt.second` / `s.dt.microsecond`: time components.
+- `s.dt.date`: Python `date` objects (no time component).
+- `s.dt.time`: Python `time` objects (no date component).
+- `s.dt.dayofweek` / `s.dt.day_of_week`: integer (Monday=0, Sunday=6).
+- `s.dt.day_name(locale=None)`: full weekday name as a string.
+- `s.dt.month_name(locale=None)`: full month name as a string.
+- `s.dt.dayofyear` / `s.dt.day_of_year`: day number within the year (1–366).
+- `s.dt.weekofyear` / `s.dt.isocalendar().week`: ISO week number.
+- `s.dt.quarter`: quarter of the year (1–4).
+- `s.dt.is_month_start` / `s.dt.is_month_end`: boolean — first or last day of the month.
+- `s.dt.is_year_start` / `s.dt.is_year_end`: boolean — first or last day of the year.
+- `s.dt.is_leap_year`: boolean — whether the year is a leap year.
+- `s.dt.days_in_month`: number of days in the month.
+- `s.dt.tz`: timezone info (or `None` if timezone-naive).
+
+#### Methods
+
+- `s.dt.strftime(date_format)`: formats each datetime as a string using a strftime format.
+  - `date_format`: format string (e.g., `'%d %B %Y'`).
+
+- `s.dt.normalize()`: sets the time component to midnight (`00:00:00`), preserving the date.
+
+- `s.dt.floor(freq)` / `s.dt.ceil(freq)` / `s.dt.round(freq)`: rounds timestamps down/up/to-nearest to the given frequency.
+  - `freq`: offset alias — `'D'`, `'h'`, `'min'`, `'s'`, etc.
+
+- `s.dt.tz_localize(tz, ambiguous='raise', nonexistent='raise')`: localizes a timezone-naive Series to a given timezone.
+  - `tz`: timezone string (e.g., `'UTC'`, `'US/Eastern'`).
+
+- `s.dt.tz_convert(tz)`: converts a timezone-aware Series to a different timezone.
+
+- `s.dt.to_period(freq)`: converts timestamps to Period objects (e.g., monthly or quarterly periods).
+
+- `s.dt.total_seconds()`: for Timedelta Series — returns the total duration in seconds as a float.
+
+```python
+s = pd.to_datetime(pd.Series(["2024-03-15 08:45:00", "2023-11-01 22:10:30"]))
+
+# Date components
+print(s.dt.year)           # [2024, 2023]
+print(s.dt.month)          # [3, 11]
+print(s.dt.day)            # [15, 1]
+print(s.dt.hour)           # [8, 22]
+print(s.dt.quarter)        # [1, 4]
+print(s.dt.dayofweek)      # [4, 2]  (Friday=4, Wednesday=2)
+print(s.dt.day_name())     # ['Friday', 'Wednesday']
+print(s.dt.month_name())   # ['March', 'November']
+print(s.dt.dayofyear)      # [75, 305]
+print(s.dt.days_in_month)  # [31, 30]
+print(s.dt.is_month_end)   # [False, False]
+print(s.dt.is_leap_year)   # [True, False]
+
+# Format as string
+print(s.dt.strftime("%d %B %Y"))  # ['15 March 2024', '01 November 2023']
+
+# Rounding
+print(s.dt.floor("h"))     # truncate to hour
+print(s.dt.round("D"))     # round to nearest day
+print(s.dt.normalize())    # set time to midnight
+
+# Timezone
+s_utc = s.dt.tz_localize("UTC")
+s_berlin = s_utc.dt.tz_convert("Europe/Berlin")
+
+# Period conversion
+print(s.dt.to_period("M"))  # ['2024-03', '2023-11']
+
+# Timedelta total seconds
+durations = pd.to_timedelta(["1 days 02:00:00", "0 days 30:00:00"])
+print(pd.Series(durations).dt.total_seconds())  # [93600.0, 108000.0]
+```
+
+### Generating Date Ranges
+
+- `pd.date_range(start=None, end=None, periods=None, freq='D', tz=None, normalize=False, name=None)`: generates a fixed-frequency `DatetimeIndex`.
+  - `start` / `end`: start and end of the range (inclusive by default).
+  - `periods`: number of periods to generate (specify two of `start`, `end`, `periods`).
+  - `freq`: frequency alias — `'D'` (day), `'h'` (hour), `'min'` (minute), `'MS'` (month start), `'ME'` (month end), `'QS'` (quarter start), `'YS'` (year start), `'B'` (business day), `'W'` (week ending Sunday).
+  - `tz`: timezone string.
+  - `normalize`: if `True`, normalizes start/end to midnight.
+
+- `pd.period_range(start=None, end=None, periods=None, freq=None, name=None)`: generates a `PeriodIndex` (calendar periods rather than timestamps).
+
+- `pd.timedelta_range(start=None, end=None, periods=None, freq=None)`: generates a `TimedeltaIndex`.
+
+```python
+# Daily range
+dates = pd.date_range(start="2024-01-01", end="2024-01-31", freq="D")
+
+# Monthly start for 12 months
+months = pd.date_range(start="2024-01-01", periods=12, freq="MS")
+
+# Business days only
+bdays = pd.date_range(start="2024-01-01", periods=10, freq="B")
+
+# Hourly
+hours = pd.date_range(start="2024-01-01 00:00", periods=24, freq="h")
+
+# With timezone
+dates_tz = pd.date_range("2024-01-01", periods=5, freq="D", tz="Europe/Berlin")
+
+# Period range (months)
+periods = pd.period_range(start="2024-01", periods=6, freq="M")
+
+# Timedelta range
+deltas = pd.timedelta_range(start="0 days", periods=5, freq="12h")
+```
+
+### Resampling & Frequency Conversion
+
+- `df.resample(rule, closed=None, label=None, origin='start_day')`: groups time-series data into calendar buckets (requires a `DatetimeIndex`).
+  - `rule`: target frequency — `'D'`, `'W'`, `'ME'`, `'MS'`, `'QE'`, `'YE'`, etc.
+  - `closed`: which end of each interval is closed — `'left'` or `'right'`.
+  - `label`: which end to use as the bucket label — `'left'` or `'right'`.
+  - `origin`: anchor for the first bin — `'start'`, `'start_day'`, `'epoch'`, or a timestamp.
+
+- `df.asfreq(freq, method=None, fill_value=None)`: converts a time series to a specific frequency without aggregation — inserts NaN (or filled values) for missing timestamps.
+  - `method`: fill method for missing entries — `'ffill'` or `'bfill'`.
+
+```python
+df = df.set_index("Date")          # DatetimeIndex required
+
+# Downsample — aggregate to lower frequency
+monthly_mean  = df.resample("ME").mean()
+weekly_sum    = df.resample("W").sum()
+quarterly     = df.resample("QE").agg({"Score": "mean", "Count": "sum"})
+
+# Multiple aggregations
+result = df["Score"].resample("ME").agg(["mean", "min", "max", "std"])
+
+# Upsample — increase frequency (fills gaps)
+daily = df.resample("D").asfreq()              # NaN for missing days
+daily_ffill = df.resample("D").ffill()         # forward-fill gaps
+daily_interp = df.resample("D").interpolate()  # linear interpolation
+
+# asfreq — simple frequency conversion
+df_daily = df.asfreq("D", method="ffill")
+```
+
+### Time Offsets & Shifting
+
+```python
+from pandas.tseries.offsets import BDay, MonthEnd, YearBegin
+
+# Shift values forward/backward in time
+df["Score_lag1"]  = df["Score"].shift(1)    # shift values down by 1 period
+df["Score_lead1"] = df["Score"].shift(-1)   # shift values up by 1 period
+df["Score_diff"]  = df["Score"].diff(1)     # first difference (value - previous value)
+df["Score_pct"]   = df["Score"].pct_change()  # percentage change
+
+# Shift index by a date offset
+df_shifted = df.shift(1, freq="ME")         # move all timestamps forward by one month end
+df_shifted = df.shift(3, freq=BDay())       # shift by 3 business days
+
+# Date arithmetic with offsets
+df["NextMonthEnd"] = df["Date"] + MonthEnd(1)
+df["NextYearStart"] = df["Date"] + YearBegin(1)
+df["FiveBDays"] = df["Date"] + 5 * BDay()
+```
+
+### Filtering & Slicing by Date
+
+```python
+df = df.set_index("Date")   # DatetimeIndex enables partial-string indexing
+
+# Partial string indexing — select by year, month, or range
+print(df["2024"])                          # all of 2024
+print(df["2024-03"])                       # March 2024
+print(df["2024-01":"2024-06"])             # Jan–Jun 2024 (inclusive)
+
+# Boolean filtering
+print(df[df.index >= "2024-01-01"])
+print(df[(df.index >= "2024-01-01") & (df.index < "2024-07-01")])
+
+# loc with timestamps
+print(df.loc["2024-03-01":"2024-03-31"])
+
+# between_time — filter by time of day (not date)
+print(df.between_time("09:00", "17:00"))
+
+# truncate — keep rows within a date window
+print(df.truncate(before="2024-01-01", after="2024-12-31"))
 ```
 
 ---

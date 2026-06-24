@@ -386,20 +386,27 @@
 ---
 
 - `awk [flags] '<program>' [file...]`
+
   - **Function**: Pattern-scanning and text-processing language; processes files line by line.
+
   - **Flags**:
     - `-F <sep>`: Set the field separator (e.g., `-F ':'` for colon-delimited files).
     - `-v <var=val>`: Assign a variable before execution.
     - `-f <script>`: Read the awk program from a file.
+
   - **Parameters**:
     - `<program>` *(required)*: Awk program string, e.g., `'{print $1}'`.
     - `[file...]` *(optional)*: Input file(s); reads from stdin if omitted.
+
   - **Example Usage**: `awk -F ':' '{print $1}' /etc/passwd` / `awk '{sum += $1} END {print sum}' data.txt`
 
 ---
 
 - `find <path> [flags]`
-  - **Function**: Searches for files and directories matching given criteria in a directory hierarchy.
+ 
+  - **Function**: Searches for files and directories matching given criteria in a directory hierarchy. It also looks 
+  at the subdirectories.
+  
   - **Flags**:
     - `-name <pattern>`: Match by name (case-sensitive).
     - `-iname <pattern>`: Match by name (case-insensitive).
@@ -407,11 +414,16 @@
     - `-size <n>`: Match by size (e.g., `+10M` = larger than 10 MB).
     - `-mtime <n>`: Match by modification time in days (e.g., `-7` = last 7 days).
     - `-maxdepth <n>`: Limit search depth.
-    - `-exec <cmd> {} \;`: Execute a command on each result.
+    - `-exec <cmd> {} \;` or `-exec <cmd> {} +`: Execute a command on each result. Example underneath.
     - `-delete`: Delete matching files.
+    - `-user <user>`: To look for an exact user.
+
   - **Parameters**:
+ 
     - `<path>` *(required)*: Directory to search in.
+
   - **Example Usage**: `find . -name "*.log" -mtime +30 -delete` / `find /home -type f -size +100M`
+      `find . -name "*.md" -exec grep -l "Searches for files and directories" {} +`
 
 ---
 

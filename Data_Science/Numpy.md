@@ -207,18 +207,19 @@ print("Original a after view change:\n", a)
 ## Indexing
 
 Each axis gets its own index using `[start:stop:step, start:stop:step, ...]`. This means we can
-access elements with the notation `arr[i, j, k]` instead of `arr[i][j][k]`, which also allows slicing.
+access elements with the notation `arr[i, j, k], arr[(i, j, k)]` instead of `arr[i][j][k]`, which also allows slicing.
 
 ```python
 arr2d = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
 
+print(arr2d[(0,1)] == arr2d[0][1]) # equivalent
 print(arr2d[0, 1])    # 20 — row 0, col 1
 print(arr2d[-1, -1])  # 90 — last row, last col
 ```
 
 ### Advanced Indexing
 
-Triggered when an array or list is used for indexing. Always returns a copy.
+Triggered when an array or list is used for indexing. Always returns a **copy**.
 
 ```python
 arr2d = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
@@ -303,6 +304,178 @@ print(scores[mask])   # [1, 2, ..., 50]
 
 ---
 
+## Iterations
+
+- `np.nditer(op, order='K', flags=None, op_flags=None)`: efficient multi-dimensional iterator over one or more arrays.
+  - `op`: array or sequence of arrays to iterate over.
+  - `order`: iteration order — `'C'` (row-major), `'F'` (column-major), `'A'` (Fortran if contiguous, else C), `'K'` (as close to memory layout as possible).
+  - `flags`: list of iterator-level flags. Common values: `'multi_index'` (track the current N-D index), `'external_loop'` (return larger chunks instead of single elements for performance).
+  - `op_flags`: per-operand flags — e.g., `['readwrite']` to modify the array in place, `['writeonly']` for output-only operands.
+
+- `np.ndenumerate(arr)`: multi-dimensional equivalent of `enumerate()`. Yields `(index_tuple, value)` pairs for every element.
+  - `arr`: input array.
+
+- `np.ndindex(*shape)`: iterates over every index tuple for a virtual array with the given shape.
+  - `*shape`: integers defining the shape.
+
+- `np.apply_along_axis(func1d, axis, arr, *args, **kwargs)`: applies a 1D function to each 1D slice of an array along a given axis.
+  - `func1d`: callable that takes a 1D array and returns a scalar or 1D array.
+  - `axis`: axis along which `func1d` is applied.
+  - `arr`: input array.
+  - `*args`, `**kwargs`: extra arguments forwarded to `func1d`.
+
+- `np.apply_over_axes(func, a, axes)`: applies a function repeatedly over multiple axes.
+  - `func`: callable of the form `func(a, axis)` that reduces one axis at a time.
+  - `a`: input array.
+  - `axes`: list of axes over which to apply the function.
+
+```python
+arr = np.array([[1, 2, 3], [4, 5, 6]])
+
+# Basic iteration (row-major by default)
+for x in np.nditer(arr):
+    print(x, end=" ")  # 1 2 3 4 5 6
+print()
+
+# Column-major order
+for x in np.nditer(arr, order='F'):
+    print(x, end=" ")  # 1 4 2 5 3 6
+print()
+
+# In-place modification with readwrite flag
+arr_copy = arr.copy()
+with np.nditer(arr_copy, op_flags=['readwrite']) as it:
+    for x in it:
+        x[...] = x * 2
+print("Doubled:\n", arr_copy)  # [[2 4 6], [8 10 12]]
+
+# Track multi-index
+with np.nditer(arr, flags=['multi_index']) as it:
+    while not it.finished:
+        print(f"Index {it.multi_index}: {it[0]}")
+        it.iternext()
+
+# ndenumerate — (index_tuple, value) pairs
+for idx, val in np.ndenumerate(arr):
+    print(f"Index {idx}: {val}")
+# Index (0, 0): 1
+# Index (0, 1): 2  ...
+
+# ndindex — iterate over all index tuples for a given shape
+for idx in np.ndindex(2, 3):
+    print(idx, end=" ")  # (0,0) (0,1) (0,2) (1,0) (1,1) (1,2)
+print()
+
+# Broadcast-iterate over two arrays
+a = np.array([1, 2, 3])
+b = np.array([[10], [20], [30]])
+for x, y in np.nditer([a, b]):
+    print(f"{int(x)}+{int(y)}", end="  ")  # 1+10  2+10  3+10  1+20 ...
+print()
+
+# apply_along_axis — normalize each row
+data = np.array([[1.0, 2.0, 3.0], [4.0, 8.0, 12.0]])
+normalized = np.apply_along_axis(
+    lambda row: (row - row.mean()) / row.std(), axis=1, arr=data
+)
+print("Row-normalized:\n", normalized)
+
+# apply_over_axes — sum over both axes 0 and 1 of a 3D array
+arr3d = np.arange(24).reshape(2, 3, 4)
+result = np.apply_over_axes(np.sum, arr3d, axes=[0, 1])
+print("Sum over axes 0 & 1, shape:", result.shape)  # (1, 1, 4)
+```
+
+---
+
+## Masking
+
+A **mask** is a boolean array of the same shape as the data, where `True` marks values as invalid or missing. NumPy's `numpy.ma` module provides masked arrays that carry this mask alongside the data, so all operations silently ignore masked elements.
+
+- `np.ma.array(data, mask=False, fill_value=None, dtype=None)`: creates a masked array.
+  - `data`: input data array or sequence.
+  - `mask`: boolean array — `True` marks a value as masked (invalid). A scalar `False` means no masking.
+  - `fill_value`: value used to replace masked elements when exporting to a regular array.
+
+- `np.ma.masked_where(condition, a, copy=True)`: masks elements of `a` where `condition` is `True`.
+  - `condition`: boolean array with the same shape as `a`.
+  - `a`: input array.
+
+- `np.ma.masked_greater(a, value)` / `np.ma.masked_less(a, value)`: masks elements strictly greater than / less than `value`.
+
+- `np.ma.masked_greater_equal(a, value)` / `np.ma.masked_less_equal(a, value)`: masks elements ≥ / ≤ `value`.
+
+- `np.ma.masked_equal(a, value)`: masks elements equal to `value`. Useful for sentinel values like `-9999`.
+
+- `np.ma.masked_outside(a, v1, v2)`: masks elements outside the interval `[v1, v2]`.
+
+- `np.ma.masked_invalid(a)`: masks NaN and Inf values in `a`.
+  - `a`: input array.
+
+- `np.ma.filled(a, fill_value=None)`: returns a copy of `a` with masked values replaced by `fill_value`.
+  - `a`: masked array.
+  - `fill_value`: replacement scalar. Falls back to the array's own `fill_value` if `None`.
+
+- `np.ma.compressed(a)`: returns a 1D array containing only the unmasked (valid) elements.
+  - `a`: masked array.
+
+- `np.ma.getmask(a)`: returns the mask of `a`, or `np.ma.nomask` (`False`) if the array is not masked.
+
+- `np.ma.getdata(a)`: returns the underlying data array, ignoring the mask.
+
+- `np.ma.count(a, axis=None)`: counts the non-masked elements along an axis.
+
+```python
+import numpy as np
+
+data = np.array([1.0, -999.0, 3.0, -999.0, 5.0])
+
+# Mask sentinel values
+masked = np.ma.masked_equal(data, -999.0)
+print("Masked array:", masked)          # [1.0 -- 3.0 -- 5.0]
+print("Mask:", masked.mask)             # [False  True False  True False]
+
+# Aggregate functions automatically skip masked values
+print("Mean (valid only):", masked.mean())   # 3.0  (= (1+3+5)/3)
+print("Sum:", masked.sum())                  # 9.0
+print("Valid count:", np.ma.count(masked))   # 3
+
+# Mask by condition
+arr = np.array([4, 7, 2, 9, 1, 5])
+masked2 = np.ma.masked_where(arr > 5, arr)
+print("Masked (>5):", masked2)          # [4 -- 2 -- 1 5]
+
+# Mask by range
+masked3 = np.ma.masked_outside(arr, 2, 6)
+print("Masked outside [2,6]:", masked3)  # [4 -- 2 -- -- 5]
+
+# Mask NaN and Inf
+arr_bad = np.array([1.0, np.nan, 3.0, np.inf, 5.0])
+masked_inv = np.ma.masked_invalid(arr_bad)
+print("Masked invalid:", masked_inv)    # [1.0 -- 3.0 -- 5.0]
+
+# Fill masked values for export or plotting
+filled = np.ma.filled(masked, fill_value=0.0)
+print("Filled:", filled)               # [1. 0. 3. 0. 5.]
+
+# Compressed: only the valid values as a flat 1D array
+print("Compressed:", np.ma.compressed(masked))  # [1. 3. 5.]
+
+# Manual mask
+mask = np.array([False, True, False, True, False])
+m = np.ma.array(data, mask=mask, fill_value=-1.0)
+print("Custom masked array:", m)
+print("Underlying data:", np.ma.getdata(m))  # [-999. ...] — mask ignored
+
+# 2D masked array
+mat = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+mmat = np.ma.masked_where(mat % 2 == 0, mat)  # mask even numbers
+print("2D masked (even numbers hidden):\n", mmat)
+print("Column means:", mmat.mean(axis=0))     # only odd values contribute
+```
+
+---
+
 ## Filtering
 
 NumPy provides different ways to select elements from arrays.
@@ -323,6 +496,13 @@ NumPy provides different ways to select elements from arrays.
   - `a`: input array.
   - `axis`: axis to reduce over.
 
+- `np.nonzero(a)`: returns the indices of the elements that are non-zero  
+  - `a`: input array.
+
+- `np.argwhere(a)`: Find the indices of array elements that are non-zero, grouped by element.
+  - `a`: input array.
+
+
 ```python
 arr = np.arange(10)
 
@@ -332,6 +512,9 @@ print("Greater than 5:", arr[arr > 5])                       # [6 7 8 9]
 print("where (>1 keep, else 0):", np.where(arr > 1, arr, 0)) # [0 0 2 3 4 5 6 7 8 9]
 print("All > 0:", np.all(arr > 0))                           # False (0 is in arr)
 print("Any > 8:", np.any(arr > 8))                           # True
+
+x = np.array([[3, 0, 0], [0, 4, 0], [5, 6, 0]])
+np.nonzero(x)                                                # [[0, 1, 2, 2], [0, 1, 0, 1]]
 ```
 
 ---
@@ -431,10 +614,21 @@ to match the larger array's shape.
 When broadcasting applies, the smaller array is left-padded with size-1 dimensions until shapes match.
 
 ```python
-arr = np.array([1, 2, 3])
+arr = np.array([1, 2, 3]) # (1,3)
+b = np.array([[4], [4]])  # (2,1)
 
 print("Add scalar:", arr + 5)         # [6, 7, 8]
 print("Multiply scalar:", arr * 2)    # [2, 4, 6]
+
+# NumPy does deo following: 
+
+# row expansion [1, 2, 3] -> [[1, 2, 3]] (1,3)
+# -> [[1,2,3], [1,2,3]] (2, 3)
+# b needs to be expanded to match the new shape 
+# [[4], [4]] -> [[4, 4, 4], [4, 4, 4]] (2,3)
+# Now  both have the same size
+
+print("Complex expandion:", arr + b)  # [[5, 6, 7], [5, 6, 7]]
 
 matrix = np.ones((3, 3))
 vec = np.array([1, 2, 3])             # shape (3,) → broadcasts to (3, 3)
@@ -636,8 +830,73 @@ print("Block matrix:\n", b)
 
 ### Sub-matrices
 
+NumPy provides tools for extracting and constructing diagonal and triangular sub-matrices.
 
+- `np.diag(v, k=0)`: if `v` is 1D, constructs a 2D array with `v` on the k-th diagonal; if `v` is 2D, extracts the k-th diagonal as a 1D array.
+  - `v`: 1D array to place on the diagonal, or 2D array to extract from.
+  - `k`: diagonal offset — `0` is the main diagonal, positive is above, negative is below.
 
+- `np.diagonal(a, offset=0, axis1=0, axis2=1)`: returns the specified diagonal without copying.
+  - `a`: input array (at least 2D).
+  - `offset`: diagonal offset (same convention as `np.diag`).
+  - `axis1`, `axis2`: the two axes that define the 2D sub-space from which the diagonal is taken.
+
+- `np.tril(m, k=0)`: returns the lower triangle of a matrix — all elements above the k-th diagonal are set to zero.
+  - `m`: input matrix.
+  - `k`: diagonal cutoff; `0` keeps the main diagonal.
+
+- `np.triu(m, k=0)`: returns the upper triangle of a matrix — all elements below the k-th diagonal are set to zero.
+  - `m`: input matrix.
+  - `k`: diagonal cutoff.
+
+- `np.fill_diagonal(a, val, wrap=False)`: fills the main diagonal of `a` **in-place**.
+  - `a`: input array (at least 2D), modified directly.
+  - `val`: scalar or sequence to fill the diagonal with.
+  - `wrap`: if `True`, wraps diagonally for tall matrices.
+
+```python
+mat = np.array([[1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9]])
+
+# Extract main diagonal
+print("Main diagonal:", np.diag(mat))          # [1, 5, 9]
+print("Above-main diagonal:", np.diag(mat, k=1))  # [2, 6]
+print("Below-main diagonal:", np.diag(mat, k=-1)) # [4, 8]
+
+# Build a diagonal matrix from a 1D array
+print("Diag matrix from [1,2,3]:\n", np.diag([1, 2, 3]))
+# [[1, 0, 0],
+#  [0, 2, 0],
+#  [0, 0, 3]]
+
+# Lower and upper triangles
+print("Lower triangle:\n", np.tril(mat))
+# [[1, 0, 0],
+#  [4, 5, 0],
+#  [7, 8, 9]]
+
+print("Upper triangle:\n", np.triu(mat))
+# [[1, 2, 3],
+#  [0, 5, 6],
+#  [0, 0, 9]]
+
+print("Lower (k=1):\n", np.tril(mat, k=1))  # includes one super-diagonal
+
+# Fill diagonal in-place
+A = np.zeros((3, 3))
+np.fill_diagonal(A, [1, 2, 3])
+print("Filled diagonal:\n", A)
+# [[1., 0., 0.],
+#  [0., 2., 0.],
+#  [0., 0., 3.]]
+
+# Cholesky decomposition: A = L @ L.T (requires positive-definite matrix)
+A_pd = np.array([[4.0, 2.0], [2.0, 3.0]])
+L = np.linalg.cholesky(A_pd)
+print("Cholesky L:\n", L)
+print("L @ L.T:\n", L @ L.T)  # ≈ A_pd
+```
 
 ### Index-Based Array Creation
 
@@ -903,6 +1162,167 @@ print("Bootstrap sample:", bootstrap)
 
 ---
 
+## Calculus
+
+### Numerical Differentiation
+
+- `np.gradient(f, *varargs, axis=None, edge_order=1)`: computes the numerical gradient using central differences in the interior and first/second-order accurate one-sided differences at the boundaries.
+  - `f`: input array (sampled values of the function).
+  - `*varargs`: spacing between samples — a single scalar for uniform spacing, or one 1D coordinate array per axis. If omitted, spacing of 1 is assumed.
+  - `axis`: axis or axes along which to compute the gradient. If `None`, the gradient is computed along all axes and a list of arrays is returned.
+  - `edge_order`: accuracy at the boundary — `1` (first-order, default) or `2` (second-order).
+
+- `np.diff(a, n=1, axis=-1, prepend=np._NoValue, append=np._NoValue)`: computes the n-th discrete difference along the given axis (finite forward differences).
+  - `a`: input array.
+  - `n`: order of differentiation — `1` for first differences, `2` for second differences (approximates the second derivative), etc.
+  - `axis`: axis along which to compute (default `-1`, the last axis).
+  - `prepend` / `append`: values to add before/after `a` before computing differences (useful to control the output shape).
+
+### Numerical Integration
+
+- `np.trapezoid(y, x=None, dx=1.0, axis=-1)`: integrates `y(x)` using the composite trapezoidal rule. Each pair of adjacent samples forms a trapezoid whose area is summed.
+  - `y`: array of function values.
+  - `x`: array of sample positions. If `None`, uniform spacing of `dx` is assumed.
+  - `dx`: spacing between samples when `x` is not given (default `1.0`).
+  - `axis`: axis along which to integrate (default last axis).
+
+> Note: `np.trapz` is the legacy name (deprecated in NumPy 2.0). Use `np.trapezoid` for NumPy ≥ 2.0.
+
+- `np.cumsum(a, axis=None, dtype=None)`: cumulative sum — each output element is the sum of all preceding input elements. Approximates the anti-derivative via a Riemann sum when multiplied by the step size.
+  - `a`: input array.
+  - `axis`: axis along which to accumulate. If `None`, operates on the flattened array.
+
+### Grid Creation
+
+- `np.meshgrid(*xi, indexing='xy', sparse=False, copy=True)`: creates coordinate matrices from coordinate vectors. Used to evaluate functions over a 2D (or higher-dimensional) grid.
+  - `*xi`: 1D arrays representing coordinates along each axis.
+  - `indexing`: `'xy'` (Cartesian, default — first output varies along columns) or `'ij'` (matrix/NumPy indexing — first output varies along rows).
+  - `sparse`: if `True`, returns open (sparse) grids instead of full broadcast grids — much more memory-efficient for high-dimensional grids.
+  - `copy`: if `False`, may return views of the input arrays.
+
+### Polynomials
+
+- `np.polyfit(x, y, deg, rcond=None, full=False, w=None, cov=False)`: least-squares polynomial fit. Returns coefficients `[pn, ..., p1, p0]` for a degree-`deg` polynomial.
+  - `x`: x-coordinates of the data points.
+  - `y`: y-coordinates of the data points.
+  - `deg`: degree of the fitting polynomial.
+  - `w`: weights for the data points (optional).
+  - `cov`: if `True`, also returns the covariance matrix of the coefficient estimates.
+
+- `np.polyval(p, x)`: evaluates a polynomial at given points.
+  - `p`: 1D array of polynomial coefficients in descending order `[pn, ..., p1, p0]`.
+  - `x`: scalar or array of points at which to evaluate.
+
+- `np.poly1d(c_or_r, r=False, variable=None)`: represents a polynomial as an object supporting arithmetic, evaluation, differentiation and integration.
+  - `c_or_r`: coefficients in descending order, or roots if `r=True`.
+  - `r`: if `True`, `c_or_r` is interpreted as the polynomial roots.
+
+- `np.polyder(p, m=1)`: returns the derivative of a polynomial.
+  - `p`: polynomial coefficients or `poly1d` object.
+  - `m`: order of differentiation (default 1).
+
+- `np.polyint(p, m=1, k=None)`: returns the anti-derivative of a polynomial.
+  - `p`: polynomial coefficients or `poly1d` object.
+  - `m`: order of integration (default 1).
+  - `k`: integration constants (default 0 for each order).
+
+### Convolution
+
+- `np.convolve(a, v, mode='full')`: discrete, linear convolution of two 1D sequences.
+  - `a`, `v`: 1D input arrays.
+  - `mode`: `'full'` (full output, length `len(a)+len(v)-1`), `'same'` (output has same length as `a`), `'valid'` (only where the sequences fully overlap).
+
+```python
+# --- Numerical Differentiation ---
+
+# First derivative of sin(x) → cos(x)
+x = np.linspace(0, 2 * np.pi, 200)
+f = np.sin(x)
+dfdx = np.gradient(f, x)                    # uses actual x spacing
+print("df/dx at π/2 ≈", dfdx[50])          # ≈ cos(π/2) ≈ 0
+
+# np.diff — forward differences
+y = np.array([0.0, 1.0, 4.0, 9.0, 16.0])   # f(x) = x² at x = 0,1,2,3,4
+dy = np.diff(y)                              # [1, 3, 5, 7] — first differences
+d2y = np.diff(y, n=2)                        # [2, 2, 2]    — second differences ≈ f''=2
+print("First diff:", dy)
+print("Second diff:", d2y)
+
+# Keep the same length with prepend
+dy_full = np.diff(y, prepend=y[0])           # same length as y
+print("First diff (same length):", dy_full)
+
+# --- Numerical Integration ---
+
+# ∫₀^π sin(x) dx = 2
+x_int = np.linspace(0, np.pi, 1000)
+y_int = np.sin(x_int)
+integral = np.trapezoid(y_int, x_int)
+print("∫₀^π sin(x) dx ≈", integral)         # ≈ 2.0
+
+# Cumulative integral (Riemann sum approximation)
+dx = x_int[1] - x_int[0]
+cumulative = np.cumsum(y_int) * dx
+print("Cumulative integral at π:", cumulative[-1])  # ≈ 2.0
+
+# --- Grid Creation ---
+
+x_vals = np.linspace(-np.pi, np.pi, 50)
+y_vals = np.linspace(-np.pi, np.pi, 50)
+X, Y = np.meshgrid(x_vals, y_vals)           # both shape (50, 50)
+Z = np.sin(X) * np.cos(Y)
+print("Grid shape:", X.shape)                # (50, 50)
+print("Z range: [{:.2f}, {:.2f}]".format(Z.min(), Z.max()))
+
+# 2D gradient of the scalar field Z
+dZ_dy, dZ_dx = np.gradient(Z, y_vals, x_vals)  # note: returns [axis0, axis1]
+print("∂Z/∂x shape:", dZ_dx.shape)            # (50, 50)
+
+# Sparse grid — memory-efficient
+X_s, Y_s = np.meshgrid(x_vals, y_vals, sparse=True)
+print("Sparse X shape:", X_s.shape)          # (1, 50)
+print("Sparse Y shape:", Y_s.shape)          # (50, 1)
+Z_s = np.sin(X_s) * np.cos(Y_s)             # broadcasting still works
+
+# Matrix ('ij') indexing
+Xi, Yi = np.meshgrid(x_vals, y_vals, indexing='ij')  # first index → rows
+print("Matrix indexing shape:", Xi.shape)             # (50, 50)
+
+# --- Polynomials ---
+
+# Fit a degree-2 polynomial to noisy data
+rng = np.random.default_rng(0)
+x_data = np.linspace(-3, 3, 50)
+y_data = 2 * x_data**2 - x_data + 3 + rng.standard_normal(50)
+coeffs = np.polyfit(x_data, y_data, deg=2)
+print("Fitted coefficients:", np.round(coeffs, 2))  # ≈ [2, -1, 3]
+
+# Evaluate the fitted polynomial
+x_eval = np.linspace(-3, 3, 200)
+y_fit = np.polyval(coeffs, x_eval)
+
+# poly1d object — supports arithmetic and derivative/integral
+p = np.poly1d(coeffs)
+print("p(0) =", p(0))            # ≈ 3
+print("p'(x):", np.polyder(p))   # derivative: degree-1 polynomial
+print("∫p dx:", np.polyint(p))   # anti-derivative: degree-3 polynomial
+
+# --- Convolution ---
+
+# Smooth a signal with a box filter
+signal = np.array([1.0, 2.0, 3.0, 4.0, 3.0, 2.0, 1.0])
+kernel = np.array([1/3, 1/3, 1/3])
+smoothed = np.convolve(signal, kernel, mode='same')
+print("Smoothed signal:", np.round(smoothed, 2))
+
+# Polynomial multiplication via convolution:
+# (x + 1)(x + 2) = x² + 3x + 2
+poly_a = np.array([1, 1])   # x + 1
+poly_b = np.array([1, 2])   # x + 2
+print("Product coefficients:", np.convolve(poly_a, poly_b))  # [1, 3, 2]
+```
+
+
 ## Splitting
 
 - `np.vsplit(ary, indices_or_sections)`: splits an array into multiple sub-arrays vertically (row-wise).
@@ -945,7 +1365,7 @@ print("Tile as 2x3:", np.tile(arr2, (2, 3)))          # [[1,2,3,1,2,3,1,2,3],[..
 - `np.dot(a, b)`: dot product of two arrays. For 2D arrays, equivalent to matrix multiplication.
   - `a`, `b`: input arrays.
 
-- `a @ b`: matrix multiplication operator (equivalent to `np.matmul`). Preferred over `np.dot` for matrices.
+- `a @ b`: matrix multiplication operator (equivalent to `np.matmul(a, b)`). Preferred over `np.dot` for matrices.
 
 - `np.outer(a, b)`: outer product of two 1D arrays — produces an `(N, M)` matrix.
   - `a`: 1D array of length N.
@@ -954,14 +1374,25 @@ print("Tile as 2x3:", np.tile(arr2, (2, 3)))          # [[1,2,3,1,2,3,1,2,3],[..
 - `np.linalg.det(a)`: determinant of a square matrix.
   - `a`: square matrix (N×N).
 
-- `np.linalg.inv(a)`: multiplicative inverse of a square matrix.
+- `np.cross(a, b, axisa=-1, axisb=-1, axisc=-1, axis=None)`: cross product of two (arrays of) vectors. For 3D vectors returns a 3D vector perpendicular to both; for 2D vectors returns the scalar z-component.
+  - `a`, `b`: input arrays. The vectors must be 2D or 3D (length 2 or 3 along the relevant axis).
+  - `axisa`, `axisb`: axes of `a` and `b` that define the vectors (default last axis).
+  - `axisc`: axis of the output array that holds the cross product vector.
+  - `axis`: if given, sets `axisa`, `axisb`, and `axisc` simultaneously.
+
+- `np.linalg.inv(a)`:   multiplicative inverse of a square matrix.
   - `a`: square non-singular matrix.
 
 - `np.linalg.eig(a)`: eigenvalues and right eigenvectors of a square matrix.
   - `a`: square matrix.
   - Returns: `(eigenvalues, eigenvectors)` — each column of `eigenvectors` is an eigenvector.
 
-- `np.linalg.matrix_rank(M, tol=None)`: matrix rank computed via SVD.
+- `np.linalg.eigh(a, UPLO='L')`: eigenvalues and eigenvectors of a **symmetric** (or Hermitian) matrix. Faster and more numerically stable than `np.linalg.eig` for symmetric inputs. Eigenvalues are returned in ascending order.
+  - `a`: symmetric or Hermitian square matrix. Only the lower or upper triangle is used.
+  - `UPLO`: `'L'` to read the lower triangle (default), `'U'` for the upper triangle.
+  - Returns: `(eigenvalues, eigenvectors)` — columns of `eigenvectors` are the orthonormal eigenvectors.
+
+- `np.linalg.matrix_rank(M, tol=None)`:   matrix rank computed via SVD.
   - `M`: matrix to evaluate.
   - `tol`: threshold below which singular values are considered zero.
 
@@ -1021,6 +1452,38 @@ print("Euclidean norm of vec:", np.linalg.norm(arr1))  # ≈ 3.742
 # SVD
 U, s, Vh = np.linalg.svd(mat)
 print("Singular values:", s)
+
+# Low-rank approximation using SVD (keep top k singular values)
+k = 1
+mat_approx = (U[:, :k] * s[:k]) @ Vh[:k, :]
+print("Rank-1 approximation:\n", mat_approx)
+
+# Rank and condition number
+print("Rank:", np.linalg.matrix_rank(mat))
+print("Condition number:", np.linalg.cond(mat))    # ratio of largest to smallest singular value
+
+# Cross product
+a3d = np.array([1, 0, 0])   # unit x vector
+b3d = np.array([0, 1, 0])   # unit y vector
+print("Cross product (x × y):", np.cross(a3d, b3d))  # [0, 0, 1] — unit z vector
+
+a2d = np.array([1, 2])
+b2d = np.array([3, 4])
+print("2D cross product (scalar):", np.cross(a2d, b2d))  # 1*4 - 2*3 = -2
+
+# eigh — symmetric matrix (faster than eig, real eigenvalues)
+sym = np.array([[4.0, 2.0], [2.0, 3.0]])
+eigvals_h, eigvecs_h = np.linalg.eigh(sym)
+print("Eigenvalues (eigh):", eigvals_h)   # ascending order, guaranteed real
+print("Eigenvectors (eigh):\n", eigvecs_h)
+
+# Verify: A v = λ v for each eigenpair
+for i in range(len(eigvals_h)):
+    residual = sym @ eigvecs_h[:, i] - eigvals_h[i] * eigvecs_h[:, i]
+    print(f"Residual {i}:", np.linalg.norm(residual))   # ≈ 0
+
+# Trace (sum of diagonal elements = sum of eigenvalues)
+print("Trace:", np.trace(mat))            # 5 = 1 + 4
 ```
 
 ### Transpose & Swap Axes

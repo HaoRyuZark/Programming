@@ -5,9 +5,50 @@ to communicate with each others.
 
 ---
 
+## Stateless
+
+**Stateless** in the context of APIs means that each request from the client to the server contains all of the information needed to understand and process the request. 
+The server or client do not need to store data to handle the request.
+
+--- 
+
+
 ## Representational State Transfer (REST)
 
-**Representational State Transfer (REST)** is an architectural style for designing networked applications. It relies on a stateless, client-server, cacheable communications protocol -- and in virtually all cases, the HTTP protocol is used. RESTful applications use HTTP requests to perform CRUD (Create, Read, Update, Delete) operations on resources, which are identified by URIs (Uniform Resource Identifiers).
+**Representational State Transfer (REST)** is an architectural style for designing networked applications. It relies on a **stateless**, **client-server**, **cacheable** 
+communications protocol -- and in virtually all cases, the HTTP protocol is used. RESTful applications use HTTP requests to perform CRUD (Create, Read, Update, Delete) operations on resources, 
+which are identified by URIs (Uniform Resource Identifiers).
+
+The resources are reachable through endpoints, which are specific **URLs/URIs** that represent the resource or functionality provided by the API.
+
+### Format
+
+The format looks mostly like: 
+
+```http
+GET /api/users HTTP/1.1
+Host: example.com
+Accept: application/json
+Some-Header: value
+Status: 200 OK
+Body: 
+{
+    "name": "John Doe",
+    "age": 30,
+    "email": "john@example.com"
+}
+``` 
+
+- **Verb**: The HTTP method used to perform the operation (GET, POST, PUT, DELETE).
+
+- **Endpoint**: The URL/URI that identifies the resource being accessed.
+
+- **Headers**: Additional information sent with the request, such as content type and authorization.
+
+- **Status**: The HTTP status code indicating the result of the request (e.g., 200 OK, 404 Not Found, 500 Internal Server Error).
+
+- **Body**: The data sent with the request, typically used in POST and PUT requests.
+
 
 ### When to use REST
 
@@ -81,7 +122,20 @@ Content-Type: application/json
 
 ## Caching
 
-**Caching** is the process of storing copies of data or resources in a temporary storage location (cache) to reduce the time it takes to access that data in the future. In the context of APIs, caching can improve performance and reduce server load by serving cached responses for frequently requested resources.
+**Caching** is the process of storing copies of data or resources in a temporary storage location (cache) to reduce the time it takes to access that data in the future. In the 
+context of APIs, caching can improve performance and reduce server load by serving cached responses for frequently requested resources.
+
+
+### Caching Strategies
+
+- **Client-side caching**: The client stores a copy of the response and uses it for subsequent requests, reducing the need to contact the server.
+
+- **Write-through caching**: The cache is updated whenever the underlying data is modified, ensuring that the cache always contains the most up-to-date information.
+
+- **Write-back caching**: The cache is updated first, and the changes are written to the underlying data store asynchronously, improving write performance but potentially risking data 
+loss in case of a failure.
+
+- **Time-based caching**: The cache is set to expire after a specific time period, after which the client must request the resource from the server again.
 
 ---
 
@@ -112,7 +166,8 @@ Content-Type: application/json
 
 ## Middleware
 
-**Middleware** is software that acts as an intermediary between different systems or applications, facilitating communication and data exchange. In the context of APIs, middleware can handle tasks such as authentication, logging, request/response transformation, and error handling.
+**Middleware** is software that acts as an intermediary between different systems or applications, facilitating communication and data exchange. In the context of APIs, middleware can handle tasks 
+such as authentication, logging, request/response transformation, and error handling.
 
 ---
 
@@ -282,13 +337,6 @@ data returned in a single response, improving performance and reducing bandwidth
 
 Clients can request specific pages of data, allowing for efficient navigation through large datasets.
 
-Example:
-
-```http
-GET /api/users?page=2&size=10 HTTP/1.1
-Host: example.com
-Accept: application/json
-```
 
 ### Trade-Offs
 
@@ -335,9 +383,24 @@ easy to implement.
 
 ---
 
+## Query Parameters
+
+**Query parameters** are key-value pairs appended to the end of a URL/URI to provide additional information or filter the results of an API request. They are typically used to
+specify options, such as sorting, filtering, pagination, and other parameters that affect the response.
+
+Example:
+
+```http
+GET /api/users?sort=age&filter=active&page=2&limit=10
+```
+
+--- 
+
+
 ## Versioning
 
-**Versioning** is the practice of managing changes and updates to an API over time. It allows developers to introduce new features, fix bugs, and make improvements without disrupting existing clients that rely on the API. Versioning helps maintain backward compatibility and ensures a smooth transition for users when changes are made.
+**Versioning** is the practice of managing changes and updates to an API over time. It allows developers to introduce new features, fix bugs, and make improvements without disrupting existing 
+clients that rely on the API. Versioning helps maintain backward compatibility and ensures a smooth transition for users when changes are made.
 
 Most of the time you put the version in the URL path `/api/v1/resource`.
 
@@ -349,11 +412,14 @@ Host: example.com
 Accept: application/json
 ```
 
+Another alternative is to put the version in the request header `Accept: application/vnd.example.v1+json`.
+
 ---
 
 ## Status Codes
 
-**Status codes** are standardized three-digit numbers returned by a server in response to an HTTP request. They indicate the outcome of the request and provide information about the status of the requested resource. Status codes are grouped into five categories based on their first digit:
+**Status codes** are standardized three-digit numbers returned by a server in response to an HTTP request. They indicate the outcome of the request and provide information about the status of the 
+requested resource. Status codes are grouped into five categories based on their first digit:
 
 - **1xx (Informational)**: The request was received, and the server is continuing the process.
 
@@ -404,7 +470,8 @@ These are stateful server-side handled authentication.
 
 ## Rate Limiting
 
-**Rate limiting** is a technique used to control the number of requests a client can make to an API within a specified time period. It helps prevent abuse, ensures fair usage, and protects the server from being overwhelmed by excessive requests. Rate limiting can be implemented using various strategies, such as fixed window, sliding window, or token bucket algorithms.
+**Rate limiting** is a technique used to control the number of requests a client can make to an API within a specified time period. It helps prevent abuse, ensures fair usage, and protects the 
+server from being overwhelmed by excessive requests. Rate limiting can be implemented using various strategies, such as fixed window, sliding window, or token bucket algorithms.
 
 ---
 

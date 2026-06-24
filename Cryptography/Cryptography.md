@@ -113,17 +113,17 @@ Used for:
 
 --- 
 
-## Asymetric Cryptography
+## Asymmetric Cryptography
 
 Different keys, a pulbic and a private key are used to perform and reverse/verify/complete an operation.
 
 The main operations are: encryption (RSA), signatures (DSA) and key exchanges (DH).
 
-### Asymetric Encryption
+### Asymmetric Encryption
 
 The public key is used for the encryption and the private key of the other party is used for the decryption.
 
-### Sigantures
+### Signatures
 
 Operations that guarantees data has not changed since it was signed.
 
@@ -171,6 +171,10 @@ Steps:
    |     Shared Secret       |                                |   Shared Secret         |
 
 ```
+
+
+Basically, they perform the same operation on the same pair of number, but in a different order. Big primes are used to make 
+this process irreversible using non-quantum computers. 
 
 --- 
 

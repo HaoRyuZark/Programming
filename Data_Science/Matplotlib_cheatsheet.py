@@ -8,6 +8,14 @@ from collections import Counter
 
 ##################################################################################################
 
+# Key Concepts 
+
+# Figure: The top level container 
+# Axes: The plot area of a graph
+# Axis: The number of line objects
+
+##################################################################################################
+
 # alpha Parameter 
 
 # It is a parameter that comes in a lot of plot types. Its use is to control the transparency of the plot elements. 
@@ -114,6 +122,24 @@ plt.ylabel("Y Axis")
 
 ##################################################################################################
 
+# Title 
+
+plt.title('Title', fontsize=15, fontweight='bold') # we can customize the title using the different parameters
+
+
+##################################################################################################
+
+# Axis customization
+
+plt.xlabel('Data')
+plt.xticks(rot=45)
+
+##################################################################################################
+
+# Colorbar
+
+##################################################################################################
+
 # Line Plot
 
 # Customization options: linestyle ('-', '--', ':'), color, linewidth, marker
@@ -122,7 +148,7 @@ years = [200 + i for i in range(50)]
 something = [np.random.random() for _ in range(50)]
 weights = np.random.random(50) * 50
 
-plt.plot(years, weights, color='red', linestyle='--', linewidth=2, marker='o') # we can also pass the label we passed in the legend
+plt.plot(years, weights, color='red', linestyle='--', linewidth=2, marker='o', label='I am this line') # we can also pass the label we passed in the legend
 plt.title("Line Plot Example")
 plt.xlabel("Years")
 plt.ylabel("Weights")
@@ -139,14 +165,26 @@ plt.show()
 # Bar Plot
 
 # Customization options: color, width, edgecolor, orientation (barh for horizontal)
-x = ['C++', 'Rust', 'C', 'Py', 'Java', 'Bash']
+cat = ['C++', 'Rust', 'C', 'Python', 'Java', 'Bash']
 y = [20, 30, 40, 10, 30, 5]
+y_2 = [10, 40, 50, 90, 20, 70]
 
-plt.bar(x, y, color='green', edgecolor='black')
+plt.bar(cat, y, color='green', edgecolor='black')
 plt.title("Bar Chart Example")
 plt.show()
 
-plt.barh(x, y, color='green', edgecolor='black')
+width = 0.25
+
+# Plotting bars side by side using the width
+
+x = np.arange(len(cat))
+plt.bar(x  - width, y)
+plt.bar(x, y_2)
+plt.xticks(x, cat) # passing the numerical data for the positioning, but the string for the labels
+
+
+# Horizontal
+plt.barh(cat, y, color='green', edgecolor='black')
 plt.title("Bar Chart Horizontal Example")
 plt.show()
 
@@ -161,7 +199,7 @@ width = 0.25 # we can use plus or minus on the indexes with this width to put th
 # Putting bars side by side by shifting the x value
 plt.bar(x_rand, y_rand, color='blue', width=width)
 plt.bar(x_rand_2 + width, y_rand_2, color='yellow', width=width)
-plt.xticks(ticks=x_rand, labels=x) # ticks based on the x indexes with y based on the labels (this time the programming languages. The plot is bullshit
+plt.xticks(ticks=x_rand, labels=cat) # ticks based on the x indexes with y based on the labels (this time the programming languages. The plot is bullshit
 plt.show()
 
 ##################################################################################################
