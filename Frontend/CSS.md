@@ -116,8 +116,8 @@ input::placeholder { color: #aaa; font-style: italic; }
 
 ### Relationship Selector 
 
-The **descendant**, **child**, **adjacent sibling**, and **general sibling** combinators define structural relationships between elements and their rules. Choosing the right combinator
-avoids over-selecting and keeps styles predictable.
+The **descendant**, **child**, **adjacent sibling**, and **general sibling** combinators define structural relationships 
+between elements and their rules. Choosing the right combinator avoids over-selecting and keeps styles predictable.
 
 ```css
 /* Style only direct children, not grandchildren */
@@ -135,7 +135,8 @@ footer a { color: #ccc; }
 
 ### Specificity
 
-When multiple rules target the same element and property, the browser uses **specificity** to decide which wins. Specificity is a score calculated as `(A, B, C)`:
+When multiple rules target the same element and property, the browser uses **specificity** to decide which wins. Specificity is
+a score calculated as `(A, B, C)`:
 
 | Selector type | Contribution |
 |---------------|-------------|
@@ -236,7 +237,7 @@ p    { padding: 1em; }        /* 16px — relative to p's own font-size */
 
 Every HTML element is a rectangular box. The **box model** describes the layers of that box from inside out.
 
-```
+```txt
 ┌────────────────────────────── margin ────────────────────────────────┐
 │  ┌─────────────────────────── border ─────────────────────────────┐  │
 │  │  ┌──────────────────────── padding ────────────────────────┐   │  │
@@ -256,9 +257,7 @@ By default, `width` and `height` only apply to the **content** area. Use `box-si
 }
 ```
 
-### Content
-
-The inner area where text and child elements render.
+- **Content**: The inner area where text and child elements render.
 
 ```css
 .box {
@@ -267,9 +266,7 @@ The inner area where text and child elements render.
 }
 ```
 
-### Padding
-
-Space between the content and the border. Inherits the element's background color.
+- **Padding**: Space between the content and the border. Inherits the element's background color.
 
 ```css
 .box {
@@ -285,9 +282,7 @@ Space between the content and the border. Inherits the element's background colo
 }
 ```
 
-### Border
-
-The line drawn around the padding area.
+- **Border**: The line drawn around the padding area.
 
 ```css
 .box {
@@ -306,9 +301,7 @@ The line drawn around the padding area.
 }
 ```
 
-### Margin
-
-Space outside the border — transparent, creates distance between elements.
+- **Margin**: Space outside the border — transparent, creates distance between elements.
 
 ```css
 .box {
@@ -416,11 +409,57 @@ Variables cascade and can be overridden at any scope:
 
 --- 
 
+## Float
+
+**Float** allows elements to take the space a block would normally occupy and let inline content wrap around it.
+
+```css
+.image {
+  float: left;      /* left | right | none */
+  margin: 0 16px 16px 0; /* spacing around the floated element */
+}
+```
+
+--- 
+
+## Positioning 
+
+There are different ways to position element inside elements, relative to the normal flow, the viewport, or a containing block.
+
+- **Static** (default) — normal flow, no special positioning.
+- **Relative** — offset from its normal position, but still occupies space.
+- **Absolute** — positioned relative to the nearest positioned ancestor (not static). Removed from normal flow.
+- **Fixed** — positioned relative to the viewport, stays in place on scroll.
+- **Sticky** — toggles between relative and fixed, depending on scroll position.
+
+```css
+.element {
+  position: relative;   /* static | relative | absolute | fixed | sticky */
+  top: 16px;            /* offset from top */
+  right: 0;             /* offset from right */
+  bottom: 0;            /* offset from bottom */
+  left: 0;              /* offset from left */
+  z-index: 10;          /* stacking order — higher values appear on top */
+}
+```
+
+--- 
+
 ## Flex Box 
 
 **Flexbox** is a one-dimensional layout model — it lays items out along a single axis (row or column).
 
 ### Container Properties
+
+- **flex-direction**: determines the main axis direction — row (default), row-reverse, column, column-reverse.
+
+- **justify-content**: aligns items along the main axis (start, end, center, space-between, space-around, space-evenly).
+
+- **align-items**: aligns items along the cross axis (vertically) (stretch, start, end, center, baseline).
+
+- **flex-wrap**: controls whether items wrap onto multiple lines (nowrap, wrap, wrap-reverse).
+
+- **align-content**: aligns wrapped lines along the cross axis (stretch, start, end, center, space-between, space-around).
 
 ```css
 .flex-container {
@@ -451,6 +490,18 @@ Variables cascade and can be overridden at any scope:
 ```
 
 ### Item Properties
+
+- **flex-grow**: how much the item grows relative to siblings (default 0). 
+
+- **flex-shrink**: how much the item shrinks when space is tight (default 1).
+
+- **flex-basis**: the base size of the item before grow/shrink is applied (default auto).
+
+- **order**: controls the visual order of items (default 0).
+
+- **flex**: shorthand for `flex-grow`, `flex-shrink`, and `flex-basis`.
+
+- **align-self**: overrides the container's `align-items` for this item only.
 
 ```css
 .flex-item {
@@ -1039,5 +1090,337 @@ $spacing-base: 16px;
 
 --- 
 
+## Frequently Asked Questions
 
- 
+### Centering a div
+
+There are several ways to center a div both horizontally and vertically, but it is 
+mostly done using Flexbox or Grid. Here are some examples:
+
+- **Flexbox**
+
+```css
+.centered {
+  display: flex;
+  justify-content: center; /* horizontal */
+  align-items: center;     /* vertical */
+  height: 100vh;           /* full viewport height */
+}
+```
+
+- **Grid**
+
+```css
+.centered {
+  display: grid;
+  place-items: center;     /* shorthand for justify-items + align-items */
+  height: 100vh;
+}
+```
+
+- **Classic absolute positioning**
+
+```css
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* offset by half of its own size */
+}
+```
+
+### Eliminating the margin and padding of the body
+
+This is for our boxes inside the body to take up the full width and height of the viewport. 
+It is a common practice to reset the default margin and padding of the body element to ensure 
+consistent layout across different browsers.
+
+```css
+body {
+  margin: 0;
+  padding: 0;
+}
+```
+
+### Image Carousel / Slider
+
+This one is a common UI pattern for displaying multiple images in a slideshow format.
+
+### Automatic Image Carousel with CSS and HTML 
+
+
+```html
+<div id="main_flex_container">
+    <img src="../resources/slideshow/main_site_bg.jpg" class="slide slide1">
+    <img src="../resources/slideshow/city.jpg"         class="slide slide2">
+    <img src="../resources/slideshow/pink_eyes.jpg"  class="slide slide3">
+
+    <h1 id="main_title">AnimeMigUX</h1>
+</div>
+```
+
+```css 
+#main_flex_container {
+
+    border: none;
+    padding: none;
+
+    position: relative; /* Position the container relative to its normal position */
+    overflow: hidden;
+
+    height: 45rem;
+    display: flex;
+
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.slide {
+    position: absolute; /* Position slides on top of each other */
+    z-index: 0;         /* Ensure slides are behind the title */
+
+    top: 0;  /* Position slides at the top of the container */
+    left: 0; /* Position slides at the left of the container */
+
+    width: 100%;  /* Make slides take full width of the container */
+    height: 100%; /* Make slides take full height of the container */
+
+    animation: slideshow 15s infinite;
+}
+
+/* Each slide will have a different animation delay to create the slideshow effect */
+.slide1 {
+    animation-delay: 0s;
+}
+
+.slide2 {
+    animation-delay: 5s;
+}
+
+.slide3 {
+    animation-delay: 10s;
+}
+
+/* Keyframes for the slideshow animation using a sliding window effect */
+@keyframes slideshow {
+    0% {
+        opacity: 0;
+    }
+
+    8% {
+        opacity: 1;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    38% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+    }    
+}
+
+```
+
+### Side Navigation Bar
+
+```html 
+    <header id="main_header">
+        <nav id="nav">
+
+            <!-- The first list is for the side bar -->
+            <ul class="sidebar">
+               <li onclick=hideSideBar()><img id="close_burgir" src="../resources/icons/close_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg"></li> 
+               <li><a href="#">Blog</a></li> 
+               <li><a href="#">Forum</a></li> 
+               <li><a href="#">Forum</a></li> 
+               <li><a href="#">About</a></li> 
+            </ul>
+
+            <!-- Acutal list for the header-->
+            <ul class="topbar">
+               <li><a href="./index.html">AnimeMigUX</a></li> 
+               <li class="hideOnMobile"><a href="#">Blog</a></li> 
+               <li class="hideOnMobile"><a href="#">Forum</a></li> 
+               <li class="hideOnMobile"><a href="#">Forum</a></li> 
+               <li class="hideOnMobile"><a href="#">About</a></li> 
+               <li id="menu-button" onclick=showSidebar()><img id="burgir_menu" src="../resources/icons/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg"></li>
+            </ul>
+        </nav>
+    </header>
+```
+
+```css 
+* {
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding:0;
+}
+
+body { 
+    margin: 0;
+    padding:0;
+    min-height: 100vh;
+}
+
+#nav {
+    background-color: white;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
+}
+
+.topbar {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#nav li {
+    height: 50px;
+}
+
+#nav a {
+    height: 100%;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    color: black;
+}
+
+#nav a:hover {
+    background-color: #f0f0f0;
+}
+
+#nav li:first-child {
+    margin-right: auto;
+}
+
+#burgin_menu {
+    height: 26px; 
+    width: 26px;
+}
+
+#close_burgir {
+    height: 26px; 
+    width: 26px;
+}
+
+.sidebar {
+
+    list-style: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px; 
+    height: 100vh; 
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.sidebar li {
+    width: 100%;
+}
+.sidebar a {
+    width: 100%;
+}
+
+#menu-button {
+    display: none;
+}
+
+@media(max-width: 800px) {
+    .hideOnMobile {
+        display: none;
+    }
+    #menu-button {
+        display: block;
+    }
+}
+```
+
+
+### Centering An Image in a Div
+
+```html
+<div class="image-container">
+    <img src="image.jpg" alt="Centered Image">
+</div>
+```
+
+```css
+.image-container {
+  display: bloc; 
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%; /* Adjust the width as needed */
+}
+``` 
+
+### Button With Gradient Border And Glow Effect
+
+```html 
+<button id="goto_main_bttn">Go to Main</button>
+```
+
+```css 
+#goto_main_bttn {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+
+    padding: 10px;
+
+    height: 70px;
+    width: 400px;
+    margin: 5px;
+    
+    border:none;
+
+    border-radius: 1000px;
+
+    background-color: black;
+    
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#goto_main_bttn::after {
+    content: '';
+    position: absolute;
+    background-image: linear-gradient(to bottom right, #008cff, #e100ff);
+    z-index: -1;
+    height: 108%;
+    width: 103%;
+    border-radius: 1000px;
+}
+
+#goto_main_bttn:hover {
+    z-index: 0;
+    box-shadow: 40px 0 100px #008cff, -40px 0 100px #008cff;
+}
+
+#note_and_art_container {
+    display: flex;
+    align-items: center;
+}
+```

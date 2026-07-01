@@ -5,13 +5,22 @@ to communicate with each others.
 
 ---
 
+## Web Servers 
+
+A **web server** is a software application which handles the HTTP request from a client. It is the program responsible for routing and
+delegating the request to the right **service**, just another program running which handles the specific functionality. 
+
+It is also possible for the web server to handle the request itself, but this is not a good practice for large applications.
+
+--- 
+
+
 ## Stateless
 
 **Stateless** in the context of APIs means that each request from the client to the server contains all of the information needed to understand and process the request. 
 The server or client do not need to store data to handle the request.
 
 --- 
-
 
 ## Representational State Transfer (REST)
 
@@ -61,28 +70,51 @@ Body:
 
 ## CRUD Operations
 
-- **Create** - POST
-- **Read** - GET
-- **Update** - PUT/PATCH
-- **Delete** - DELETE
+- **POST -Create** - creates a new resource on the server.
+- **GET - Read** - get the information from the server.
+- **PUT/PATH - Update** - PUT replaces while PATCH modifies the information.
+- **DELETE - Delete** - Deletes the resource.
 
 ---
 
 ## URL/URI
 
-A **Uniform Resource Locator (URL)** or **Uniform Resource Identifier (URI)** is a reference (an address) to a resource on the internet. It specifies the location of the resource as well as the protocol used to access it.
+A **Uniform Resource Locator (URL)** or **Uniform Resource Identifier (URI)** is a reference (an address) to a resource on the internet. 
+It specifies the location of the resource as well as the protocol used to access it.
 
 ---
 
 ## Endpoints
 
-An **endpoint** is a specific URL/URI where an API can be accessed by a client application. It represents a specific resource or functionality provided by the API.
+An **endpoint** is a specific URL/URI where an API can be accessed by a client application. It represents a specific resource or functionality 
+provided by the API.
 
 ---
 
+## API Gateway
+
+An **API Gateway** is a server that acts as an intermediary between clients and backend services. It handles incoming API requests, 
+routes them to the appropriate service, and returns the response to the client. API gateways can provide additional functionality such 
+as authentication, rate limiting, caching, and request/response transformation.
+
+--- 
+
+## How Are APIs Accessed
+
+APIs are accessed through **HTTP requests** sent from a client application to the API server. The client can be a web browser, 
+mobile app, or any other software that can make HTTP requests.
+
+The server process listens for incoming requests, processes them, and sends back an HTTP response containing the
+requested data or the result of the operation.
+
+
+--- 
+
 ## JSON
 
-**JSON (JavaScript Object Notation)** is a lightweight data interchange format that is easy for humans to read and write, and easy for machines to parse and generate. It is commonly used in web APIs to transmit data between a server and a client.
+**JSON (JavaScript Object Notation)** is a lightweight data interchange format that is easy for humans to read and write, and easy 
+for machines to parse and generate. It is commonly used in web APIs to transmit data between a server and a client.
+
 Example:
 
 ```json

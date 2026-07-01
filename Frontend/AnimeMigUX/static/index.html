@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="I am tired of Bad Design for Anime Pages, so I am making my own."
-    <link rel="icon" type="image/jpg" href="../resources/rem_icon.jpg">
+    <meta name="description" content="I am tired of the bad design of pirate anime sites, so I am making my own.">
+    <link rel="icon" type="image/x-icon" href="../resources/rem_icon.ico">
     <link rel="stylesheet" href="../style/index.css">
+    <script src="../js/index.js"></script>
     <title>AnimeMigUX</title>
 </head>
 <body>
 
-<!---- 
+<!---- Simplified view
    ___________________________
-  | AnimeMigUX               |
+  | AnimeMigUX_____a_b_c_____| 
   |                          |
   |           >_<            |
   | -------------------------|
@@ -22,29 +23,65 @@
   |__________________________|
 -->
 
-    <header id="main_header">
-        <div id="upper_title">
-            AnimeMigUX
-        </div>
+    <!--- Should only contain the nav-->
+    <header>
+        <nav id="nav">
+
+            <!-- The first list is for the side bar -->
+            <ul class="sidebar">
+               <li onclick=hideSideBar()><img id="close_burgir" src="../resources/icons/close_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg"></li> 
+               <li><a href="#">Blog</a></li> 
+               <li><a href="#">Forum</a></li> 
+               <li><a href="#">Forum</a></li> 
+               <li><a href="#">About</a></li> 
+            </ul>
+
+            <!-- Acutal list for the header-->
+            <ul class="topbar">
+               <li><a href="./index.html">AnimeMigUX</a></li> 
+               <li class="hideOnMobile"><a href="#">Blog</a></li> 
+               <li class="hideOnMobile"><a href="#">Forum</a></li> 
+               <li class="hideOnMobile"><a href="#">Forum</a></li> 
+               <li class="hideOnMobile"><a href="#">About</a></li> 
+               <li id="menu-button" onclick=showSidebar()><img id="burgir_menu" src="../resources/icons/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg"></li>
+            </ul>
+        </nav>
     </header>
 
+    <!--- Main content container -->
     <main id="main_container">
+      
         <div id="main_flex_container">
+            <img src="../resources/slideshow/katanagatari.jpg" class="slide slide1">
+            <img src="../resources/slideshow/city.jpg"         class="slide slide2">
+            <img src="../resources/slideshow/miku.jpg"  class="slide slide3">
 
             <h1 id="main_title">AnimeMigUX</h1>
-
-            <buttom id="goto_main_bttn" href="./dashboard.html">
-                Start Browsing Animes
-            </buttom>
-
         </div> 
+        
+        <div id="button_container">
+            <button id="goto_main_bttn" onclick="location.href='./dashboard.html'">
+                Start Browsing Animes
+            </button>
+        </div>
+        
+        <div id="note_and_art_container">
+            <p>    
+             I love anime, manga, light novels, visual novels and everything related to Japan. 
+            I hope that I can share a part of that with you. 
+            </p>
+            <div>
+                <img src="../resources/chibi.jpg">
+            </div>
+        </div>
+
     </main>
 
 
     <footer id="main_footer">
-        <div class="generic_text">I wish you the best day of your life</div>
-        <a href="about.html">About</a>
+        <div class="generic_text">I wish you the best day of your life.</div>
     </footer>
 
 </body>
+
 </html>

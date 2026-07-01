@@ -716,3 +716,24 @@ the x86-64 ABI, which specifies how functions receive parameters, how the stack 
 
 - **ISA**: The instruction set architecture is the set of instructions that a CPU can execute. It defines the machine language that the CPU understands. 
 Examples include x86, ARM, and RISC-V.
+
+--- 
+
+## Base 64
+
+**Base 64** is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It is commonly used to encode 
+data that needs to be stored and transferred over media that are designed to deal with textual data. This encoding helps ensure that 
+the data remains intact without modification during transport.
+
+### Encoding Process
+
+Each group of three bytes (24 bits) from the binary data is divided into four groups of six bits. Each six-bit group is 
+then mapped to a character in the Base 64 alphabet, which consists of 64 characters: A-Z, a-z, 0-9, +, and /. If the total number of 
+bytes is not divisible by three, padding with one or two '=' characters is added to the end of the encoded string to make it a
+multiple of four characters.
+
+Example: 
+
+| Plain | Binary | Triplets | Base 64 Alphabet|
+|:------|--------|--------|---------|
+| And   |01000001 01101110 01100100 |010000  010110  111001 100100|QW5k|

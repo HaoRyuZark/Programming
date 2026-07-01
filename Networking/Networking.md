@@ -1,7 +1,6 @@
 # Networking
 
-Networking in computer science refers to concept of connection of
-multiple computers.
+**Networking** in computer science refers to the concept of connecting multiple computers.
 
 ---
 
@@ -533,8 +532,9 @@ Common protocols include:
 
 ## Ports
 
-A **port** is a communication endpoint commonly used to identify an application in a communication. They are identified by a number and for the operating system, they are a logical construct to identify a process or a
-type of network service. Note that the at the hardware level we also have ports for audio, video, etc., but this are completely different ports.
+A **port** is a communication endpoint commonly used to identify an application in a communication. They are identified by a number and for the operating system, 
+they are a logical construct to identify a process or a type of network service. Note that the at the hardware level we also have ports for audio, video, etc., 
+but this are completely different ports.
 
 - Ports are regions of memory in the address-space of the operating system. Thus, the OS is responsible for them.
 - Ports in a networking context are always bind with an IP-Address. `IP-Address:Port`
@@ -557,7 +557,15 @@ type of network service. Note that the at the hardware level we also have ports 
 ### Port Forwarding 
 
 It is a technique used for allowing external devices access to a local network. When a request reaches a router then it gets 
-redirected to correct computer and port.
+redirected to correct computer and port. When a request arrives at the router with an specific port **X**, this request gets mapped to 
+an specific computers, static IP-address inside the network. 
+
+$$
+   \text{Port } \mapsto \text{ IP-address }
+$$
+
+
+Note, that is used for when some computer from the outside tries to access the local private network.
 
 ### Port Security
 
@@ -644,11 +652,32 @@ This term refers to the actual, intended data transmitted in a network communica
 
 ---
 
-## DHCP 
+## Dynamic Host Configuration Protocol (DHCP)
 
-The **Dynamic Host Configuration Protocol** provides a host with an IP, SM, DG and DNS server dynamically.
+The **Dynamic Host Configuration Protocol** provides a host with an IP-address, subnetmask, default gateway and domain name resolution server dynamically.
 This is the protocol responsible for providing access to the internet when a device is connected to the internet by just plugin 
 the ethernet cable or the wifi password.
+
+They way this is accomplished using a server which is mostly the routers. 
+
+--- 
+
+## What happens the first time a computer gets access to a network? 
+
+Let us assume that we have a computer which has never been connected to any network and it is going make its first requests to 
+a machine outside the network. 
+
+1. The computer wants to send a packet, but it does not have a default gateway or knowledge about other devices. Hence it sends a broadcast asking 
+for the MAC-address of the router and it has not IP-address.
+
+2. It gets to the switch which redirects it to the router. 
+
+3. The router determines that this machine needs a private IP-address and a DG for further communication, so it sends this data determined by DHCP server to our 
+computer. 
+
+4. The computer DG gets configured and the address of the switch is cached. 
+
+5. Any further communication is done using the typical procedures like ARP, TCP, etc.
 
 --- 
 
@@ -670,18 +699,24 @@ also detect errors occurred at the physical layer and correct hem via algorithms
 
 - **Physical Layer**: Consists on the hardware components of the system.
 
-### Frames
+### Frames, Packets And Segments
 
-A **frame** is a layer 2 PDU (Protocol Data Unit) which consists of a header, payload and trailer. 
+- A **frame** is a layer 2 PDU (Protocol Data Unit) which consists of a header, payload and trailer. 
 The header contains the destination and source MAC addresses, while the trailer includes error-checking information (CRC).
 
-### Packets
+- A **packet** is a layer 3 PDU (Protocol Data Unit) used in the network layer. It consists of a header and a payload. The header contains source 
+and destination IP addresses, which are used for routing the packet across the network.
 
-A **packet** is a layer 3 PDU (Protocol Data Unit) used in the network layer. It consists of a header and a payload. The header contains source and destination IP addresses, which are used for routing the packet across the network.
+- A **segment** is a layer 4 PDU (Protocol Data Unit) used in the transport layer. It contains a header and a payload. The header includes information 
+such as source and destination ports, sequence numbers, and acknowledgment numbers, which are essential for ensuring reliable data transfer.
 
-### Segments
+#### Simplified depiction
 
-A **segment** is a layer 4 PDU (Protocol Data Unit) used in the transport layer. It contains a header and a payload. The header includes information such as source and destination ports, sequence numbers, and acknowledgment numbers, which are essential for ensuring reliable data transfer.
+```txt 
+Data | Source port | Destination port | Protocol |  <- Segment
+Data | Source port | Destination port | Protocol | Source IP | Destination IP |  <- Packet
+Data | Source port | Destination port | Protocol | Source IP | Destination IP | Source MAC | Destination MAC |  <- Frame
+```
 
 ---
 
@@ -694,6 +729,8 @@ A **segment** is a layer 4 PDU (Protocol Data Unit) used in the transport layer.
 ---
 
 ## Encapsulation & Decapsulation
+
+
 
 ---
 
@@ -897,7 +934,7 @@ for sending data across the internet. This is a TCP-based protocol which consist
 life-cycle of a connection.
 
 ```txt
-               CLient             Server 
+               CClient             Server 
                ------             ------
                |                  |
 TCP Handshake  | SYN              |
@@ -920,6 +957,40 @@ Certificate    |   Certificate    |
 - The **SYNC** and **ACK** packages do not really contain data, but instead just meta data for checking the connection.
 
 - The main use is for webpages and the information transferred in those.
+
+If HTTPS is used the **TLS/SSL** handshake is performed after the TCP handshake and before the data transfer. 
+This ensures that the data is encrypted and secure.
+
+
+```txt 
+               CClient          Server 
+               ------           ------
+               |                  |
+TCP Handshake  | SYN              |
+               |----------------->|
+               |                  |
+               |  SYN ACK         |
+               | <----------------|
+               |                  |
+               |  ACK             | 
+               |----------------->|
+               |                  |
+TLS Handshake  |   Client Hello   |
+               |----------------->|
+               |                  |
+               |   Server Hello   |
+               | <----------------|
+               |                  |
+               |   Certificate    |
+               | <----------------|
+               |                  |
+               |   Key Exchange   |
+               | <----------------|
+               |                  |
+HTTP/HTTPS     |   Data Transfer  |
+(Data Transfer)|<---------------->|
+               |                  |
+```   
 
 ### Headers 
 
@@ -945,9 +1016,21 @@ In this protocol a **status code** needs to be send to describe the status of th
 
 ### Request
 
+An **HTTP request** is a message sent by a client to a server to initiate an action or retrieve information. It consists of 
+several components, including the request line, headers, and an optional body.
+
+```http
+GET /index.html HTTP/1.1
+Host: www.example.com
+```
 
 ### Response
 
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+<html>...</html>
+```
 
 ---
 
@@ -973,22 +1056,40 @@ confidentiality, integrity and authentication. The acronyms refer to 2 version o
 
 The combination of these 3 is called a **PKI public key infrastructure**.
 
-### TLS/SSL Handshake
+### Certificates
 
-1. The certificate autority provides a signed certificate with a public and private key.
+**Certificates** are a cryptographic signs which are used to verify the identity of a server. They are sold by trusted organizations.
 
-2. The server generates its own set or private and public key. Then it generates a **Certificate Signing Request (CSR)** which includes the 
+- The server generates its own set of private and public key. Then it generates a **Certificate Signing Request (CSR)** which includes the 
 public key and it is signed with the private key of the server.
 
-3. The CA inspects and validates the certificate. The certifacate is signed with the private key of the CA. It also inlcudes the public key of the server.
+- The certificate autority provides a signed certificate with a public and private key for the server.
 
-4. The server can use the certifacte to validate its identity.
+- The CA inspects and validates the certificate. The certifacate is signed with the private key of the CA. It also includes the public key of the server.
 
-5. Clients already have a signed certificate which includes the public key of the CA.
+- The server can use the certificate to validate its identity.
 
-6. The clients requests the cerficate of the server by chekcing the sign with the CA's public key.
+- Clients already have a signed certificate which includes the public key of the CA.
 
-7. The handshake then creates a pair of public and private keys (**Session Keys**) used by both the client and server for asymmetric encryption. 
+- The clients requests the cerficate of the server by chekcing the sign with the CA's public key.
+
+### TLS/SSL Handshake
+
+Previous to the hand shake a TCP connection is established using the three-way handshake. 
+
+1. The client sends a hello-message to the server which includes meta data and the encryption supported. 
+
+2. The server reads the meta data and chooses an encryption algorithm. This, a public key and the certificate are send to the client.
+
+3. The client checks the validity of the certificate. 
+
+4. If the certificate is valid, it generates a random session key which is encrypted with the servers public key and send to him (RSA). 
+Now that both parties have the same seed values, this is used to generate the private key pairs for symmetric encryption. There are two pairs 
+due to one being used for the server-to-client and the other for the client-to-server communication.
+
+It is also important to notice that instead of RSA the Diffie-Dellman exchange is used for the generation of the shared secret.
+
+5. The server decrypts the session key and sends a finish message. This includes a digest of all the other messages. 
 
 ### HTTP Strict Transport Security HSTS
 
@@ -1006,46 +1107,46 @@ Strict-Transport-Security: includeSubDomains
 Strict-Transport-Security: preload 
 ```
 
-Because of the first visit still being vulnerable. A concetp called **HSTS Preload** was developed, which 
+Because of the first visit still being vulnerable. A concept called **HSTS Preload** was developed, which 
 consists on a static list of HSTS sites maintained by the browsers locally.
 
 --- 
 
-## Domains
+## Domain Name System (DNS)
 
+**Domain Name System** is a method of mapping **domain names** in plain text to actual **IP-address** of a server.
 
---- 
+Important facts: 
 
-## DNS
-
-**Domain Name System** is a method of mapping domain names in plain text to actual IP-Address of a server.
-
-- The IP-address of the resolver of the **resolver** is hardcoded into the router by the internet service provider. 
-the goes for the address of the **root**, **tld** and **authoritative name** server in the **resolver**.
+- The IP-address of the resolver of the **resolver** is hard-coded into the router by the internet service provider (ISP). 
+Then it goes for the address of the **root**, **tld** and **authoritative name** server in the **resolver**.
 
 - The **stub resolver** is the client dns running in you computer. 
 
 - The **recursive resolver** is a DNS server which does not know the IP-address if not chached but it knows the addresses of the **root** servers. 
 
-- **Root Servers** know the right **ANS** servers to ask for the given ip address. 
+- **Root Servers** know the right **ANS** servers to ask for the given IP-address. 
 
-- The **Authoritative Name Server** is the one server containing the actual ip address which knows the targets ip address.
+- The **Authoritative Name Server** is the one server containing the actual IP-address which knows the targets ip address.
+
+- In DNS there are always more than one server for each servers to maximize availability.
 
 ### Root Servers 
 
+The **root** name servers are which are responsible for the hidden final `.` at the end of each domain name. 
 
 ### Steps
 
-1. The stup resolver checks the cache and if the IP is not in the cache a request is triggered to hardcoded IP-address of the one program used to 
+1. The **resolver** checks the cache and if the IP is not in the cache a request is triggered to hard-coded IP-address of the one program used to 
 ask for the domain.
 
-2. A request is triggered to the recursive resolver which will the **root** server of an specific **top level domain** like `.com`
+2. A request is triggered to the recursive resolver which will the **root** `.` server of an specific **top level domain** like `.com`
 
 3. The resolver is redirected to an specific **Authoritative Name Server** which always know the IP address.
 
-4. The address is given to recursive resolver. 
+4. The address is given to recursive resolver which caches the address. 
 
-5. The resolver returns the id to the computer. 
+5. The resolver returns the IP to the computer which can now make a request. 
 
 ### Structure 
 
@@ -1054,20 +1155,113 @@ ask for the domain.
 - 
 
 ```text 
-   aaaaaaaaaaaaaaaaaa.google.com
-                              |
-                     Top level domain
+   www.aaaaaaaaaaaaaaaaaa.google.com
+   |           |             |
+Subdomain   2d-domain    Top level domain
 ```
+
+
+### DNS Zones 
+
+A **DNS zone** is a section of a domain name space that a certain administrator has been delegated control over.
 
 ### Zone Files 
 
+**Zone files** are the files which contain the mapping of domain names to IP-addresses. They are used by the **Authoritative Name Servers** to resolve domain names.
+
+It is composed of different parts: 
+
+- **$ORIGIN**: This is the domain name of the zone file. It is used to specify the domain name for which the zone file is authoritative.
+- **$TTL**: This is the time to live for the zone file. It is used to specify how long the zone file should be cached by the resolver.
+- **SOA (Start of Authority)**: This record indicates the authoritative DNS server for the zone.
+- **NS (Name Server)**: This record specifies the authoritative name servers for the zone.
+- **A (Address)**: This record maps a domain name to an IPv4 address.
+- **AAAA (IPv6 Address)**: This record maps a domain name to an IPv6 address.
+- **CNAME (Canonical Name)**: This record creates an alias for a domain name.
+- **MX (Mail Exchange)**: This record specifies the mail servers for the domain.
+
+This parts are called **Resource Records** and they are used to map domain names to IP-addresses.
+
+- **Structure of a record**
+
+```txt
+OWNER CLASS TYPE VALUES
+```
+
+Example: 
+
+```txt
+$ORIGIN example.com. 
+$TTL 86400 
+@	IN	SOA	dns1.example.com.	hostmaster.example.com. (
+			2001062501 ; serial                     
+			21600      ; refresh after 6 hours                     
+			3600       ; retry after 1 hour                     
+			604800     ; expire after 1 week                     
+			86400 )    ; minimum TTL of 1 day  
+		     
+		           
+	IN	NS	dns1.example.com.       
+	IN	NS	dns2.example.com.        
+	
+	
+	IN	MX	10	mail.example.com.       
+	IN	MX	20	mail2.example.com.        
+
+	
+dns1	IN	A	10.0.1.1
+dns2	IN	A	10.0.1.2	
+
+			       
+server1	IN	A	10.0.1.5        
+server2	IN	A	10.0.1.6
+
+       
+ftp	IN	A	10.0.1.3
+	IN	A	10.0.1.4
+	
+mail	IN	CNAME	server1
+mail2	IN	CNAME	server2
+
+
+www	IN	CNAME	server1
+```
+
+#### Typical Records
+
+- *A*: maps a domain name to an IPv4-address.
+- *AAAA*: maps a domain name to an IPv6-address.
+- **CNAME (canonical name)**: resolves a domain or subdomain to another domain name.
+- **MX**: uses for mail exchage. 
+- **SOA**: it stands for start of authority a stored administrative information for a zone.
+- **NS**: provides the name of the authoritative name server within a domain.
+- **SRV**: points to a server and a service by including a port number. 
+- **PTR**: maps an IP-address to a domain name. It can be used to check the authenticity of an email.
 
 --- 
 
 ## SSH
 
 Secure shell is a protocol used for providing a secure encrypted connection to a remote machine. It uses asymmetric encryption
-and commonly **port 22** for the connection. It uses either a password or asymmetric encryption for connection without using a password.
+and runs commonly on **port 22**. It uses either a password or asymmetric encryption for connection without using a password.
+
+### Process 
+
+1. **Stablish a TCP connection**: typical process. 
+
+2. **SSH Version Check**: Check if both server and host are using the same SSH version. 
+
+3. **Key Exchange process**: Diffie-Dellman key exchange in most cases.
+
+4. **Server authentication**: The server returns its public key to the client which is added to the file `/home/user/.ssh/known_hosts`.
+
+5. **Client Authentication**: The server checks the password given by the client.
+
+6. **Start of the actual SHH**
+
+### Tunneling 
+
+SSH allows to stablish a secure connection which is then used for sharing data and commands directed to other applications in the system.
 
 ### Layout Of An SSH Packet
 
