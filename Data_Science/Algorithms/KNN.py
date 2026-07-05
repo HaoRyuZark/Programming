@@ -30,10 +30,10 @@ class KNN:
     def _predict(self, x):
 
         distances = np.array([self.dis_func(x, n) for n in self.X_train])
-        sorted_indices = np.argsort(distances)[::self.k]
+        sorted_indices = np.argsort(distances)[1:self.k]
  
         k_nearest_labels = [self.y_train[i] for i in sorted_indices]    
 
-        return Counter(k_nearest_labels).most_common() 
+        return Counter(k_nearest_labels).most_common()[0][0]
 
         

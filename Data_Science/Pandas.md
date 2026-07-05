@@ -61,7 +61,7 @@ A two-dimensional labeled data structure — essentially a table with rows and c
 
 - `df.index`: row labels.
 - `df.columns`: column labels.
-- `df.values`: the underlying 2D NumPy array.
+- `df.values`: the underlying 2D NumPy array. Useful to collect the data
 - `df.dtypes`: data type of each column.
 - `df.shape`: tuple `(rows, columns)`.
 - `df.size`: total number of elements.
@@ -80,6 +80,10 @@ print(df.columns)   # Index(['Name', 'Age', 'Score'], dtype='object')
 print(df.dtypes)
 print(df.shape)     # (3, 3)
 print(df.ndim)      # 2
+
+# X containts only the data for name and age, while y only the scores. Both as pure numpy arrays.
+X, y = df.iloc[:, :2].values, df.iloc[:, 2].values
+
 ```
 
 ### Axis
@@ -993,6 +997,8 @@ print(df.count())                        # count of non-NaN values per column
 print(df.nunique())                      # unique values per column
 print(df["Category"].value_counts())      # frequency of each category
 print(df.corr())                          # pairwise correlation of columns
+
+df["new_col"] = df.sum(axis="1")          # adding a new column which contains the row sum
 ```
 
 --- 
@@ -1128,20 +1134,27 @@ df_combined = pd.concat([df_a, df_b], keys=["source_a", "source_b"])
 
 ---
 
-## Reshaping
+## Reshaping & Pivot Tables 
 
-- `df.pivot_table(values, index, columns, aggfunc='mean', fill_value=None, margins=False)`: creates a spreadsheet-style pivot table.
+**Pivot tables** are useful for when we have to have a modified view of our data in which we only take some of the columns and a different 
+column as the index; we can then use an aggregation to get information in a more compact way. This way we reduce the number of entries by 
+compressing them into a more shorter, but wider table.
+
+- `df.pivot(index, columns, values)`: reshapes without aggregation. Requires unique (index, column) pairs. We can chose one column whose values will become the 
+new columns and another column to use as an index. It turns values in one columns into a new column.
+
+  - `index`: column to use as row index.
+  - `columns`: column whose values become new column names.
+  - `values`: column(s) to fill the cells.
+
+- `df.pivot_table(values, index, columns, aggfunc='mean', fill_value=None, margins=False)`: creates a spreadsheet-style pivot table like `pivot` it also allows 
+to choose multiple columns for the index and labels and can handle duplicates. `groupby + pivot`.
   - `values`: column(s) to aggregate.
   - `index`: column(s) to use as row labels.
   - `columns`: column(s) to use as column labels.
   - `aggfunc`: aggregation function(s) — e.g., `'mean'`, `'sum'`, `'count'`, or a list.
   - `fill_value`: value to replace NaN in the result.
   - `margins`: if `True`, adds row/column totals.
-
-- `df.pivot(index, columns, values)`: reshapes without aggregation. Requires unique (index, column) pairs.
-  - `index`: column to use as row index.
-  - `columns`: column whose values become new column names.
-  - `values`: column(s) to fill the cells.
 
 - `df.melt(id_vars=None, value_vars=None, var_name='variable', value_name='value')`: unpivots — converts columns to rows (wide → long format).
   - `id_vars`: column(s) to keep as identifier variables.
@@ -1154,6 +1167,10 @@ df_combined = pd.concat([df_a, df_b], keys=["source_a", "source_b"])
 
 - `df.unstack(level=-1, fill_value=None)`: pivots the inner row level into columns (inverse of `stack`).
   - `level`: index level(s) to unstack.
+
+- `df.crosstab()`:
+
+- `df.explode()`:
 
 ```python
 df = pd.DataFrame({
@@ -1168,6 +1185,11 @@ print(pivot)
 #          Math  Science
 # Alice    90.0     85.0
 # Bob      80.0     78.0
+
+# Corona Pivot Table
+bl = np.unique(df["Bundesland"])
+covid = df.pivot_table(index="Meldedatum", columns="Bundesland", values="AnzahlFall", aggfunc="sum").fillna(0)
+covid["Deutschland"] = covid.sum(axis=1)
 
 # Pivot (no aggregation — requires unique pairs)
 pivot2 = df.pivot(index="Name", columns="Subject", values="Score")
@@ -1622,3 +1644,9 @@ df["Category"] = df["Category"].astype("category")
 for row in df.itertuples():
     print(row.Name, row.Score)
 ```
+
+--- 
+
+## Plotting
+
+

@@ -23,6 +23,12 @@ from collections import Counter
 
 ##################################################################################################
 
+# Step Plot 
+
+# This is a plot which instead of drawing a line between the points it draws a latter.
+
+##################################################################################################
+
 # Color Mapping 
 
 from gapminder import gapminder

@@ -17,7 +17,7 @@ The **cascade** determines which rules apply when multiple rules target the same
 
 ## Selectors
 
-Selectors target which HTML elements a rule applies to.
+**Selectors** target which HTML elements a rule applies to.
 
 ### Basic Selectors
 
@@ -48,6 +48,8 @@ a[href$=".pdf"] { color: orange; }
 ```
 
 ### Grouping & Combinators
+
+A way of applying the same rule to multiple selector. 
 
 ```css
 /* Grouping — apply the same rules to multiple selectors */
@@ -425,12 +427,19 @@ Variables cascade and can be overridden at any scope:
 ## Positioning 
 
 There are different ways to position element inside elements, relative to the normal flow, the viewport, or a containing block.
+When the position is set to something different than `static`, we get access to the properties: `top`, `bottom`, `left`, `right` and `z-index`.
 
-- **Static** (default) — normal flow, no special positioning.
-- **Relative** — offset from its normal position, but still occupies space.
-- **Absolute** — positioned relative to the nearest positioned ancestor (not static). Removed from normal flow.
-- **Fixed** — positioned relative to the viewport, stays in place on scroll.
-- **Sticky** — toggles between relative and fixed, depending on scroll position.
+- **Static**: (default) normal flow, no special positioning.
+
+- **Relative**: offset from its normal position, but still occupies space.
+
+- **Fixed**: positioned relative to the viewport, stays in place on scroll.
+
+- **Sticky**: toggles between relative and fixed, depending on scroll position. We could for example define via `top:0` that the elements becomes fixed, once it 
+reaches this position.
+
+- **Absolute**: positioned relative to the nearest positioned ancestor (not static). Removed from normal flow. If the parent has no position attribute it will 
+be relative to the body.
 
 ```css
 .element {
@@ -443,23 +452,26 @@ There are different ways to position element inside elements, relative to the no
 }
 ```
 
+This crucial for designing complex components.
+
 --- 
 
 ## Flex Box 
 
 **Flexbox** is a one-dimensional layout model — it lays items out along a single axis (row or column).
+It is really practical to define: simple layouts, child elements, etc. 
 
 ### Container Properties
 
-- **flex-direction**: determines the main axis direction — row (default), row-reverse, column, column-reverse.
+- `flex-direction`: determines the main axis direction — row (default), row-reverse, column, column-reverse.
 
-- **justify-content**: aligns items along the main axis (start, end, center, space-between, space-around, space-evenly).
+- `justify-content`: aligns items along the main axis (start, end, center, space-between, space-around, space-evenly).
 
-- **align-items**: aligns items along the cross axis (vertically) (stretch, start, end, center, baseline).
+- `align-items`: aligns items along the cross axis (vertically) (stretch, start, end, center, baseline).
 
-- **flex-wrap**: controls whether items wrap onto multiple lines (nowrap, wrap, wrap-reverse).
+- `flex-wrap`: controls whether items wrap onto multiple lines (nowrap, wrap, wrap-reverse).
 
-- **align-content**: aligns wrapped lines along the cross axis (stretch, start, end, center, space-between, space-around).
+- `align-content`: aligns wrapped lines along the cross axis (stretch, start, end, center, space-between, space-around).
 
 ```css
 .flex-container {
@@ -491,17 +503,22 @@ There are different ways to position element inside elements, relative to the no
 
 ### Item Properties
 
-- **flex-grow**: how much the item grows relative to siblings (default 0). 
+By default, all items will have its minimal inital size, which can wastes a lot of space, the following properties define size, and how much of the extra space is 
+to be taken by items. for `grow` and `shrink` we give a value between 0 and 1.
 
-- **flex-shrink**: how much the item shrinks when space is tight (default 1).
+- `flex-grow`: how much the item grows relative to siblings (default 0). If we set it to 
 
-- **flex-basis**: the base size of the item before grow/shrink is applied (default auto).
+- `flex-shrink`: how much the item shrinks when space is tight (default 1).
 
-- **order**: controls the visual order of items (default 0).
+- `flex-basis`: the base size of the item before grow/shrink is applied (default auto).
 
-- **flex**: shorthand for `flex-grow`, `flex-shrink`, and `flex-basis`.
+- `order`: controls the visual order of items (default 0).
 
-- **align-self**: overrides the container's `align-items` for this item only.
+- `flex`: shorthand for `flex-grow`, `flex-shrink`, and `flex-basis`.
+
+- `align-self`: overrides the container's `align-items` for this item only.
+
+- `margin-left/right`: (default 0) this is used to push one or multiple elements to the left or right of the container. Set to `auto` to do so.
 
 ```css
 .flex-item {
@@ -558,9 +575,34 @@ There are different ways to position element inside elements, relative to the no
 
 ## Grid 
 
-**CSS Grid** is a two-dimensional layout system — rows and columns simultaneously.
+**CSS Grid** is a two-dimensional layout system — rows and columns simultaneously. This is the go-to-way of defining complex layouts.
 
 ### Container Properties
+
+- `grid-template-columns`: determines the number of columns and its sizes. We normally use relative values to use the full space.
+
+- `grid-template-rows`:determines the number of rows and its sizes.
+
+- `justify-content`: determines the horizontal position of the grid with respect to the container. 
+
+- `align-content`: determines the vertical position of the grid with respect to the container.
+
+- `justify-items`: (start, end, center, space-evenly, space-between, space-around) align items on the x-axis.
+
+- `align-items`:(start, end, center, space-evenly, space-between, space-around) align items on the y-axis.
+
+- `grid-column-gap`: defines the gab between the columns.
+
+- `grid-row-gap`: defines the gab between the rows.
+
+- `grid-gap`: shorthand for the col and row gap, in that order.
+
+- `grid-auto-rows:` it handles the automatic generated elements.
+
+- `grid-auto-columns:` it handles the automatic generated elements.
+
+- `grid-auto-flow`: when new dynamic elements are created, we can define this property to `row` or `column` for the way in which they should be put in the grid.
+
 
 ```css
 .grid-container {
@@ -597,26 +639,107 @@ There are different ways to position element inside elements, relative to the no
 
 ### Item Properties
 
+The following properties allow us to change the elements inside our grid cells. 
+
+- `grid-column`: specifies the column(s) an element should occupy.
+
+- `grid-row`: specifies the row(s) an element should occupy.
+
+- `grid-template-areas`: defines named grid areas. For example, we can define a header, sidebar, main content, and footer area.
+
+- `grid-area`: assigns an item to a named grid area.
+
+
 ```css
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 1fr auto;
+  gap: 16px;
+  grid-template-areas:
+    "header header header"
+    "sidebar main main"
+    "footer footer footer";
+}
+
 .grid-item {
-  /* Span specific columns */
-  grid-column: 1 / 3;         /* from line 1 to line 3 (spans 2 columns) */
-  grid-column: span 2;        /* span 2 columns from auto-placed position */
+  /* Span multiple columns */
+  grid-column: 1 / 3;        /* from column line 1 to line 3 */
+  grid-column: span 2;       /* span 2 columns */
 
-  /* Span specific rows */
-  grid-row: 1 / 4;
-  grid-row: span 2;
+  /* Span multiple rows */
+  grid-row: 2 / 4;           /* from row line 2 to line 4 */
+  grid-row: span 2;          /* span 2 rows */
 
-  /* Place in a named area */
-  grid-area: header;
+  /* Assign to a named area */
+  grid-area: header;         /* matches a name in grid-template-areas */
+}
+```
 
-  /* Override alignment for this item only */
-  justify-self: center;
-  align-self: end;
+
+### Bento Grid
+
+A **bento grid** is a layout pattern that uses a combination of fixed and flexible grid items to create a visually appealing and functional design. 
+It often features a mix of large and small items, creating a dynamic and engaging layout.
+
+```css
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 200px);
+  gap: 16px;
+}
+
+.grid-item:nth-child(1) {
+  grid-column: span 2; /* Large item spanning 2 columns */
+  grid-row: span 2;    /* Large item spanning 2 rows */
+}
+
+.grid-item:nth-child(2) {
+  grid-column: span 1; /* Small item */
+  grid-row: span 1;
+}
+```
+
+### Grid Stacking 
+
+This is a technique that allows us to stack elements on top of each other in a grid layout. By using the `grid-row` and 
+`grid-column` properties, we can position multiple items in the same grid cell, creating a layered effect.
+
+```css
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 200px);
+  gap: 16px;
+}
+
+.grid-item {
+  grid-column: 2 / 3; /* All items occupy the same column */
+  grid-row: 2 / 3;    /* All items occupy the same row */
+}
+```
+
+Using `z-index`, we can control which item appears on top of the others. This practical for designing layouts without absolutely positioning elements.
+
+### Grid Wrapping
+
+
+**Grid wrapping** is a technique that allows grid items to automatically wrap onto new rows or columns when there isn't enough space in the container.
+
+```css
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 ```
 
 ### Named Template Areas
+
+**Named template areas** allow us to define a grid layout using descriptive names for each area, making it easier to understand and maintain. Is the 
+same as for the bento grid, but we can define more areas and use them in a more complex way.
+
 
 ```css
 .layout {
@@ -918,7 +1041,7 @@ body {
 
 ## Transitions 
 
-Transitions animate a property smoothly from one value to another when it changes (e.g., on hover).
+**Transitions** animate a property smoothly from one value to another when it changes (e.g., on hover).
 
 ```css
 .button {
@@ -1057,6 +1180,7 @@ Common CSS frameworks and utility libraries:
 | **Styled Components** | CSS-in-JS | Write CSS inside JavaScript/TypeScript component files |
 | **Open Props** | Design tokens | CSS custom property design system |
 | **Normalize.css** | Reset | Consistent cross-browser baseline styles |
+
 
 ### Sass / SCSS Quick Reference
 
@@ -1424,3 +1548,6 @@ body {
     align-items: center;
 }
 ```
+
+
+

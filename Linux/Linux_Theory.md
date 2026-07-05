@@ -8,6 +8,26 @@ Those modules shoudl be independent yet able to work together. Another aspect, c
 
 --- 
 
+## Startup Sequence 
+
+1. Power on 
+2. UEFI Firmware 
+3. Power-On Self Test 
+4. Bootloader 
+5. Load kernel image. 
+6. Initialize Kernel and root file-system. 
+7. Initramfs (optional).
+8. Load Device Drivers. 
+9. Init system runs. 
+10. Start services. 
+11. Display manager starts.
+12. User authentication. 
+13. Start User Enviroment.
+14. Start Display server.
+15. Start desktop environment if available.
+
+--- 
+
 ## Init System
 
 ---

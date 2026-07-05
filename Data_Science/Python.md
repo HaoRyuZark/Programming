@@ -2453,12 +2453,6 @@ python -m venv .venv
 # Activate (Linux / macOS)
 source .venv/bin/activate
 
-# Activate (Windows CMD)
-.venv\Scripts\activate.bat
-
-# Activate (Windows PowerShell)
-.venv\Scripts\Activate.ps1
-
 # Deactivate (any platform)
 deactivate
 ```
@@ -2539,7 +2533,9 @@ pip install ".[dev]"
 
 ## Multithreading
 
-Python threads are OS-level threads managed by the `threading` module. Due to the **Global Interpreter Lock (GIL)**, only one thread executes Python bytecode at a time — this means threads do **not** achieve true CPU parallelism for pure Python code. However, threads **do** run concurrently for I/O-bound work (network, file, database) because the GIL is released during blocking I/O calls.
+Python threads are OS-level threads managed by the `threading` module. Due to the **Global Interpreter Lock (GIL)**, only one thread executes 
+Python bytecode at a time — this means threads do **not** achieve true CPU parallelism for pure Python code. However, threads **do** run concurrently for 
+I/O-bound work (network, file, database) because the GIL is released during blocking I/O calls.
 
 Use threads for: I/O-bound tasks (HTTP requests, file reads, database queries), GUIs, and background tasks.
 Use processes for CPU-bound tasks (see Multiprocessing section).
@@ -2552,22 +2548,46 @@ Use processes for CPU-bound tasks (see Multiprocessing section).
   - `args`: tuple of positional arguments passed to `target`.
   - `kwargs`: dict of keyword arguments passed to `target`.
   - `daemon`: if `True`, the thread is a daemon thread — it is killed automatically when the main thread exits. Non-daemon threads block the process from exiting.
+
 - `t.start()`: start the thread (calls `target` in a new OS thread).
+
 - `t.join(timeout=None)`: block until the thread finishes or `timeout` seconds elapse.
   - `timeout`: float seconds to wait. If the thread is still alive after timeout, returns without error — check `t.is_alive()`.
+
 - `t.is_alive()`: returns `True` if the thread is still running.
+
 - `t.daemon`: read or set before `start()`.
+
 - `threading.current_thread()`: returns the `Thread` object for the calling thread.
+
 - `threading.main_thread()`: returns the main thread object.
+
 - `threading.active_count()`: number of alive threads.
+
 - `threading.enumerate()`: list of all alive threads.
 
+```python 
+import threading
+
+# Using a thread with a function
+thread = thread.Thread(target=print)
+
+thread.start()
+thread.join()
+
+print("Hello from main")
+
+```
+
 ### Subclassing `Thread`
+
+This is a common practice to encapsulate the threading inside a class.
 
 ```python
 import threading
 import time
 
+# Create a class which inherits from thread like in Java
 class Worker(threading.Thread):
 
     def __init__(self, task_id: int):
@@ -2582,10 +2602,13 @@ class Worker(threading.Thread):
         print(f"[{self.name}] done → {self.result}")
 
 workers = [Worker(i) for i in range(5)]
+
 for w in workers:
     w.start()
+
 for w in workers:
     w.join()
+
 print([w.result for w in workers])   # [0, 1, 4, 9, 16]
 ```
 
@@ -2596,11 +2619,13 @@ print([w.result for w in workers])   # [0, 1, 4, 9, 16]
 A mutual exclusion lock — only one thread can hold it at a time. Use to protect shared mutable state.
 
 - `lock = threading.Lock()`: create an unlocked lock.
+
 - `lock.acquire(blocking=True, timeout=-1)`: acquire the lock. Returns `True` on success.
   - `blocking`: if `False`, return immediately with `False` if the lock is not available.
   - `timeout`: seconds to wait. `-1` means wait forever.
+
 - `lock.release()`: release the lock (must be held by the calling thread).
-- Use as a context manager: `with lock:` — acquires on enter, releases on exit even if an exception occurs.
+    - Use as a context manager: `with lock:` — acquires on enter, releases on exit even if an exception occurs.
 
 ```python
 import threading
@@ -2615,8 +2640,11 @@ def increment(n: int):
             counter += 1
 
 threads = [threading.Thread(target=increment, args=(10_000,)) for _ in range(5)]
+
 for t in threads: t.start()
+
 for t in threads: t.join()
+
 print(counter)   # always 50000 — no race condition
 ```
 
@@ -2779,14 +2807,23 @@ for t in threads: t.join()
 Higher-level interface for thread pools — manages a pool of worker threads and returns `Future` objects.
 
 - `ThreadPoolExecutor(max_workers=None)`: create a pool. Defaults to `min(32, os.cpu_count() + 4)`.
+
 - `executor.submit(fn, *args, **kwargs)`: schedule `fn` for execution; returns a `Future`.
+
 - `executor.map(fn, *iterables, timeout=None, chunksize=1)`: like `map()` but parallel; results are in submission order; raises exceptions lazily on iteration.
+
 - `executor.shutdown(wait=True)`: wait for all futures to complete, then free resources. Called automatically at context manager exit.
+
 - `future.result(timeout=None)`: get the return value; blocks until done; re-raises exceptions from the thread.
+
 - `future.exception(timeout=None)`: get the exception if one was raised, `None` otherwise.
+
 - `future.done()`: returns `True` if the call has finished.
+
 - `future.cancel()`: attempt to cancel (only works if not yet started).
+
 - `concurrent.futures.as_completed(futures, timeout=None)`: yields futures as they complete (not in submission order).
+
 - `concurrent.futures.wait(futures, timeout=None, return_when=ALL_COMPLETED)`: block until futures satisfy the condition.
   - `return_when`: `ALL_COMPLETED`, `FIRST_COMPLETED`, or `FIRST_EXCEPTION`.
 
@@ -3268,17 +3305,4 @@ if __name__ == "__main__":
         print(f"[{status}] {value}")
 ```
 
-### Quick Reference: Thread vs Process
 
-| | `threading` | `multiprocessing` |
-|---|---|---|
-| Parallelism | I/O-bound only (GIL) | CPU-bound (true parallelism) |
-| Memory | Shared (fast, race-prone) | Separate (safe, copying overhead) |
-| Start time | Fast | Slow (`spawn`) / Fast (`fork`) |
-| Communication | Shared objects + locks | Queue, Pipe, shared memory |
-| Overhead | Low | High (serialization, IPC) |
-| Crash isolation | No (one thread crashes the process) | Yes (process boundary) |
-| Max workers | Hundreds | Typically `cpu_count()` |
-| Best for | HTTP requests, DB queries, GUIs | NumPy/Pandas crunching, ML, image processing |
-
-## Multiprocessing
