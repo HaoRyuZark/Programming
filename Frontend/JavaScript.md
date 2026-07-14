@@ -25,6 +25,17 @@ console.log(process.platform);   // "linux", "win32", "darwin"
 - **Engine** (e.g. V8 in Chrome & Node.js, SpiderMonkey in Firefox): parses and executes JS code.
 - **Event loop**: single-threaded, non-blocking I/O via callbacks, promises, and async/await.
 
+It was mainly created to modify the DOM and add dynamism to web-sites without needing a full reload, but like all horrible 
+things it was then used for other stuff it was not suppose to do.
+
+### Loading JavaScript
+
+It is recomended to use the key-words `defer` or `async` inside the `script` tags inside the HTML document when loading the script 
+since it else completly pauses the HTML-parsing.
+
+- `defer`: The script is loaded on a parallel thread and executed right after the HTML-parsing.
+- `async`: The script is loaded on a parallel thread, but once the loading ends it gets executed directly, pausing the HTML-parsing if not completed.
+
 ---
 
 ## Basics
@@ -49,7 +60,7 @@ user.name = "Bob"; // OK — the object itself is mutable
 var legacy = "hoisted to function top";
 ```
 
-**Hoisting** — `var` declarations are moved to the top of their scope and initialized to `undefined`. `let`/`const` are hoisted but stay in the **Temporal Dead Zone** until their line is reached.
+**Hoisting**: `var` declarations are moved to the top of their scope and initialized to `undefined`. `let`/`const` are hoisted but stay in the **Temporal Dead Zone** until their line is reached.
 
 ```js
 console.log(a); // undefined (var is hoisted)
@@ -91,8 +102,8 @@ let obj  = { x: 1 };
 let fn   = function() {};
 ```
 
+- **Checking types:**
 
-**Checking types:**
 ```js
 typeof 42           // "number"
 typeof "hi"         // "string"
@@ -110,7 +121,7 @@ null === null           // true
 obj instanceof Object   // true
 ```
 
-**Equality gotchas:**
+- **Equality gotchas:**
 ```js
 null == undefined   // true  (loose equality)
 null === undefined  // false (strict equality)
@@ -118,7 +129,20 @@ NaN === NaN         // false — NaN is never equal to itself
 Number.isNaN(NaN)   // true  — correct check
 ```
 
----
+- **Implicit coercion pitfalls:**
+
+```js
+"5" + 3     // "53"  — + prefers string concatenation
+"5" - 3     // 2     — - forces numeric conversion
+"5" * "2"   // 10
+true + true // 2
+[] + {}     // "[object Object]"
+{} + []     // 0 (in some contexts)
+
+// Always use === to avoid surprises
+"5" == 5    // true  (loose — converts "5" to 5)
+"5" === 5   // false (strict — no conversion)
+```
 
 ### Type Conversion
 
@@ -145,7 +169,13 @@ String(null)        // "null"
 String(undefined)   // "undefined"
 (42).toString()     // "42"
 (255).toString(16)  // "ff"  — hexadecimal
+```
 
+### Falsy & Truhty Values 
+
+Values which are evaluted to `false`, `true`.
+
+```js
 // to Boolean (falsy values become false)
 Boolean(0)          // false
 Boolean("")         // false
@@ -153,6 +183,7 @@ Boolean(null)       // false
 Boolean(undefined)  // false
 Boolean(NaN)        // false
 Boolean(false)      // false
+
 // Everything else is truthy:
 Boolean(1)          // true
 Boolean("hello")    // true
@@ -160,21 +191,6 @@ Boolean([])         // true  ← empty array is truthy!
 Boolean({})         // true  ← empty object is truthy!
 ```
 
-**Implicit coercion pitfalls:**
-```js
-"5" + 3     // "53"  — + prefers string concatenation
-"5" - 3     // 2     — - forces numeric conversion
-"5" * "2"   // 10
-true + true // 2
-[] + {}     // "[object Object]"
-{} + []     // 0 (in some contexts)
-
-// Always use === to avoid surprises
-"5" == 5    // true  (loose — converts "5" to 5)
-"5" === 5   // false (strict — no conversion)
-```
-
----
 
 ### Template Literals
 
@@ -744,81 +760,6 @@ const daysBetween = (a, b) => Math.floor((b - a) / oneDay);
 
 ---
 
-## npm
-
-**npm** is the package manager for JavaScript and Node.js. It installs packages from the npm registry.
-
-```bash
-# Initialize a new project
-npm init          # interactive wizard
-npm init -y       # auto-accept all defaults
-
-# Installing packages
-npm install lodash            # production dependency
-npm install --save-dev jest   # dev dependency (testing, build tools)
-npm install -g typescript     # global (available as CLI command)
-npm install                   # install all deps from package.json
-
-# Removing
-npm uninstall lodash
-
-# Running scripts (defined in package.json)
-npm run start
-npm run build
-npm run test
-npm test          # shorthand for `npm run test`
-
-# Viewing
-npm list                 # installed packages (local)
-npm list -g --depth=0    # global packages
-npm outdated             # check for updates
-npm update               # update all packages
-
-# Registry and publishing
-npm login
-npm publish
-npm version patch  # bump version: 1.0.0 → 1.0.1
-npm version minor  # bump version: 1.0.0 → 1.1.0
-npm version major  # bump version: 1.0.0 → 2.0.0
-```
-
-**`package.json`** — project manifest:
-
-```json
-{
-  "name": "my-app",
-  "version": "1.0.0",
-  "description": "A sample app",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build": "tsc",
-    "test": "jest"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  },
-  "devDependencies": {
-    "jest": "^29.0.0",
-    "typescript": "^5.0.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
-}
-```
-
-**Version specifiers:**
-- `^1.2.3` — compatible with `1.x.x` (most common)
-- `~1.2.3` — compatible with `1.2.x`
-- `1.2.3`  — exact version
-- `*`      — any version (dangerous)
-
-**`package-lock.json`** — locks exact resolved versions; commit to version control for reproducible installs.
-
----
-
 ## Input / Output
 
 ### Console
@@ -986,11 +927,14 @@ form.addEventListener("submit", (e) => {
 
 ---
 
-## Object-Oriented Programming
+## Object-Oriented Programming (OOP)
 
 ### Objects
 
-Objects are key-value data structures. Keys are strings (or Symbols); values can be anything.
+**Objects** are key-value data structures. Keys are strings (or Symbols); values can be anything.
+We can set properties to the object even after the definition `obj[new_prop] = "I am new"`. 
+
+- **Basic functionality**:
 
 ```js
 // Object literal
@@ -1030,20 +974,41 @@ person.newAge = 31;        // setter called
 person.email = "alice@example.com";
 delete person.isActive;
 
-// Checking property existence
+```
+
+> They can, but are well suited to use as a hash-map. This is consider poor practice.
+ 
+- **Checking property existence**:
+
+```js
 "firstName" in person          // true
 person.hasOwnProperty("email") // true
 Object.hasOwn(person, "email") // true (modern, preferred)
 
-// Iterating
+```
+
+- **Iterating**
+
+```js
 Object.keys(person)    // ["firstName", "lastName", ...]
 Object.values(person)  // ["Alice", "Smith", ...]
 Object.entries(person) // [["firstName", "Alice"], ...]
 
+// Iterating over the object key-value-pairs
 for (const [key, value] of Object.entries(person)) {
   console.log(`${key}: ${value}`);
 }
 
+
+// Iterating over the object keys
+for (const k of Object.values(obj)) {
+  console.log(k)
+}
+```
+
+- **Default methods and property descriptors**:
+
+```js
 // Object methods
 Object.assign(target, source1, source2); // shallow merge
 Object.freeze(person);   // make immutable (shallow)
@@ -1056,11 +1021,19 @@ Object.defineProperty(person, "id", {
   enumerable:   false, // hidden from for...in and Object.keys
   configurable: false  // cannot delete or redefine
 });
+
+// Defining a property dynamically
+const obj = {
+  val: "name",
+  [defined_on_runtime()]: true;
+}
 ```
+
 
 ### Prototypes
 
-Every object has a hidden `[[Prototype]]` link forming the **prototype chain**.
+Every object has a `__proto__` property which points to the prototype of the object it inherits from.
+
 
 ```js
 // Prototype chain lookup
@@ -1087,8 +1060,9 @@ alice.hasOwnProperty("name");   // true  — own property
 alice.hasOwnProperty("greet");  // false — inherited
 ```
 
+**Constructors functions** have the `prototype` property which also allows us to modify the prototype-chain.
 
-### Classes
+### OOP-Classes
 
 Classes are syntactic sugar over prototype-based inheritance.
 
@@ -1145,7 +1119,7 @@ const dog = Animal.create("Rex", "woof");
 console.log(Animal.count);    // 2
 ```
 
-### Inheritance
+### Class Inheritance
 
 ```js
 class Dog extends Animal {
@@ -1259,20 +1233,28 @@ function deepClone(value) {
 
 ---
 
-## Core Data Structures
-
-### Arrays
+## Arrays
 
 Ordered, zero-indexed, dynamic lists. Arrays in JavaScript can hold mixed types.
 
 ```js
 // Creation
 const arr  = [1, 2, 3, 4, 5];
+
 const arr2 = new Array(3);         // [undefined, undefined, undefined]
 const arr3 = new Array(3).fill(0); // [0, 0, 0]
+
 const arr4 = Array.from("hello");  // ["h", "e", "l", "l", "o"]
+
+// We specify the length and via the closure, how every element should be created. This 
+// is the closest to a list comprehension
 const arr5 = Array.from({ length: 5 }, (_, i) => i * 2); // [0, 2, 4, 6, 8]
+
 const arr6 = Array.of(1, 2, 3);    // [1, 2, 3]
+
+// Filling
+new Array(5).fill(0);           // [0, 0, 0, 0, 0]
+[1,2,3,4,5].fill(0, 2, 4);     // [1, 2, 0, 0, 5] — fill from index 2 to 4
 
 // Accessing
 arr[0]      // 1
@@ -1282,41 +1264,52 @@ arr.at(-2)  // 4
 // Basic info
 arr.length  // 5
 Array.isArray(arr) // true
+
+// Reversing
+[1, 2, 3].reverse(); // [3, 2, 1] — in place
+
 ```
 
-#### Mutating Methods (modify the original array)
+### Adding / removing
 
 ```js
 const a = [1, 2, 3];
 
-// Adding / removing
 a.push(4, 5);       // add to end → [1,2,3,4,5], returns new length
 a.pop();            // remove from end → returns 5, a = [1,2,3,4]
 a.unshift(0);       // add to start → [0,1,2,3,4], returns new length
 a.shift();          // remove from start → returns 0, a = [1,2,3,4]
 
-// splice(start, deleteCount, ...insertItems)
-a.splice(1, 2);            // remove 2 elements at index 1 → returns [2,3], a=[1,4]
-a.splice(1, 0, 10, 11);    // insert at index 1 without removing → a=[1,10,11,4]
-a.splice(1, 1, 99);        // replace 1 element at index 1 with 99
+```
 
-// Sorting
+### Splicing
+
+- `splice(start, deleteCount, ...insertItems)`: it changes the contents of an array by removing or replacing and 
+or adding new elements.
+
+```js
+const a = [1, 2, 3, 4, 5];
+
+a.splice(1, 0, 99)         // Inserts 99 at index 1 and shifts the rest
+a.splice(1, 2);            // remove 2 elements at index 1
+
+a.splice(1, 0, 10, 11);    // insert at index 1 without removing
+a.splice(1, 1, 99);        // replace 1 element at index 1 with 99
+```
+
+### Sorting 
+
+```js
 [3, 1, 2].sort();                        // [1, 2, 3] — default: lexicographic!
 [10, 1, 20].sort((a, b) => a - b);       // [1, 10, 20] — numeric ascending
 [10, 1, 20].sort((a, b) => b - a);       // [20, 10, 1] — numeric descending
 ["banana", "apple"].sort();               // ["apple", "banana"]
 users.sort((a, b) => a.name.localeCompare(b.name)); // by name alphabetically
-
-// Reversing
-[1, 2, 3].reverse(); // [3, 2, 1] — in place
-
-// Filling
-new Array(5).fill(0);           // [0, 0, 0, 0, 0]
-[1,2,3,4,5].fill(0, 2, 4);     // [1, 2, 0, 0, 5] — fill from index 2 to 4
 ```
 
-#### Non-Mutating Methods (return new arrays/values)
+### Higher-Order Array Methods
 
+Similar to java-streams
 ```js
 const nums = [1, 2, 3, 4, 5];
 
@@ -1327,26 +1320,18 @@ nums.map((x, i) => `${i}:${x}`) // ["0:1", "1:2", ...]
 // Filtering
 nums.filter(x => x % 2 === 0)  // [2, 4]
 nums.filter(x => x > 3)        // [4, 5]
+nums.filter((x, i) => x > 3 && i === 0)        // [4, 5]
 
 // Reducing
 nums.reduce((acc, x) => acc + x, 0) // 15 (sum)
 nums.reduce((acc, x) => acc * x, 1) // 120 (product)
 nums.reduceRight((acc, x) => acc + x, 0) // right-to-left
+nums.reduce(func, init)
 
 // Flattening
 [[1,2],[3,4]].flat()           // [1, 2, 3, 4]
 [1, [2, [3]]].flat(Infinity)   // [1, 2, 3] — flatten all levels
 nums.flatMap(x => [x, x * 2]) // [1,2, 2,4, 3,6, 4,8, 5,10]
-
-// Searching
-nums.find(x => x > 3)         // 4 — first match (or undefined)
-nums.findIndex(x => x > 3)    // 3 — index of first match (or -1)
-nums.findLast(x => x < 4)     // 3 — last match (modern)
-nums.findLastIndex(x => x < 4) // 2
-
-nums.indexOf(3)                // 2 — strict equality
-nums.lastIndexOf(3)            // 2
-nums.includes(3)               // true
 
 // Testing
 nums.every(x => x > 0)  // true — all pass?
@@ -1371,7 +1356,22 @@ nums.join("")     // "12345"
 [...nums.entries()] // [[0,1],[1,2],[2,3],[3,4],[4,5]]
 ```
 
-#### Array Destructuring
+### Searching
+
+```js 
+let nums = [1,2,3,4,5,5,6,7,7,8,9,9,]
+
+nums.find(x => x > 3)         // 4 — first match (or undefined)
+nums.findIndex(x => x > 3)    // 3 — index of first match (or -1)
+nums.findLast(x => x < 4)     // 3 — last match (modern)
+nums.findLastIndex(x => x < 4) // 2
+
+nums.indexOf(3)                // 2 — strict equality
+nums.lastIndexOf(3)            // 2
+nums.includes(3)               // true
+```
+
+### Array Destructuring
 
 ```js
 const [first, second, ...rest] = [1, 2, 3, 4, 5];
@@ -1403,7 +1403,7 @@ console.log(min, max); // 1 5
 
 ---
 
-### Sets
+## Sets
 
 A `Set` holds **unique values** of any type, in insertion order.
 
@@ -1445,7 +1445,7 @@ const union        = new Set([...a, ...b]);                    // {1,2,3,4,5,6}
 const intersection = new Set([...a].filter(x => b.has(x)));   // {3,4}
 const difference   = new Set([...a].filter(x => !b.has(x)));  // {1,2}
 
-// Practical: deduplicate an array
+// Practical: duplicate an array
 const arr = [1, 2, 2, 3, 3, 4];
 const unique = [...new Set(arr)]; // [1, 2, 3, 4]
 ```
@@ -2056,28 +2056,57 @@ JSON.stringify(new User("Alice", "secret")); // '{"name":"Alice"}'
 
 JavaScript is **single-threaded** with a non-blocking **event loop**. Async operations are offloaded and their callbacks are queued.
 
-```js
-// Synchronous — blocks the thread
-const data = fs.readFileSync("file.txt");
+### The Event Loop
 
-// Asynchronous — does not block
-setTimeout(() => console.log("after 1 second"), 1000);
-console.log("this runs immediately"); // runs first!
+The **event loop** is a component of the JavaScript runtime which handles asynchronous tasks. It continuously checks the **call stack** and the **task queues** (microtasks and macrotasks) 
+to determine what to execute next depending on a priority order. The need for this component arises from JavaScript being single-threaded and some operations being bounded with a certain latency, like 
+I/O operations, timers, and user interactions. The event loop allows JavaScript to perform non-blocking operations by offloading tasks to the system kernel whenever possible.
 
-// Microtask vs Macrotask queue
-// Microtasks (Promise callbacks) run before macrotasks (setTimeout, setInterval)
-setTimeout(() => console.log("timeout"), 0);
-Promise.resolve().then(() => console.log("promise"));
-console.log("sync");
-// Output order: "sync" → "promise" → "timeout"
-```
+#### Priority of Execution:
+
+1. **Call Stack**: Executes synchronous code. Place in which all task are placed for execution.
+
+2. **Microtask Queue**: Executes tasks like Promise callbacks and `process.nextTick()`. The tasks in this queue, always execute before the ones in the **macrotask queue**, but they 
+still need to wait for the global execution context to be pop out of the task. Only callbacks attached with a promise, mutationOserver, function bodies after a await keyword and a queueMicrotask go
+int the microtask queue.
+
+3. **Macrotask Queue**: Executes tasks like `setTimeout`, `setInterval`, and I/O callbacks. A task in this queue is only executed once the call stack is **empty**; this includes 
+the global executed context. This tasks are executed by Javascript **itself**, not by a remote API.
 
 ### Callbacks
 
+A **callback** is a function passed as an argument to another function, which is then invoked after some operation has completed.
+
+We use `setTimeout` to simulate an asynchronous operation.
+
 ```js
-// Node.js convention: (error, result)
+const posts = [
+  {title: "XZ Utils", author: "Migu"},
+  {title: "TDD", author: "Munti"}
+];
+
+// Example 1:
+
+function printPosts() {
+  setTimeout( () => {
+      posts.forEach((post, index) => console.log("${post.title}, ${post.author}"));
+    }, 2000
+  );
+}
+
+let createPost = (author, title, callback) => {
+  setTimeout( () => {
+      posts.push({title: title, author: author})
+      callback()
+    }, 2000
+  );
+
+createPost("Migu", "Amazonas", printPost()); // Now only after creating the last post, they will be printed
+
+// Example 2:
+
 function fetchUser(id, callback) {
-  setTimeout(() => {
+  setTimeout(() => {n
     if (id <= 0) callback(new Error("Invalid ID"), null);
     else callback(null, { id, name: "Alice" });
   }, 100);
@@ -2087,11 +2116,136 @@ fetchUser(1, (err, user) => {
   if (err) return console.error(err.message);
   console.log(user.name);
 });
+
+}
+```
+
+**Example**: Canceling a timeout: 
+
+```js 
+let cancellable = function(fn, args, t) {
+    
+    let tm = setTimeout(() => {
+        return fn(...args);
+    }, t);
+  
+    // the execution gets canceled if the transaction takes to long, means if we call this function after being returned.
+    let cancelFn = () => clearTimeout(tm);
+
+    return cancelFn;
+};
+```
+
+##### Callback Hell
+
+This happens when we have a lot of callbacks nested.
+
+```js
+function walkTheDog(callback) {
+    setTimeout(() => { 
+      console.log("Dog");
+      callback();
+    }, 1000);
+}
+
+function cook(callback) {
+    setTimeout(() => {
+      console.log("cook");
+      callback();
+    }, 1000);
+}
+
+function cleanTheKitchen(callback) {
+    setTimeout(() => {
+      console.log("Kitchen");
+      callback();
+    }, 1000);
+}
+
+walkTheDog(() => {
+    cook(() => {
+      cleanTheKitchen(() => console.log("Finished Execution"))
+    })
+})
+
 ```
 
 ### Promises
 
-A `Promise` represents a value that will be available in the future.
+A `Promise` represents a value that will be available in the future and they provide a better syntax and structure than 
+a callback hell. They can be in three states: **pending**, **resolve** and **reject**.
+They count as a microtask. `new Promise((resolve, reject) => { async code })`. The value passed into the `resolve()` function gets 
+returned as the value of the promise.
+
+Basic example:
+
+```js 
+function walkTheDog() {
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => { 
+        resolve("Dog");
+      }, 1000);
+    });
+}
+
+function cook() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => { 
+        resolve("Cook");
+      }, 1000);
+    });
+}
+
+function cleanTheKitchen() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => { 
+        resolve("Kitchen");
+      }, 1000);
+    });
+}
+
+walkTheDog()
+  .then(value => { console.log(value); return cook();})
+  .then(value => { console.log(value); return cleanTheKitchen();})
+  .then(value => console.log(value));
+```
+
+Here is an even cleaner way: 
+
+```js 
+const delay = (ms, value) => new Promise(resolve => setTimeout(() => resolve(value), ms));
+
+const walkTheDog      = () => delay(1000, "Dog");
+const cook            = () => delay(1000, "Cook");
+const cleanTheKitchen = () => delay(1000, "Kitchen");
+
+walkTheDog()
+  .then(value => { console.log(value); return cook(); })
+  .then(value => { console.log(value); return cleanTheKitchen(); })
+  .then(value => console.log(value));
+
+```
+
+In the last two examples, we defined our own promises, but we can also use the fact that `.then()` also returns a promise to work 
+in a functional way with our first returned value. 
+
+```js
+const loadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+};
+
+loadImage(src)
+  .then(image => resizeImage(image))
+  .then(image => addWatermark(image))
+```
+
+> Important Note: The code inside the function passed to the new Promise(() => ...) gets executed normally in the call stack. Only then `.then()` are microstasks.
 
 ```js
 // Creating a Promise
@@ -2127,6 +2281,8 @@ function delay(ms) {
 
 #### Promise Combinators
 
+They allow us to collect the results of a promise depending on if all resolved or only some. 
+
 ```js
 // Promise.all — wait for ALL; fail-fast if any rejects
 const [users, posts] = await Promise.all([
@@ -2140,6 +2296,7 @@ const results = await Promise.allSettled([
   Promise.reject(new Error("oops")),
   Promise.resolve(3)
 ]);
+
 // [{ status:"fulfilled", value:1 }, { status:"rejected", reason:... }, ...]
 results.forEach(r => {
   if (r.status === "fulfilled") console.log(r.value);
@@ -2165,27 +2322,42 @@ const fastest = await Promise.any([
 // Static helpers
 Promise.resolve(42).then(v => console.log(v)); // 42
 Promise.reject(new Error("fail")).catch(e => console.error(e));
+
+// Promise.all
+addTwoPromises = async function(promise1, promise2) {
+
+    return Promise.all([promise1, promise2])
+    .then((values) => values.reduce((acc, num) => acc + num, 0));  
+};
 ```
 
-### async / await
+### Async / Await
 
-Syntactic sugar over Promises — reads like synchronous code.
+Syntactic sugar over Promises to read like synchronous code. Instead of calling `.then()` we just use the `await` keyword in front of our function call inside an 
+`async` function, and for the error handling we use classical `try-catch` syntax.
 
 ```js
 // Basic pattern
 async function fetchUser(id) {
+
   const res  = await fetch(`/api/users/${id}`);
+
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
   return await res.json();
 }
 
 // Error handling
 async function loadDashboard(userId) {
+
   try {
+ 
     const user  = await fetchUser(userId);
     const posts = await fetchPosts(user.id);
-    return { user, posts };
-  } catch (err) {
+     
+     return { user, posts };
+
+} catch (err) {
     console.error("Dashboard load failed:", err.message);
     throw err;
   }
@@ -2216,7 +2388,10 @@ const config = await fetch("/config.json").then(r => r.json());
 
 ### fetch API
 
-The modern HTTP client for browsers (and Node.js 18+).
+The `fetch()` is a function used for HTTPS request to fetch resources. `fetch(url, {method, headers, ...})`.
+This method returns a promise, hence, we can use both async/await and our promise methods for doing operations.
+
+Example:
 
 ```js
 // GET request
@@ -2256,7 +2431,13 @@ try {
 } catch (err) {
   if (err.name === "AbortError") console.log("Request cancelled");
 }
+
+const data = fetch("some_path")
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err));
 ```
+
 
 ---
 
@@ -2556,6 +2737,15 @@ let voidFn:   void;                 // function with no meaningful return value
 
 // Type assertions
 const input = document.getElementById("name") as HTMLInputElement;
+```
+
+### Advanced Types
+
+```ts 
+let direction: "top" | "bottom"; // can only have the value of one the declared literals
+let unionType: string | number;  // can be either
+let name: string | null;         // can be null
+let intersection: FirstType & SecondType; // is a combination of both
 ```
 
 ### Arrays & Tuples

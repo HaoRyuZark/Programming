@@ -1,4 +1,4 @@
-# VSCode Keyboard Shortcuts Cheat Sheet
+# VSCode 
 
 > **Setup notes:** Vim extension active. Many default Vim `Ctrl+*` overrides have been **disabled** — standard VSCode bindings take 
 priority for most `Ctrl` combos. 
@@ -271,3 +271,22 @@ priority for most `Ctrl` combos.
 | **Zed** | Vim mode available. `Ctrl+P` → file picker, `Ctrl+Shift+P` → commands. Most bindings overlap |
 | **Emacs** | Install evil-mode for Vim layer. Remap `C-p`, `C-s`, etc. as needed |
 | **Sublime Text** | Vintage mode for Vim. `Ctrl+P` file picker identical |
+
+--- 
+
+## Tasks 
+
+We can run **task** in VSCode which let us run scripts and commands in the terminal. We can create a task by creating a `tasks.json` file in the `.vscode` folder.
+
+```json 
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "echo",
+            "type": "shell",
+            "command": "echo Hello"
+        }
+    ]
+}
+```

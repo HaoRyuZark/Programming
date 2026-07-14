@@ -927,11 +927,34 @@ Client Side                        Server Side
 
 ---
 
+## Uniform Resource Identifier (URI) / Uniform Resource Locator (URL) /Uniform Resource Name (URN)
+
+A **URI/URL/URN** has the purpose of being a unique identifier to a resource in the internet.
+
+$$\mathrm{URI} = \mathrm{URL} \cup \, \mathrm{URN}$$
+
+- **URL**: locator to the information object with the specification of the protocol for communication.
+- **URN**: locator to the information object without the specification of the protocol for communication.
+
+Examples: 
+
+```txt
+URI: example.com
+URL: http://www.example.com/datei.txt
+URL: mailto:test@example.com
+URL: ftp://127.0.0.1/dump.sql
+URN: urn:isbn:0596517742
+```
+
+---
+
 ## Hyper Text Transport Protocol / Secure (HTTP & HTTPS)
 
-**TCP** and **HTTPS** the **S** stands for **Secure** and refers to the data being encrypted; are protocol 
-for sending data across the internet. This is a TCP-based protocol which consists on the following 
+**TCP** and **HTTPS** the **S** stands for **Secure** and refers to the data being encrypted; are state-less protocols
+for sending data across the internet in text format. This is a TCP-based protocol which consists on the following 
 life-cycle of a connection.
+
+**Communication**: 
 
 ```txt
                CClient             Server 
@@ -992,6 +1015,19 @@ HTTP/HTTPS     |   Data Transfer  |
                |                  |
 ```   
 
+### Syntax Of A HTTP URL
+
+Example syntax bellow, this can vary depending on the implementation.
+
+```http 
+
+http://<user>:<password>@<host>:<port>/<url-path>?<query-parameter>
+
+
+http://user:pw@example.com:80/datei.html?q=123
+```
+
+
 ### Headers 
 
 An HTTP header is a field of an HTTP request or response that passes additional context and metadata
@@ -1008,29 +1044,109 @@ http-method:GET
 
 In this protocol a **status code** needs to be send to describe the status of the operation. 
 
-- **1xx** Informationall
-- **2xx** The request was successful.
-- **3xx** The client is redirected to a different resource.
-- **4xx** The request contains some kind of error.
-- **5xx** THe server errored while fulfilling the request.
+- **1xx**: Informational
+- **2xx**: The request was successful.
+- **3xx**: The client is redirected to a different resource.
+- **4xx**: The request contains some kind of error.
+- **5xx**: THe server errored while fulfilling the request.
 
 ### Request
 
 An **HTTP request** is a message sent by a client to a server to initiate an action or retrieve information. It consists of 
 several components, including the request line, headers, and an optional body.
 
+```http 
+method sp URL sp version cr if 
+header field name: value cr if 
+...
+header field name: value cr if 
+cr if 
+   Body
+
+```
+
+Example: 
+
 ```http
-GET /index.html HTTP/1.1
-Host: www.example.com
+GET https://www.fh-aachen.de/ HTTP/1.1
+Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding: gzip, deflate, br
+Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7
+Cache-Control: no-cache
+Connection: keep-alive
+Cookie:_pk_ref.4.19d4=%5B%22%22%2C%22%22%2C1670832293%2C%22https%3A%2F%2Fwww.google.com%2F%22%5D;
+_pk_id.4.19d4=4115fa9a7f694583.1670832293.; fhac_cookiemodal-selection=[%22essential%22%2C%22analytics%22%2C%22search%22];
+fe_typo_user=bf03b5cab5fc0cdae56a04e56a4413a5
+Host: www.fh-aachen.de
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Mobile Safari/537.36
 ```
 
 ### Response
 
+**Response** syntax:
+
+```http 
+version sp status code sp phrase cr if 
+header field name: value cr if 
+...
+header field name: value cr if 
+cr if 
+   Body
+
+```
+
+Example:
+
 ```http
 HTTP/1.1 200 OK
-Content-Type: text/html
-<html>...</html>
+Connection: keep-alive
+Content-Encoding: gzip
+Content-Language: de
+Content-Length: 13083
+Content-Type: text/html; charset=utf-8
+Date: Mon, 06 Feb 2023 09:17:41 GMT
+Server: nginx/1.18.0 (Ubuntu)
+Strict-Transport-Security: max-age=31536000
+<!DOCTYPE html>
+<html>
+...
 ```
+
+### HTML Example With Form 
+
+```html 
+<form action="do.php?q=login" method="post">
+   <input type="text" name="username" />
+   <input type="password" name="pw" />
+   <input type="submit" value="Login" />
+</form>
+```
+
+
+This will generate: 
+
+```http 
+POST /do.php?q=login HTTP/1.1
+Host: www.example.com
+...
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 31
+Connection: keep-alive
+username=vosa&pw=supersecret123
+```
+
+### Mutiplexing
+
+The **multiplexing** implemented from HTPP 2.0 allows to send multiple requests without always waiting for a response. A **resquest-stream** 
+is open until a `END_STREAM` flag is set to end the close it. The same goes for the responses.
+
+The key difference to **pipelining** is that the responses do not need to be in the same order as the request were sent.
+
+### QUIC
+
+**QUIC** is a UDP-based protocol which supports TLS and is used for HTTP 3.0 along side the classic TCP protocols used for 
+HTTP.
 
 ---
 
@@ -1111,6 +1227,14 @@ Because of the first visit still being vulnerable. A concept called **HSTS Prelo
 consists on a static list of HSTS sites maintained by the browsers locally.
 
 --- 
+
+## Content Delivery Networks (CDN)
+
+A **content delivery network (CDN)** connects different services and delivers content in form of static resources, libraries, or a service 
+to distribute load and data more efficiently. They consist mostly on a series of proxy servers connected to a specific data center.
+
+--- 
+
 
 ## Domain Name System (DNS)
 
@@ -1566,5 +1690,37 @@ Is a disclosure made by the website about how cookies are used and how he can ma
 
 --- 
 
+## Sessions 
+
+
+--- 
+
+
+## Token Authentication
+
+### JSON Web Tokens (JWT)
+
+
+--- 
+
+## OAuth2 
+
+
+--- 
+
+## Websockets
+
+**Websockets** is a way of stablishing a duplex connection between a frontend and backend for an 
+even-driven data request. This is ideal for real-time applications.
+
+It works as following 
+
+1. The client performs an HTTP-request for stablishing a websockets connection.
+
+2. The servers agrees an switches the protocol 
+
+Now both computers share a two-way connection which is based on events.
+
+--- 
 
 

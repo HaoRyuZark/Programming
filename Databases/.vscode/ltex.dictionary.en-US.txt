@@ -1,3 +1,0 @@
-Boyce-Cood
-atomicity
-rightarrow

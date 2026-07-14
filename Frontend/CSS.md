@@ -37,6 +37,9 @@ p { color: #333; }
 /* Attribute — matches <input type="text"> */
 input[type="text"] { border: 1px solid #ccc; }
 
+/* Combining element with class name */
+input.className { color: red; }
+
 /* Attribute contains value */
 a[href*="example"] { color: red; }
 

@@ -1,19 +1,26 @@
 #include <stdio.h>
 
 //Binary Search
-int binary_search(int arr[], int l, int r, int x){
-    
+
+int _rec_bs(int arr[], int l, int r, int x) {
+
     if (r >= l){
-    int mid = l + (r - l)/2;
-
-    if (arr[mid] == x) return mid;
     
-    if (arr[mid] > x) return binary_search(arr, l, mid-1, x);
+        // mid between both limit: l = 0, r = 10 -> mid = 0 + (int)(10- 0)/2 = 5
+        int mid = l + (r - l)/2;
 
-        return binary_search(arr, mid+1, r, x);
+        if (arr[mid] == x) { return mid; }
+        
+        if (arr[mid] > x) { return _rec_bs(arr, l, mid-1, x); } // we use mid - 1, since arr[mid] was already not relevant
+
+        return _rec_bs(arr, mid+1, r, x);
     }
 
     return -1;
+}
+
+int binary_search(int* arr, int len, int x){ 
+    return _rec_bs(arr, 0, len, x);
 }
 
 

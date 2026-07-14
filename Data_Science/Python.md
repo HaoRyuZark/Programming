@@ -945,19 +945,31 @@ print(p)          # Point(x=3, y=4)
 
 ## Dictionaries
 
-Ordered (Python 3.7+), mutable key-value maps. Keys must be hashable.
+Ordered, mutable key-value maps. Keys must be hashable.
 
 - `d.get(key, default=None)`: returns the value for `key`, or `default` if not found.
+
 - `d.setdefault(key, default=None)`: if `key` is absent, inserts it with `default` and returns it.
+
 - `d.update(other)`: merges `other` (dict or iterable of key-value pairs) into `d`.
+
 - `d.keys()`: returns a view of all keys.
+
 - `d.values()`: returns a view of all values.
+
 - `d.items()`: returns a view of all `(key, value)` pairs.
+
 - `d.pop(key, default)`: removes and returns the value for `key`. Raises `KeyError` if absent and no default.
+
 - `d.popitem()`: removes and returns the last inserted `(key, value)` pair.
+
 - `d.copy()`: returns a shallow copy.
+
 - `d.clear()`: removes all entries.
-- `dict.fromkeys(iterable, value=None)`: class method — creates a dict from an iterable of keys with an optional default value.
+
+- `dict.fromkeys(iterable, value=None)`: class method — creates a dict from an iterable of keys with an optional default value `defaultdict(type)`: it initializes an empty value of `type` for the dictionary to use and avoiding setting a new key every time 
+
+- `defaultdict(type)`: it initializes an empty value of `type` for the dictionary to use and avoiding setting a default value for a new pair manually.
 
 ```python
 d = {"a": 1, "b": 2, "c": 3}
@@ -997,6 +1009,11 @@ print(empty)   # {'name': None, 'age': None, 'city': None}
 users = {0: "Alice", 1: "Bob", 2: "Carol"}
 users_copy = users.copy()
 users.clear()
+
+# Create a default dictionary
+from collections import defaultdict 
+d = defaultdict(list)
+c["key"] = [1,2,4]
 ```
 
 ---
@@ -1462,12 +1479,19 @@ shared_arr = Array('d', [1.0, 2.0, 3.0])  # shared double array
 `asyncio` implements cooperative multitasking in a single thread using an **event loop**. Functions declared with `async` return a coroutine and must be awaited.
 
 - `async def func()`: declares a coroutine function.
+
 - `await expr`: suspends the current coroutine until `expr` completes. Can only be used inside an `async` function.
+
 - `asyncio.run(coroutine)`: entry point — creates an event loop, runs the coroutine, and closes the loop.
+
 - `asyncio.gather(*coros)`: runs multiple coroutines concurrently and waits for all to finish.
+
 - `asyncio.create_task(coro)`: schedules a coroutine to run as a Task concurrently (fire and forget until awaited).
+
 - `asyncio.wait_for(coro, timeout)`: runs a coroutine with a timeout — raises `asyncio.TimeoutError` if it exceeds.
+
 - `asyncio.sleep(seconds)`: suspends the current coroutine for `seconds`, yielding control to the event loop.
+
 - `asyncio.Lock()`: async mutex — use with `async with lock:` to protect shared state.
 
 ```python
