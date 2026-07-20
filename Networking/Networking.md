@@ -4,6 +4,13 @@
 
 ---
 
+## How Do We Access The Internet? 
+
+Even with all of the wireless technologies available, they are only used to connect our devices to the router of our local network. This router is wired 
+via a cable given by you internet provider which is the real connection to the real internet.
+
+--- 
+
 ## Host
 
 **Hosts** are any device which sends or receive traffic.
@@ -1437,15 +1444,18 @@ A **repeater** its a device which regenerates signals, it is used to prevent sig
 
 ## Bridge
 
-They sit between hub-connected host which allow to regulate the data send by hubs. For example: if we have to
-networks connected via two hubs, the bridge between the two ensures that only data from one network reaches the
-other if and only if necessary, other data emitted by the hub does not cross the bridge.
+**Bridges** sit between hub-connected host which allow to regulate the data send by hubs. They segment a LAN.
+
+For example: if we have two networks connected via two hubs, the bridge between the two ensures that only data from one network reaches the other 
+if and only if necessary, other data emitted by the hub does not cross the bridge.
+
+They are a layer 2 device which uses the MAC-addresses to determine if the data should be sent across the bridge or not.
 
 --- 
 
 ## Hub 
 
-A **hub** is a device which redirects data in a local network, but it always send the data to all devices instead of being selective like a swithc. 
+A **hub** is a device which redirects data in a local network, but it always send the data to all devices instead of being selective like a **switch**.
 
 --- 
 

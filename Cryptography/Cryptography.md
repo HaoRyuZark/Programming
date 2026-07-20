@@ -1,15 +1,15 @@
 # Cryptography 
 
 This is a document for basic understanding in **cryptography**, not a deep dive 
-into the mathematics behind the scenes. It will provice a clear overview of the procesess and steps 
-used for securig or hashing data.
+into the mathematics behind the scenes. It will provide a clear overview of the processes and steps 
+used for securing or hashing data.
 
 --- 
 
 ## Hashing
 
-Is the procesess of taking data and transforming it into a **deterministic, fix-length** value called the
-**digest** via a **hashing-algorithm** which is mostly a mathemtical formula. 
+Is the process of taking data and transforming it into a **deterministic, fix-length** value called the
+**digest** via a **hashing-algorithm** which is mostly a mathematical formula. 
 
 So called **collisions** happen which means that different inputs produce the same output. This is not 
 avoidable since, the number of outputs are limited.
@@ -48,19 +48,19 @@ function hash(input, salt, bytes, format) {
 
 ## Encryption
 
-**Encryption** is the procesess of using mathemtical operations to transform plain, readable text into something unintelligible.
+**Encryption** is the process of using mathematical operations to transform plain, readable text into something unintelligible.
 This encrypted message can then be **decrypted** (transform into the original form) if a **key** is known.
 
 --- 
 
 ## Secret Keys
 
-Any binariy sequence used in cryptography is a **key**. A **secret** is only know to the own machine of for the machine
-involded in a certain interaction. Keys are pseudo-unique and generated via specific algorithms, and they are used in combination
+Any binary sequence used in cryptography is a **key**. A **secret** is only known to the own machine or to the machine
+involved in a certain interaction. Keys are pseudo-unique and generated via specific algorithms, and they are used in combination
 with cryptographic algorithms to generate different outputs given the same data.
 
 - A `n`-size keys means the number of bits used for the sequence.
-- Keys are mostly generated in pairs for asymetric encryption.
+- Keys are mostly generated in pairs for asymmetric encryption.
 
 ---
  
@@ -76,12 +76,12 @@ Mostly used for:
 
 ### Symmetric Encryption
 
-Is encryption involing a known secret key by both parties in a communication. The problem arises when delaing on how to 
+Is encryption involving a known secret key by both parties in a communication. The problem arises when dealing on how to 
 share the key in secret.
 
 ### MAC & HMAC
 
-**Message Authentication Code** is a concept combining a meesage witha secret key before hashing used for integrity and authentication.
+**Message Authentication Code** is a concept combining a message with a secret key before hashing used for integrity and authentication.
 
 1. Message data is hashed along the secret key.
 2. Data is transmited with the hash alongside.
@@ -99,7 +99,7 @@ They transform a **secret** and a **label** into a deterministic, arbitrary-leng
 They are used for: 
 
 - Generate unlimited keys from a single secret key.
-- Generate psudo-random numbers. 
+- Generate pseudo-random numbers.
 
 --- 
 
@@ -115,7 +115,7 @@ Used for:
 
 ## Asymmetric Cryptography
 
-Different keys, a pulbic and a private key are used to perform and reverse/verify/complete an operation.
+Different keys, a public and a private key are used to perform and reverse/verify/complete an operation.
 
 The main operations are: encryption (RSA), signatures (DSA) and key exchanges (DH).
 
@@ -127,13 +127,13 @@ The public key is used for the encryption and the private key of the other party
 
 Operations that guarantees data has not changed since it was signed.
 
-The private key is used for the creatation and the public key for the verification.
+The private key is used for the creation and the public key for the verification.
 
 #### RSA Signature Verification
 
-- The data is hashed and the digest is encryptd with the private key. 
+- The data is hashed and the digest is encrypted with the private key.  
 - On the other end, the same data is hashed again and the signature is decrypted with the public key.
-- If both digest math then the data has not been manipulated.
+- If both digests match then the data has not been manipulated.
 
 --- 
 
@@ -145,14 +145,14 @@ be generated.
 
 ### Diffie-Hellman 
 
-It is the industry standard algorithm used for key exachanges.
+It is the industry standard algorithm used for key exchanges.
 
 Steps: 
 
 1. Peers publicly agree on a mutual starting value.
 2. Peers generate a private value which is never shared.
 3. Peers calculate a public value which is meant to be shared with the other peers.
-4. They combine theit private value with the shared public value.
+4. They combine their private value with the shared public value.
 5. The generated value is the seed used to generate for the public and private keys.
 
 ```txt
@@ -180,7 +180,7 @@ this process irreversible using non-quantum computers.
 
 ## Anti-Replay 
 
-It provides a built-sequence number to prevent attackers to used sended packets to be re-used.
+It provides a built-in sequence number to prevent attackers from re-using sent packets.
 
 --- 
 

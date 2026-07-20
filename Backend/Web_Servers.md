@@ -35,6 +35,13 @@ which can improve performance under high load.
 
 --- 
 
+## Common Gateway Interface (CGI)
+
+**CGI** is a way of servers to execute external programs to process HTTP-request via a script (cgi-script), commonly written in a scripting language. The output is then
+given to the server and returned to the source of the request. It starts a process for each new request, which can be resource intensive.
+
+--- 
+
 ## Fast Common Gateway Interface (FastCGI)
 
 **FastCGI** is a protocol for interfacing interactive programs with a web server. It is an improvement over the older Common Gateway Interface (CGI) 

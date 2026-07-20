@@ -37,9 +37,6 @@ p { color: #333; }
 /* Attribute — matches <input type="text"> */
 input[type="text"] { border: 1px solid #ccc; }
 
-/* Combining element with class name */
-input.className { color: red; }
-
 /* Attribute contains value */
 a[href*="example"] { color: red; }
 
@@ -55,19 +52,22 @@ a[href$=".pdf"] { color: orange; }
 A way of applying the same rule to multiple selector. 
 
 ```css
-/* Grouping — apply the same rules to multiple selectors */
+/* Grouping: apply the same rules to multiple selectors using ","*/
 h1, h2, h3 { font-family: sans-serif; }
 
-/* Descendant — any <p> inside a .card, at any depth */
+/* Element + Class: apply the same rules to elements with a specific class */
+div.card { padding: 16px; }
+
+/* Descendant: any <p> inside a .card, at any depth */
 .card p { font-size: 0.9rem; }
 
-/* Child (>) — only direct <li> children of <ul> */
+/* Child (>): only direct <li> children of <ul> */
 ul > li { list-style: none; }
 
-/* Adjacent sibling (+) — <p> immediately after an <h2> */
+/* Adjacent sibling (+): <p> immediately after an <h2> */
 h2 + p { margin-top: 0; }
 
-/* General sibling (~) — all <p> siblings after an <h2> */
+/* General sibling (~): all <p> siblings after an <h2> */
 h2 ~ p { color: #555; }
 ```
 
@@ -80,6 +80,7 @@ a:hover        { text-decoration: underline; }
 a:focus        { outline: 2px solid blue; }
 a:visited      { color: purple; }
 a:active       { color: red; }
+a:required      { border-color: red; }
 
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -91,11 +92,13 @@ input:invalid  { border-color: red; }
 /* Structural pseudo-classes */
 li:first-child       { font-weight: bold; }
 li:last-child        { border-bottom: none; }
-li:nth-child(2)      { background: #f0f0f0; }   /* 2nd item */
+li:nth-child(2)      { background: #f0f0f0; }    /* 2nd item */
 li:nth-child(odd)    { background: #fafafa; }    /* 1st, 3rd, 5th… */
-li:nth-child(3n+1)   { color: blue; }            /* every 3rd starting at 1 */
+li:nth-child(3n+1)   { color: blue; }              /* every 3rd starting at 1 */
+li:only-child        { font-style: italic; }        /* only child of its parent */
 p:not(.intro)        { color: #666; }            /* all <p> without .intro */
 section:empty        { display: none; }
+p:only-of-type       { font-size: 1.2rem; }      /* only <p> among siblings. If the element is among other children of the same type, this rule does not apply */
 ```
 
 ### Pseudo-elements
@@ -203,25 +206,25 @@ CSS units fall into two categories: **absolute** (fixed size) and **relative** (
 
 ### Absolute
 
-| Unit | Description |
-|------|-------------|
-| `px` | Pixel — the most common absolute unit |
-| `pt` | Point — used in print stylesheets (1pt = 1/72 inch) |
-| `cm` / `mm` | Centimetres / millimetres — rarely used on screen |
+| Unit | Description | Use-case|
+|------|-------------|---------|
+| `px` | Pixel — the most common absolute unit | Borders, spacing |
+| `pt` | Point — used in print stylesheets (1pt = 1/72 inch) | Print styles |
+| `cm` / `mm` | Centimetres / millimetres — rarely used on screen | Print styles |
 
 ### Relative
 
-| Unit | Relative To |
-|------|-------------|
-| `%` | Parent element's dimension |
-| `em` | Current element's own `font-size` (compounds when nested) |
-| `rem` | Root element (`<html>`) `font-size` — predictable, no compounding |
-| `vw` | 1% of the viewport width |
-| `vh` | 1% of the viewport height |
-| `vmin` | 1% of the smaller viewport dimension |
-| `vmax` | 1% of the larger viewport dimension |
-| `ch` | Width of the `0` character in the current font |
-| `lh` | Current line height |
+| Unit | Relative To | Use-case |
+|------|-------------|---------|
+| `%` | Parent element's dimension | Width, height, padding, margin |
+| `em` | Current element's own `font-size` (compounds when nested) | Font sizes, spacing |
+| `rem` | Root element (`<html>`) `font-size` — predictable, no compounding | Font sizes, spacing |
+| `vw` | 1% of the viewport width | Responsive layouts, full-width elements |
+| `vh` | 1% of the viewport height | Full-height sections, hero images |
+| `vmin` | 1% of the smaller viewport dimension | Responsive layouts |
+| `vmax` | 1% of the larger viewport dimension | Responsive layouts |
+| `ch` | Width of the `0` character in the current font | Monospaced text, input fields |
+| `lh` | Current line height | Vertical spacing, line-height adjustments |
 
 ```css
 html { font-size: 16px; }     /* 1rem = 16px throughout the page */

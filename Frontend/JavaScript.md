@@ -23,7 +23,12 @@ console.log(process.platform);   // "linux", "win32", "darwin"
 | Module system    | ES Modules           | CommonJS + ES Modules |
 
 - **Engine** (e.g. V8 in Chrome & Node.js, SpiderMonkey in Firefox): parses and executes JS code.
+
 - **Event loop**: single-threaded, non-blocking I/O via callbacks, promises, and async/await.
+
+- **APIs**: they are host-provided, not part of the JS language itself. For example, `
+asynchronous operations like network requests, timers, and file I/O.
+
 
 It was mainly created to modify the DOM and add dynamism to web-sites without needing a full reload, but like all horrible 
 things it was then used for other stuff it was not suppose to do.
@@ -401,6 +406,9 @@ const val = (1, 2, 3); // val = 3
 
 Functions are **first-class citizens** in JavaScript which means that they can be assigned, passed, and returned like any value.
 
+Using the `this` keyword inside a function will refer to the object that called the function, not the function itself. To get the function using this we 
+need to either use a closure or an arrow function, since they do not have their own `this` and will inherit it from the enclosing scope.
+
 ```js
 // Function declaration — hoisted (can call before definition)
 function add(a, b) {
@@ -547,7 +555,7 @@ console.log(account.getBalance()); // 1300
 
 ## The `this` Keyword
 
-`this` refers to the **execution context** — what called the function.
+`this` refers to the **execution context**; what called the function.
 
 ```js
 // In an object method, this = the object
@@ -559,7 +567,7 @@ const user = {
 };
 console.log(user.greet()); // "Hi, I'm Alice"
 
-// Arrow functions do NOT have their own this — they inherit from enclosing scope
+// Arrow functions do NOT have their own `this`; they inherit from enclosing scope
 const timer = {
   seconds: 0,
   start() {
@@ -976,7 +984,7 @@ delete person.isActive;
 
 ```
 
-> They can, but are well suited to use as a hash-map. This is consider poor practice.
+> They can, but are not well suited to use as a hash-map. This is consider poor practice.
  
 - **Checking property existence**:
 
@@ -1000,9 +1008,14 @@ for (const [key, value] of Object.entries(person)) {
 }
 
 
-// Iterating over the object keys
-for (const k of Object.values(obj)) {
-  console.log(k)
+// Iterating over the object values only
+for (const value of Object.values(person)) {
+  console.log(value);
+}
+
+// Iterating over the object keys only
+for (const key of Object.keys(person)) {
+  console.log(key);
 }
 ```
 
@@ -1452,7 +1465,7 @@ const unique = [...new Set(arr)]; // [1, 2, 3, 4]
 
 ---
 
-### Maps
+### Hash Maps (Map)
 
 A `Map` is an ordered key-value collection where **keys can be any type**.
 
@@ -2006,7 +2019,19 @@ const { groups: { y, m, d } } = "2025-05-31"
 
 ---
 
-## JSON
+## JavaScript Object Notation (JSON)
+
+**JSON** is a lightweight data-interchange format. It is easy for humans to read and write, and easy for machines to parse and generate. JSON is built on two structures:
+
+1. A collection of name/value pairs (object)
+2. An ordered list of values (array)
+
+Inside JavaScript there is a global `JSON` object with two main methods:
+
+- `JSON.stringify(value, replacer, space)`: converts a JavaScript value to a JSON string.
+- `JSON.parse(text, reviver)`: parses a JSON string and returns the corresponding JavaScript value.
+
+Example: 
 
 ```js
 // Serializing (JS → JSON string)
@@ -2067,8 +2092,8 @@ I/O operations, timers, and user interactions. The event loop allows JavaScript 
 1. **Call Stack**: Executes synchronous code. Place in which all task are placed for execution.
 
 2. **Microtask Queue**: Executes tasks like Promise callbacks and `process.nextTick()`. The tasks in this queue, always execute before the ones in the **macrotask queue**, but they 
-still need to wait for the global execution context to be pop out of the task. Only callbacks attached with a promise, mutationOserver, function bodies after a await keyword and a queueMicrotask go
-int the microtask queue.
+still need to wait for the global execution context to be popped out of the task. Only callbacks attached with a promise, mutationObserver, function bodies after an await keyword and a queueMicrotask go
+into the microtask queue.
 
 3. **Macrotask Queue**: Executes tasks like `setTimeout`, `setInterval`, and I/O callbacks. A task in this queue is only executed once the call stack is **empty**; this includes 
 the global executed context. This tasks are executed by Javascript **itself**, not by a remote API.
@@ -2101,12 +2126,12 @@ let createPost = (author, title, callback) => {
     }, 2000
   );
 
-createPost("Migu", "Amazonas", printPost()); // Now only after creating the last post, they will be printed
+createPost("Migu", "Amazonas", printPosts); // Now only after creating the last post, they will be printed
 
 // Example 2:
 
 function fetchUser(id, callback) {
-  setTimeout(() => {n
+  setTimeout(() => {
     if (id <= 0) callback(new Error("Invalid ID"), null);
     else callback(null, { id, name: "Alice" });
   }, 100);
@@ -2170,16 +2195,86 @@ walkTheDog(() => {
 
 ```
 
+> Note: that when passing a variable name inside the callback parentheses we can use it for the next callback
+
+```js 
+someAsyncFunction((result) => {
+    // result is whatever the function called callback(result) with
+});
+```
+
+Example: 
+
+```js
+function getFalafel(callback) {
+    const falafel = "Falafel";
+    console.log(falafel + " aus dem Kühlschrank geholt");
+
+    setTimeout(() => {
+        callback(falafel);
+    }, 1000);
+}
+
+function fryFalafel(falafel, callback) {
+    setTimeout(() => {
+        const friedFalafel = "Frittierte " + falafel;
+        console.log(falafel + " frittiert");
+
+        callback(friedFalafel);
+    }, 1000);
+}
+
+function getWrap(callback) {
+    const wrap = "Wrap";
+    console.log(wrap + " aus dem Schrank geholt");
+
+    setTimeout(() => {
+        callback(wrap);
+    }, 1000);
+}
+
+function assembleFalafelWrap(wrap, friedFalafel, callback) {
+    const falafelwrap = "Falafel-Wrap";
+    console.log(friedFalafel + " in " + wrap + " gewickelt");
+
+    setTimeout(() => {
+        callback(falafelwrap);
+    }, 1000);
+}
+
+function prepareFalafelWrap(callback) {
+    callback();
+}
+
+function serve(meal) {
+    console.log(meal + " serviert");
+}
+
+getFalafel((falafel) => {
+    fryFalafel(falafel, (friedFalafel) => {
+        getWrap((wrap) => {
+            assembleFalafelWrap(wrap, friedFalafel, (falafelwrap) => {
+                prepareFalafelWrap(() => {
+                    serve(falafelwrap);
+                });
+            });
+        });
+    });
+});
+```
+
 ### Promises
 
 A `Promise` represents a value that will be available in the future and they provide a better syntax and structure than 
-a callback hell. They can be in three states: **pending**, **resolve** and **reject**.
-They count as a microtask. `new Promise((resolve, reject) => { async code })`. The value passed into the `resolve()` function gets 
+a callback hell. They can be in three states: **pending**, **resolve** and **reject**. They count as a **microtask**. 
+
+To create a promise we use the constructor with the `excutor(resolve, reject)` arrow function as argument with
+`new Promise((resolve, reject) => { async code })`. The value passed into the `resolve()` function gets 
 returned as the value of the promise.
 
 Basic example:
 
-```js 
+```js
 function walkTheDog() {
 
     return new Promise((resolve, reject) => {
@@ -2272,8 +2367,15 @@ fetch("/api/users")
   .then(users => users.filter(u => u.active))
   .then(active => console.log(active))
   .catch(err => console.error(err));
+```
 
-// Promisifying a callback function
+### Promisifying a callback function
+
+To **promisify** a callback we wrap the callback call inside a new promise and use the `resolve` parameter to call the callback.
+
+Example with a `setTimeout`:
+
+```js
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -2583,23 +2685,77 @@ export default defineConfig({
 
 ---
 
-## Browser APIs
+## DOM Manipulation
 
-### DOM Manipulation
+One of the primary uses of Javascript is to modify the DOM to add dynamism to our website. For this we use the 
+`document` object which represents the DOM and then use different selectors.
+
+### Selecting elements
+
+- `document.getElementById("id")`: single element by ID
+
+- `document.getElementsByClassName("class")`: live HTMLCollection of elements
+
+- `document.getElementsByTagName("tag")`: live HTMLCollection of elements
+
+- `document.querySelector("selector")`: first match
+
+- `document.querySelectorAll("selector")`: static NodeList of all matches
+
+- `document.body`: the `<body>` element, can be used with other tags like `document.head`, `document.documentElement` (the `<html>` element)
+
+- `element.children`: HTMLCollection of child elements
+
+- `element.parentElement`: parent element
 
 ```js
-// Selecting elements
+// 
 const el   = document.getElementById("app");
 const btn  = document.querySelector(".btn");        // first match
 const btns = document.querySelectorAll(".btn");     // NodeList
 const divs = document.getElementsByTagName("div");  // HTMLCollection
+```
 
+### Creating, Inserting and Modifying Elements
+
+- `document.createElement(tag)`: create a new element
+
+- `element.textContent`: set/get text content inside the element (between tags, no HTML parsing).
+
+- `element.innerHTML`: set/get HTML content inside the element (between tags, HTML parsing, i.e. the browser will parse the string as HTML and create elements accordingly).
+
+- `element.innerText`: set/get visible text content (ignores hidden elements, line breaks, etc.)
+
+- `element.className`: set/get class attribute
+
+- `element.dataset`: access `data-*` attributes
+
+- `parent.appendChild(child)`: append child to parent
+
+- `parent.prepend(child)`: insert child at the beginning
+
+- `element.before(newElement)`: insert before element
+
+- `element.after(newElement)`: insert after element
+
+- `element.remove()`: remove element from DOM
+
+- `element.setAttribute(name, value)`: set attribute
+
+- `element.getAttribute(name)`: get attribute
+
+- `element.removeAttribute(name)`: remove attribute
+
+- `element.toggleAttribute(name)`: toggle boolean attribute
+
+```js
 // Creating and inserting elements
-const p = document.createElement("p");
+const p = document.createElement("div");
 p.textContent  = "Hello World";          // safe (no HTML injection)
 p.innerHTML    = "<strong>Hello</strong>"; // HTML — careful with user input!
 p.className    = "message";
 p.dataset.userId = "123"; // data-user-id attribute
+p.setAttribute('style', "display:flex; color: blue;")
 
 document.body.appendChild(p);
 document.body.prepend(p);
@@ -2630,7 +2786,61 @@ el.nextElementSibling;
 el.closest(".container"); // nearest ancestor matching selector
 ```
 
+### Creating Dynamic Elements
+
+We will suppose that we a have a grid container which we will select by id. We will fetch data from the Pokemon-API and then we will create a card for each Pokemon and append it to the grid container. 
+
+```js
+// For each of the elements we crate a div an append the name and the image of the Pokemon to it. Then we append this div to the grid container. The content is adjusted 
+// with internal CSS.
+function createPokemonCard(pokemon) {
+
+  const card = document.createElement("div");
+  card.className = "pokemon-card";
+
+  const name = document.createElement("h2");
+  name.textContent = pokemon.name;
+
+  const image = document.createElement("img");
+  image.src = pokemon.sprites.front_default;
+  image.alt = pokemon.name;
+
+  card.appendChild(name);
+  card.appendChild(image);
+  gridContainer.appendChild(card);
+}
+
+const gridContainer = document.getElementById("grid-container");
+
+async function fetchPokemon() {
+  try {
+
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10");
+    const data = await response.json();
+    const pokemonList = data.results;
+
+    pokemonList.forEach(async (pokemon) => {
+
+      const pokemonResponse = await fetch(pokemon.url);
+      const pokemonData = await pokemonResponse.json();
+
+      createPokemonCard(pokemonData);
+    });
+
+} catch (error) {
+    console.error("Error fetching Pokemon:", error);
+  }
+}
+
+fetchPokemon();
+```
+
 ### Events
+
+We can listen to events on elements and handle them with a callback function. Events can bubble up the DOM tree, and we can stop propagation if needed.
+
+- `element.addEventListener(event, handler, options)` — attach event listener
+- `element.removeEventListener(event, handler)` — remove event listener
 
 ```js
 // Adding event listeners
@@ -2672,6 +2882,29 @@ const myEvent = new CustomEvent("user:login", {
 });
 document.dispatchEvent(myEvent);
 document.addEventListener("user:login", e => console.log(e.detail.userId));
+```
+
+### Modifying styles
+
+- `element.style.property` — set inline style
+- `getComputedStyle(element)` — get computed styles (read-only)
+- `element.classList` — toggle classes for CSS rules
+- `element.style.setProperty("--var", value)` — set CSS variable
+- `element.style.removeProperty("--var")` — remove CSS variable
+- `element.style.cssText` — set multiple styles at once 
+
+```js
+el.style.backgroundColor = "red";
+
+const styles = getComputedStyle(el);
+console.log(styles.marginTop);
+
+el.classList.add("dark-mode");
+el.classList.remove("light-mode");
+
+const body = document.body;
+body.style.setProperty("display", "flex");
+body.style.setProperty("--main-color", "#3498db");
 ```
 
 ### localStorage & sessionStorage
@@ -3136,4 +3369,41 @@ function deepEqual(a, b) {
 }
 ```
 
+## fetch API
+
+The **fetch()** is a function used for HTTPS request to fetch resources. `fetch(url, {method, headers, ...})`.
+This method returns a promise, hence, we can use both async/await and our promise methods for doing operations.
+
+- `fetch(url)`: triggers a GET request to the specified URL and returns a promise that resolves to the response object.
+- `fetch(url, { method: "POST", body: JSON.stringify(data) })`: triggers a POST request with the specified data.
+
+```js
+
+fetch("https://api.example.com/data")
+  .then(response => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(err => console.error("Fetch error:", err));
+
+fetch("https://api.example.com/data", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "Alice", age: 30 })
+})
+  .then(response => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  })
+  .then(data => console.log("Created:", data))
+  .catch(err => console.error("Fetch error:", err));
+```
+
+--- 
+
+## AJAX (Asynchronous JavaScript and XML) 
+
+AJAX is a technique for creating asynchronous web applications. It allows web pages to be updated asynchronously by exchanging data with a web server behind the scenes. 
+This means that it is possible to update parts of a web page, without reloading the whole page.
 

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="../style/dashboard.css">
+    <link rel="icon" type="image/x-icon" href="../resources/rem_icon.ico">
 </head>
 <body>
 
@@ -27,16 +29,44 @@
      |___________________________________________________________________________|   
     -->
 
-    <header id="dashboard_header">
+    <header>
+        <nav id="nav">
+
+            <!-- The first list is for the side bar -->
+            <ul class="sidebar">
+               <li onclick=hideSideBar()><img id="close_burgir" src="../resources/icons/close_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg"></li> 
+               <li><a href="#">Blog</a></li> 
+               <li><a href="#">Forum</a></li> 
+               <li><a href="#">Forum</a></li> 
+               <li><a href="#">About</a></li> 
+            </ul>
+
+            <!-- Acutal list for the header-->
+            <ul class="topbar">
+               <li><a href="./index.html">AnimeMigUX</a></li> 
+               <li class="hideOnMobile"><a href="#">Blog</a></li> 
+               <li class="hideOnMobile"><a href="#">Forum</a></li> 
+               <li class="hideOnMobile"><a href="#">Forum</a></li> 
+               <li class="hideOnMobile"><a href="#">About</a></li> 
+               <li id="menu-button" onclick=showSidebar()><img id="burgir_menu" src="../resources/icons/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg"></li>
+            </ul>
+        </nav>
 
     </header>
 
-    <main id="dashboard_main">
+    <main>
+        
+        <div id="searchbar_container">
+            <div>            </div>
+        </div>
 
+        <div id="results_container">
+
+        </div>
     </main>
 
     <footer id="dashboard_footer">
-
+        <div class="generic_text">I wish you the best day of your life.</div>
     </footer>
 </body>
 </html>
