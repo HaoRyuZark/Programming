@@ -1047,6 +1047,7 @@ const obj = {
 
 Every object has a `__proto__` property which points to the prototype of the object it inherits from.
 
+General Example of the prototype chain:
 
 ```js
 // Prototype chain lookup
@@ -1073,11 +1074,33 @@ alice.hasOwnProperty("name");   // true  — own property
 alice.hasOwnProperty("greet");  // false — inherited
 ```
 
+Expanding array functionality using prototypes:
+
+```js
+// Add a groupBy method to all arrays
+Array.prototype.groupBy = function(fn) {
+    
+    let res = {};
+
+    for (const element of this) {
+        let val = fn(element);
+        if (res[val] == undefined) {
+            res[val] = [];
+        }
+
+        res[val].push(element);
+    }
+
+    return res;
+};
+```
+
+
 **Constructors functions** have the `prototype` property which also allows us to modify the prototype-chain.
 
 ### OOP-Classes
 
-Classes are syntactic sugar over prototype-based inheritance.
+Classes are syntactic sugar over prototype-based inheritance. They provide more structure than the constructor only syntax.
 
 ```js
 class Animal {
@@ -1119,6 +1142,10 @@ class Animal {
 
   toString() {
     return `Animal(${this.#name})`;
+  }
+
+  eat() {
+    console.log("Eating\n")
   }
 }
 
@@ -1830,7 +1857,10 @@ for (const n of range) console.log(n); // 1 2 3 4 5
 
 ### Generators
 
-Functions that can **pause** and **resume** execution.
+Functions that can **pause** and **resume** execution. We use the `function*` syntax and `yield` keyword to return values lazily. If we have a recursive
+generator, we can use `yield*` to delegate to another generator.
+
+- **Basic generator**:
 
 ```js
 function* counter(start = 0) {
@@ -1850,7 +1880,11 @@ function* range(start, end, step = 1) {
   }
 }
 [...range(0, 10, 2)]; // [0, 2, 4, 6, 8]
+```
 
+- **Delegating generators**:
+
+```js
 // Delegating with yield*
 function* flatten(arr) {
   for (const item of arr) {
@@ -1859,7 +1893,11 @@ function* flatten(arr) {
   }
 }
 [...flatten([1, [2, [3, 4]], 5])]; // [1, 2, 3, 4, 5]
+```
 
+- **Infinite sequences**:
+
+```js
 // Infinite sequences (lazy evaluation)
 function* fibonacci() {
   let [a, b] = [0, 1];
@@ -3360,12 +3398,18 @@ function escapeHtml(str) {
 
 // Deep equality check
 function deepEqual(a, b) {
-  if (a === b) return true;
-  if (typeof a !== "object" || typeof b !== "object") return false;
-  if (a === null || b === null) return false;
-  const keysA = Object.keys(a), keysB = Object.keys(b);
-  if (keysA.length !== keysB.length) return false;
-  return keysA.every(key => deepEqual(a[key], b[key]));
+
+    if (a === b) return true;
+    
+    if (typeof a !== "object" || typeof b !== "object") return false;
+    
+    if (a === null || b === null) return false;
+    
+    const keysA = Object.keys(a), keysB = Object.keys(b);
+    
+    if (keysA.length !== keysB.length) return false;
+    
+    return keysA.every(key => deepEqual(a[key], b[key]));
 }
 ```
 
@@ -3404,6 +3448,70 @@ fetch("https://api.example.com/data", {
 
 ## AJAX (Asynchronous JavaScript and XML) 
 
-AJAX is a technique for creating asynchronous web applications. It allows web pages to be updated asynchronously by exchanging data with a web server behind the scenes. 
+**AJAX** is a technique for creating asynchronous web applications. It allows web pages to be updated asynchronously by exchanging data with a web server behind the scenes. 
 This means that it is possible to update parts of a web page, without reloading the whole page.
 
+This is achieved by using the `XMLHttpRequest` object or the modern `fetch()` API to send and receive data from a server asynchronously.
+
+```js
+// Using XMLHttpRequest
+const xhr = new XMLHttpRequest();
+xhr.open("GET", "https://api.example.com/data", true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) { // DONE
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      console.log(data);
+    } else {
+      console.error("Error:", xhr.status);
+    }
+  }
+};
+xhr.send();
+```
+
+Note that the `fetch()` API is a modern alternative to `XMLHttpRequest` and is generally preferred for new applications due to its simpler syntax and promise-based interface. We also 
+try to avoid using XML as a data format, and instead use JSON, which is more lightweight and easier to work with in JavaScript.
+
+This is more a legacy technique, but it is still important to know about it, as there are still many applications that use it.
+
+--- 
+
+## Timers API 
+
+The **Timers API** provides a way to schedule code execution after a certain amount of time or at regular intervals. The main functions are:
+
+- `setTimeout(callback, delay)`: executes the callback function once after the specified delay (in milliseconds).
+- `setInterval(callback, interval)`: executes the callback function repeatedly at the specified interval (in milliseconds).
+- `clearTimeout(timeoutId)`: cancels a timeout set with `setTimeout()`.
+- `clearInterval(intervalId)`: cancels an interval set with `setInterval()`.
+- `requestAnimationFrame(callback)`: schedules a callback to be called before the next repaint, useful for animations.
+
+```js
+// Example: setTimeout
+const timeoutId = setTimeout(() => {
+  console.log("This will run after 2 seconds");
+}, 2000); 
+
+// Example: setInterval
+const intervalId = setInterval(() => {
+  console.log("This will run every 1 second");
+}, 1000);
+
+// Example: clearInterval
+setTimeout(() => {
+  clearInterval(intervalId);
+  console.log("Interval cleared");
+}, 5000);
+
+// Example: clearTimeout
+// the function will not be executed if we clear the timeout before it runs
+var debounce = function(fn, t) {
+    
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), t);
+    }
+};
+```

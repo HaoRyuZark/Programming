@@ -865,6 +865,21 @@ router.param("id", (req, res, next, id) => {
 module.exports = router;
 ```
 
+If declared inside the same folder:
+
+```js 
+import express from "express";
+
+const app = express();
+const router1 = express.Router();
+const router2 = express.Router();
+
+app.use("/users", router1);
+app.use("/products", router2);
+
+//...
+```
+
 ### Controllers 
 
 **Controllers** are responsible for handling the business logic of the application. They receive requests from the routes, process them, and 
@@ -924,7 +939,7 @@ app.listen(3000, () => {
 });
 ```
 
-## Template Engines (Mustache.js)
+## Template Engines 
 
 The goal of a **template engine** is to separate the HTML from the Node.js-code. They allows 
 us to create dynamic HTML pages by embedding variables and logic into the HTML templates.
@@ -973,27 +988,36 @@ We declare our **views** folder and inside it we create our **.mustache** files.
 </html>
 ```
 
-Template-engine specific syntax is used to embed variables, declare dynamic content, and add logic into the HTML templates.
+Example with **EJS**:
 
-### Mustache Example
+```js
+const express = require("express");
+const ejs = require("ejs");
+const app = express();
 
-Mustache.js is a logic-less template engine, meaning it does not support complex logic or control structures.
-It also supports partials, which are reusable templates that can be included in other templates.
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views"); 
+app.get("/", (req, res) => {
+  res.render("index", { title: "Hello, World!", message: "Welcome to my website!" });
+});
+```
 
 ```html
-<!-- views/index.mustache -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+    <title><%= title %></title>
 </head>
 <body>
-    <h1>{{message}}</h1>
+    <h1><%= message %></h1>
 </body>
 </html>
 ```
+
+
+Template-engine specific syntax is used to embed variables, declare dynamic content, and add logic into the HTML templates.
 
 --- 
 

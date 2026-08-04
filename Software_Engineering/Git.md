@@ -73,25 +73,63 @@ If successful, you'll see a message like:
 ## Basic Commands
 
 - `git status` – Show the status of changes
+
 - `git log --stat` = Shows which files were modified and how many lines changed
+
 - `git log -p` = Shows which files were modified with the modifications
+
 - `git add <file>` – Stage a file for commit
+
 - `git add .` – Stage all changes
+
 - `git commit -m "message"` – Commit staged changes
+
 - `git commit --amend` – Edit the last commit
+
 - `git log` – Show commit history
+
 - `git log --oneline --graph` – Show a compact commit history
+
+- `git log --merge --oneline` – Show commits  which cause a merge conflict.
 
 ## Branching and Merging
 
 - `git branch` – List branches
+
 - `git branch <branch_name>` – Create a new branch
+
 - `git checkout <branch_name>` – Switch to a branch
+
 - `git checkout -b <branch_name>` – Create and switch to a new branch
-- `git merge <branch_name>` – Merges a branch into the current branch you are in
+
+- `git merge <branch_name>` – Merges a branch into the **current branch you are in**
+
+```sh
+git commit -m "Bla"
+git checkout master
+git merge feature_branch
+```
+
+
 - `git branch -d <branch_name>` – Delete a branch
+
 - `git branch -D <branch_name>` – Force delete a branch
-- `git rebase <branch_name>` – Puts the changes of another branch on top of the current branch 
+
+- `git rebase <branch_name>` – Puts the changes of another branch **on top of the current branch**
+
+```sh
+git commit -m "Bla"
+git checkout master
+git rebase feature_branch
+```
+
+Or we can use to re-root another branch on top of another like:
+
+```sh
+git checkout feature_branch
+git rebase master
+```
+
 
 ## Working with Remotes
 
@@ -173,12 +211,29 @@ git push -u origin main
 **Merge conflicts** are when two divergent branches can not reconciliate due to changes being made in the same files on the
 different branches. They mostly does not happen when working solo, but with a team.
 
-Resolving them consist on mostly going through the conflicted files and then deciding what to add and
-what to remove.
+### Resolving Merge Conflicts 
+
+1. We find the files which are causing the conflict via 
+`git log --merge --oneline`
+
+2. For each file in the list we look for the sections marked with 
+
+```txt
+<<<<<<<<<<<<<<<<<< HEAD (leatest commit on the main branch: mostly)
+    Code  V1
+===========    
+    Code  V2
+>>>>>>>>>>>>>>>>>> my_feature (our feature branch)
+```
+
+Now we can remove the boiler plate and only left the code we want to have at the end.
+
+3. Stage the files and commit.
+
 
 --- 
 
-## gitignore
+## .gitignore
 
 The `.gitignore` file is used to declare files or kinds o files we want git to not keep track of. 
 

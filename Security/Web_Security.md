@@ -47,6 +47,9 @@ To prevent broken access management, follow these best practices:
 **Cryptographic failures** refer to security vulnerabilities that arise from the improper use of cryptography in an application. A simple example 
 would be using a deprecated algorithm for encryption, such as MD5 or SHA1, which are no longer considered secure.
 
+### Prevention 
+
+The only prevention is to use up-to-data cryptography and check the transmition channels periodically to prevent **timing-attacks** or store now, decrypt later.
 
 --- 
 
@@ -214,13 +217,26 @@ eval(userInput);
 
 ### Prevention
 
-Again, sanitize and validate user input before executing any code. Avoid using `eval()` or similar functions that execute arbitrary code. Use safer alternatives like `JSON.parse()` for parsing JSON data.
+Again, sanitize and validate user input before executing any code. Avoid using `eval()` or similar functions that execute arbitrary code. Use safer alternatives like `JSON.parse()` 
+for parsing JSON data.
+
+--- 
+
+## Cross-Origin Resource-Sharing (CORS)
+
+**CORS** is mechanism which allows two sites to share data using **URL**. This is blocked for most websites since, allowing any kind of request 
+to our server from a cross-origin is an open window for attacks.
+
+### Prevention
+
+This is technically a feature, hence the only prevention is to use it with a strict set of rules or to completely block such requests.
 
 --- 
 
 ## Cross Site Scripting (XSS)
 
-**Cross-Site Scripting (XSS)** is a type of security vulnerability that occurs when an attacker is able to inject malicious scripts into a web page, which are then executed in the context of a user's browser.
+**Cross-Site Scripting (XSS)** is a type of security vulnerability that occurs when an attacker is able to inject malicious scripts into a web page, which are then executed in the 
+context of a user's browser.
 
 Example of a simple XSS attack:
 
@@ -241,7 +257,8 @@ Example of a simple XSS attack:
 </script>
 ```
 
-In the example we get access to the cookie and redirect it to the attacker's server. This can lead to session hijacking and other security issues.
+In the example we  fill the user-input field with a `script` tag and then get access to the cookie and redirect it to the attacker's server. This can lead to 
+session hijacking and other security issues.
 
 ### Types of XSS attacks
 
@@ -264,17 +281,24 @@ sources of content are allowed to be loaded and executed on a web page.
 
 --- 
 
+## Same Origin Policy
+
+**Same origin policy** is a mechanism used to only allow request to server is they come from same origin as its corresponding website.
+This is used to prevent CORS and other similar attacks. It primarily checks if a request has the same **port**, **host** and **protocol** as the 
+specified for the server.
+
+--- 
+
 ## Insecure Design
 
 **Insecure design** means exactly what the name says, a poorly designed system with lack of security, scalability, and maintainability. 
 
 --- 
 
-
 ## Dependencies
 
-Another common source of vulnerabilities are a high number of direct and transitive dependencies. This is a common problem in modern web development, where applications often rely on 
-numerous third-party libraries and frameworks.
+Another common source of vulnerabilities are a high number of direct and transitive dependencies. This is a common problem in modern web development, where applications often 
+rely on numerous third-party libraries and frameworks.
 
 ### Prevention
 
@@ -320,11 +344,13 @@ We can exploit this by sending a request to `../internal-service` or `http://loc
 
 ## Cross-Site-Request-Forgery (XSRF or CSRF)
 
-**Cross-Site Request Forgery (CSRF)** is a type of security vulnerability that occurs when an attacker tricks a user into performing actions on a web application without their knowledge or consent.
+**Cross-Site Request Forgery (CSRF)** is a type of security vulnerability that occurs when an attacker tricks a user into performing actions on a web application without their 
+knowledge or consent.
+
 This is accomplished by exploiting the trust that a web application has in the user's browser, allowing the attacker to perform actions on behalf of the user.
 
-For example, an attacker could create a malicious website that contains a hidden form that submits a request to a vulnerable web application when the user visits the site. The attacker 
-abuses the stored cookie in the user's browser to perform actions on the web application without the user's knowledge or consent.
+For example, an attacker could create a malicious website that contains a hidden form that submits a request to a vulnerable web application when the user visits the site. The 
+attacker abuses the stored cookie in the user's browser to perform actions on the web application without the user's knowledge or consent.
 
 ---
 

@@ -227,7 +227,8 @@ print(apply_function(lambda x: x * x, 5))  # 25
 Anonymous single-expression functions. Best used for short, throwaway transformations.
 
 ```python
-square = lambda x: x * x
+square: Callable[int, int] = lambda x: x * x
+
 print(square(5))   # 25
 
 add = lambda a, b: a + b
@@ -291,7 +292,9 @@ table2: dict[str, int] = {"a": 1}
 
 ## Closures
 
-A closure is a function that captures variables from the scope in which it was defined, even after that scope has exited.
+A **closure** is a function that captures variables from the scope in which it was defined, even after that scope has exited.
+
+- `nonlocal`
 
 ```python
 def closure_example(s: str):
@@ -381,6 +384,9 @@ def my_decorator(func: Callable) -> Callable:
         return func(*args, **kwargs)
     return wrapper
 ```
+
+
+### Class Decorator
 
 ---
 
@@ -603,6 +609,7 @@ for e in duck_list:
     e.be()   # works for all — they all have .be()
 ```
 
+### static and staticmethod
 ---
 
 ## Abstract Classes
@@ -651,7 +658,8 @@ print(dog.describe())   # I make sound: Woof! and I run
 
 ## Interfaces (Protocol)
 
-`Protocol` from `typing` defines structural interfaces — a class satisfies the protocol if it has the required methods, without needing to inherit from it (pure duck typing + static checking).
+`Protocol` from `typing` defines structural interfaces — a class satisfies the protocol if it has the required methods, without needing to inherit from it 
+(pure duck typing + static checking).
 
 ```python
 from typing import Protocol
@@ -695,6 +703,66 @@ print_shape_info(Circle(7))          # Area: 153.94, Perimeter: 43.98
 ```
 
 ---
+
+## MRO / Diamond Problem
+
+```mermaid
+flowchart TD
+    O["O – gemeinsame Basisklasse"]
+
+    O --> A[A]
+    O --> B[B]
+    O --> C[C]
+    O --> D[D]
+    O --> E[E]
+
+    C --> K1["K1(C, A, B)"]
+    A --> K1
+    B --> K1
+
+    A --> K3["K3(A, D)"]
+    D --> K3
+
+    B --> K2["K2(B, D, E)"]
+    D --> K2
+    E --> K2
+
+    K1 --> Z["Z(K1, K3, K2)"]
+    K3 --> Z
+    K2 --> Z
+```
+
+Die Pfeile zeigen von der Basisklasse zur Unterklasse: `O` steht oben, `Z` unten.
+
+```python
+class O: ...
+class A(O): ...
+class B(O): ...
+class C(O): ...
+class D(O): ...
+class E(O): ...
+
+class K1(C, A, B): ...
+class K3(A, D): ...
+class K2(B, D, E): ...
+class Z(K1, K3, K2): ...
+
+
+def mro_names(cls: type[object]) -> list[str]:
+    return [base.__name__ for base in cls.__mro__]
+
+
+print(mro_names(Z))
+# Z, K1, C, K3, A, K2, B, D, E, O, object
+```
+
+C3-Merksatz: Nimm immer den ersten Kopf der MRO-Listen, der nicht im Schwanz einer anderen Liste steht. So bleiben Elternreihenfolge und jede Klasse genau einmal erhalten.
+
+---
+
+## Dataclasses
+
+--- 
 
 ## Generic Types
 
@@ -943,7 +1011,7 @@ print(p)          # Point(x=3, y=4)
 
 ---
 
-## Dictionaries
+## Dictionaries `dict`
 
 Ordered, mutable key-value maps. Keys must be hashable.
 
@@ -984,7 +1052,7 @@ d.update({"e": 5, "f": 6})   # merge
 d.setdefault("g", 99)         # inserts g=99 and returns 99
 
 # Iterate
-for key, value in d.items():
+for key, value in d.item():
     print(f"{key}: {value}")
 
 # Remove
@@ -1602,6 +1670,9 @@ print(pretty_json({"b": 2, "a": 1}))
 
 ## `enumerate` & `zip`
 
+- `zip(ite1, iter2)` combines two or more iteratbles into one iteratable object. For example: if we have two list 
+we want to iterate on, `zip` would return a list of tuples of the members of both list at the same position.
+
 ```python
 # enumerate — get index and value together
 fruits = ["apple", "banana", "cherry"]
@@ -1614,6 +1685,7 @@ for i, fruit in enumerate(fruits, start=1):   # start from 1
 # zip — iterate multiple sequences in parallel
 names  = ["Alice", "Bob", "Carol"]
 scores = [95, 87, 92]
+
 for name, score in zip(names, scores):
     print(f"{name}: {score}")
 
@@ -1633,7 +1705,7 @@ for a, b in zip_longest([1, 2, 3], ["a", "b"], fillvalue="-"):
 
 ---
 
-## `random` Module
+## The `random` Module
 
 ```python
 import random
@@ -3329,4 +3401,11 @@ if __name__ == "__main__":
         print(f"[{status}] {value}")
 ```
 
+---- 
 
+## DateTime 
+
+
+```py 
+X_labels = [x.strftime("%Y-%m-%d") for x in df.index]
+```

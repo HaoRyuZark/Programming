@@ -28,6 +28,14 @@ Those modules shoudl be independent yet able to work together. Another aspect, c
 
 --- 
 
+## Portable Operating System Interface (POSIX)
+
+**POSIX** is a family of standards derived fomr the UNIX operating system designed to ensure compatibility across 
+different versions of UNIS and its derivatives by setting rules for file reading and writing, command names, etc. 
+
+
+--- 
+
 ## Init System
 
 ---

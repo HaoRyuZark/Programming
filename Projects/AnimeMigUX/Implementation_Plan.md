@@ -31,6 +31,9 @@ MyAnimeList or external sources. (Data Pipeline).
 
 --- 
 
+--- 
+
+
 ## Backend 
 
 --- 
@@ -40,6 +43,26 @@ MyAnimeList or external sources. (Data Pipeline).
 --- 
 
 ## Database 
+
+The database layer of this application should be simple yet functional. We habe the following entites:
+
+- User: has **name**, **email** and **password**.
+
+- Author: **name**
+
+- Anime/Manga/Novel: **title**, **genre**, **author**,
+
+
+Links: 
+
+- [Jikan API](https://jikan.moe/): this our main source of data which we will use to migrate the data to our own database.
+- [MyAnimeList](https://myanimelist.net/): this is the main source of data for the Jikan API.
+- [MangaDex](https://mangadex.org/): this a specialized source of data for manga and light novels which we will use to migrate the data to our own database. 
+- [AniList](https://anilist.co/): this is a specialized source of data for anime and manga which we will use to migrate the data to our own database.
+- [Anime News Network](https://www.animenewsnetwork.com/): we will use this for news and announcements related to anime, manga, and light novels.
+- [MobyGames](https://www.mobygames.com/): we will use this for news and announcements related to video games.
+
+I will take a look at the different API specifications to decide the schema to be used. Other sources will be used to fetch news and announcements we will use to update the database.
 
 --- 
 

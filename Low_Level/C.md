@@ -223,8 +223,12 @@ string type—just character arrays.
 
 ```c
 char str1[] = "Hello";       // Size is automatically 6 (5 + null terminator)
-char str2[10] = "Hi";        // Manually specified size, with extra space
-char *str3 = "World";        // Pointer to a string literal (read-only)
+
+char str2[10] = "Hi";        // Manually specified size, with extra space (will be null-terminated)
+
+char *str3 = "World";        // Pointer to a string literal (read-only) (has a null terminator)
+
+char str4[5] = {'H', 'e', 'l', 'l', 'o'}; // Not null-terminated, not a proper C string
 ```
 
 #### Char Buffers

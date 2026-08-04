@@ -338,3 +338,15 @@ There are mainly three types of patterns:
 
 --- 
 
+## Scalability
+
+**Scalability** refers to the capacity of a system to maintain functionality, maintainability and const while growing in size.
+Systems when growing can be expanded into ways: 
+
+- **Horizontal**: which refers to the maximization of the resources of the CPU by parallelism, threading, machine code optimization, etc.
+This can become really complex and become complex to maintain, but reduces costs.
+
+- **Vertical**: refers to expansion of hardware and resources. On the one side, new hardware can be expensive and also be detrimental to a system if not handled properly, on the 
+other side, thsis is sometimes easier than complex machine code optimization.
+
+--- 

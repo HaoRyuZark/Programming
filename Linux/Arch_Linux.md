@@ -461,7 +461,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
    lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
-   julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl`
+   julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl imv`
 
 -*Packet plus purpose:**
 
@@ -563,6 +563,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - go 
 - composer
 - pkgconf openssl
+- imv
 
 ---
 
