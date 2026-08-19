@@ -1008,35 +1008,45 @@ and port numbers to allow multiple devices to share a single public IP address. 
 - **Dynamic**: Mapping is created on-the-fly as needed, without pre-configuration, but the admin defines the pre and post-translation attributes.
 Only the translation is done by the device.
 
-### Static NAT
+#### Static NAT
 
-- The purpose is to make an internal resource externally accessible.
-- Inbound packet: destination is translated.
-- Outbound packet: source is translated.
-- Packets are translated in both directions.
+The purpose is to make an internal resource externally accessible.
+
+- **Inbound packet**: destination is translated.
+
+- **Outbound packet**: source is translated.
+
+- Packets are translated in **both directions**.
+
 - Does not conserve addresses, as each internal resource requires a unique public IP address.
 
-### Static PAT
+#### Static PAT
 
-- Similar to the static NAT, but it also translates the port number.
-- Multiple servers can use one public IP address, but they must use different port numbers to distinguish between them.
+Similar to the static NAT, but it also translates the port number.
+
+- Multiple servers can use one public IP address, but they must use **different port numbers** to distinguish between them.
+
 - Conserves address-space as mentioned in the introduction.
 
-### Dynamic NAT
+#### Dynamic NAT
 
 The same as static NAT, but the mapping is created on-the-fly as needed, without pre-configuration, but the admin defines the pre and post-translation attributes.
 
 - Mostly unused, as it does not conserve addresses and it is not flexible.
+
 - Can be used for lazy static NAT.
 
-### Dynamic PAT
+#### Dynamic PAT
 
 Is similar to the dynamic NAT, but it also translates the port number. Multiple servers can use one public IP address, but they must use different port numbers to distinguish 
 between them. 
 
 - Conserves address-space.
-- Traffic is unidirectional, meaning that only outbound traffic is translated. Inbound traffic is not allowed unless a static mapping is created for it.
-- The ports in the outbound side is also randomized.
+
+- Traffic is unidirectional, meaning that only **outbound** traffic is translated. Inbound traffic is not allowed unless a static mapping is created for it.
+
+- The ports in the outbound side are also **randomized**.
+
 - Each shared public IP address allows 65.000 simultaneous connections.
 
 ### Policy NAT
@@ -2413,7 +2423,7 @@ for websites to remember stateful information or to record the user's browsing a
 Set-Cookie: <name>=<value>; Expires=<date>; Path=<path>; Domain=<domain>; Secure; HttpOnly; SameSite=<samesite>
 ```
 
-Cookies are allways sent to the server with every request to the same domain, which allows the server to identify the user and maintain session state.
+Cookies are always sent to the server with every request to the same domain, which allows the server to identify the user and maintain session state.
 
 --- 
 
@@ -2534,6 +2544,7 @@ A common case of this practice is with OAuth 2.0, where a user can grant access 
 
 A **session** is a way to maintain state between a client and a server across multiple requests. They are not 
 directly supported by the HTTP protocol, which is stateless. Sessions are typically managed using session IDs stored in cookies or URL parameters.
+These session IDs have a limited lifespan, once expired, the session is no longer valid.
 
 They are handled by the **server** which generates a unique session ID for each user and stores it in a database or memory. The session ID is then sent to the client as a cookie or URL parameter, 
 which is included in subsequent requests to the server. This sessions IDs should be **randomly generated** and **hard to guess** to prevent session hijacking. 
@@ -2604,17 +2615,4 @@ compares it to the transmitted checksum to verify data integrity.
 
 It mostly used **twisted pair cables** which consist of 4-color wires twisted with or without a shield.
 
---- 
-
-## Signal Length As Time 
-
-The time unit depends strongly on the speed of the cable. 
-
-
-| Unit | Time | 
-|-------|------|
-| 1 bit | 100 ns | 
-| 1 byte| |
-| 1 MGb |   | 
-| 1 GB | | 
-| 1 TR | |
+---

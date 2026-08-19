@@ -5,11 +5,12 @@ related to the project of hosting the internet locally.
 
 --- 
 
-## Target Media 
+## Objectives
 
 - **Animes**
-- **Mange**
+- **Mangas**
 - **Books**
+- **Games**
 - **Wikipedia**
 - **Images** (own and external)
 - **Videos**
@@ -17,8 +18,11 @@ related to the project of hosting the internet locally.
 - **Movies**
 - **WebPages**
 - **Documetations**
-- **Repos** 
-- **LLM**
+- **Repositories** 
+- **LLMs**
+- **Minecraft Server**
+- **VPN**
+- **Backup** 
 
 --- 
 
@@ -30,8 +34,10 @@ related to the project of hosting the internet locally.
 
 - Docker 
 - Virtual Machines
+- OpenMediaVault
 - JellyFish 
 - Kiwix
 - VPN
-- 
+- Navidrome
+- ProxMox
 

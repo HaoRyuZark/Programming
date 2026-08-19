@@ -4,11 +4,28 @@ Continuous Integration (CI) is a software development practice where developers 
 often multiple times a day. Each merge triggers an automated build and test process to detect integration issues early, ensuring faster feedback and 
 higher software quality. 
 
+The configuration files are just a glorified checklist of steps to be ran after each commit is pushed to an specific branch.
+
+---
+
+## Manual Setup 
+
+Theoretically, we can emulate a platform like GitHub Actions locally on our machine, but this is not scalable for projects with other 
+developers. In case you still want to set up a pipeline for the your project as a learning experience, then you can follow the following schema. 
+
+1. Write a script which gets triggered every time a commit is triggered.
+
+2. Launch a container with the necessary enviroment-components. 
+
+3. Define a script with the commands to follow after a commit is made: running tests, checking integrity, building, etc. 
+
+4. If you wish to do so, you can also set up a deployment pipe-line which will deliver the new code to the your customers. 
+
 --- 
 
 ## Feature Driven Development
 
-Agile framework in wich software is planned and developed as a list of features. It can be mixed with classical 
+Agile framework in which software is planned and developed as a list of features. It can be mixed with classical 
 scrum in the way that features are listed as items of the product backlog. It also allows for shorter release 
 cycles by adding features in an incremental way.
 
@@ -126,42 +143,43 @@ software development and IT operations teams.
 
 #### 1. **Jenkins**
 
-* Open-source automation server.
-* Highly customizable with plugins.
-* Supports pipelines as code.
+- Open-source automation server.
+- Highly customizable with plugins.
+- Supports pipelines as code.
 
 #### 2. **GitHub Actions**
 
-* CI/CD built into GitHub repositories.
-* Easy YAML-based workflows.
-* Strong community integrations.
+- CI/CD built into GitHub repositories.
+- Easy YAML-based workflows.
+- Strong community integrations.
 
 #### 3. **GitLab CI/CD**
 
-* Integrated with GitLab platform.
-* Built-in container registry.
-* Supports auto DevOps pipelines.
+- Integrated with GitLab platform.
+- Built-in container registry.
+- Supports auto DevOps pipelines.
 
 #### 4. **CircleCI**
 
-* Cloud-native CI/CD platform.
-* Optimized for parallelization.
-* Strong Docker support.
+- Cloud-native CI/CD platform.
+- Optimized for parallelization.
+- Strong Docker support.
 
 #### 5. **Travis CI**
 
-* Hosted CI/CD service.
-* Simple YAML-based configuration.
-* Free for open-source projects.
+- Hosted CI/CD service.
+- Simple YAML-based configuration.
+- Free for open-source projects.
 
 #### 6. **Azure DevOps Pipelines**
 
-* Microsoft’s CI/CD solution.
-* Strong integration with Azure cloud.
-* Multi-language and platform support.
+- Microsoft’s CI/CD solution.
+- Strong integration with Azure cloud.
+- Multi-language and platform support.
 
+--- 
 
-### Example CI Workflow (Simplified)
+## Example CI Workflow (GitHub Actions)
 
 ```yaml
 # Example GitHub Actions CI Workflow
@@ -188,17 +206,24 @@ jobs:
         run: npm test
 ```
 
+### Configurations Options
+
+- ``:
+
+
 ### Best Practices in CI
 
-* Commit small, frequent changes.
-* Keep builds fast and reliable.
-* Use version control for pipeline configurations.
-* Run tests in parallel to reduce time.
-* Fail fast: stop pipelines early when errors occur.
-* Monitor pipeline health with dashboards.
-* Secure the pipeline (secrets, dependencies, access).
+- Commit small, frequent changes.
+- Keep builds fast and reliable.
+- Use version control for pipeline configurations.
+- Run tests in parallel to reduce time.
+- Fail fast: stop pipelines early when errors occur.
+- Monitor pipeline health with dashboards.
+- Secure the pipeline (secrets, dependencies, access).
 
-### CI vs. CD
+--- 
+
+## CI vs. CD
 
 
 | Aspect         | Continuous Integration (CI) | Continuous Delivery/Deployment (CD) |

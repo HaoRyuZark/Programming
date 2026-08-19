@@ -1082,8 +1082,8 @@ df_filtered = df.groupby("Category").filter(lambda g: len(g) > 10)
 
 ## Merging, Joining & Concatenation
 
-The **join-operations** behave like SQL, while **merge** works like a database join. The **concat** function is more general and can
-be used for simple stacking of DataFrames.
+
+**Merging** behaves like SQL-join and it is used to combine dataframes side by side, while **concat** stacks them vertically.
 
 - `pd.merge(left, right, how='inner', on=None, left_on=None, right_on=None, left_index=False, right_index=False, suffixes=('_x', '_y'))`: merges two DataFrames 
 (SQL-style join).
@@ -1156,7 +1156,7 @@ to choose multiple columns for the index and labels and can handle duplicates. `
   - `fill_value`: value to replace NaN in the result.
   - `margins`: if `True`, adds row/column totals.
 
-- `df.melt(id_vars=None, value_vars=None, var_name='variable', value_name='value')`: unpivots — converts columns to rows (wide → long format).
+- `df.melt(id_vars=None, value_vars=None, var_name='variable', value_name='value')`: unpivots, converts columns to rows (wide -> long format).
   - `id_vars`: column(s) to keep as identifier variables.
   - `value_vars`: column(s) to unpivot. If `None`, all columns not in `id_vars` are used.
   - `var_name`: name for the variable column.

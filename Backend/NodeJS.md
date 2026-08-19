@@ -1023,59 +1023,1586 @@ Template-engine specific syntax is used to embed variables, declare dynamic cont
 
 ## Cookies & Sessions
 
-A main problem about NodeJS is that variables and state in general gets lost once the script terminates; 
-to solve this problem we use so called **cookies** and **sessions** to store this data across scripts inside 
-the headers of our HTTP request and responses.
+Cookies store small pieces of data on the **client**; sessions store data on the **server** keyed by a session ID sent in a cookie.
 
-> Cookies store information on the client side, while sessions do it for the server side
-
-**Cookie Example**: 
-
-```http 
-HTTP/1.1 200 OK
-Content-type: text/html
-Set-Cookie: name=value
-Set-Cookie: foo=bar; Expires=Wed, 09 Jun 2021 10:18:14 GMT
-...
+```bash
+npm install cookie-parser express-session
 ```
 
-Using express, we can achieve this behavior via 
+### Cookies (`cookie-parser`)
 
-```js 
-res.cookie('name', 'value' [, options])
-```
+- `cookieParser(secret, options)`: middleware that parses `Cookie` headers into `req.cookies` and `req.signedCookies`.
+  - `secret`: string or array used to sign cookies (enables tamper detection).
 
-Example: 
+- `res.cookie(name, value, options)`: sets a `Set-Cookie` header.
+  - `maxAge`: max age in milliseconds.
+  - `expires`: explicit `Date` object.
+  - `httpOnly`: if `true`, inaccessible to JavaScript (XSS protection).
+  - `secure`: if `true`, sent only over HTTPS.
+  - `sameSite`: `'Strict'`, `'Lax'`, or `'None'` (CSRF protection).
+  - `signed`: if `true`, signs the cookie with the parser secret.
+  - `domain`, `path`: scope the cookie.
+
+- `res.clearCookie(name, options)`: expires the cookie.
 
 ```js
-res.cookie('rememberme', '1',
-{ expires: new Date(Date.now() + 900000),
-path: '/' })
+import express from "express";
+import cookieParser from "cookie-parser";
+
+const app = express();
+app.use(cookieParser("mySigningSecret"));
+
+// Set cookies
+app.get("/set", (req, res) => {
+  res.cookie("username", "alice", {
+    maxAge:   7 * 24 * 60 * 60 * 1000,  // 7 days in ms
+    httpOnly: true,                       // not readable by JS — XSS protection
+    secure:   true,                       // HTTPS only
+    sameSite: "Lax",                      // CSRF protection
+  });
+
+  res.cookie("token", "abc123", { signed: true });  // tamper-proof
+
+  res.json({ message: "Cookies set" });
+});
+
+// Read cookies
+app.get("/read", (req, res) => {
+  console.log(req.cookies);              // unsigned cookies
+  console.log(req.signedCookies);       // signed cookies (verified)
+  res.json({ user: req.cookies.username });
+});
+
+// Clear a cookie
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
+});
 ```
 
-**Session Example**:
+**Cookie attribute quick reference:**
 
-```js 
+| Attribute | Purpose |
+|-----------|---------|
+| `httpOnly` | Prevents JS access — mitigates XSS |
+| `secure` | HTTPS only |
+| `sameSite: 'Strict'` | Cookie never sent cross-site |
+| `sameSite: 'Lax'` | Sent on top-level navigation (default in modern browsers) |
+| `sameSite: 'None'` | Always sent — requires `secure: true` |
+| `maxAge` | Seconds until expiry (relative) |
+| `expires` | Absolute expiry `Date` |
+
+---
+
+### Sessions (`express-session`)
+
+- `session(options)`: session middleware. Stores session data server-side; sends only a session ID cookie to the client.
+  - `secret`: string or array — signs the session ID cookie. **Required**. Use a strong random value from env.
+  - `resave`: if `false`, only saves the session if it was modified (recommended: `false`).
+  - `saveUninitialized`: if `false`, does not store empty sessions (recommended: `false`).
+  - `cookie`: options for the session ID cookie (`maxAge`, `secure`, `httpOnly`, `sameSite`).
+  - `store`: session store — defaults to in-memory (not suitable for production). Use `connect-pg-simple`, `connect-redis`, etc.
+
+```bash
+npm install express-session connect-pg-simple
+```
+
+```js
+import session from "express-session";
+import pgSession from "connect-pg-simple";
+
+const PgStore = pgSession(session);
+
 app.use(session({
-    secret: 'ilovenode',
-    cookie: { secure: true,
-    domain:'yourdomain.com'},
-  }
-})
+  secret:            process.env.SESSION_SECRET,
+  resave:            false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge:   24 * 60 * 60 * 1000,  // 1 day
+    httpOnly: true,
+    secure:   process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+  },
+  store: new PgStore({
+    conString: process.env.DATABASE_URL,  // PostgreSQL store
+    tableName: "sessions",
+  }),
+}));
+
+// Set session data
+app.post("/login", async (req, res) => {
+  const user = await authenticateUser(req.body.email, req.body.password);
+  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
+  req.session.userId = user.id;          // store arbitrary data in session
+  req.session.role   = user.role;
+  req.session.save((err) => {            // explicitly save before redirecting
+    if (err) return next(err);
+    res.json({ message: "Logged in" });
+  });
+});
+
+// Read session data
+app.get("/profile", (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: "Not authenticated" });
+  res.json({ userId: req.session.userId, role: req.session.role });
+});
+
+// Destroy session on logout
+app.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) return res.status(500).json({ error: "Logout failed" });
+    res.clearCookie("connect.sid");      // clear the session ID cookie
+    res.json({ message: "Logged out" });
+  });
+});
 ```
 
+---
 
----- 
+## Environment Variables (dotenv)
 
-## Websockets
+**dotenv** loads variables from a `.env` file into `process.env`. Never commit `.env` to version control — commit `.env.example` instead.
 
+```bash
+npm install dotenv
+```
 
---- 
+```
+# .env
+PORT=3000
+NODE_ENV=development
+DATABASE_URL=postgres://user:pass@localhost:5432/mydb
+JWT_SECRET=supersecretkey32chars
+JWT_EXPIRES_IN=7d
+BCRYPT_ROUNDS=12
+```
 
+```js
+// Load at the very top of the entry file — before any other imports
+import "dotenv/config";          // ES6 (Node 18+)
+// or
+require("dotenv").config();      // CommonJS
+
+const port   = parseInt(process.env.PORT)   || 3000;
+const dbUrl  = process.env.DATABASE_URL;
+
+// Validate required variables at startup — fail fast rather than crash later
+const required = ["DATABASE_URL", "JWT_SECRET"];
+for (const key of required) {
+  if (!process.env[key]) {
+    console.error(`Missing required env var: ${key}`);
+    process.exit(1);
+  }
+}
+```
+
+> Use `dotenv-expand` to allow variable interpolation (`API_URL=http://localhost:${PORT}/api`).
+
+---
+
+## JWT Authentication
+
+JSON Web Tokens are the standard for stateless API authentication. The server signs a token containing the user's claims; the client sends it on every subsequent request.
+
+```bash
+npm install jsonwebtoken bcrypt
+```
+
+- `jwt.sign(payload, secret, options)`: creates a signed token.
+  - `payload`: data to encode — keep it small (it is base64-encoded, not encrypted).
+  - `secret`: secret key (HS256) or RSA private key (RS256).
+  - `options.expiresIn`: duration string — `'15m'`, `'1h'`, `'7d'`.
+  - `options.algorithm`: default `'HS256'`.
+
+- `jwt.verify(token, secret, options)`: verifies signature and expiry. Throws `JsonWebTokenError` or `TokenExpiredError` on failure.
+
+- `jwt.decode(token)`: decodes without verification — **never trust the result for auth decisions**.
+
+```js
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// --- Helpers ---
+function generateAccessToken(userId, role) {
+  return jwt.sign({ userId, role }, JWT_SECRET, { expiresIn: "15m" });
+}
+
+function generateRefreshToken(userId) {
+  return jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
+}
+
+// --- Login route ---
+app.post("/api/auth/login", async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match)  return res.status(401).json({ error: "Invalid credentials" });
+
+    const accessToken  = generateAccessToken(user.id, user.role);
+    const refreshToken = generateRefreshToken(user.id);
+
+    // Store refresh token in an httpOnly cookie — not in localStorage
+    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true, sameSite: "Strict" });
+    res.json({ accessToken, user: { id: user.id, email: user.email, role: user.role } });
+  } catch (err) { next(err); }
+});
+
+// --- Auth middleware ---
+export function authenticate(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+  try {
+    req.user = jwt.verify(authHeader.slice(7), JWT_SECRET); // attaches { userId, role, iat, exp }
+    next();
+  } catch (err) {
+    const msg = err.name === "TokenExpiredError" ? "Token expired" : "Invalid token";
+    res.status(401).json({ error: msg });
+  }
+}
+
+// --- Role-based authorisation middleware ---
+export function authorize(...roles) {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ error: "Insufficient permissions" });
+    }
+    next();
+  };
+}
+
+// --- Refresh token route ---
+app.post("/api/auth/refresh", (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (!token) return res.status(401).json({ error: "No refresh token" });
+  try {
+    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    const accessToken = generateAccessToken(userId, "user");  // re-fetch role from DB in production
+    res.json({ accessToken });
+  } catch {
+    res.status(401).json({ error: "Invalid refresh token" });
+  }
+});
+
+// --- Protected routes ---
+app.get("/api/profile",             authenticate, getProfile);
+app.delete("/api/users/:id",        authenticate, authorize("admin"), deleteUser);
+app.get("/api/admin/dashboard",     authenticate, authorize("admin", "moderator"), getDashboard);
+```
+
+---
+
+## CORS
+
+Cross-Origin Resource Sharing — required when your frontend (e.g. React on port 5173) calls your API (port 3000).
+
+```bash
+npm install cors
+```
+
+- `cors(options)`: returns middleware that sets CORS headers on responses.
+  - `origin`: allowed origins — string, array, regex, or a `(origin, callback)` function.
+  - `methods`: allowed HTTP verbs (default: `'GET,HEAD,PUT,PATCH,POST,DELETE'`).
+  - `credentials`: if `true`, allows cookies and `Authorization` headers cross-origin.
+  - `allowedHeaders`: headers the client may send.
+  - `exposedHeaders`: headers the browser is allowed to read from the response.
+  - `maxAge`: seconds to cache the preflight response.
+
+```js
+import cors from "cors";
+
+// Allow all origins — development only
+app.use(cors());
+
+// Single origin
+app.use(cors({
+  origin:         "https://myfrontend.com",
+  methods:        ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  credentials:    true,                        // allow cookies + auth headers
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+// Multiple allowed origins — dynamic check
+const allowedOrigins = ["https://myfrontend.com", "https://admin.myfrontend.com"];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // allow server-to-server (no origin) or whitelisted origins
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
+```
+
+---
+
+## Express Error Handling
+
+Express error-handling middleware takes **four parameters** `(err, req, res, next)` and must be registered **after** all routes.
+
+```js
+// Custom operational error class
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode  = statusCode;
+    this.isOperational = true;   // distinguishes expected errors from bugs
+  }
+}
+
+// 404 handler — catches all unmatched routes
+app.use((req, res, next) => {
+  next(new AppError(`Route ${req.originalUrl} not found`, 404));
+});
+
+// Global error handler — must have exactly 4 params
+app.use((err, req, res, next) => {
+  const status  = err.statusCode || 500;
+  const message = err.message    || "Internal Server Error";
+
+  if (status >= 500) console.error(err.stack);  // log unexpected errors
+
+  // Sequelize validation errors
+  if (err.name === "SequelizeValidationError") {
+    const details = err.errors.map(e => ({ field: e.path, message: e.message }));
+    return res.status(422).json({ error: "Validation failed", details });
+  }
+
+  // Sequelize unique constraint
+  if (err.name === "SequelizeUniqueConstraintError") {
+    return res.status(409).json({ error: "Resource already exists" });
+  }
+
+  // JWT errors
+  if (err.name === "JsonWebTokenError") return res.status(401).json({ error: "Invalid token" });
+  if (err.name === "TokenExpiredError") return res.status(401).json({ error: "Token expired" });
+
+  res.status(status).json({
+    error: message,
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  });
+});
+
+// In async route handlers — pass errors to next()
+app.get("/api/users/:id", async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) return next(new AppError("User not found", 404));
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Async wrapper — eliminates try/catch boilerplate in every handler
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
+app.get("/api/posts", asyncHandler(async (req, res) => {
+  const posts = await Post.findAll();
+  res.json(posts);
+}));
+```
+
+---
+
+## Security & Rate Limiting
+
+### Helmet — Security Headers
+
+```bash
+npm install helmet
+```
+
+`helmet()` sets security-related HTTP headers (Content-Security-Policy, X-Frame-Options, etc.).
+
+```js
+import helmet from "helmet";
+app.use(helmet());   // apply all default headers
+
+// Custom CSP
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc:  ["'self'", "https://cdn.example.com"],
+      imgSrc:     ["'self'", "data:", "https:"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
+```
+
+### express-rate-limit
+
+```bash
+npm install express-rate-limit
+```
+
+- `rateLimit(options)`: creates a rate-limiting middleware.
+  - `windowMs`: time window in milliseconds.
+  - `max`: max requests per window per IP.
+  - `message`: response sent when the limit is exceeded.
+  - `standardHeaders`: sends `RateLimit-*` headers (recommended: `true`).
+  - `legacyHeaders`: disables old `X-RateLimit-*` headers (recommended: `false`).
+
+```js
+import rateLimit from "express-rate-limit";
+
+// Global limiter — all routes
+const limiter = rateLimit({
+  windowMs:        15 * 60 * 1000,   // 15 minutes
+  max:             100,               // 100 requests per window
+  standardHeaders: true,
+  legacyHeaders:   false,
+  message:         { error: "Too many requests, please try again later." },
+});
+app.use(limiter);
+
+// Stricter limiter for auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max:      10,                       // 10 login attempts per 15 minutes
+  message:  { error: "Too many login attempts." },
+});
+app.post("/api/auth/login",    authLimiter, loginHandler);
+app.post("/api/auth/register", authLimiter, registerHandler);
+```
+
+---
+
+## WebSockets
+
+WebSockets provide full-duplex communication over a single persistent TCP connection. Unlike HTTP, both sides can push messages at any time without a request-response cycle.
+
+### `ws` — Bare WebSocket Server
+
+```bash
+npm install ws
+```
+
+- `new WebSocketServer({ port, server })`: creates a WebSocket server.
+  - `port`: listen on a dedicated port.
+  - `server`: attach to an existing HTTP server (same port as Express).
+
+- `wss.on('connection', (ws, req) => {})`: fires when a client connects.
+  - `ws`: the socket for this specific client.
+  - `req`: the underlying HTTP upgrade request (useful for auth headers / cookies).
+
+- `ws.on('message', (data, isBinary) => {})`: incoming message from this client.
+
+- `ws.send(data, callback)`: sends data to this client.
+
+- `ws.close(code, reason)`: closes the connection.
+
+- `ws.readyState`: `ws.OPEN`, `ws.CLOSING`, `ws.CLOSED`.
+
+- `wss.clients`: `Set` of all active `WebSocket` connections.
+
+```js
+import { WebSocketServer } from "ws";
+import http from "http";
+import express from "express";
+
+const app        = express();
+const httpServer = http.createServer(app);
+const wss        = new WebSocketServer({ server: httpServer });  // share port with Express
+
+// Client metadata map
+const clients = new Map();   // ws → { id, joinedAt }
+
+wss.on("connection", (ws, req) => {
+  const clientId = req.headers["sec-websocket-key"];
+  clients.set(ws, { id: clientId, joinedAt: Date.now() });
+  console.log(`Client connected: ${clientId}`);
+
+  ws.send(JSON.stringify({ type: "welcome", id: clientId }));
+
+  ws.on("message", (data) => {
+    const msg = JSON.parse(data.toString());
+
+    // Echo back to sender
+    ws.send(JSON.stringify({ type: "echo", payload: msg }));
+
+    // Broadcast to all other clients
+    for (const [client] of clients) {
+      if (client !== ws && client.readyState === ws.OPEN) {
+        client.send(JSON.stringify({ type: "broadcast", payload: msg }));
+      }
+    }
+  });
+
+  ws.on("close", (code, reason) => {
+    clients.delete(ws);
+    console.log(`Disconnected: ${code}`);
+  });
+
+  ws.on("error", (err) => console.error("WS error:", err));
+});
+
+// Keepalive — detect dead connections
+wss.on("connection", (ws) => { ws.isAlive = true; });
+ws.on("pong", () => { ws.isAlive = true; });
+
+const heartbeat = setInterval(() => {
+  wss.clients.forEach((ws) => {
+    if (!ws.isAlive) return ws.terminate();
+    ws.isAlive = false;
+    ws.ping();
+  });
+}, 30_000);
+
+wss.on("close", () => clearInterval(heartbeat));
+
+httpServer.listen(3000);
+```
+
+**Browser client:**
+
+```js
+const ws = new WebSocket("ws://localhost:3000");
+ws.onopen    = () => ws.send(JSON.stringify({ type: "hello" }));
+ws.onmessage = (e) => console.log(JSON.parse(e.data));
+ws.onerror   = (e) => console.error(e);
+ws.onclose   = ()  => console.log("Disconnected");
+```
+
+---
+
+### Socket.IO — Rooms, Namespaces, Events
+
+Socket.IO adds auto-reconnection, rooms, namespaces, event acknowledgements, and a long-polling fallback.
+
+```bash
+npm install socket.io          # server
+npm install socket.io-client   # client (or use CDN)
+```
+
+- `new Server(httpServer, options)`: creates a Socket.IO server.
+  - `cors`: CORS options.
+  - `pingTimeout` / `pingInterval`: keepalive tuning.
+
+- `io.on('connection', (socket) => {})`: new client connected.
+
+- `socket.emit(event, ...args)`: send to this client only.
+
+- `socket.broadcast.emit(event, ...args)`: send to all clients **except** sender.
+
+- `io.emit(event, ...args)`: send to **all** clients.
+
+- `socket.join(room)`: add socket to a named room.
+
+- `io.to(room).emit(event, ...args)`: broadcast to all sockets in a room.
+
+- `socket.to(room).emit(event, ...args)`: broadcast to room **except** sender.
+
+- `socket.leave(room)`: leave a room.
+
+- `socket.id`: unique identifier for this connection.
+
+```js
+// server.js
+import { Server } from "socket.io";
+import { createServer } from "http";
+import express from "express";
+
+const app  = express();
+const http = createServer(app);
+const io   = new Server(http, {
+  cors: { origin: "http://localhost:5173", credentials: true }
+});
+
+io.on("connection", (socket) => {
+  console.log("Connected:", socket.id);
+
+  // Join a chat room
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    io.to(room).emit("user_joined", { userId: socket.id, room });
+  });
+
+  // Relay a message within a room
+  socket.on("send_message", ({ room, message }) => {
+    io.to(room).emit("receive_message", {
+      from:      socket.id,
+      message,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  // Private message to a specific socket ID
+  socket.on("private_message", ({ to, message }) => {
+    socket.to(to).emit("receive_private", { from: socket.id, message });
+  });
+
+  // Acknowledgement — client receives a server confirmation
+  socket.on("save_data", (data, ack) => {
+    // process data...
+    ack({ status: "ok", id: data.id });
+  });
+
+  socket.on("disconnect", (reason) => {
+    console.log(`Disconnected ${socket.id}: ${reason}`);
+  });
+});
+
+http.listen(3000);
+```
+
+**React / browser client:**
+
+```js
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3000", { withCredentials: true });
+
+socket.on("connect", () => {
+  socket.emit("join_room", "general");
+});
+
+socket.emit("send_message", { room: "general", message: "Hello!" });
+
+socket.on("receive_message", ({ from, message, timestamp }) => {
+  console.log(`[${timestamp}] ${from}: ${message}`);
+});
+
+// Acknowledgement
+socket.emit("save_data", { id: 42 }, (res) => {
+  console.log("Ack:", res.status);
+});
+```
+
+**Namespaces** — logical separation within one server (separate CORS / middleware per namespace):
+
+```js
+const chatNs  = io.of("/chat");
+const adminNs = io.of("/admin");
+
+adminNs.use((socket, next) => {  // middleware only on /admin
+  if (!isAdmin(socket.handshake.auth.token)) return next(new Error("Forbidden"));
+  next();
+});
+
+chatNs.on("connection",  (socket) => { /* chat logic */ });
+adminNs.on("connection", (socket) => { /* admin logic */ });
+```
+
+---
 
 ## Sequelize.js
 
---- 
+**Sequelize** is a promise-based ORM for Node.js supporting PostgreSQL, MySQL, MariaDB, SQLite, and MSSQL.
+It maps ES6 classes to database tables and provides a full query API without writing raw SQL.
+
+```bash
+npm install sequelize
+npm install pg pg-hstore   # PostgreSQL
+npm install mysql2         # MySQL / MariaDB
+npm install sqlite3        # SQLite
+```
+
+---
+
+### Connection & Setup
+
+- `new Sequelize(database, username, password, options)`: creates a Sequelize instance.
+  - `dialect`: `'postgres'`, `'mysql'`, `'mariadb'`, `'sqlite'`, `'mssql'`.
+  - `host`, `port`: database server address.
+  - `logging`: `console.log` to print SQL, or `false` to silence.
+  - `pool`: `{ max, min, acquire, idle }` — connection pool settings.
+  - `storage`: path to the SQLite file (SQLite only).
+
+- `sequelize.authenticate()`: tests the connection. Returns a promise.
+
+- `sequelize.sync(options)`: creates/updates tables to match models.
+  - `force: true`: drops and re-creates all tables — **dev only**.
+  - `alter: true`: alters tables non-destructively — use with caution.
+
+- `sequelize.close()`: closes the connection pool.
+
+```js
+// db.js
+import { Sequelize } from "sequelize";
+
+const sequelize = new Sequelize("mydb", "postgres", "password", {
+  dialect: "postgres",
+  host:    "localhost",
+  port:    5432,
+  logging: false,
+  pool: { max: 10, min: 0, acquire: 30_000, idle: 10_000 },
+});
+
+// From DATABASE_URL (12-factor / Heroku / Railway)
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  dialectOptions: { ssl: { require: true, rejectUnauthorized: false } },
+  logging: false,
+});
+
+try {
+  await sequelize.authenticate();
+  console.log("Database connected.");
+} catch (err) {
+  console.error("Connection failed:", err);
+  process.exit(1);
+}
+
+export default sequelize;
+```
+
+---
+
+### Defining Models
+
+- `Model.init(attributes, options)`: registers the model with the Sequelize instance.
+  - `attributes`: column definitions — each key maps to a `DataTypes` config.
+  - `options.sequelize`: the Sequelize instance (required).
+  - `options.modelName`: class name used as the model name.
+  - `options.tableName`: explicit DB table name (defaults to pluralised class name).
+  - `options.timestamps`: adds `createdAt` / `updatedAt` columns (default `true`).
+  - `options.paranoid`: adds `deletedAt` and soft-deletes instead of hard-deletes.
+  - `options.underscored`: uses `snake_case` column names in the DB.
+  - `options.indexes`: array of index definitions.
+
+**DataTypes quick reference:**
+
+| DataType | SQL equivalent |
+|----------|---------------|
+| `DataTypes.INTEGER` | INT |
+| `DataTypes.BIGINT` | BIGINT |
+| `DataTypes.FLOAT` | FLOAT |
+| `DataTypes.DECIMAL(p, s)` | DECIMAL(p, s) |
+| `DataTypes.STRING` | VARCHAR(255) |
+| `DataTypes.STRING(n)` | VARCHAR(n) |
+| `DataTypes.TEXT` | TEXT |
+| `DataTypes.BOOLEAN` | BOOLEAN |
+| `DataTypes.DATE` | DATETIME / TIMESTAMP |
+| `DataTypes.DATEONLY` | DATE |
+| `DataTypes.UUID` | UUID / CHAR(36) |
+| `DataTypes.UUIDV4` | default value generator |
+| `DataTypes.JSON` | JSON |
+| `DataTypes.JSONB` | JSONB (PostgreSQL) |
+| `DataTypes.ENUM('a','b')` | ENUM |
+| `DataTypes.ARRAY(DataTypes.STRING)` | ARRAY (PostgreSQL only) |
+| `DataTypes.VIRTUAL` | not stored in DB — computed getter |
+
+```js
+// models/User.js
+import { Model, DataTypes } from "sequelize";
+import sequelize from "../db.js";
+
+class User extends Model {}
+
+User.init(
+  {
+    id: {
+      type:          DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey:    true,
+    },
+    uuid: {
+      type:         DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      unique:       true,
+    },
+    email: {
+      type:      DataTypes.STRING,
+      allowNull: false,
+      unique:    true,
+      validate: {
+        isEmail:  true,
+        notEmpty: true,
+      },
+    },
+    password: {
+      type:      DataTypes.STRING,
+      allowNull: false,
+      validate: { len: [8, 128] },
+    },
+    role: {
+      type:         DataTypes.ENUM("user", "admin", "moderator"),
+      defaultValue: "user",
+    },
+    age: {
+      type:     DataTypes.INTEGER,
+      validate: { min: 0, max: 120 },
+    },
+    isActive: {
+      type:         DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    fullName: {
+      type: DataTypes.VIRTUAL,     // computed — not stored
+      get() { return `${this.firstName} ${this.lastName}`; },
+    },
+  },
+  {
+    sequelize,
+    modelName: "User",
+    tableName: "users",
+    timestamps:  true,             // createdAt, updatedAt
+    paranoid:    true,             // soft delete — sets deletedAt instead of removing
+    underscored: true,             // camelCase JS → snake_case DB column
+    indexes: [
+      { fields: ["email"] },
+      { unique: true, fields: ["uuid"] },
+    ],
+  }
+);
+
+export default User;
+```
+
+---
+
+### Hooks (Lifecycle Callbacks)
+
+Hooks execute at specific points in the record's lifecycle — useful for hashing passwords, normalising data, and audit logging.
+
+| Hook | When |
+|------|------|
+| `beforeValidate` / `afterValidate` | Around validation |
+| `beforeCreate` / `afterCreate` | Around INSERT |
+| `beforeUpdate` / `afterUpdate` | Around UPDATE |
+| `beforeSave` / `afterSave` | Before/after INSERT or UPDATE |
+| `beforeDestroy` / `afterDestroy` | Around DELETE |
+| `beforeBulkCreate` / `afterBulkCreate` | Around bulk inserts |
+
+```js
+import bcrypt from "bcrypt";
+
+// Hash password before every create
+User.addHook("beforeCreate", async (user) => {
+  user.password = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_ROUNDS) || 12);
+});
+
+// Hash only if password was changed on update
+User.addHook("beforeUpdate", async (user) => {
+  if (user.changed("password")) {
+    user.password = await bcrypt.hash(user.password, 12);
+  }
+});
+
+// Normalise email
+User.addHook("beforeValidate", (user) => {
+  if (user.email) user.email = user.email.toLowerCase().trim();
+});
+```
+
+---
+
+### CRUD Operations
+
+#### Create
+
+- `Model.create(values, options)`: inserts a new record. Runs validations and hooks.
+  - `fields`: whitelist of allowed columns — prevents mass-assignment vulnerabilities.
+
+- `Model.bulkCreate(records, options)`: inserts multiple records in one statement.
+  - `validate: true`: runs validations on each record.
+  - `ignoreDuplicates: true`: silently skips rows that would violate a unique constraint.
+  - `updateOnDuplicate: [cols]`: upsert — update these columns on conflict (PostgreSQL / MySQL).
+
+- `Model.findOrCreate({ where, defaults })`: finds a matching record or creates one.
+  - Returns `[instance, created]` — `created` is `true` if it was inserted.
+
+```js
+// Single insert
+const user = await User.create({
+  email: "alice@example.com",
+  password: "secret123",
+});
+console.log(user.id, user.createdAt);
+
+// Safe create from user input — only allow these fields
+const user2 = await User.create(req.body, { fields: ["email", "password"] });
+
+// Bulk insert
+await User.bulkCreate(
+  [
+    { email: "bob@example.com",   password: "pass1" },
+    { email: "carol@example.com", password: "pass2" },
+  ],
+  { validate: true }
+);
+
+// Find or create
+const [user3, created] = await User.findOrCreate({
+  where:    { email: "dave@example.com" },
+  defaults: { password: "pass3", role: "user" },
+});
+console.log(created);   // true = inserted, false = already existed
+```
+
+#### Read
+
+- `Model.findAll(options)`: returns all matching records as model instances.
+  - `where`: filter conditions.
+  - `attributes`: columns to SELECT — array or `{ exclude: ['password'] }`.
+  - `order`: `[['createdAt', 'DESC']]`.
+  - `limit` / `offset`: pagination.
+  - `include`: eager-load associated models (JOIN).
+  - `raw: true`: returns plain JS objects (faster for read-only operations).
+  - `group`: GROUP BY columns.
+
+- `Model.findOne(options)`: first matching record or `null`.
+
+- `Model.findByPk(id, options)`: find by primary key.
+
+- `Model.findAndCountAll(options)`: returns `{ count, rows }` — ideal for paginated endpoints.
+
+- `Model.count(options)`: count of matching records.
+
+```js
+// All records
+const users = await User.findAll();
+
+// Filtered, ordered, paginated
+const page  = parseInt(req.query.page) || 1;
+const limit = 10;
+
+const { count, rows } = await User.findAndCountAll({
+  where:      { isActive: true, role: "user" },
+  attributes: { exclude: ["password"] },
+  order:      [["createdAt", "DESC"]],
+  limit,
+  offset:     (page - 1) * limit,
+});
+res.json({ total: count, page, pages: Math.ceil(count / limit), data: rows });
+
+// Find one
+const user = await User.findOne({ where: { email: "alice@example.com" } });
+
+// Find by PK
+const user2 = await User.findByPk(req.params.id);
+if (!user2) return res.status(404).json({ error: "Not found" });
+
+// Count
+const adminCount = await User.count({ where: { role: "admin" } });
+
+// Raw — plain objects, no Sequelize overhead
+const rows2 = await User.findAll({ raw: true });
+```
+
+#### Update
+
+- `Model.update(values, options)`: updates all matching rows. Returns `[affectedCount]`.
+  - `where`: required — omitting it updates every row.
+  - `returning: true`: returns updated instances (PostgreSQL only).
+
+- `instance.update(values)`: updates a specific instance. Runs hooks and validations. Preferred over the static form.
+
+- `instance.increment(field, { by })` / `instance.decrement(field, { by })`: atomic increment/decrement.
+
+```js
+// Bulk update
+const [count] = await User.update(
+  { isActive: false },
+  { where: { role: "banned" } }
+);
+
+// Instance update — runs beforeUpdate hook
+const user = await User.findByPk(42);
+await user.update({ role: "admin" });
+
+// Set then save
+user.set("bio", "Updated bio");
+await user.save();
+
+// Atomic increment
+await user.increment("loginCount");
+await user.decrement("credits", { by: 10 });
+```
+
+#### Delete
+
+- `Model.destroy(options)`: deletes matching records. Returns count.
+  - `where`: required — omitting it deletes all rows.
+
+- `instance.destroy()`: deletes a specific record.
+
+- `Model.restore(options)` / `instance.restore()`: restores soft-deleted records (only when `paranoid: true`).
+
+> If the model has `paranoid: true`, `.destroy()` sets `deletedAt` instead of removing the row. Pass `{ force: true }` for a hard delete.
+
+```js
+// Bulk delete
+const n = await User.destroy({ where: { isActive: false } });
+
+// Instance delete
+const user = await User.findByPk(42);
+await user.destroy();          // soft-delete if paranoid is true
+
+// Hard delete on a paranoid model
+await user.destroy({ force: true });
+
+// Restore a soft-deleted record
+await User.restore({ where: { id: 42 } });
+```
+
+---
+
+### Querying — Operators
+
+```js
+import { Op } from "sequelize";
+
+// Comparison
+User.findAll({ where: { age: { [Op.gt]: 18 } } });             // age > 18
+User.findAll({ where: { age: { [Op.gte]: 18 } } });            // age >= 18
+User.findAll({ where: { age: { [Op.between]: [18, 65] } } });  // BETWEEN
+User.findAll({ where: { id: { [Op.in]: [1, 2, 3] } } });       // IN (1,2,3)
+User.findAll({ where: { id: { [Op.notIn]: [4, 5] } } });       // NOT IN
+
+// String matching
+User.findAll({ where: { email: { [Op.like]:  "%@gmail.com" } } });  // LIKE
+User.findAll({ where: { email: { [Op.iLike]: "%@gmail.com" } } });  // ILIKE (case-insensitive, PG)
+User.findAll({ where: { name: { [Op.startsWith]: "Al" } } });
+User.findAll({ where: { name: { [Op.endsWith]:   "son" } } });
+
+// Null checks
+User.findAll({ where: { deletedAt: null } });
+User.findAll({ where: { deletedAt: { [Op.not]: null } } });
+
+// Logical operators
+User.findAll({
+  where: {
+    isActive: true,
+    [Op.or]: [
+      { role: "admin" },
+      { age:  { [Op.lt]: 25 } },
+    ],
+  },
+});
+```
+
+**Op reference:**
+
+| Operator | SQL |
+|----------|-----|
+| `Op.eq` | `=` |
+| `Op.ne` | `!=` |
+| `Op.gt` | `>` |
+| `Op.gte` | `>=` |
+| `Op.lt` | `<` |
+| `Op.lte` | `<=` |
+| `Op.between` | `BETWEEN` |
+| `Op.in` | `IN` |
+| `Op.notIn` | `NOT IN` |
+| `Op.like` | `LIKE` |
+| `Op.iLike` | `ILIKE` |
+| `Op.and` | `AND` |
+| `Op.or` | `OR` |
+| `Op.not` | `NOT` |
+| `Op.is` | `IS` (NULL checks) |
+
+---
+
+### Associations
+
+Associations define relationships between models. Always define them **after** all models are initialised.
+
+- `Model.hasOne(Target, options)`: one-to-one — FK lives on `Target`.
+- `Model.belongsTo(Target, options)`: one-to-one or many-to-one — FK lives on **this** model.
+- `Model.hasMany(Target, options)`: one-to-many — FK lives on `Target`.
+- `Model.belongsToMany(Target, options)`: many-to-many via a junction table.
+  - `through`: junction model or table name string.
+  - `foreignKey` / `otherKey`: FK names on the junction table.
+
+```js
+// models/associations.js — define all relationships in one place
+import User    from "./User.js";
+import Post    from "./Post.js";
+import Tag     from "./Tag.js";
+import Profile from "./Profile.js";
+
+// One-to-One
+User.hasOne(Profile, { foreignKey: "userId", as: "profile" });
+Profile.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+// One-to-Many
+User.hasMany(Post, { foreignKey: "authorId", as: "posts", onDelete: "CASCADE" });
+Post.belongsTo(User, { foreignKey: "authorId", as: "author" });
+
+// Many-to-Many
+Post.belongsToMany(Tag, { through: "PostTags", foreignKey: "postId", as: "tags" });
+Tag.belongsToMany(Post, { through: "PostTags", foreignKey: "tagId",  as: "posts" });
+```
+
+**Auto-generated instance methods:**
+
+```js
+const user = await User.findByPk(1);
+
+// hasOne
+const profile = await user.getProfile();
+await user.setProfile(profile);
+await user.createProfile({ bio: "Hello!" });
+
+// hasMany
+const posts = await user.getPosts({ where: { published: true } });
+await user.createPost({ title: "New Post", content: "..." });
+
+// belongsToMany
+const post = await Post.findByPk(1);
+await post.addTag(tag);
+await post.addTags([tag1, tag2]);
+await post.setTags([tag1, tag2]);   // replace all
+await post.removeTag(tag);
+const hasThem = await post.hasTags([tag1, tag2]);
+```
+
+**Eager loading (JOINs)** with `include`:
+
+```js
+// Include one association
+const users = await User.findAll({
+  include: { model: Profile, as: "profile" },
+  attributes: { exclude: ["password"] },
+});
+
+// Nested eager loading
+const posts = await Post.findAll({
+  include: [
+    { model: User, as: "author",  attributes: ["id", "email"] },
+    { model: Tag,  as: "tags",    through: { attributes: [] } },  // hide junction columns
+  ],
+});
+
+// Filter on associated model (INNER JOIN)
+const activeAuthors = await User.findAll({
+  include: {
+    model:    Post,
+    as:       "posts",
+    where:    { published: true },
+    required: true,              // INNER JOIN — only users with published posts
+  },
+});
+```
+
+---
+
+### Transactions
+
+Transactions group queries into an atomic unit — all succeed or all roll back.
+
+- `sequelize.transaction(callback)`: **managed** — auto-commits on success, auto-rolls back on thrown error.
+- `sequelize.transaction()`: **unmanaged** — you call `t.commit()` / `t.rollback()` manually.
+
+Pass `{ transaction: t }` to **every** query that should participate.
+
+```js
+// Managed (preferred)
+await sequelize.transaction(async (t) => {
+  const user = await User.create(
+    { email: "new@example.com", password: "pass" },
+    { transaction: t }
+  );
+  await Profile.create({ userId: user.id, bio: "Hi" }, { transaction: t });
+  // auto-commits; auto-rolls back on any thrown error
+});
+
+// Unmanaged (more control)
+const t = await sequelize.transaction();
+try {
+  await User.update({ credits: 0 }, { where: { id: 1 }, transaction: t });
+  await AuditLog.create({ action: "reset", userId: 1 }, { transaction: t });
+  await t.commit();
+} catch (err) {
+  await t.rollback();
+  throw err;
+}
+```
+
+---
+
+### Raw Queries
+
+Use `sequelize.query()` for SQL that the ORM cannot express, or when performance is critical.
+
+- `sequelize.query(sql, options)`: executes raw SQL.
+  - `type: QueryTypes.SELECT`: returns plain objects.
+  - `replacements`: named (`:key`) or positional (`?`) safe parameter substitution — **always use this instead of string interpolation**.
+  - `model`: maps results to a model class.
+
+```js
+import { QueryTypes } from "sequelize";
+
+const users = await sequelize.query(
+  "SELECT id, email FROM users WHERE role = :role AND age > :age",
+  {
+    replacements: { role: "admin", age: 18 },
+    type: QueryTypes.SELECT,
+  }
+);
+
+// Positional replacements
+const posts = await sequelize.query(
+  "SELECT * FROM posts WHERE author_id = ?",
+  { replacements: [userId], type: QueryTypes.SELECT }
+);
+
+// UPDATE / DELETE
+await sequelize.query(
+  "UPDATE users SET is_active = false WHERE last_login < :cutoff",
+  { replacements: { cutoff: new Date(Date.now() - 90 * 86400_000) } }
+);
+```
+
+---
+
+### Migrations (Sequelize CLI)
+
+Migrations track schema changes in version control. Use them instead of `sync({ force: true })` in production.
+
+```bash
+npm install --save-dev sequelize-cli
+
+npx sequelize-cli init   # creates config/, models/, migrations/, seeders/
+```
+
+**`.sequelizerc`:**
+
+```js
+const path = require("path");
+module.exports = {
+  "config":          path.resolve("src/config/database.json"),
+  "models-path":     path.resolve("src/models"),
+  "migrations-path": path.resolve("src/migrations"),
+  "seeders-path":    path.resolve("src/seeders"),
+};
+```
+
+```bash
+npx sequelize-cli migration:generate --name create-users-table
+npx sequelize-cli db:migrate                # run pending migrations
+npx sequelize-cli db:migrate:undo           # revert last migration
+npx sequelize-cli db:migrate:undo:all       # revert all
+
+npx sequelize-cli seed:generate --name demo-users
+npx sequelize-cli db:seed:all
+npx sequelize-cli db:seed:undo:all
+```
+
+**Migration file:**
+
+```js
+// migrations/20240101000000-create-users.js
+"use strict";
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("users", {
+      id:         { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+      email:      { type: Sequelize.STRING,  allowNull: false, unique: true },
+      password:   { type: Sequelize.STRING,  allowNull: false },
+      role:       { type: Sequelize.ENUM("user", "admin"), defaultValue: "user" },
+      is_active:  { type: Sequelize.BOOLEAN, defaultValue: true },
+      created_at: { type: Sequelize.DATE,    allowNull: false },
+      updated_at: { type: Sequelize.DATE,    allowNull: false },
+      deleted_at: { type: Sequelize.DATE,    allowNull: true },
+    });
+    await queryInterface.addIndex("users", ["email"]);
+  },
+
+  async down(queryInterface) {
+    await queryInterface.dropTable("users");
+  },
+};
+```
+
+**Add column migration:**
+
+```js
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.addColumn("users", "phone", { type: Sequelize.STRING, allowNull: true });
+  },
+  async down(queryInterface) {
+    await queryInterface.removeColumn("users", "phone");
+  },
+};
+```
+
+**Seeder file:**
+
+```js
+// seeders/20240101000001-demo-users.js
+"use strict";
+const bcrypt = require("bcrypt");
+
+module.exports = {
+  async up(queryInterface) {
+    await queryInterface.bulkInsert("users", [{
+      email:      "admin@example.com",
+      password:   await bcrypt.hash("admin123", 12),
+      role:       "admin",
+      is_active:  true,
+      created_at: new Date(),
+      updated_at: new Date(),
+    }]);
+  },
+  async down(queryInterface) {
+    await queryInterface.bulkDelete("users", { email: "admin@example.com" });
+  },
+};
+```
+
+---
+
+### Integrating with Express
+
+```js
+// models/index.js — central export point
+import sequelize from "../db.js";
+import User      from "./User.js";
+import Post      from "./Post.js";
+import Profile   from "./Profile.js";
+import "./associations.js";   // registers all associations
+
+export { sequelize, User, Post, Profile };
+
+// app.js — connect before starting the server
+import { sequelize } from "./models/index.js";
+
+sequelize.authenticate()
+  .then(() => app.listen(3000, () => console.log("Server running")))
+  .catch((err) => { console.error(err); process.exit(1); });
+
+// controllers/userController.js
+import { User, Post } from "../models/index.js";
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id, {
+      attributes: { exclude: ["password"] },
+      include:    [{ model: Post, as: "posts", limit: 5 }],
+    });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (err) {
+    next(err);   // delegate to Express error handler
+  }
+};
+```
+
+---
+
+## EventEmitter
+
+Node.js's built-in event system — the foundation of streams, HTTP, and most core modules.
+
+- `emitter.on(event, listener)`: adds a persistent listener. Alias: `addListener`.
+- `emitter.once(event, listener)`: fires only on the first occurrence, then auto-removes.
+- `emitter.emit(event, ...args)`: synchronously invokes all listeners for the event.
+- `emitter.off(event, listener)`: removes a specific listener. Alias: `removeListener`.
+- `emitter.removeAllListeners(event)`: removes all listeners for an event.
+- `emitter.listenerCount(event)`: number of attached listeners.
+- `emitter.setMaxListeners(n)`: raise the listener cap to avoid memory-leak warnings (default 15).
+
+```js
+import { EventEmitter } from "events";
+
+// Custom event-driven service
+class OrderService extends EventEmitter {
+  async placeOrder(order) {
+    // business logic...
+    this.emit("order:placed", order);
+  }
+
+  async cancelOrder(orderId) {
+    // business logic...
+    this.emit("order:cancelled", { orderId });
+  }
+}
+
+const orderService = new OrderService();
+
+// Separate concerns by reacting to events
+orderService.on("order:placed", async (order) => {
+  await sendConfirmationEmail(order.userId);
+});
+
+orderService.on("order:placed", async (order) => {
+  await updateInventory(order.items);
+});
+
+orderService.once("order:placed", (order) => {
+  console.log("First ever order:", order.id);  // fires only once
+});
+
+// Always handle the error event — unhandled emitter errors crash the process
+orderService.on("error", (err) => console.error("OrderService error:", err));
+
+await orderService.placeOrder({ id: 1, userId: 42, items: [] });
+```
+
+---
+
+## Streams
+
+Streams process data in **chunks** — essential for large files, HTTP I/O, and data pipelines without loading everything into memory.
+
+| Type | Class | Description | Example |
+|------|-------|-------------|---------|
+| Readable | `Readable` | Source | `fs.createReadStream` |
+| Writable | `Writable` | Sink | `fs.createWriteStream` |
+| Duplex | `Duplex` | Read + Write | TCP socket |
+| Transform | `Transform` | Read, transform, write | `zlib.createGzip` |
+
+- `readable.pipe(writable)`: connects streams and handles backpressure automatically.
+- `stream.pipeline(...streams, callback)`: like `pipe` but cleans up correctly on error — **prefer this**.
+- `pipeline` from `stream/promises`: promise-based version (Node 15+).
+
+```js
+import { createReadStream, createWriteStream } from "fs";
+import { createGzip }                          from "zlib";
+import { pipeline }                            from "stream/promises";
+
+// Compress a large file without loading it into memory
+await pipeline(
+  createReadStream("large.csv"),
+  createGzip(),
+  createWriteStream("large.csv.gz")
+);
+
+// Stream a file download via Express
+app.get("/download/:filename", (req, res) => {
+  const filePath = `./uploads/${path.basename(req.params.filename)}`;
+  res.setHeader("Content-Disposition", `attachment; filename="${req.params.filename}"`);
+  createReadStream(filePath).pipe(res);
+});
+
+// Process a large CSV line-by-line without loading it into memory
+import { createInterface } from "readline";
+
+const rl = createInterface({ input: createReadStream("data.csv") });
+rl.on("line", (line) => {
+  const [name, age] = line.split(",");
+  // process each row
+});
+await new Promise((resolve, reject) => {
+  rl.on("close", resolve);
+  rl.on("error", reject);
+});
+```
+
+---
+
+## Async Patterns
+
+```js
+// Promise.all — parallel execution, fails fast on first rejection
+const [users, posts, stats] = await Promise.all([
+  User.findAll(),
+  Post.findAll(),
+  getStats(),
+]);
+
+// Promise.allSettled — collect every result regardless of failure
+const results = await Promise.allSettled([
+  fetch("https://api1.com"),
+  fetch("https://api2.com"),
+]);
+for (const r of results) {
+  if (r.status === "fulfilled") process(r.value);
+  else console.error("Failed:", r.reason);
+}
+
+// Promise.race — first to resolve or reject wins
+const fastest = await Promise.race([fetchPrimary(), fetchFallback()]);
+
+// Promise.any — first to resolve wins (ignores rejections)
+const result = await Promise.any([mirror1(), mirror2(), mirror3()]);
+
+// Async route wrapper — eliminates try/catch in every Express handler
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
+app.get("/api/users", asyncHandler(async (req, res) => {
+  const users = await User.findAll({ attributes: { exclude: ["password"] } });
+  res.json(users);
+}));
+
+// Sequential async with a for-of loop (use when order matters)
+for (const user of users) {
+  await sendWelcomeEmail(user.email);   // one at a time
+}
+
+// Parallel with concurrency limit (p-limit)
+import pLimit from "p-limit";
+const limit = pLimit(5);               // max 5 concurrent tasks
+await Promise.all(
+  users.map((user) => limit(() => processUser(user)))
+);
+```
+
+---
+
+## Project Structure (Convention)
+
+A recommended layout for a full Express + Sequelize backend:
+
+```
+src/
+├── app.js                  ← Express app setup (middleware, routes, error handlers)
+├── server.js               ← Entry point — DB connect, server.listen
+├── config/
+│   └── database.json       ← Sequelize CLI config
+├── db.js                   ← Sequelize instance
+├── models/
+│   ├── index.js            ← Central model export + associations
+│   ├── User.js
+│   └── Post.js
+├── migrations/             ← Sequelize migration files
+├── seeders/                ← Sequelize seeder files
+├── routes/
+│   ├── index.js            ← Mount all routers
+│   ├── auth.js
+│   └── users.js
+├── controllers/
+│   ├── authController.js
+│   └── userController.js
+├── middleware/
+│   ├── authenticate.js     ← JWT auth middleware
+│   ├── authorize.js        ← Role-based access
+│   └── asyncHandler.js     ← try/catch wrapper
+├── services/               ← Business logic (optional layer between controller and model)
+│   └── emailService.js
+└── utils/
+    └── AppError.js         ← Custom error class
+```
+
+**`server.js` bootstrap pattern:**
+
+```js
+import "dotenv/config";
+import app                from "./app.js";
+import { sequelize }      from "./models/index.js";
+
+const PORT = parseInt(process.env.PORT) || 3000;
+
+async function start() {
+  try {
+    await sequelize.authenticate();
+    console.log("Database connected.");
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (err) {
+    console.error("Startup failed:", err);
+    process.exit(1);
+  }
+}
+
+start();
+```
 
 
 

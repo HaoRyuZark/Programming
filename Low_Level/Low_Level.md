@@ -344,10 +344,24 @@ Actually, this process is very complex, and CPU's can actually predict branches,
 
 The OS is a process itself, and it runs whenever the CPU is not executing user code. It is loaded into memory when the computer boots and then can be invoked in several ways:
 
-- **System Calls**: When a user program requests a service from the OS, such as file access or process management, it triggers a system call that switches the CPU to kernel mode to execute the OS code.
-- **Interrupts**: Hardware devices can generate interrupts to signal the CPU that they require attention. When an enterrupt occurs, the CPU stops executing the current user program, stores the context and switches to the OS to handle the interrupt. This is build into the CPU architecture.
-- **Exceptions**: These are unexpected events that occur during program execution, such as division by zero or invalid memory access. When an exception occurs, the CPU switches to the OS to handle the error.
-- **Context Switching**: The OS can preempt a running user program to give CPU time to another process. This is done through context switching, where the OS saves the state of the current process and loads the state of the next process to be executed.
+- **System Calls**: When a user program requests a service from the OS, such as file access or process management, it triggers a system call that switches the CPU to kernel mode 
+to execute the OS code.
+
+- **Interrupts**: Hardware devices can generate interrupts to signal the CPU that they require attention. When an interrupt occurs, the CPU stops executing the current user program, 
+stores the context and switches to the OS to handle the interrupt. This is build into the CPU architecture.
+
+- **Exceptions**: These are unexpected events that occur during program execution, such as division by zero or invalid memory access. When an exception occurs, the CPU switches 
+to the OS to handle the error.
+
+- **Context Switching**: The OS can preempt a running user program to give CPU time to another process. This is done through context switching, where the OS saves 
+the state of the current process and loads the state of the next process to be executed.
+
+--- 
+
+## Binary Decoders 
+
+A **binary decoder** is a set of logic gates, mostly AND gates which are used to map a unique fixed-size binary sequence to a unique binary sequence. 
+This is used to access specific memory cells in memory, and to determine which instruction is to be executed by the CPU.
 
 --- 
 
@@ -365,24 +379,27 @@ The memory layout of a process typically consists of several segments:
 
 ## Virtual Memory
 
-Virtual memory is a memory management technique that allows a computer to use more memory than is physically available by using disk space as an extension of RAM. It also provides the illusion of a large, contiguous memory space to applications, while the operating system manages the mapping between virtual addresses and physical addresses.
+Virtual memory is a memory management technique that allows a computer to use more memory than is physically available by using disk space as an extension of RAM. It also provides 
+the illusion of a large, contiguous memory space to applications, while the operating system manages the mapping between virtual addresses and physical addresses.
 
-It is done by dividing the memory into fixed-size pages and mapping them to physical memory frames. When a program accesses a page that is not currently in physical memory, a page fault occurs, and the OS retrieves the required page from disk and updates the mapping.
+It is done by dividing the memory into fixed-size pages and mapping them to physical memory frames. When a program accesses a page that is not currently in physical memory, a page 
+fault occurs, and the OS retrieves the required page from disk and updates the mapping.
 
-Via hardware support, such as the Memory Management Unit (MMU), virtual memory allows for efficient memory usage, isolation between processes, and protection against unauthorized access. This unit is also responsible for managing the page table, which keeps track of the mapping between virtual addresses and physical addresses.
+Via hardware support, such as the Memory Management Unit (MMU), virtual memory allows for efficient memory usage, isolation between processes, and protection against 
+unauthorized access. This unit is also responsible for managing the page table, which keeps track of the mapping between virtual addresses and physical addresses.
 
 ---
 
-## ABI
+## The Application Binary Interface (ABI)
 
-The Application Binary Interface (ABI) defines how different components of a binary program interact at the machine level. It specifies details such as calling conventions, data types, and system calls, ensuring that compiled code can run on a specific platform without requiring recompilation.
+The **Application Binary Interface (ABI)** defines how different components of a binary program interact at the machine level. It specifies details such as calling conventions, data 
+types, and system calls, ensuring that compiled code can run on a specific platform without requiring recompilation.
 
 ---
 
 ## Processes
 
 A **process** is an instance of a program with its own memory region.
-
 
 ### PCB 
 
@@ -737,3 +754,27 @@ Example:
 | Plain | Binary | Triplets | Base 64 Alphabet|
 |:------|--------|--------|---------|
 | And   |01000001 01101110 01100100 |010000  010110  111001 100100|QW5k|
+
+--- 
+
+## RAID
+
+**RAID** is a way of creating redundancy for backups  using one or more storage devices.
+There are different levels of raid, depending on the level of redundancy desired. It is also important to note 
+that it does take storage capacity.
+
+- **RAID 0**: No redundancy.
+
+- **RAID 1 (Mirroring)**: Data gets copied to another disk.
+
+- **RAID 5**: Data gets copied to another disk and also  parity-bits are used for integrity.
+
+- **RAID 10**: Data gets splitted across multiple disks with double parity chekcs.
+
+
+
+
+
+
+--- 
+

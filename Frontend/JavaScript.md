@@ -14,6 +14,7 @@ console.log(process.version);    // e.g. "v20.11.0"
 console.log(process.platform);   // "linux", "win32", "darwin"
 ```
 
+
 | Feature          | Browser              | Node.js               |
 |------------------|----------------------|-----------------------|
 | Global object    | `window`             | `global` / `globalThis` |
@@ -21,6 +22,7 @@ console.log(process.platform);   // "linux", "win32", "darwin"
 | File system      | No                   | Yes (`fs` module)     |
 | HTTP server      | No                   | Yes (`http` module)   |
 | Module system    | ES Modules           | CommonJS + ES Modules |
+
 
 - **Engine** (e.g. V8 in Chrome & Node.js, SpiderMonkey in Firefox): parses and executes JS code.
 
@@ -462,6 +464,14 @@ const double = multiplier(2);
 const triple = multiplier(3);
 console.log(double(5)); // 10
 console.log(triple(5)); // 15
+```
+
+**Leet Code Problem:**: Modify the function prototype to make functions accept a custom calling context (like `call` does).
+
+```js 
+Function.prototype.callPolyfill = function(context, ...args) {
+    return this.bind(context)(...args);
+}
 ```
 
 ---
@@ -1593,6 +1603,17 @@ function processNode(node) {
 ```
 
 ---
+
+## Execution Context
+
+The **execution context** is the environment in which JS code runs. Outside objects the keyword `this` refers to this context. 
+When a function is called, a new execution context is created for that function while for arrow functions, the context is inherited from the parent scope.
+
+It is important to note that there is the **global execution context** which contains references to the **global object** which is 
+the one responsible for providing the global scope, external API's and the event loop. The global object is `window` in browsers and `global` in Node.js.
+
+--- 
+
 
 ## Functional Patterns
 
