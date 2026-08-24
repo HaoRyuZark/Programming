@@ -37,7 +37,7 @@ class PCA:
         return X @ self.components
 
     
-    def pve(self):
+    def my_pve(self):
         self.pve = self.eig_vals / np.sum(self.eig_vals)
         return self.pve
 

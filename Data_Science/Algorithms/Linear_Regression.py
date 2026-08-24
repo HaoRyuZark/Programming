@@ -1,25 +1,33 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-def lin_reg(X, y):
-    X_b = np.c_[np.ones((X.shape[0], 1)), X]
-    return np.linalg.inv(X_b.T @ X_b) @ X_b.T @ y
+class Linear_Regression:
 
+    def __init__(self) -> None:
+        pass
+
+    def fit(self, X, y):
+        self.X= X 
+        self.y = y
+        self.n_samples, self.m_features = X.shape, 1
+
+    def transform(self):
+        X = np.column_stack((np.ones(self.n_samples), self.X))
+        self.w = np.linalg.inv(X.T @ X) @ X.T @ self.y
+        return self.w
 
 X_2_1, y_2_1 = np.loadtxt('https://data.bialonski.de/ml/franchise-data.txt', delimiter=',', unpack=True)
 
-theta = lin_reg(X_2_1.reshape(-1, 1), y_2_1)
+lg = Linear_Regression()
+lg.fit(X_2_1, y_2_1)
+w = lg.transform() 
+
+
+func = lambda x: x * w[1] + w[0]
 
 X_plot = np.linspace(X_2_1.min(), X_2_1.max())
-X_plot_b = np.c_[np.ones((X_plot.shape[0], 1)), X_plot]
-y_plot = X_plot_b @ theta
+y_plot = [func(x) for x in X_plot]
+plt.scatter(X_2_1, y_2_1)
+plt.plot(X_plot, y_plot)
+plt.grid(True)
 
-plt.scatter(X_2_1, y_2_1, label="Training Data")
-plt.plot(X_plot, y_plot, color="red", label="Linear Regression")
-plt.xlabel("Number of Habitants in the City (×10,000)")
-plt.ylabel("Profit per Fastfood Truck (×10,000 €)")
-plt.legend()
-plt.show()
-
-print("Intercept (theta0):", theta[0])
-print("Slope (theta1):", theta[1])

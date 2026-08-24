@@ -23,13 +23,16 @@ class Linear_Regression:
             y_pred = X_train @ self.weights + self.bias 
             
             # Derivatives of the loss function
+
             dw = (1/n_samples) * (X_train.T @ (y_pred - y_train)) # vectorized operation
+
             db = (1/n_samples) * np.sum(y_pred - y_train)  # vectorized operation
 
             self.weights = self.weights - self.learning_rate * dw
             self.bias = self.bias - self.learning_rate * db
 
     def predict(self, X_test):
+        # Returns an array
         y_pred = X_test @ self.weights + self.bias 
 
         return y_pred

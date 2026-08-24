@@ -298,6 +298,7 @@ one after the other.
 - `GROUP BY`  it sorts multiple matching rows into groups determined by an specific criteria. This is mostly used for aggregating data.
 
 - `LIMIT` restricts number of rows.
+    - `OFFSET`: given a limit `pagesize` results we use the formula `pagesize * (page - 1)` to get the next offset.
 
 - `LIKE 'pattern'` is used to specify patterns in text using `'%letters%'` `%` is a wild card for any character any number of times and `_` a wild card 
 for exactly one character.
@@ -1073,3 +1074,44 @@ There is also the Min-Max notation which is $(min, max)$
 
 ---
 
+## Setting Up Postgres (In Arch)
+
+1. Install Postgres
+
+```bash 
+sudo pacman -S postgresql
+```
+
+2. Switch to the `posgres` user to initialize the database
+
+```bash
+sudo -iu postgres
+```
+
+3. Specify where the data is to be stored and which encoding is it going to use
+
+```bash 
+initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data
+```
+
+Return to the normal user using `exit`.
+
+4. Create the user and database
+
+```bash 
+sudo -u postgres createuser --interactive 
+sudo -u postgres createdb mydatabase -O myuser
+```
+
+or use `psql`
+
+```bash 
+sudo -u postgres psql
+```
+
+followed by: 
+
+```sql 
+CREATE USER myuser WITH PASSWORD 'mypassword';
+CREATE DATABASE mydatabase OWNER myuser;
+```

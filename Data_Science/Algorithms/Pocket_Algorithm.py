@@ -1,83 +1,101 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+# -------------- START - helper functions --------------
+
 def generate_points(N):
     return np.random.rand(N, 2)
 
+
 def generate_decision_line():
     g = generate_points(2)
-    # Properly extract x and y
-    x1, y1 = g[0]
-    x2, y2 = g[1]
-    m = (y2 - y1) / (x2 - x1)
-    b = y1 - m * x1
+    m = (g[1, 1] - g[1, 0]) / (g[0, 1] - g[0, 0])
+    b = g[1, 0] - m * g[0, 0]
 
     def getY(x):
         return m * x + b
 
-    return getY
+    func = getY
+    return func
 
+
+# This function creates an "unknown" target function f.
+# f is then used to create labels y for points X.
+# Some of these labels are randomly flipped to render
+# the dataset not linearly separable any more.
+# X is a matrix containing N rows (the data points) of
+# with 2 dimensions (columns) each.
 def getClassedPoints(N):
     np.random.seed(5)
     f = generate_decision_line()
     X = generate_points(N)
-    y = np.array([1 if f(x[0]) > x[1] else -1 for x in X])
-    # Introduce 10% label noise
+    y = np.array([1 if f(X[i, 0]) > X[i, 1] else -1
+                  for i in range(X.shape[0])])
     for i in np.random.randint(0, len(y), int(len(y) / 10)):
-        y[i] = -y[i]
+        y[i] = y[i] * (-1)
     return X, y, f
 
+
+# -------------- END - helper functions --------------
+
+# Obtain data
 X_2_2, y_2_2, f = getClassedPoints(50)
 
-def in_sample_error(X, y, w):
-    predictions = np.sign(X @ w)
-    misclassified = np.sum(predictions != y)
-    return misclassified / len(y)
+# Visualize data
+plt.scatter(X_2_2[:, 0], X_2_2[:, 1], c=y_2_2)
 
-def pocket(X, y, T=1000):
-    X_with_bias = np.column_stack((np.ones(X.shape[0]), X))
-    
-    w = np.zeros(X_with_bias.shape[1])
-    w_best = np.copy(w)
-    best_error = in_sample_error(X_with_bias, y, w_best)
-    
-    for _ in range(T):
-        
-        predictions = np.sign(X_with_bias @ w)
-        misclassified_idx = np.where(predictions != y)[0]
-        
-        if len(misclassified_idx) == 0:
-            break
-        
-        i = np.random.choice(misclassified_idx)
-        w = w + y[i] * X_with_bias[i]
-        
-        current_error = in_sample_error(X_with_bias, y, w)
-        
-        if current_error < best_error:
-            w_best = np.copy(w)
-            best_error = current_error
-    
-    return w_best
+class Pocket:
 
-w = pocket(X_2_2, y_2_2, T=1000)
-print("Best weights:", w)
-print("Final in-sample error:", in_sample_error(np.column_stack((np.ones(X_2_2.shape[0]), X_2_2)), y_2_2, w))
+    def __init__(self, n_iters=100) -> None:
+        self.n_iters = n_iters
 
-X_with_bias = np.column_stack((np.ones(X_2_2.shape[0]), X_2_2))
-predictions = np.sign(X_with_bias @ w)
+    def fit(self, X, y) -> None: 
+        self.X = X 
+        self.y = y 
+        self.n_samples, self.m_features = X.shape
 
-# Plot the data points with predictions
-plt.figure(figsize=(10, 6))
-plt.scatter(X_2_2[:, 0], X_2_2[:, 1], c=predictions, cmap='coolwarm', edgecolors='black')
-plt.xlabel('Feature 1')
-plt.ylabel('Feature 2')
-plt.title('Pocket Algorithm Classification Results')
+    def _perceptron(self, x, w) -> np.ndarray:
+        return np.sign(np.dot(x, w))
 
-x_min, x_max = X_2_2[:, 0].min() - 0.1, X_2_2[:, 0].max() + 0.1
-x_line = np.array([x_min, x_max])
-y_line = -(w[0] + w[1] * x_line) / w[2]
-plt.plot(x_line, y_line, 'g-', linewidth=2, label='Decision Boundary')
-plt.legend()
-plt.grid(True, alpha=0.3)
+    def _e_in(self, y_pred) -> np.float64:
+        return np.mean(y_pred != self.y)
+
+    def transform(self) -> np.ndarray:
+
+        self.w = np.zeros(self.m_features + 1)
+        X_b = np.column_stack((np.ones(self.n_samples), self.X))
+
+        changed = False
+        e_in = np.inf
+        w_best = self.w
+
+        for t in range(self.n_iters):
+
+            y_pred = self._perceptron(X_b, self.w)
+            c_e_in = self._e_in(y_pred)
+
+            if c_e_in < e_in:
+               w_best = np.copy(self.w) 
+               e_in = c_e_in
+
+            for i in range(self.n_samples):
+
+                if y_pred[i] != self.y[i]:
+                    changed = True
+                    self.w = self.w + (self.y[i] * X_b[i])
+                    break
+                changed = False
+
+            if not changed:
+                break
+
+        return w_best
+
+p = Pocket(100)
+p.fit(X_2_2, y_2_2)
+w = p.transform()
+
+plt.scatter(X_2_2[:,0], X_2_2[:,1], c=y_2_2)
+plt.plot(X_2_2[:,0], [(-w[1]/w[2])* x - (w[0]/w[2]) for x in X_2_2[:, 0]])
+plt.grid(True)
 plt.show()

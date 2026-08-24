@@ -2974,11 +2974,10 @@ public class UserService {
 
 ---
 
----
+## Pure Spring Framework
 
-# Pure Spring Framework
-
-Spring Boot is an opinionated layer **on top of** the Spring Framework. Understanding the core framework is essential for advanced configuration, multi-module projects, non-Boot applications, and debugging unexpected Spring behaviour.
+Spring Boot is an opinionated layer **on top of** the Spring Framework. Understanding the core framework is essential for advanced configuration, 
+multi-module projects, non-Boot applications, and debugging unexpected Spring behaviour.
 
 ```xml
 <!-- Minimal Spring Core (no Boot) -->
@@ -2995,13 +2994,13 @@ Spring Boot is an opinionated layer **on top of** the Spring Framework. Understa
 </dependency>
 ```
 
----
 
-## ApplicationContext
+### ApplicationContext
 
 The **IoC (Inversion of Control) container** creates, configures, wires, and manages the lifecycle of beans. `ApplicationContext` is the main interface.
 
 ### ApplicationContext Types
+
 
 | Type | Config source | Typical use |
 |------|--------------|-------------|
@@ -3010,6 +3009,7 @@ The **IoC (Inversion of Control) container** creates, configures, wires, and man
 | `FileSystemXmlApplicationContext` | XML from filesystem | Legacy apps |
 | `AnnotationConfigWebApplicationContext` | Java config in a web app | Spring MVC without Boot |
 | `GenericWebApplicationContext` | Programmatic | Framework integration |
+
 
 ```java
 // Standalone Java config
@@ -3026,7 +3026,7 @@ String[]    names = ctx.getBeanNamesForType(UserService.class); // all matching 
 ApplicationContext ctx2 = new AnnotationConfigApplicationContext("com.example");
 ```
 
-### XML Configuration (Legacy)
+#### XML Configuration (Legacy)
 
 ```xml
 <!-- beans.xml -->
@@ -3051,7 +3051,7 @@ ApplicationContext ctx2 = new AnnotationConfigApplicationContext("com.example");
 ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
 ```
 
-### Java Configuration
+#### Java Configuration
 
 ```java
 @Configuration
@@ -3079,28 +3079,26 @@ public class AppConfig {
 }
 ```
 
----
-
-## Bean Lifecycle (Deep Dive)
+### Bean Lifecycle (Deep Dive)
 
 ```
-Instantiate bean
-    ↓
-Populate properties via dependency injection
-    ↓
-BeanNameAware.setBeanName()
-    ↓
-ApplicationContextAware.setApplicationContext()
-    ↓
-BeanPostProcessor.postProcessBeforeInitialization()   ← @PostConstruct processing happens here
-    ↓
-InitializingBean.afterPropertiesSet() / custom init-method
-    ↓
-BeanPostProcessor.postProcessAfterInitialization()    ← AOP proxies are created here
-    ↓
-Bean is ready — serves requests
-    ↓
-DisposableBean.destroy() / custom destroy-method      ← on context close
+    Instantiate bean
+        ↓
+    Populate properties via dependency injection
+        ↓
+    BeanNameAware.setBeanName()
+        ↓
+    ApplicationContextAware.setApplicationContext()
+        ↓
+    BeanPostProcessor.postProcessBeforeInitialization()   ← @PostConstruct processing happens here
+        ↓
+    InitializingBean.afterPropertiesSet() / custom init-method
+        ↓
+    BeanPostProcessor.postProcessAfterInitialization()    ← AOP proxies are created here
+        ↓
+    Bean is ready — serves requests
+        ↓
+    DisposableBean.destroy() / custom destroy-method      ← on context close
 ```
 
 **Lifecycle interfaces (prefer annotations — less coupling):**
@@ -3156,11 +3154,10 @@ public class MyBFPP implements BeanFactoryPostProcessor {
 }
 ```
 
----
 
-## Spring JDBC
+### Spring JDBC
 
-Direct SQL with result mapping — simpler than JPA, no ORM overhead, full control over queries.
+Direct SQL with result mapping; simpler than JPA, no ORM overhead, full control over queries.
 
 ```xml
 <dependency>
@@ -3184,6 +3181,7 @@ public class JdbcConfig {
 
 **`JdbcTemplate` core methods:**
 
+
 | Method | Returns | Use |
 |--------|---------|-----|
 | `queryForObject(sql, type, args...)` | `T` | Single scalar value |
@@ -3194,6 +3192,7 @@ public class JdbcConfig {
 | `update(sql, args...)` | `int` | INSERT / UPDATE / DELETE |
 | `batchUpdate(sql, batchArgs)` | `int[]` | Batch DML |
 | `execute(sql)` | `void` | DDL |
+
 
 ```java
 @Repository
@@ -3262,25 +3261,26 @@ public class UserJdbcRepository {
 }
 ```
 
----
 
-## Transaction Management (Deep Dive)
+### Transaction Management (Deep Dive)
 
-### Propagation Levels
+#### Propagation Levels
 
 Controls what happens when a `@Transactional` method is called while a transaction is already active.
+
 
 | Propagation | Behaviour |
 |-------------|-----------|
 | `REQUIRED` | Join the existing transaction, or create a new one (default) |
 | `REQUIRES_NEW` | Always create a new transaction; suspend the existing one |
-| `NESTED` | Create a savepoint inside the existing transaction — roll back to savepoint on failure |
+| `NESTED` | Create a savepoint inside the existing transaction; roll back to savepoint on failure |
 | `SUPPORTS` | Run in a transaction if one exists; otherwise run non-transactionally |
 | `NOT_SUPPORTED` | Always run non-transactionally; suspend any existing transaction |
 | `MANDATORY` | Must run inside an existing transaction; throw if none exists |
 | `NEVER` | Must run non-transactionally; throw if a transaction is active |
 
-### Isolation Levels
+
+#### Isolation Levels
 
 Controls what concurrent transactions see from each other.
 
@@ -3330,7 +3330,7 @@ public class PaymentService {
 }
 ```
 
-### Programmatic Transactions (TransactionTemplate)
+#### Programmatic Transactions (TransactionTemplate)
 
 Use when declarative `@Transactional` granularity is insufficient.
 
@@ -3359,9 +3359,8 @@ public class OrderService {
 }
 ```
 
----
 
-## Spring Expression Language (SpEL)
+### Spring Expression Language (SpEL)
 
 A powerful expression language used in `@Value`, `@Cacheable`, `@PreAuthorize`, `@ConditionalOnExpression`, and XML config.
 
@@ -3379,6 +3378,7 @@ A powerful expression language used in `@Value`, `@Cacheable`, `@PreAuthorize`, 
 | `#{ list.?[age > 18] }` | selection — filter list |
 | `#{ list.![name] }` | projection — extract field from each element |
 | `#{ value ?: 'default' }` | Elvis operator — default if null |
+
 
 ```java
 @Component
@@ -3409,9 +3409,7 @@ public UserDto getUser(Long id) { ... }
 public void updateProfile(UserDto user) { ... }
 ```
 
----
-
-## Spring MVC (Without Spring Boot)
+### Spring MVC (Without Spring Boot)
 
 Manually configure Spring MVC in a standard Servlet container (standalone Tomcat, Jetty, etc.).
 
@@ -3422,6 +3420,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) {
+
         // Root application context (services, repositories)
         AnnotationConfigWebApplicationContext rootCtx = new AnnotationConfigWebApplicationContext();
         rootCtx.register(RootConfig.class);
@@ -3518,11 +3517,10 @@ public class LoggingInterceptor implements HandlerInterceptor {
 }
 ```
 
----
 
-## Spring Core Utilities
+### Spring Core Utilities
 
-### Environment & Properties
+#### Environment & Properties
 
 ```java
 @Component
@@ -3602,7 +3600,7 @@ public class GreetingService {
 }
 ```
 
-### ApplicationContextAware
+#### ApplicationContextAware
 
 Access the context programmatically from a bean (use sparingly — prefer direct injection):
 
@@ -3624,7 +3622,8 @@ public class BeanFactory implements ApplicationContextAware {
 }
 ```
 
-### Common Spring Utility Classes
+#### Common Spring Utility Classes
+
 
 | Class | Purpose |
 |-------|---------|
@@ -3636,6 +3635,7 @@ public class BeanFactory implements ApplicationContextAware {
 | `ResourceUtils` | Classpath / file URL helpers |
 | `ObjectUtils` | Null-safe operations (`nullSafeToString`, `isEmpty`) |
 | `ClassUtils` | Class introspection helpers |
+
 
 ```java
 // Assert — clean precondition checks

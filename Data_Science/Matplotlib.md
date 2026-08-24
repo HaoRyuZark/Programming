@@ -55,8 +55,8 @@ plt.show()
   - `facecolor`: background colour of the figure.
   - `layout`: `'tight'`, `'constrained'`, or `'compressed'` — automatic spacing algorithm.
 
-- `plt.subplots(nrows=1, ncols=1, sharex=False, sharey=False, squeeze=True, figsize=None, dpi=None, subplot_kw=None, gridspec_kw=None, **fig_kw)`: creates a Figure and a grid of Axes in one call. 
-The recommended way to start any plot.
+- `plt.subplots(nrows=1, ncols=1, sharex=False, sharey=False, squeeze=True, figsize=None, dpi=None, subplot_kw=None, gridspec_kw=None, **fig_kw)`: creates a Figure and a grid 
+of Axes in one call. The recommended way to start any plot.
   - `nrows`, `ncols`: number of rows and columns in the Axes grid.
   - `sharex` / `sharey`: if `True` (or `'all'`, `'row'`, `'col'`), the axes share limits and ticks along that dimension.
   - `squeeze`: if `True`, extra dimensions are removed — a single Axes is returned as a scalar, one row/column as a 1D array.
@@ -351,7 +351,8 @@ plt.show()
 
 ## Heatmap (imshow)
 
-`ax.imshow(X, cmap=None, norm=None, aspect='equal', interpolation='antialiased', alpha=None, vmin=None, vmax=None, origin='upper', extent=None)`: displays data as an image (2D array heatmap).
+`ax.imshow(X, cmap=None, norm=None, aspect='equal', interpolation='antialiased', alpha=None, vmin=None, vmax=None, origin='upper', extent=None)`: displays data as an 
+image (2D array heatmap).
 
 - `X`: 2D array-like `(M, N)` — or `(M, N, 3)` RGB / `(M, N, 4)` RGBA.
 - `cmap`: colormap name (ignored for RGB input).
@@ -588,7 +589,8 @@ ax2.set_ylabel("exp(x/5)", color='red')
 
 ## Legend
 
-`ax.legend(handles=None, labels=None, loc='best', bbox_to_anchor=None, ncols=1, title=None, fontsize=None, frameon=True, framealpha=0.8, shadow=False, fancybox=True, borderpad=0.4, labelspacing=0.5, handlelength=2.0)`: places a legend on the Axes.
+`ax.legend(handles=None, labels=None, loc='best', bbox_to_anchor=None, ncols=1, title=None, fontsize=None, frameon=True, framealpha=0.8, shadow=False, fancybox=True, 
+borderpad=0.4, labelspacing=0.5, handlelength=2.0)`: places a legend on the Axes.
 
 - `handles`: list of `Artist` objects to include (auto-detected from `label=` if omitted).
 - `labels`: list of strings (auto-detected from `label=` if omitted).
@@ -623,7 +625,8 @@ ax.legend(handles=handles)
   - `bbox`: dict — draws a box around the text, e.g., `{'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.5}`.
   - `transform`: use `ax.transAxes` for axes-fraction coordinates instead of data coordinates.
 
-- `ax.annotate(text, xy, xytext=None, xycoords='data', textcoords='data', arrowprops=None, ha='left', va='center', fontsize=None)`: adds a text annotation with an optional arrow pointing to a data point.
+- `ax.annotate(text, xy, xytext=None, xycoords='data', textcoords='data', arrowprops=None, ha='left', va='center', fontsize=None)`: adds a text annotation with an optional 
+arrow pointing to a data point.
   - `xy`: the point being annotated (the tip of the arrow).
   - `xytext`: the position of the text.
   - `xycoords` / `textcoords`: coordinate system — `'data'`, `'axes fraction'`, `'figure fraction'`.
@@ -651,7 +654,8 @@ ax.text(0.02, 0.97, 'Note: values are illustrative',
 
 ## Colorbar
 
-`plt.colorbar(mappable, ax=None, cax=None, label='', orientation='vertical', shrink=1.0, pad=0.05, fraction=0.15, aspect=20, extend='neither', ticks=None, format=None)`: adds a colorbar to the figure.
+`plt.colorbar(mappable, ax=None, cax=None, label='', orientation='vertical', shrink=1.0, pad=0.05, fraction=0.15, aspect=20, extend='neither', ticks=None, format=None)`: adds a 
+colorbar to the figure.
 
 - `mappable`: the `ScalarMappable` object (return value of `imshow`, `scatter`, `contourf`, etc.) to which the colorbar applies.
 - `ax`: the Axes to which the colorbar is attached (shrinks that Axes to make room).
@@ -675,6 +679,7 @@ cbar.set_ticks([0, 0.25, 0.5, 0.75, 1.0])
 
 Matplotlib provides hundreds of named colormaps, organised by category:
 
+
 | Category | Examples |
 |---|---|
 | **Perceptually uniform** | `viridis`, `plasma`, `inferno`, `magma`, `cividis` |
@@ -683,6 +688,7 @@ Matplotlib provides hundreds of named colormaps, organised by category:
 | **Cyclic** | `twilight`, `hsv` |
 | **Qualitative** | `tab10`, `tab20`, `Set1`, `Set2`, `Pastel1`, `Paired` |
 | **Miscellaneous** | `jet`, `rainbow`, `terrain`, `ocean`, `hot`, `cool` |
+
 
 > Append `_r` to any name to get the reversed version — e.g., `'viridis_r'`.
 
@@ -708,6 +714,7 @@ sc = ax.scatter(x, y, c=z, cmap='plasma', vmin=0, vmax=1)
 
 Matplotlib accepts colour specifications in several formats:
 
+
 | Format | Example | Description |
 |---|---|---|
 | Named colour | `'red'`, `'steelblue'`, `'tomato'` | CSS / X11 named colours |
@@ -719,11 +726,13 @@ Matplotlib accepts colour specifications in several formats:
 | Greyscale string | `'0.75'` | Float in `[0, 1]` as a string |
 | CN cycle alias | `'C0'`, `'C1'`, … `'C9'` | Colours from the default property cycle |
 
+
 ---
 
 ## Markers & Linestyles Reference
 
 ### Marker Symbols
+
 
 | Code | Shape | Code | Shape |
 |---|---|---|---|
@@ -738,6 +747,7 @@ Matplotlib accepts colour specifications in several formats:
 | `'|'` | Vertical line | `'_'` | Horizontal line |
 | `'P'` | Plus (filled) | `'X'` | Cross (filled) |
 
+
 ### Line Styles
 
 | Code | Style |
@@ -747,6 +757,7 @@ Matplotlib accepts colour specifications in several formats:
 | `'-.'` | Dash-dot line |
 | `':'` | Dotted line |
 | `'None'` or `''` | No line |
+
 
 ### Format String Shorthand
 
@@ -836,7 +847,8 @@ plt.show()
 
 ### GridSpec
 
-`matplotlib.gridspec.GridSpec(nrows, ncols, figure=None, wspace=None, hspace=None, width_ratios=None, height_ratios=None)`: fine-grained control over subplot layout — supports unequal row/column sizes and spanning.
+`matplotlib.gridspec.GridSpec(nrows, ncols, figure=None, wspace=None, hspace=None, width_ratios=None, height_ratios=None)`: fine-grained control over subplot layout;
+supports unequal row/column sizes and spanning.
 
 - `wspace` / `hspace`: width and height spacing between subplots as a fraction of the average Axes size.
 - `width_ratios` / `height_ratios`: list of relative widths/heights for each column/row.
@@ -916,7 +928,9 @@ plt.close('all')      # close all open figures
 
 ## 3D Plots
 
-All 3D plots require an `Axes3D` — obtained via `projection='3d'`.
+All 3D plots require an `Axes3D`;obtained via `projection='3d'`. 
+
+> For scatter plots, we can just set another array for the z-coordinate without more setup.
 
 ```python
 from mpl_toolkits.mplot3d import Axes3D   # noqa: F401 (registers the projection)
@@ -1091,7 +1105,8 @@ plt.ioff()         # turn off interactive mode
 
 ## Seaborn Integration
 
-Seaborn is a higher-level statistical plotting library built on top of Matplotlib. All Seaborn plots return or operate on Matplotlib `Axes` objects, so full Matplotlib customisation is available after calling Seaborn functions.
+Seaborn is a higher-level statistical plotting library built on top of Matplotlib. All Seaborn plots return or operate on Matplotlib `Axes` objects, so full Matplotlib 
+customisation is available after calling Seaborn functions.
 
 ```python
 import seaborn as sns

@@ -784,7 +784,7 @@ print("Counts:", counts)       # [2, 2, 3]
 - `np.dstack(tup)`: stacks arrays depth-wise (along the third axis).
   - `tup`: sequence of arrays.
 
-- `np.column_stack(tup)`: stacks 1D arrays as columns into a 2D array, or 2D arrays column-wise.
+- `np.column_stack(tup)`: stacks 1D arrays as columns into a 2D array, or 2D arrays column-wise. Very useful when combining features and labels.
   - `tup`: sequence of 1D or 2D arrays.
 
 ```python

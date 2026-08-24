@@ -356,7 +356,7 @@ Sudo:
 16. **Enbling core services**
 
 - `systemctl enable NetworkManager`
-- `systemctl enable ly.service`
+- `systemctl enable ly@ttyX.service`
 
 17. **Bootloader**
 
@@ -461,9 +461,10 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
    lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
-   julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl imv`
+   julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl imv swayimg 
+   polkit-gnome nm-applet postgresql`
 
--*Packet plus purpose:**
+**Packet plus purpose:**
 
 - texlive
 - fastetch 
@@ -560,10 +561,13 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - conda
 - kubernetes
 - polkit
-- go 
+- `go`: GoLang with its tool-chain.
 - composer
 - pkgconf openssl
 - imv
+- `swayimg`: lightweight image viewer 
+- `polkit-gnome`: pokit based of Gnome. Used for password prompts.
+ - `nm-applet`: password prompt for wifi.
 
 ---
 

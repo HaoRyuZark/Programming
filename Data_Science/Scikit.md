@@ -33,6 +33,10 @@ Every scikit-learn object follows the same interface:
 
 ## Datasets & Data Loading
 
+```python 
+from sklearn.datasets import ...
+```
+
 ### Built-in Toy Datasets
 
 - `load_iris(return_X_y=False, as_frame=False)`: 150 samples, 4 features, 3 classes (flower species).
@@ -40,9 +44,11 @@ Every scikit-learn object follows the same interface:
 - `load_wine(return_X_y=False)`: 178 samples, 13 features, 3 classes (wine origin).
 - `load_breast_cancer(return_X_y=False)`: 569 samples, 30 features, binary classification.
 - `load_diabetes(return_X_y=False)`: 442 samples, 10 features, continuous regression target.
-- `load_boston()`: **deprecated** — do not use.
+
+#### Attributes Of The Datasets
 
 All `load_*` functions return a `Bunch` object with:
+
 - `.data`: feature matrix (NumPy array).
 - `.target`: target vector.
 - `.feature_names`: list of feature names.

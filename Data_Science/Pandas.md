@@ -157,8 +157,8 @@ df4 = pd.DataFrame(df1)
 
 ## Reading Data
 
-- `pd.read_csv(filepath, sep=',', header='infer', index_col=None, usecols=None, dtype=None, nrows=None, skiprows=None, na_values=None, parse_dates=False, format=None, encoding='utf-8')`: 
-reads a CSV file into a DataFrame.
+- `pd.read_csv(filepath, sep=',', header='infer', index_col=None, usecols=None, dtype=None, nrows=None, skiprows=None, na_values=None, parse_dates=False, format=None, 
+encoding='utf-8')`: reads a CSV file into a DataFrame.
   - `filepath`: path to the file or URL.
   - `sep`: delimiter character (use `\t` for TSV files).
   - `header`: row number to use as column names (default `'infer'`).
@@ -218,7 +218,8 @@ df = pd.read_html("https://example.com", match="Revenue")[0]  # table containing
 
 ### CSV
 
-- `df.to_csv(path_or_buf, sep=',', index=True, header=True, columns=None, encoding='utf-8', na_rep='', float_format=None, date_format=None, mode='w', compression='infer', quoting=None, quotechar='"', lineterminator=None, chunksize=None)`: writes a DataFrame to a CSV file.
+- `df.to_csv(path_or_buf, sep=',', index=True, header=True, columns=None, encoding='utf-8', na_rep='', float_format=None, date_format=None, mode='w', compression='infer', 
+quoting=None, quotechar='"', lineterminator=None, chunksize=None)`: writes a DataFrame to a CSV file.
   - `path_or_buf`: file path or file-like object. If `None`, returns the CSV as a string.
   - `sep`: field delimiter (default `','`). Use `'\t'` for TSV.
   - `index`: if `False`, the row index is not written to the file.
@@ -274,7 +275,8 @@ df.to_csv("output.csv", index=False, quoting=csv.QUOTE_ALL)
 
 ### Excel
 
-- `df.to_excel(excel_writer, sheet_name='Sheet1', index=True, header=True, startrow=0, startcol=0, na_rep='', float_format=None, columns=None, freeze_panes=None, engine=None)`: writes a DataFrame to an Excel `.xlsx` file.
+- `df.to_excel(excel_writer, sheet_name='Sheet1', index=True, header=True, startrow=0, startcol=0, na_rep='', float_format=None, columns=None, freeze_panes=None, engine=None)`: writes a 
+DataFrame to an Excel `.xlsx` file.
   - `excel_writer`: file path string or a `pd.ExcelWriter` object. Use `ExcelWriter` when writing multiple sheets or applying formatting.
   - `sheet_name`: name of the target worksheet (default `'Sheet1'`).
   - `index`: if `False`, the row index is not written.
@@ -286,7 +288,8 @@ df.to_csv("output.csv", index=False, quoting=csv.QUOTE_ALL)
   - `freeze_panes`: tuple `(row, col)` — freezes rows above and columns to the left of this cell (e.g., `(1, 0)` freezes the header row).
   - `engine`: underlying engine — `'openpyxl'` (default for `.xlsx`) or `'xlsxwriter'`.
 
-- `pd.ExcelWriter(path, engine=None, mode='w', if_sheet_exists='error', datetime_format=None, date_format=None)`: context manager for writing to a single Excel file, enabling multiple sheets and engine-level formatting.
+- `pd.ExcelWriter(path, engine=None, mode='w', if_sheet_exists='error', datetime_format=None, date_format=None)`: context manager for writing to a single Excel file, enabling 
+multiple sheets and engine-level formatting.
   - `path`: output file path.
   - `engine`: `'openpyxl'` or `'xlsxwriter'`.
   - `mode`: `'w'` (overwrite) or `'a'` (append sheets to an existing file — requires `openpyxl`).
@@ -339,7 +342,8 @@ with pd.ExcelWriter("dated.xlsx", datetime_format="DD/MM/YYYY") as writer:
 
 ### JSON
 
-- `df.to_json(path_or_buf=None, orient=None, date_format='epoch', double_precision=10, force_ascii=True, date_unit='ms', default_handler=None, lines=False, compression='infer', index=True, indent=None, storage_options=None)`: serialises a DataFrame to JSON.
+- `df.to_json(path_or_buf=None, orient=None, date_format='epoch', double_precision=10, force_ascii=True, date_unit='ms', default_handler=None, lines=False, compression='infer', 
+index=True, indent=None, storage_options=None)`: serialises a DataFrame to JSON.
   - `path_or_buf`: file path or file-like object. If `None`, returns the JSON as a string.
   - `orient`: JSON structure format:
     - `'records'` — `[{col: val, ...}, ...]` — list of row objects (most common, REST-API friendly).
@@ -1083,7 +1087,7 @@ df_filtered = df.groupby("Category").filter(lambda g: len(g) > 10)
 ## Merging, Joining & Concatenation
 
 
-**Merging** behaves like SQL-join and it is used to combine dataframes side by side, while **concat** stacks them vertically.
+**Merging** behaves like SQL-join and it is used to combine dataframes side by side, while 
 
 - `pd.merge(left, right, how='inner', on=None, left_on=None, right_on=None, left_index=False, right_index=False, suffixes=('_x', '_y'))`: merges two DataFrames 
 (SQL-style join).
@@ -1649,4 +1653,5 @@ for row in df.itertuples():
 
 ## Plotting
 
-
+- `scatter_matrix(frame, alpha=0.5, figsize=None, ax=None, grid=False, diagonal='hist', marker='.', density_kwds=None, hist_kwds=None, range_padding=0.05, **kwargs)`: plots 
+a matrix consisting on scatter plots for all combinations of features with histograms in the main diagonal.

@@ -42,6 +42,38 @@ different versions of UNIS and its derivatives by setting rules for file reading
 
 ## Processes
 
+**Processes** in Linux can be viewed using the commands `top`, `htop`, `btop` or any other variant. It will display a list like: 
+
+```txt
+top - 10:46:02 up 7 days, 22:32,  1 user,  load average: 4.20, 4.44, 2.85
+Tasks: 368 total, 1 running, 366 sleep, 1 d-sleep, 0 stopped, 0 zombie
+%Cpu(s): 17.5 us,  1.4 sy,  0.0 ni, 80.3 id,  0.2 wa,  0.5 hi,  0.2 si,  0.0 st 
+MiB Mem :  31845.6 total,  14486.8 free,   6768.6 used,  11891.0 buff/cache     
+MiB Swap:   8192.0 total,   8191.1 free,      0.9 used.  25077.0 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                
+   3604 miguel    20   0   53.9g 784492 569128 S   2.7   2.4  51:11.70 brave                  
+   2480 miguel    -2   0  817236  89584  64292 S   1.7   0.3  27:52.50 sway                   
+ 245931 miguel    20   0 1450.1g 102516  77424 S   1.7   0.3   0:00.05 brave                  
+    445 root      20   0       0      0      0 S   1.0   0.0   3:05.98 btrfs-transaction      
+   2713 miguel    20   0  412800  20864   8560 S   0.7   0.1   5:48.63 pipewire-pulse         
+   4240 miguel    20   0   52.8g 105908  87664 S   0.7   0.3   6:35.74 brave                  
+ 238903 miguel    20   0  635348 112388  29244 S   0.7   0.3   1:36.33 nvim                   
+ 241651 miguel    20   0  605848  82232  14440 S   0.7   0.3   0:23.19 nvim                   
+ 244516 miguel    20   0 1448.2g 299416 146760 S   0.7   0.9   0:13.93 brave                  
+     16 root      20   0       0      0      0 I   0.3   0.0   0:29.92 rcu_preempt            
+   1083 root      20   0  776708  52776  51188 S   0.3   0.2   0:41.17 rsyslogd               
+   2620 miguel    20   0  340960  16648   9104 S   0.3   0.1   3:49.15 pipewire               
+   3665 miguel    20   0   52.7g  72552  49900 S   0.3   0.2   2:07.51 brave                  
+ 224779 miguel    20   0 2342992  65280  48304 S   0.3   0.2   0:16.67 waybar               
+```
+
+
+
+This list will give information about the process like: **id (PID)**, **memory usage**, **user**, etc.
+
+We can end a process using the `kill` command plus the specified **id**.
+
 --- 
 
 ## Enviroment variables 

@@ -1,18 +1,20 @@
-from typing import Counter
 import numpy as np 
 import pandas as pd 
 import matplotlib.pyplot as pyplot 
 import math 
+from collections import Counter
 
-def euclidean_dist(x,y):
+def euclidean_dist_scratch(x,y):
     n = len(x)
     sum = 0
     for i in range(0, n):
         sum += (x[i] - y[i])**2
 
-    return math.sqrt(sum)
-     
+    return math.sqrt(sum) 
 
+
+def euclidean_dist(x,y):
+    return np.linalg.norm(x - y)
 
 class KNN:
     def __init__(self, k=3, func=euclidean_dist):
@@ -26,6 +28,9 @@ class KNN:
     def predict(self, X_test):
         predictions = np.array([self._predict(x) for x in X_test])
         return predictions
+    
+    def _majority_vote(self, neigbors):
+        return Counter(neigbors).most_common()
 
     def _predict(self, x):
 
@@ -34,6 +39,6 @@ class KNN:
  
         k_nearest_labels = [self.y_train[i] for i in sorted_indices]    
 
-        return Counter(k_nearest_labels).most_common()[0][0]
+        return self. _majority_vote(k_nearest_labels) 
 
         
