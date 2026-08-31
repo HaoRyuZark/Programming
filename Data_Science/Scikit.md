@@ -18,13 +18,21 @@ from sklearn import ...
 Every scikit-learn object follows the same interface:
 
 - `.fit(X, y=None)`: trains the model on data `X` (and labels `y` for supervised models). Always returns `self`.
+
 - `.predict(X)`: returns predicted labels or values for `X`.
+
 - `.predict_proba(X)`: returns class probabilities (classifiers that support it).
+
 - `.transform(X)`: applies a learned transformation (preprocessors, decomposers).
+
 - `.fit_transform(X, y=None)`: equivalent to `.fit(X).transform(X)` but often more efficient.
+
 - `.score(X, y)`: returns the default performance metric (R² for regressors, accuracy for classifiers).
+
 - `.get_params(deep=True)`: returns a dict of the estimator's parameters.
+
 - `.set_params(**params)`: sets parameters and returns `self`.
+
 - `.inverse_transform(X)`: reverses a transformation (where supported).
 
 > **Convention**: capital `X` denotes the feature matrix (shape `(n_samples, n_features)`); lowercase `y` denotes the target vector (shape `(n_samples,)`).
@@ -40,9 +48,13 @@ from sklearn.datasets import ...
 ### Built-in Toy Datasets
 
 - `load_iris(return_X_y=False, as_frame=False)`: 150 samples, 4 features, 3 classes (flower species).
+
 - `load_digits(n_class=10, return_X_y=False)`: 1797 samples, 64 features, handwritten digit images.
+
 - `load_wine(return_X_y=False)`: 178 samples, 13 features, 3 classes (wine origin).
+
 - `load_breast_cancer(return_X_y=False)`: 569 samples, 30 features, binary classification.
+
 - `load_diabetes(return_X_y=False)`: 442 samples, 10 features, continuous regression target.
 
 #### Attributes Of The Datasets
@@ -120,7 +132,11 @@ print("Train:", X_train.shape, "Test:", X_test.shape)
 
 ---
 
-## Preprocessing (`sklearn.preprocessing`)
+## Preprocessing 
+
+```py 
+from sklearn.preprocessing import ...
+```
 
 ### Scalers
 
@@ -144,6 +160,27 @@ print("Train:", X_train.shape, "Test:", X_test.shape)
 
 > **Rule of thumb**: use `StandardScaler` as default, `RobustScaler` with many outliers, `QuantileTransformer` / `PowerTransformer` when normality is required (e.g., linear models).
 
+```python
+from sklearn.preprocessing import (StandardScaler, MinMaxScaler, RobustScaler)
+import numpy as np
+
+X = np.array([[1.0, 100.0], [2.0, 200.0], [3.0, 300.0], [100.0, 10.0]])
+
+ss = StandardScaler()
+X_std = ss.fit_transform(X)
+print("Mean after StandardScaler:", X_std.mean(axis=0))  # ≈ [0, 0]
+print("Std after StandardScaler:", X_std.std(axis=0))    # ≈ [1, 1]
+print("Learned mean:", ss.mean_)
+
+mm = MinMaxScaler(feature_range=(0, 1))
+X_mm = mm.fit_transform(X)
+print("MinMax range:", X_mm.min(axis=0), X_mm.max(axis=0))
+
+rb = RobustScaler()
+X_rb = rb.fit_transform(X)   # robust to the outlier at row 3
+```
+
+
 ### Encoders
 
 - `OneHotEncoder(categories='auto', drop=None, sparse_output=True, handle_unknown='error', dtype=float)`: encodes categorical features as binary indicator columns.
@@ -157,6 +194,26 @@ print("Train:", X_train.shape, "Test:", X_test.shape)
 
 - `LabelBinarizer(neg_label=0, pos_label=1, sparse_output=False)`: binarizes labels for multi-class problems (one-vs-rest).
 
+```py
+from sklearn.preprocessing import (OneHotEncoder, OrdinalEncoder, LabelEncoder)
+import numpy as np
+
+cats = np.array([['cat'], ['dog'], ['cat'], ['bird'], ['dog']])
+enc = OneHotEncoder(sparse_output=False)
+X_enc = enc.fit_transform(cats)
+print("One-hot categories:", enc.categories_)
+print("Encoded:\n", X_enc)
+
+ord_enc = OrdinalEncoder()
+X_ord = ord_enc.fit_transform(cats)
+print("Ordinal:", X_ord.ravel())
+
+le = LabelEncoder()
+y_enc = le.fit_transform(['cat', 'dog', 'bird', 'cat'])
+print("Labels:", y_enc)                # [1, 2, 0, 1]
+print("Classes:", le.classes_)         # ['bird', 'cat', 'dog']
+```
+
 ### Imputation
 
 - `SimpleImputer(missing_values=nan, strategy='mean', fill_value=None, add_indicator=False)`: fills in missing values.
@@ -166,6 +223,19 @@ print("Train:", X_train.shape, "Test:", X_test.shape)
 - `KNNImputer(n_neighbors=5, weights='uniform', metric='nan_euclidean')`: imputes using the mean of k nearest neighbours.
 
 - `IterativeImputer(estimator=None, max_iter=10, random_state=None)`: multivariate imputation modelling each feature with missing values as a function of all others. Experimental.
+
+```py
+from sklearn.impute import SimpleImputer, KNNImputer
+import numpy as np
+
+X_nan = np.array([[1., 2.], [np.nan, 4.], [5., np.nan], [7., 8.]])
+imputer = SimpleImputer(strategy='mean')
+X_imp = imputer.fit_transform(X_nan)
+print("Imputed:\n", X_imp)
+
+knn_imp = KNNImputer(n_neighbors=2)
+X_knn = knn_imp.fit_transform(X_nan)
+```
 
 ### Feature Construction
 
@@ -182,13 +252,23 @@ print("Train:", X_train.shape, "Test:", X_test.shape)
   - `strategy`: `'uniform'`, `'quantile'`, `'kmeans'`.
   - `encode`: `'onehot'`, `'onehot-dense'`, `'ordinal'`.
 
+```py 
+from sklearn.preprocessing import (PolynomialFeatures, PowerTransformer,
+                                    QuantileTransformer, Normalizer)
+import numpy as np
+
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_poly = poly.fit_transform(np.array([[1., 2.], [3., 4.]]))
+print("Poly feature names:", poly.get_feature_names_out())
+```
+
 ### ColumnTransformer
 
 - `ColumnTransformer(transformers, remainder='drop', sparse_threshold=0.3, n_jobs=None, transformer_weights=None, verbose_feature_names_out=True)`: applies different transformers to different columns.
   - `transformers`: list of `(name, transformer, columns)` triples. `columns` can be a list of indices, names, or a boolean mask.
   - `remainder`: what to do with untransformed columns — `'drop'`, `'passthrough'`, or a transformer.
 
-```python
+```py
 from sklearn.preprocessing import (StandardScaler, MinMaxScaler, RobustScaler,
                                     OneHotEncoder, OrdinalEncoder, LabelEncoder,
                                     PolynomialFeatures, PowerTransformer,
@@ -196,55 +276,8 @@ from sklearn.preprocessing import (StandardScaler, MinMaxScaler, RobustScaler,
 from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn.compose import ColumnTransformer
 import numpy as np
-
-# --- Scalers ---
-X = np.array([[1.0, 100.0], [2.0, 200.0], [3.0, 300.0], [100.0, 10.0]])
-
-ss = StandardScaler()
-X_std = ss.fit_transform(X)
-print("Mean after StandardScaler:", X_std.mean(axis=0))  # ≈ [0, 0]
-print("Std after StandardScaler:", X_std.std(axis=0))    # ≈ [1, 1]
-print("Learned mean:", ss.mean_)
-
-mm = MinMaxScaler(feature_range=(0, 1))
-X_mm = mm.fit_transform(X)
-print("MinMax range:", X_mm.min(axis=0), X_mm.max(axis=0))
-
-rb = RobustScaler()
-X_rb = rb.fit_transform(X)   # robust to the outlier at row 3
-
-# --- Encoders ---
-cats = np.array([['cat'], ['dog'], ['cat'], ['bird'], ['dog']])
-enc = OneHotEncoder(sparse_output=False)
-X_enc = enc.fit_transform(cats)
-print("One-hot categories:", enc.categories_)
-print("Encoded:\n", X_enc)
-
-ord_enc = OrdinalEncoder()
-X_ord = ord_enc.fit_transform(cats)
-print("Ordinal:", X_ord.ravel())
-
-le = LabelEncoder()
-y_enc = le.fit_transform(['cat', 'dog', 'bird', 'cat'])
-print("Labels:", y_enc)                # [1, 2, 0, 1]
-print("Classes:", le.classes_)         # ['bird', 'cat', 'dog']
-
-# --- Imputation ---
-X_nan = np.array([[1., 2.], [np.nan, 4.], [5., np.nan], [7., 8.]])
-imputer = SimpleImputer(strategy='mean')
-X_imp = imputer.fit_transform(X_nan)
-print("Imputed:\n", X_imp)
-
-knn_imp = KNNImputer(n_neighbors=2)
-X_knn = knn_imp.fit_transform(X_nan)
-
-# --- Polynomial features ---
-poly = PolynomialFeatures(degree=2, include_bias=False)
-X_poly = poly.fit_transform(np.array([[1., 2.], [3., 4.]]))
-print("Poly feature names:", poly.get_feature_names_out())
-
-# --- ColumnTransformer ---
 import pandas as pd
+
 df = pd.DataFrame({
     'age':    [25., 30., np.nan, 45.],
     'salary': [50000., 60000., 70000., 80000.],
@@ -263,7 +296,11 @@ print("ColumnTransformer output shape:", X_ct.shape)   # (4, 7): 2 scaled + 3 OH
 
 ---
 
-## Pipelines (`sklearn.pipeline`)
+## Pipelines 
+
+```py 
+from sklearn.pipeline import ...
+```
 
 A `Pipeline` chains preprocessing steps and a final estimator. Only the last step can be an estimator; all others must be transformers (implement `fit` and `transform`).
 
@@ -276,8 +313,11 @@ A `Pipeline` chains preprocessing steps and a final estimator. Only the last ste
 - `make_pipeline(*steps, memory=None, verbose=False)`: convenience constructor that auto-names steps from their class names (lowercase).
 
 - `Pipeline.fit(X, y=None)`: calls `fit_transform` on all but the last step, then `fit` on the last.
+
 - `Pipeline.predict(X)`: calls `transform` on all but the last step, then `predict`.
+
 - `Pipeline.score(X, y)`: calls `transform`, then `score` on the final estimator.
+
 - `Pipeline.set_params(**params)`: sets parameters using `step__param` notation.
 
 ```python
@@ -337,20 +377,83 @@ print("All params:", pipe_reg.get_params())
   - Returns array of scores for each fold.
 
 - `cross_validate(estimator, X, y=None, scoring=None, cv=5, return_train_score=False, n_jobs=None)`: like `cross_val_score` but also reports fit and score times and optionally train scores.
+  - `` 
+
 
 - `cross_val_predict(estimator, X, y=None, cv=5, method='predict', n_jobs=None)`: generates out-of-fold predictions — useful for stacking and diagnostic plots.
+  - `` 
+
+```py 
+from sklearn.model_selection import (cross_val_score, cross_validate, cross_val_predict)
+                                      KFold, StratifiedKFold, TimeSeriesSplit,
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.datasets import load_iris, load_diabetes
+from scipy.stats import randint, uniform
+import pandas as pd
+import numpy as np
+
+X, y = load_iris(return_X_y=True)
+
+pipe = Pipeline([('scaler', StandardScaler()), ('clf', KNeighborsClassifier())])
+scores = cross_val_score(pipe, X, y, cv=5, scoring='accuracy')
+print(f"5-fold accuracy: {scores.mean():.4f} ± {scores.std():.4f}")
+
+# Multiple metrics
+cv_res = cross_validate(pipe, X, y, cv=5,
+                         scoring=['accuracy', 'f1_macro'],
+                         return_train_score=True)
+
+print("Test accuracy:", cv_res['test_accuracy'].mean())
+print("Train accuracy:", cv_res['train_accuracy'].mean())
+
+# Out-of-fold predictions (for diagnostic plots)
+y_oof = cross_val_predict(pipe, X, y, cv=5, method='predict_proba')
+print("OOF proba shape:", y_oof.shape)   # (150, 3)
+
+
+```
 
 ### CV Splitters
 
 - `KFold(n_splits=5, shuffle=False, random_state=None)`: basic k-fold.
+  - `` 
 - `StratifiedKFold(n_splits=5, shuffle=False, random_state=None)`: preserves class proportions in each fold.
+  - `` 
+
 - `RepeatedKFold(n_splits=5, n_repeats=10, random_state=None)`: repeats k-fold multiple times for more stable estimates.
+  - `` 
+
 - `RepeatedStratifiedKFold(n_splits=5, n_repeats=10, random_state=None)`: stratified + repeated.
+  - ``
+
 - `ShuffleSplit(n_splits=10, test_size=0.1, random_state=None)`: random train/test splits (not exhaustive).
+  - ``
+
 - `StratifiedShuffleSplit(n_splits=10, test_size=0.1, random_state=None)`: stratified random splits.
+  - ``
+
 - `LeaveOneOut()`: leave-one-out CV. Expensive for large datasets.
+  - ``
+
 - `GroupKFold(n_splits=5)`: ensures that the same group does not appear in both train and test.
+  - ``
+
 - `TimeSeriesSplit(n_splits=5, gap=0, max_train_size=None)`: sequential splits for time series — test always follows train.
+  - ``
+
+```py 
+from sklearn.model_selection import (KFold, StratifiedKFold, TimeSeriesSplit, GridSearchCV, RandomizedSearchCV)
+from sklearn.datasets import load_iris, load_diabetes
+import pandas as pd
+import numpy as np
+
+X, y = load_iris(return_X_y=True)
+
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+for fold, (tr, te) in enumerate(skf.split(X, y)):
+    print(f"Fold {fold}: train={len(tr)}, test={len(te)}")
+```
 
 ### Hyperparameter Tuning
 
@@ -363,8 +466,10 @@ print("All params:", pipe_reg.get_params())
   - `param_distributions`: dict mapping parameter names to distributions or lists. Use `scipy.stats` distributions (e.g., `stats.randint(1, 11)`).
 
 - `HalvingGridSearchCV(estimator, param_grid, factor=3, resource='n_samples', cv=5)`: successive halving — starts with all candidates on a small budget, progressively allocates more to the best. Much faster than GridSearch.
+  - ``
 
 - `HalvingRandomSearchCV(estimator, param_distributions, n_candidates='exhaust', factor=3, resource='n_samples')`: random search with successive halving.
+  - ``
 
 ```python
 from sklearn.model_selection import (cross_val_score, cross_validate, cross_val_predict,
@@ -378,30 +483,6 @@ from scipy.stats import randint, uniform
 import pandas as pd
 import numpy as np
 
-X, y = load_iris(return_X_y=True)
-
-# --- Cross-val score ---
-pipe = Pipeline([('scaler', StandardScaler()), ('clf', KNeighborsClassifier())])
-scores = cross_val_score(pipe, X, y, cv=5, scoring='accuracy')
-print(f"5-fold accuracy: {scores.mean():.4f} ± {scores.std():.4f}")
-
-# Multiple metrics
-cv_res = cross_validate(pipe, X, y, cv=5,
-                         scoring=['accuracy', 'f1_macro'],
-                         return_train_score=True)
-print("Test accuracy:", cv_res['test_accuracy'].mean())
-print("Train accuracy:", cv_res['train_accuracy'].mean())
-
-# Out-of-fold predictions (for diagnostic plots)
-y_oof = cross_val_predict(pipe, X, y, cv=5, method='predict_proba')
-print("OOF proba shape:", y_oof.shape)   # (150, 3)
-
-# --- Stratified k-fold ---
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-for fold, (tr, te) in enumerate(skf.split(X, y)):
-    print(f"Fold {fold}: train={len(tr)}, test={len(te)}")
-
-# --- GridSearchCV ---
 X_r, y_r = load_diabetes(return_X_y=True)
 
 pipe_r = Pipeline([
@@ -444,7 +525,11 @@ print("RandomSearch best R²:", round(rnd.best_score_, 4))
 
 ---
 
-## Linear Models (`sklearn.linear_model`)
+## Linear Models 
+
+```py 
+from sklearn.linear_model import ...
+```
 
 ### Regression
 
@@ -468,6 +553,10 @@ print("RandomSearch best R²:", round(rnd.best_score_, 4))
 - `HuberRegressor(epsilon=1.35, alpha=0.0001, max_iter=100)`: robust to outliers; uses Huber loss.
 
 - `SGDRegressor(loss='squared_error', penalty='l2', alpha=0.0001, learning_rate='invscaling', max_iter=1000, random_state=None)`: stochastic gradient descent — scales to very large datasets.
+
+```py 
+
+```
 
 ### Classification
 
@@ -560,10 +649,14 @@ lr_bal.fit(Xc_tr, yc_tr)
 
 ---
 
-## Support Vector Machines (`sklearn.svm`)
+## Support Vector Machines
+
+```py 
+from sklearn.svm import ...
+```
 
 - `SVC(C=1.0, kernel='rbf', degree=3, gamma='scale', coef0=0.0, probability=False, class_weight=None, random_state=None)`: Support Vector Classifier.
-  - `C`: regularisation — smaller = wider margin, more misclassification allowed.
+  - `C`: regularisation; smaller = wider margin, more misclassification allowed.
   - `kernel`: `'linear'`, `'rbf'` (default), `'poly'`, `'sigmoid'`, `'precomputed'`.
   - `degree`: degree for polynomial kernel.
   - `gamma`: kernel coefficient for `'rbf'`, `'poly'`, `'sigmoid'`. `'scale'` = `1/(n_features * X.var())`; `'auto'` = `1/n_features`.
@@ -590,24 +683,20 @@ import numpy as np
 X, y = load_iris(return_X_y=True)
 X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# --- SVC with RBF kernel (default) ---
 svc = make_pipeline(StandardScaler(), SVC(C=1.0, kernel='rbf', gamma='scale'))
 svc.fit(X_tr, y_tr)
 print("SVC (RBF) accuracy:", round(svc.score(X_te, y_te), 4))
 
-# With probabilities
 svc_prob = make_pipeline(StandardScaler(),
                           SVC(C=1.0, kernel='rbf', probability=True, random_state=42))
 svc_prob.fit(X_tr, y_tr)
 proba = svc_prob.predict_proba(X_te[:5])
 print("SVC probabilities:\n", proba.round(3))
 
-# --- Linear SVC (faster for large datasets) ---
 lsvc = make_pipeline(StandardScaler(), LinearSVC(C=1.0, max_iter=5000))
 lsvc.fit(X_tr, y_tr)
 print("LinearSVC accuracy:", round(lsvc.score(X_te, y_te), 4))
 
-# --- SVR ---
 X_r, y_r = load_diabetes(return_X_y=True)
 X_tr_r, X_te_r, y_tr_r, y_te_r = train_test_split(X_r, y_r, test_size=0.2, random_state=42)
 
@@ -621,7 +710,7 @@ print("Number of support vectors:", svc['svc'].support_vectors_.shape[0])
 
 ---
 
-## Decision Trees (`sklearn.tree`)
+## Decision Trees 
 
 - `DecisionTreeClassifier(criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1, max_features=None, class_weight=None, random_state=None)`: CART decision tree for classification.
   - `criterion`: split quality measure — `'gini'` (default) or `'entropy'` (information gain).
@@ -691,7 +780,7 @@ print("DT Regressor R²:", round(dt_r.score(X_te_r, y_te_r), 4))
 
 ---
 
-## Nearest Neighbours (`sklearn.neighbors`)
+## Nearest Neighbours 
 
 - `KNeighborsClassifier(n_neighbors=5, weights='uniform', algorithm='auto', leaf_size=30, p=2, metric='minkowski', n_jobs=None)`: k-nearest-neighbour classifier.
   - `weights`: `'uniform'` (all neighbours equal) or `'distance'` (closer = more weight).

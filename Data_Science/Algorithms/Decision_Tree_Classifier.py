@@ -19,7 +19,7 @@ class Node:
 
 class Decision_Tree_Classifier:
 
-    def __init__(self, min_samples_split=2, max_depth=2):
+    def __init__(self, min_samples_split=2, max_depth=50):
         
         self.root = None 
         self.min_samples_split = min_samples_split
@@ -50,11 +50,13 @@ class Decision_Tree_Classifier:
                 # Once the sub trees are build return the current root node 
                 return Node(best_split["feature_index"], best_split["threshold"], left_subtree, right_subtree, best_split["info_gain"])
         
-        # Majority voting for the label
-        leaf_value = self.calculate_leaf_value(y)
-        
-        # return the leaf node
-        return Node(value=leaf_value)
+        else:
+            # Majority voting for the label
+            leaf_value = self.calculate_leaf_value(y)
+            
+            # return the leaf node
+            return Node(value=leaf_value)
+
 
     def get_best_split(self, dataset, n_samples, n_features):
         
@@ -129,18 +131,15 @@ class Decision_Tree_Classifier:
             gini += p_clss**2
 
         return gini
-
-    def entropy(self, y):
-        class_labels = np.unique(y) 
-        entropy = 0
-
-        for cls in class_labels:
-            p_clss = len(y[y == cls]) / len(y) # probability calculation
-            entropy += p_clss * np.log2(p_clss)
-
-        return entropy
-
     
+    def entropy(self,y):
+        # Get frequencies 
+        vals, freqs = np.unique(y, return_counts=True)
+        # Get set size
+        l = len(vals)
+        # return etropy
+        return np.sum( [-( (freqs[i]/l) * np.log2(freqs[i]/l)) for i in range(l)])
+
     # Majority voting function
     def calculate_leaf_value(self, y):
         Y = list(y)

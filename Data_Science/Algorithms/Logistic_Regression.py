@@ -1,34 +1,44 @@
 import numpy as np
-from matplotlib import pyplot as plt
-import math
 
 class Logistic_Regression:
 
-    def __init__(self, n_iters=1000, learning_rate=0.0001):
+    def __init__(self, n_iters=100, learning_rate=0.01, threshold=0.5):
         self.n_iters = n_iters
         self.learning_rate = learning_rate
-        self.weights = None 
-        self.bias = None 
-    
-    def theta(self, X):
-        return X.T @ self.weights + self.bias
+        self.threshold = threshold
 
-    def sigmoid(self, theta):
-        return 1.0 / (1.0 + np.exp(-theta))
-    
     def fit(self, X, y):
-        n_samples, n_features = X.shape
-        
-        for _ in range(self.n_iters):
-            
-            y_pred = self.sigmoid(self.theta(X))
-              
-            dw = (1/n_samples) * (X.T @ (y_pred - y)) # outputs vector
-            db = (1/n_samples) * np.sum((y_pred - y)) # outputs number
+        self.X = X
+        self.y = y
+        self.n_samples, self.m_features = X.shape
+        return self
+    
+    def _theta(self, X, w, b):
+        return X @ w + b
 
-            self.weights = self.weights - (self.learning_rate * dw)
-            self.bias = self.bias - (self.learning_rate * db)
-        
-    def predict(self, X, threshold=0.5):
-        y_pred = self.sigmoid(self.theta(X))
-        return np.array([0 if y <= threshold else 1 for y in y_pred])
+    def _sigmoid(self, z):
+        return 1 / (1 + np.exp(-z))
+
+    def transform(self):
+        self.w = np.zeros(self.m_features)
+        self.b = 0
+
+        for _ in range(self.n_iters):
+            z = self._theta(self.X, self.w, self.b) 
+            y_pred = self._sigmoid(z)
+
+            error = y_pred - self.y
+
+            dw = (1 / self.n_samples) * self.X.T @ error
+            db = (1 / self.n_samples) * np.sum(error)
+
+            self.w -= self.learning_rate * dw
+            self.b -= self.learning_rate * db
+
+        return self.w, self.b
+
+    def predict(self, X_test):
+        z = self._theta(X_test, self.w, self.b)
+        y_pred = self._sigmoid(z)
+
+        return np.where(y_pred >= self.threshold, 1, 0)

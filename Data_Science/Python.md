@@ -1131,31 +1131,57 @@ fs = frozenset([1, 2, 3])
 Strings are immutable sequences of Unicode characters.
 
 - `s.capitalize()`: first character uppercase, rest lowercase.
+
 - `s.lower()` / `s.upper()` / `s.title()` / `s.swapcase()`: case conversions.
+
 - `s.casefold()`: aggressive lowercase for case-insensitive comparisons (handles non-ASCII).
+
 - `s.strip(chars=None)` / `s.lstrip()` / `s.rstrip()`: removes leading/trailing characters (default: whitespace).
+
 - `s.removeprefix(prefix)` / `s.removesuffix(suffix)`: removes a prefix/suffix if present (Python 3.9+).
+
 - `s.replace(old, new, count=-1)`: replaces occurrences of `old` with `new`. `count` limits replacements.
+
 - `s.split(sep=None, maxsplit=-1)`: splits at `sep`. If `sep` is `None`, splits on any whitespace and removes empty strings.
+
 - `s.rsplit(sep=None, maxsplit=-1)`: like `split` but starts from the right.
+
 - `s.splitlines(keepends=False)`: splits at line boundaries.
+
 - `s.join(iterable)`: joins elements of `iterable` with `s` as separator.
+
 - `s.find(sub, start=0, end=None)`: returns the lowest index where `sub` is found, or `-1`.
+
 - `s.rfind(sub)`: like `find` but searches from the right.
+
 - `s.index(sub)`: like `find` but raises `ValueError` if not found.
+
 - `s.rindex(sub)`: like `index` from the right.
+
 - `s.count(sub, start=0, end=None)`: counts non-overlapping occurrences of `sub`.
+
 - `s.startswith(prefix)` / `s.endswith(suffix)`: returns `True`/`False`. Accepts tuples for multiple patterns.
+
 - `s.center(width, fillchar=' ')` / `s.ljust(width, fillchar)` / `s.rjust(width, fillchar)`: padding.
+
 - `s.zfill(width)`: pads with leading zeros.
+
 - `s.encode(encoding='utf-8')`: returns the string as a `bytes` object.
+
 - `s.format(*args, **kwargs)`: formats a string using `{}` placeholders.
+
 - `s.format_map(mapping)`: like `format` but takes a mapping directly.
+
 - `s.partition(sep)`: splits at the first occurrence of `sep`, returns `(before, sep, after)`.
+
 - `s.rpartition(sep)`: like `partition` but from the right.
+
 - `s.maketrans(x, y, z)`: creates a translation table for use with `translate()`.
+
 - `s.translate(table)`: applies a translation table to each character.
+
 - `s.isalnum()` / `s.isalpha()` / `s.isdigit()` / `s.isnumeric()` / `s.isdecimal()`: character class checks.
+
 - `s.isspace()` / `s.isupper()` / `s.islower()` / `s.istitle()` / `s.isidentifier()` / `s.isprintable()` / `s.isascii()`: additional checks.
 
 ```python

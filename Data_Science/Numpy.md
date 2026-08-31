@@ -67,6 +67,10 @@ m1 = np.mean(axis_example, axis=1)  # [1. 1. 1.]
 - **axis = 2**: acts on the rows inside each 2D array.
 - **axis = 3**: acts on the columns inside each 2D array.
 
+#### np.newaxis
+
+
+
 ---
 
 ## Array & Matrix Initialization

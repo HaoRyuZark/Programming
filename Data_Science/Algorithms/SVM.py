@@ -32,7 +32,6 @@ class SVM:
                     self.w -= self.learning_rate * (2 * self.lambda_param * self.w - np.dot(x_i, y_[idx])) 
                     self.b -= self.learning_rate * y_[idx]
 
-
     
     def predict(self, X):
         approx = X @ self.w  - self.b

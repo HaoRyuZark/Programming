@@ -1177,3 +1177,64 @@ plt.rcParams.update({
     'lines.linewidth': 2,
 })
 ```
+
+--- 
+
+## Interactive Plots 
+
+We can also animate our plots with interactive parameters using the API provided by this library.
+
+
+```py 
+import numpy as np
+from matplotlib import pyplot as plt
+from numpy.polynomial import Polynomial
+
+# ---------------------------------------------------- 
+
+def get_target_function():
+    return Polynomial((1, 2, -1, -2))
+
+
+def get_data(sigma=0, N=5):
+    np.random.seed(3)
+    p = Polynomial((1, 2, -1, -2))
+    x = np.sort(np.random.random_sample(size=N) * 2 - 1)
+    noise = np.random.standard_normal(len(x))
+    return x, p(x) + noise * sigma
+
+def phi4(x):
+    return np.array([x, x**2, x**3, x**4])
+
+def get_final_g(x, w):
+    return w[0] + w[1]* x
+
+def lin_reg(X, lamb):
+    n_samples, m_features = X.shape
+    ones = np.ones(n_samples)
+    X_t = np.column_stack((ones, X))
+    Z = X_t.T @ X_t
+    return np.linalg.inv(Z + lamb * np.eye(Z.shape[0])) @ X_t.T @ y 
+
+# ---------------------------------------------------- 
+
+X, y = get_data(N=6, sigma=.2)
+
+from ipywidgets import interact
+import ipywidgets as widgets
+@interact(lamb=widgets.FloatSlider(min=0,max=1.5,step=0.1,value=0))
+def showPlot(lamb):
+    
+    X_t = np.array([phi4(x) for x in X])
+    w = lin_reg(X_t, lamb)
+    y_plot = [get_final_g(x, w) for x in X]
+
+    plt.scatter(X, y)
+    plt.plot(X, y_plot, color="red")
+    plt.grid()
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.ylim(-1, 2)
+    plt.title("Title")
+
+```
