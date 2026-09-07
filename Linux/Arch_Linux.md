@@ -596,6 +596,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `rustup component add rust-analyzer`
 - `yay -S tex-fmt`
 - `cargo install --git https://github.com/itsjunetime/tdf.git`
+- `sudo npm install -g @angular/cli`
 
 ---
 

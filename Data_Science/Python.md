@@ -33,6 +33,7 @@ Python's built-in types. Everything is an object, including primitives.
 | `dict`  | `{"a": 1, "b": 2}`            | Yes     |
 | `set`   | `{1, 2, 3}`                   | Yes     |
 
+
 ```python
 num: int     = 10
 flt: float   = 10.5
@@ -760,10 +761,6 @@ C3-Merksatz: Nimm immer den ersten Kopf der MRO-Listen, der nicht im Schwanz ein
 
 ---
 
-## Dataclasses
-
---- 
-
 ## Generic Types
 
 Generics allow writing reusable, type-safe classes and functions that work across different types.
@@ -802,7 +799,8 @@ print(first(["a", "b", "c"])) # a
 
 ## Generators
 
-Generators are functions that lazily produce values using `yield`, pausing execution between each one. They are memory-efficient because they produce items one at a time rather than storing the entire sequence.
+Generators are functions that lazily produce values using `yield`, pausing execution between each one. They are memory-efficient because they produce items one at a time 
+rather than storing the entire sequence.
 
 ```python
 def simple_generator():
@@ -914,7 +912,52 @@ print(grouped)   # [('a', ['a','a']), ('b', ['b','b']), ('c', ['c','c'])]
 
 ---
 
-## List Comprehensions
+## Lists
+
+A **list** is the equivalent of array in python.
+
+- `l.append(x)`: adds `x` to the end of the list.
+
+- `l.extend(iterable)`: concatenates `iterable` to the end.
+
+- `l.insert(i, x)`: inserts `x` before index `i`.
+
+- `l.remove(x)`: removes the first occurrence of `x`. Raises `ValueError` if not found.
+
+- `l.pop(i=-1)`: removes and returns the element at index `i` (default: last element).
+
+- `l.index(x, start=0, end=None)`: returns the index of the first occurrence of `x`.
+
+- `l.count(x)`: returns the number of occurrences of `x`.
+
+- `l.sort(key=None, reverse=False)`: sorts the list in place.
+
+- `l.reverse()`: reverses the list in place.
+
+- `l.copy()`: returns a shallow copy.
+
+- `l.clear()`: removes all elements.
+
+```python
+l = [1, 2, 3, 4, 5, 5, 6, 6, 7]
+
+l.append(8)           # [1,2,3,4,5,5,6,6,7,8]
+l.extend([9, 10])     # [1,2,...,9,10]
+l.insert(0, 0)        # [0,1,2,3,4,5,5,6,6,7,8,9,10]
+l.remove(5)           # removes first 5
+l.pop()               # removes and returns 10
+l.pop(0)              # removes and returns 0
+print(l.index(6))     # index of first 6
+print(l.count(6))     # how many 6s
+l.sort()              # sort in place
+l.sort(key=lambda x: -x, reverse=False)  # sort descending
+l.reverse()           # reverse in place
+lc = l.copy()         # shallow copy
+l.clear()             # empty list
+print(l)              # []
+```
+
+### List Comprehensions
 
 Concise syntax for building lists, sets, dicts, and generators from iterables.
 
@@ -942,39 +985,56 @@ print(squared_dict)   # {0:0, 1:1, 2:4, 3:9, 4:16, 5:25}
 total = sum(x * x for x in range(100))   # no intermediate list created
 ```
 
----
+### Slicing
 
-## List Methods
+General form: `sequence[start:stop:step]`. Works on lists, tuples, strings, and any sequence.
 
-- `l.append(x)`: adds `x` to the end of the list.
-- `l.extend(iterable)`: concatenates `iterable` to the end.
-- `l.insert(i, x)`: inserts `x` before index `i`.
-- `l.remove(x)`: removes the first occurrence of `x`. Raises `ValueError` if not found.
-- `l.pop(i=-1)`: removes and returns the element at index `i` (default: last element).
-- `l.index(x, start=0, end=None)`: returns the index of the first occurrence of `x`.
-- `l.count(x)`: returns the number of occurrences of `x`.
-- `l.sort(key=None, reverse=False)`: sorts the list in place.
-- `l.reverse()`: reverses the list in place.
-- `l.copy()`: returns a shallow copy.
-- `l.clear()`: removes all elements.
+- `start`: beginning index (inclusive, default 0).
+- `stop`: ending index (exclusive, default end of sequence).
+- `step`: step size (default 1); negative step reverses direction.
+
+> Lists treat negative numbers as if we were in a ring buffer, therefore, `l[-1]` returns the last item in the list. We can use them also by slicing.
 
 ```python
-l = [1, 2, 3, 4, 5, 5, 6, 6, 7]
+my_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-l.append(8)           # [1,2,3,4,5,5,6,6,7,8]
-l.extend([9, 10])     # [1,2,...,9,10]
-l.insert(0, 0)        # [0,1,2,3,4,5,5,6,6,7,8,9,10]
-l.remove(5)           # removes first 5
-l.pop()               # removes and returns 10
-l.pop(0)              # removes and returns 0
-print(l.index(6))     # index of first 6
-print(l.count(6))     # how many 6s
-l.sort()              # sort in place
-l.sort(key=lambda x: -x, reverse=False)  # sort descending
-l.reverse()           # reverse in place
-lc = l.copy()         # shallow copy
-l.clear()             # empty list
-print(l)              # []
+print(my_list[2:8])       # [2, 3, 4, 5, 6, 7]
+print(my_list[2:8:2])     # [2, 4, 6]
+print(my_list[::-1])      # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0] — reversed
+print(my_list[:5])        # [0, 1, 2, 3, 4]
+print(my_list[5:])        # [5, 6, 7, 8, 9]
+print(my_list[-3:])       # [7, 8, 9] — last 3
+
+# Slice object for reuse
+rev = slice(None, None, -1)
+print(my_list[rev])       # [9, 8, 7, ..., 0]
+
+# Works on strings
+s = "Hello, World!"
+print(s[7:12])            # World
+print(s[::-1])            # !dlroW ,olleH
+```
+
+### Addition (Concatenation) & Multiplication
+
+We can also use then`*` and `+` operators on lists; giving us **concatenation** in the case of addition and a repeated list in the case of **multiplication**. 
+
+```py 
+a = [1,2,3]
+b = [4,5]
+
+print(a + b) # [1,2,3,4,5]
+print(b * 2) # [4,5,4,5]
+```
+
+### Checking Membership 
+
+We can check for membership by using the `in` keyboard.
+
+```py 
+a = [1,2,3]
+if 3 in a:
+    print("Hello")
 ```
 
 ---
@@ -1091,22 +1151,37 @@ c["key"] = [1,2,4]
 Unordered collections of unique, hashable elements. Useful for membership tests and set operations.
 
 - `s.add(x)`: adds element `x`.
+
 - `s.remove(x)`: removes `x`. Raises `KeyError` if not found.
+
 - `s.discard(x)`: removes `x` if present. No error if absent.
+
 - `s.update(iterable)`: adds all elements from `iterable`.
+
 - `s.clear()`: removes all elements.
+
 - `s.copy()`: shallow copy.
+
 - `s & other` or `s.intersection(other)`: elements in both sets.
+
 - `s | other` or `s.union(other)`: elements in either set.
+
 - `s - other` or `s.difference(other)`: elements in `s` but not in `other`.
+
 - `s ^ other` or `s.symmetric_difference(other)`: elements in exactly one of the sets.
+
 - `s.issubset(other)`: `True` if `s ⊆ other`.
+
 - `s.issuperset(other)`: `True` if `s ⊇ other`.
+
 - `s.isdisjoint(other)`: `True` if `s` and `other` share no elements.
 
 ```python
 s = {1, 2, 3, 4}
 t = {3, 4, 5, 6}
+
+l = [1,2,4,4]
+s2 = set(l)
 
 s.add(5)
 s.remove(1)
@@ -1227,36 +1302,6 @@ back = raw.decode("utf-8")          # 'hello'
 print("abcabc".find("b"))           # 1
 print("abcabc".rfind("b"))          # 4
 # "abcabc".index("z")              # ValueError
-```
-
----
-
-## Slicing
-
-General form: `sequence[start:stop:step]`. Works on lists, tuples, strings, and any sequence.
-
-- `start`: beginning index (inclusive, default 0).
-- `stop`: ending index (exclusive, default end of sequence).
-- `step`: step size (default 1); negative step reverses direction.
-
-```python
-my_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-print(my_list[2:8])       # [2, 3, 4, 5, 6, 7]
-print(my_list[2:8:2])     # [2, 4, 6]
-print(my_list[::-1])      # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0] — reversed
-print(my_list[:5])        # [0, 1, 2, 3, 4]
-print(my_list[5:])        # [5, 6, 7, 8, 9]
-print(my_list[-3:])       # [7, 8, 9] — last 3
-
-# Slice object for reuse
-rev = slice(None, None, -1)
-print(my_list[rev])       # [9, 8, 7, ..., 0]
-
-# Works on strings
-s = "Hello, World!"
-print(s[7:12])            # World
-print(s[::-1])            # !dlroW ,olleH
 ```
 
 ---
