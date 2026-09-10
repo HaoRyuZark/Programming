@@ -1,5 +1,7 @@
 # AI
 
+Best practices and explanations for **AI** 
+
 --- 
 
 ## LLM 
@@ -106,7 +108,9 @@ from the vector Database is returned and finally given to LLM as context which i
 
 - **MCP**: Model Content Protocol is a procedure in which LLMs ouput its responses in a very specific way to allow the surrounding system to 
 parse its ouput and based on an specific format make "tool-call" whose output is then eventually retrived to the LLM to know now how to continue the prompt 
-and if the task was accomplished. We can also provide a series of files for infomation to be used as context or as part of reponses.
+and if the task was accomplished. We can also provide a series of files for infomation to be used as context or as part of responses.
+
+Installing an MCP-server is basically downloading a markdown file which contains the format for the API of a tool, etc.
 
 - **Skills**: They are markdown files which describe a number of commands for the AI to use. They can also come with scripts for using certain tools. 
 The code is executed by the agent program.
@@ -173,6 +177,7 @@ Ways to mitigate hallucinations:
 - **Iterate & Experiment** – Adjust wording, tone, and constraints.
 - **Validate Outputs** – Always review results for accuracy and reliability.
 - **Architecture** - Define the architecture and tech stack.
+- **1 Task 1 Session** - The fuller the context window gets the worse it gets.
 
 --- 
 

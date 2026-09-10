@@ -6,25 +6,31 @@ List of certifications I want to get.
 
 ## Obligatory 
 
-- Bacherlor of Applied Mathematics and Compute Science (FH)
+- Bachelor of Applied Mathematics and Compute Science (FH)
 - Mathematical-technical Software Developer (IHK)
-- Master in Techno-mathematics (FH)
-- Master of Mathematics (Wisconsin University)
+- Master in Techno-mathematics (FH) / Master of Mathematics (Wisconsin University)
 
 --- 
 
-## For Research 
+## For Mathematical Research 
 
-- Bacherlor of Mathematics (Bonn){highly optinal}
-- PhD in Mathematics (Bonn)
+- Bachelor of Mathematics (Bonn){highly optional}
+- PhD in Mathematics (Bonn, also optional)
 
 --- 
 
 ## For the Tech Industry 
 
-- Master Energiewirtschaft & Informatik (FH, optional)
-- Master Artificial Intelligence & Data Science for Decission Making (Maastricht, optional)
+### Business Path 
+
+- CFA Institute  (Chartered Financial Analyst)
+- Corporate Financial Institute (FMVA)
+- Global Association of Risk Professional 
+- Project Management Institute (CAMP/PMP)
 - MBA Harvard (optional)
+
+### Manager 
+
 - Certified Tester Foundation Level (QA)
 - Professional Scrum Developer 
 - Professional Agile Leadership 
@@ -34,19 +40,17 @@ List of certifications I want to get.
 - Certified Professional for Requirements Engineering
 - Certified Professional for Software Architecture
 - OMG Certified UML Professional
+
+### Cyber-security
+
 - Comptia A+ 
 - Comptia Networkin+
 - Comptia Security+
 - Cisco CCNA
 - Comptia Linux+
 - Comptia PenTest+
+- Professional Machine Learning Engineer (Google Cloud)
+- AWS Certified Machine Learning Egineer (Amazon)
 
 --- 
-
-## For the Financial Industry 
-
-- CFA Institute  (Chartered Financial Analyst)
-- Corporate Financial Institute (FMVA)
-- Global Association of Risk Professional 
-- Project Management Institute (CAMP/PMP)
 

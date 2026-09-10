@@ -609,11 +609,24 @@ rand_legacy = np.random.randint(0, 10, 5)  # random ints in [0, 9]
 This allows NumPy to perform operations on arrays with different shapes by virtually expanding dimensions
 to match the larger array's shape.
 
-**Broadcasting rule**: two dimensions are compatible if they are equal or one of them is 1.
+- **Broadcasting rule I**: If x and y have different numbers of dimensions, prepend 1's to the shape of the shorter. 
+- **Broadcasting rule II**: Any axis of length **1** can be repeated (broadcast) to the length of the other vector's length in that axis. (Short, 1 is always compatible)
+- **Broadcasting rule III**: All other axes must have matching lengths and not be 1. 
 
 > Works: `(4, 4)` and `(4, 1)` — the second dimension of the second array is 1, so it broadcasts.
 
 > Fails: `(2, 4)` and `(3, 5)` — no dimensions match or are 1.
+
+More examples: 
+
+```txt
+(2, 3) && (2, 3) -> Compatible
+(2, 3) && (2, 1) -> Compatible
+(2, 3) && (1, 3) -> Compatible
+(2, 3) && (2, 1) -> Compatible
+(2, 3, 1) && (2, 1, 9) -> Compatible
+(2, 3, 1) && (2, 1) -> Compatible, since we can prepend 1's -> (1, 2, 1)
+```
 
 When broadcasting applies, the smaller array is left-padded with size-1 dimensions until shapes match.
 

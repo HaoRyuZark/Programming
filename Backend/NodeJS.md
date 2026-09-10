@@ -48,6 +48,39 @@ npm version minor  # bump version: 1.0.0 → 1.1.0
 npm version major  # bump version: 1.0.0 → 2.0.0
 ```
 
+### Trouble-shooting
+
+When using `npm` is possible that some times we will encounter errors, specially if we are using an older version or our cache or modules are corrupted.
+Here some measurements to deal with such problems. 
+
+- **Read the log**: not always are all answers in the logs, but they are a good starting point. 
+
+- **Remove the modules and `package-lock`**: 
+
+```bash 
+rm -rf node_modules package-lock.json
+npm cache verify 
+npm install
+```
+
+- **Clean the cache**: 
+
+```bash 
+npm clean cache --force
+npm cache verify 
+npm install
+
+```
+
+- **Update npm**: 
+
+```bash 
+sudo npm install -g npm@latest
+```
+
+> You need to open a new shell to see the change via `npm --version`
+
+
 **`package.json`** — project manifest:
 
 ```json
