@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS anime (
     anime_id INTEGER PRIMARY KEY, 
     title_jap TEXT NOT NULL, 
     title_romanji TEXT NOT NULL, 
-    title_eng TEXT DEFAULT "No english title", 
+    title_eng TEXT DEFAULT "No English title", 
     summary TEXT NOT NULL,
     number_of_episodes INTEGER NOT NULL,
     status_of_publication INTEGER NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS manga (
     isbn VARCHAR(13) NOT NULL,
     title_jap TEXT NOT NULL, 
     title_romanji TEXT NOT NULL,  
-    title_eng TEXT DEFAULT "No english title", 
+    title_eng TEXT DEFAULT "No English title", 
     summary TEXT NOT NULL,
     number_of_chapters INTEGER NOT NULL,
     number_of_volumes INTEGER NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS visual_novel (
     isbn VARCHAR(13) NOT NULL,
     title_jap TEXT NOT NULL, 
     title_romanji TEXT NOT NULL, 
-    title_eng TEXT DEFAULT "No english title", 
+    title_eng TEXT DEFAULT "No English title", 
     summary TEXT NOT NULL,
     publication_date DATE NOT NULL,
     franchise INTEGER,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS light_novel (
     light_novel_id INTEGER PRIMARY KEY, 
     title_jap TEXT NOT NULL, 
     title_romanji TEXT NOT NULL, 
-    title_eng TEXT DEFAULT "No english title", 
+    title_eng TEXT DEFAULT "No English title", 
     status_of_publication INTEGER NOT NULL,
     publication_date DATE NOT NULL,
     summary TEXT NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS game (
     game_id INTEGER PRIMARY KEY, 
     title_jap TEXT NOT NULL, 
     title_romanji TEXT NOT NULL, 
-    title_eng TEXT DEFAULT "No english title",
+    title_eng TEXT DEFAULT "No English title",
     summary TEXT NOT NULL,
     franchise INTEGER,
     game_db_link VARCHAR(500) NOT NULL,
@@ -180,9 +180,9 @@ CREATE TABLE IF NOT EXISTS light_novel_illustrator (
     FOREIGN KEY (light_novel_id) REFERENCES light_novel(light_novel_id) ON DELETE CASCADE
 );
 
--- List ----------------------------------------------------------
+-- User List ----------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS list (
+CREATE TABLE IF NOT EXISTS user_list (
     list_id INTEGER PRIMARY KEY, 
     list_name VARCHAR(50) NOT NULL,
     user_id INTEGER NOT NULL,

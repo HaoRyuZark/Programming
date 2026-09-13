@@ -69,7 +69,25 @@ m1 = np.mean(axis_example, axis=1)  # [1. 1. 1.]
 
 #### np.newaxis
 
+`newaxis` is used to increase the dimension of an array by pre-pending a 1 to the shape tuple or prepending a one at 
+a specific position.
+`(2,2) -> (1,2,2)`, now we have a 3d array.
 
+```py 
+array[np.newaxis, :]
+array[:, np.newaxis]
+# or 
+array[None, :]
+
+# Useful case 
+
+arr = np.array([1,2,3]) # (,3)
+# [1,2,3,4]
+
+col = arr[:, np.newaxis] # (3, 1)
+# [[1], [2], [3]]
+
+```
 
 ---
 

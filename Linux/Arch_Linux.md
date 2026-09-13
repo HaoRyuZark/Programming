@@ -462,7 +462,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
    lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
    julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl imv swayimg 
-   polkit-gnome nm-applet postgresql`
+   lxqt-policykit nm-applet postgresql seahorse`
 
 **Packet plus purpose:**
 
@@ -566,8 +566,9 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - pkgconf openssl
 - imv
 - `swayimg`: lightweight image viewer 
-- `polkit-gnome`: pokit based of Gnome. Used for password prompts.
- - `nm-applet`: password prompt for wifi.
+- `lxqt-policykit`: polkit 
+- `nm-applet`: password prompt for wifi.
+- `seahorse`
 
 ---
 

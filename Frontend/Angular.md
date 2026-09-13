@@ -114,7 +114,39 @@ my-app/
 
 > The `.component.x` is not necessary anymore and also, the core structure has changed a little, but the most of if is still the same.
 
-**`main.ts` bootstrap (standalone):**
+A more actual diagram is more like: 
+
+```txt 
+my-app/
+├── src/
+│   │
+│   ├── index.html                  ← HTML document shell
+│   ├── main.ts                     ← browser entry point, bootstraps Angular
+│   ├── styles.css                  ← global application styles
+│   └── app/
+│       ├── app.ts                  ← root component logic
+│       ├── app.html                ← root component template
+│       ├── app.css                 ← root component styles
+│       ├── app.spec.ts             ← tests for root component
+│       ├── app.config.ts           ← application configuration providers, router, HTTP, etc.
+│       ├── app.routes.ts            ← client-side route definitions
+│       ├── components/              ← reusable UI components│       │
+│       ├── pages/                   ← page-level components
+│       ├── services/                ← injectable application logic
+│       ├── models/                  ← interfaces / types
+│       └── guards/                  ← route guards
+│
+├── public/                          ← static assets
+│
+├── angular.json                     ← Angular CLI/build configuration
+├── tsconfig.json                    ← TypeScript configuration
+├── package.json                     ← dependencies + npm scripts
+└── ...
+```
+
+### `main.ts`
+
+**`main.ts` bootstrap (standalone):** Is the main entry-point of the application.
 
 ```ts
 import { bootstrapApplication } from "@angular/platform-browser";
@@ -125,7 +157,9 @@ bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
 ```
 
-**`app.config.ts` — application-wide providers:**
+### `app.config.ts`
+
+**`app.config.ts`, application-wide providers:**
 
 ```ts
 import { ApplicationConfig } from "@angular/core";
@@ -139,6 +173,25 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
   ],
 };
+```
+
+### `app.ts`
+
+**`app.ts` root component**.
+
+```ts 
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  imports: [RouterOutlet],
+  selector: 'app-root',
+  styleUrl: './app.css',
+  templateUrl: './app.html',
+})
+export class App {
+  protected readonly title = signal('frontend_ang');
+}
 ```
 
 --- 
@@ -693,16 +746,20 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 ## Routers 
 
 The **Router** maps URL paths to components, enabling client-side navigation without full page reloads.
+Since we are in a single page application, we need to configure the paths inside our application declaratively, for JS to 
+handle the different points of the application.
 
 - `provideRouter(routes)`: registers the route configuration (in `app.config.ts`).
 
-- `<router-outlet />`: placeholder where the matched component renders.
+- `<router-outlet />`: placeholder where the matched component renders. Used inside the **html-file**
 
-- `routerLink`: directive for declarative navigation links.
+- `routerLink`: directive used in the **html-elements** for declarative navigation links.
 
 - `Router.navigate(commands)`: programmatic navigation.
 
 - `ActivatedRoute`: access to route params, query params, and data.
+
+In the following example, we will configure the `routes.ts` file which is used to declare the routes.
 
 ```ts
 // app.routes.ts
@@ -721,6 +778,8 @@ export const routes: Routes = [
   { path: "**", component: NotFoundComponent },                  // wildcard (404)
 ];
 ```
+
+Example: 
 
 ```html
 <!-- Navigation links -->

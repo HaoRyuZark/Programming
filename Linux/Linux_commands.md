@@ -1,14 +1,12 @@
 # Linux Commands
 
-## System & User Management
+--- 
 
----
+## System & User Management
 
 - `whoami`
   - **Function**: Displays the current logged-in user's username.
   - **Example Usage**: `whoami`
-
----
 
 - `adduser [flags] <username>`
   - **Function**: Adds a new user account to the system.
@@ -21,8 +19,6 @@
     - `<username>` *(required)*: Name of the new user.
   - **Example Usage**: `sudo adduser john`
 
----
-
 - `passwd [flags] [username]`
   - **Function**: Changes the password for a user account.
   - **Flags**:
@@ -34,8 +30,6 @@
     - `[username]` *(optional)*: Target user; defaults to the current user.
   - **Example Usage**: `passwd john` / `sudo passwd -l john`
 
----
-
 - `su [flags] [username]`
   - **Function**: Switches to another user account within the current session.
   - **Flags**:
@@ -45,8 +39,6 @@
   - **Parameters**:
     - `[username]` *(optional)*: User to switch to; defaults to `root`.
   - **Example Usage**: `su - john` / `su -c "ls /root" root`
-
----
 
 - `sudo [flags] <command>`
   - **Function**: Executes a command with superuser (or another user's) privileges.
@@ -60,15 +52,11 @@
     - `<command>` *(required)*: The command to execute with elevated privileges.
   - **Example Usage**: `sudo apt update` / `sudo -u www-data ls /var/www`
 
----
-
 - `exit [n]`
   - **Function**: Exits the current shell session or script.
   - **Parameters**:
     - `[n]` *(optional)*: Exit status code to return (default: `0`).
   - **Example Usage**: `exit` / `exit 1`
-
----
 
 - `finger [flags] [user]`
   - **Function**: Displays information about logged-in users (full name, login time, idle time, home directory, shell).
@@ -80,11 +68,9 @@
     - `[user]` *(optional)*: Username to look up; shows all logged-in users if omitted.
   - **Example Usage**: `finger` / `finger john` / `finger -l john@remotehost.com`
 
----
+--- 
 
 ## File & Directory Management
-
----
 
 - `ls [flags] [path]`
   - **Function**: Lists files and directories.
@@ -100,13 +86,9 @@
     - `[path]` *(optional)*: Directory to list; defaults to current directory.
   - **Example Usage**: `ls -lah /home` / `ls -lt`
 
----
-
 - `pwd`
   - **Function**: Prints the absolute path of the current working directory.
   - **Example Usage**: `pwd`
-
---- 
 
 - `chmod [args] [path]`
   - **Function**: Changes ther permissions of a file. Includes:
@@ -115,8 +97,6 @@
       - `r`: read
       We use `+` or `-` to remove or add permissions. 
   - **Example Usage**: `chmod +x script.sh`
-
----
 
 - `chown [flags] <owner>[:<group>] <file>`
   - **Function**: Changes the ownership (user and optionally group) of a file or directory.
@@ -130,15 +110,11 @@
     - `<file>` *(required)*: File or directory to change.
   - **Example Usage**: `sudo chown john file.txt` / `sudo chown -R www-data:www-data /var/www/` / `chown john:devs project/`
 
----
-
 - `cd [path]`
   - **Function**: Changes the current working directory.
   - **Parameters**:
     - `[path]` *(optional)*: Target directory. Use `..` to go up, `~` for home, `-` for the previous directory.
   - **Example Usage**: `cd /var/log` / `cd ..` / `cd -`
-
----
 
 - `mkdir [flags] <dirname>`
   - **Function**: Creates one or more new directories.
@@ -150,8 +126,6 @@
     - `<dirname>` *(required)*: Name or path of the directory to create.
   - **Example Usage**: `mkdir -p ~/projects/my-app/src`
 
----
-
 - `rmdir [flags] <dirname>`
   - **Function**: Removes an **empty** directory.
   - **Flags**:
@@ -160,8 +134,6 @@
   - **Parameters**:
     - `<dirname>` *(required)*: Directory to remove (must be empty).
   - **Example Usage**: `rmdir old_folder` / `rmdir -p a/b/c`
-
----
 
 - `touch [flags] <filename>`
   - **Function**: Creates a new empty file or updates the access/modification timestamp of an existing file.
@@ -173,8 +145,6 @@
   - **Parameters**:
     - `<filename>` *(required)*: File to create or update.
   - **Example Usage**: `touch notes.txt` / `touch -t 202401011200 file.txt`
-
----
 
 - `cp [flags] <source> <destination>`
   - **Function**: Copies files or directories.
@@ -190,8 +160,6 @@
     - `<destination>` *(required)*: Target path or directory.
   - **Example Usage**: `cp -rv ~/docs /backup/` / `cp -i file.txt file_backup.txt`
 
----
-
 - `mv [flags] <source> <destination>`
   - **Function**: Moves or renames files and directories.
   - **Flags**:
@@ -204,8 +172,6 @@
     - `<destination>` *(required)*: Target path or new name.
   - **Example Usage**: `mv old.txt new.txt` / `mv -v ~/Downloads/*.pdf ~/Documents/`
 
----
-
 - `rm [flags] <file>`
   - **Function**: Removes files or directories.
   - **Flags**:
@@ -216,8 +182,6 @@
   - **Parameters**:
     - `<file>` *(required)*: File(s) or directory to remove.
   - **Example Usage**: `rm file.txt` / `rm -rf ./temp_dir`
-
----
 
 - `ln [flags] <target> <link_name>`
   - **Function**: Creates a link (hard or symbolic) to a file or directory.
@@ -231,8 +195,6 @@
     - `<link_name>` *(required)*: Name of the new link.
   - **Example Usage**: `ln -s /usr/local/bin/python3 ~/bin/python` / `ln file.txt hardlink.txt`
 
---- 
-
 - `tar [flags] [path]`
   - **Function**: Used for compressing and decompressing files and folders. 
   - **Flags**:
@@ -242,8 +204,6 @@
     - `-z`: use gzip compression. 
     - `-f`: specify file name. 
   - **Example Usage**: `tar -czf backup.tar.gz`
-
----
 
 - `zip [flags] <archive.zip> <files...>`
   - **Function**: Compresses files and directories into a `.zip` archive.
@@ -264,8 +224,6 @@
 
 ## File Viewing & Editing
 
----
-
 - `cat [flags] [file...]`
   - **Function**: Concatenates and displays the contents of one or more files.
   - **Flags**:
@@ -277,8 +235,6 @@
   - **Parameters**:
     - `[file...]` *(optional)*: File(s) to display; reads from stdin if omitted.
   - **Example Usage**: `cat file.txt` / `cat -n script.sh` / `cat f1.txt f2.txt > combined.txt`
-
----
 
 - `nano [flags] [file]`
   - **Function**: Opens a file in the Nano terminal text editor.
@@ -292,8 +248,6 @@
     - `[file]` *(optional)*: File to open; creates a new file if it does not exist.
   - **Example Usage**: `nano ~/.bashrc` / `nano -l config.yaml`
 
----
-
 - `vim [flags] [file]`
   - **Function**: Opens a file in the Vim text editor.
   - **Flags**:
@@ -304,8 +258,6 @@
   - **Parameters**:
     - `[file]` *(optional)*: File to open.
   - **Example Usage**: `vim ~/.vimrc` / `vim +42 log.txt` / `vim -R /etc/passwd`
-
----
 
 - `less [flags] [file]`
   - **Function**: Views file content one page at a time with backward and forward navigation.
@@ -319,8 +271,6 @@
     - `[file]` *(optional)*: File to view; reads from stdin if omitted.
   - **Example Usage**: `less /var/log/syslog` / `command | less -N`
 
----
-
 - `more [flags] [file]`
   - **Function**: Views file content one screen at a time (forward navigation only).
   - **Flags**:
@@ -330,8 +280,6 @@
   - **Parameters**:
     - `[file]` *(optional)*: File to view.
   - **Example Usage**: `more /etc/hosts`
-
----
 
 - `head [flags] [file]`
   - **Function**: Displays the first lines of a file (default: 10).
@@ -343,8 +291,6 @@
   - **Parameters**:
     - `[file]` *(optional)*: File to read; reads from stdin if omitted.
   - **Example Usage**: `head -n 20 access.log` / `head -c 100 binary.bin`
-
----
 
 - `tail [flags] [file]`
   - **Function**: Displays the last lines of a file (default: 10).
@@ -361,8 +307,6 @@
 ---
 
 ## Search & Comparison
-
----
 
 - `grep [flags] <pattern> [file...]`
   - **Function**: Searches for lines matching a pattern in files or stdin.
@@ -383,8 +327,6 @@
     - `[file...]` *(optional)*: File(s) to search; reads from stdin if omitted.
   - **Example Usage**: `grep -rn "TODO" ./src` / `grep -i "error" /var/log/syslog` / `command | grep -v "debug"`
 
----
-
 - `awk [flags] '<program>' [file...]`
 
   - **Function**: Pattern-scanning and text-processing language; processes files line by line.
@@ -400,7 +342,7 @@
 
   - **Example Usage**: `awk -F ':' '{print $1}' /etc/passwd` / `awk '{sum += $1} END {print sum}' data.txt`
 
----
+> Both grep and awk will be looked more in depth later. 
 
 - `find <path> [flags]`
  
@@ -425,8 +367,6 @@
   - **Example Usage**: `find . -name "*.log" -mtime +30 -delete` / `find /home -type f -size +100M`
       `find . -name "*.md" -exec grep -l "Searches for files and directories" {} +`
 
----
-
 - `locate [flags] <pattern>`
   - **Function**: Quickly finds files by name using a pre-built database (run `sudo updatedb` to refresh).
   - **Flags**:
@@ -438,8 +378,6 @@
     - `<pattern>` *(required)*: Filename or pattern to search for.
   - **Example Usage**: `locate -i "readme.md"` / `locate -l 5 nginx.conf`
 
----
-
 - `cmp [flags] <file1> <file2>`
   - **Function**: Compares two files byte by byte; reports the first difference found.
   - **Flags**:
@@ -450,8 +388,6 @@
     - `<file1>` *(required)*: First file.
     - `<file2>` *(required)*: Second file.
   - **Example Usage**: `cmp image_old.bin image_new.bin` / `cmp -s f1 f2 && echo "identical"`
-
----
 
 - `diff [flags] <file1> <file2>`
   - **Function**: Displays line-by-line differences between two files.
@@ -467,8 +403,6 @@
     - `<file1>` *(required)*: Original file.
     - `<file2>` *(required)*: Modified file.
   - **Example Usage**: `diff -u original.py modified.py > patch.diff` / `diff -rq dir1/ dir2/`
-
----
 
 - `sort [flags] [file]`
   - **Function**: Sorts the lines of a text file.
@@ -488,8 +422,6 @@
 
 ## Process & System Information
 
----
-
 - `kill [flags] <PID>`
   - **Function**: Sends a signal to a process by its PID (default signal: `SIGTERM`).
   - **Flags**:
@@ -500,8 +432,6 @@
   - **Parameters**:
     - `<PID>` *(required)*: Process ID of the target process.
   - **Example Usage**: `kill 1234` / `kill -9 5678` / `kill -l`
-
----
 
 - `killall [flags] <processname>`
   - **Function**: Sends a signal to all processes matching the given name.
@@ -514,8 +444,6 @@
     - `<processname>` *(required)*: Name of the process to kill.
   - **Example Usage**: `killall firefox` / `killall -9 chrome`
 
----
-
 - `jobs [flags]`
   - **Function**: Lists all jobs (processes) running in the current shell session.
   - **Flags**:
@@ -525,23 +453,17 @@
     - `-s`: List only stopped jobs.
   - **Example Usage**: `jobs -l`
 
----
-
 - `bg [job_id]`
   - **Function**: Resumes a suspended job in the background.
   - **Parameters**:
     - `[job_id]` *(optional)*: Job number from `jobs`; defaults to the most recently suspended job.
   - **Example Usage**: `bg %1` / `bg`
 
----
-
 - `fg [job_id]`
   - **Function**: Brings a background or suspended job to the foreground.
   - **Parameters**:
     - `[job_id]` *(optional)*: Job number from `jobs`; defaults to the most recent job.
   - **Example Usage**: `fg %2` / `fg`
-
----
 
 - `history [flags] [n]`
   - **Function**: Displays or manages the command history of the current shell.
@@ -554,16 +476,12 @@
     - `[n]` *(optional)*: Show the last `n` history entries.
   - **Example Usage**: `history 20` / `history -c` / `!42` *(re-run command #42)*
 
----
-
 - `uptime [flags]`
   - **Function**: Shows how long the system has been running, along with load averages.
   - **Flags**:
     - `-p`: Show uptime in a human-readable format (e.g., `up 2 hours, 5 minutes`).
     - `-s`: Show the date and time the system was last booted.
   - **Example Usage**: `uptime` / `uptime -p`
-
----
 
 - `ps [flags]`
   - **Function**: Displays information about currently running processes.
@@ -574,8 +492,6 @@
     - `-u <user>`: Show processes for a specific user.
     - `--sort=<key>`: Sort by a field (e.g., `--sort=-%cpu`).
   - **Example Usage**: `ps aux` / `ps aux | grep nginx` / `ps -u john`
-
----
 
 - `systemctl [flags] <subcommand> [unit]`
   - **Function**: Controls the systemd service manager — start, stop, enable, and inspect services and system units.
@@ -600,8 +516,6 @@
 
 ## Miscellaneous
 
----
-
 - `echo [flags] <text>`
   - **Function**: Prints text or variable values to the terminal.
   - **Flags**:
@@ -612,8 +526,6 @@
     - `<text>` *(required)*: Text or variable to print.
   - **Example Usage**: `echo "Hello, World!"` / `echo -e "Line1\nLine2"` / `echo $HOME`
 
----
-
 - `tee [flags] [file...]`
   - **Function**: Reads from stdin and writes to both stdout and one or more files simultaneously.
   - **Flags**:
@@ -622,8 +534,6 @@
   - **Parameters**:
     - `[file...]` *(optional)*: File(s) to write output to.
   - **Example Usage**: `ls -la | tee listing.txt` / `command | tee -a log.txt`
-
----
 
 - `date [flags] [+format]`
   - **Function**: Displays or sets the system date and time.
@@ -636,15 +546,11 @@
     - `[+format]` *(optional)*: Custom output format (e.g., `+"%Y-%m-%d %H:%M:%S"`).
   - **Example Usage**: `date` / `date +"%Y-%m-%d"` / `date -d "tomorrow"`
 
----
-
 - `alias [name='command']`
   - **Function**: Creates a shortcut (alias) for a command. Run `alias` alone to list all current aliases.
   - **Parameters**:
     - `[name='command']` *(optional)*: Alias name and the command it maps to. Omit to list all aliases.
   - **Example Usage**: `alias ll='ls -lah'` / `alias gs='git status'` / `alias`
-
----
 
 - `unalias [flags] <name>`
   - **Function**: Removes one or more aliases.
@@ -654,15 +560,11 @@
     - `<name>` *(required unless -a)*: Name of the alias to remove.
   - **Example Usage**: `unalias ll` / `unalias -a`
 
----
-
 - `gio open <file>`
   - **Function**: Opens a file or URI using the appropriate default GNOME application.
   - **Parameters**:
     - `<file>` *(required)*: File path or URI to open.
   - **Example Usage**: `gio open document.pdf` / `gio open https://example.com`
-
----
 
 - `xdg-open <file>`
   - **Function**: Opens a file or URL with the user's preferred application (desktop-environment agnostic).
@@ -670,15 +572,11 @@
     - `<file>` *(required)*: File path or URL to open.
   - **Example Usage**: `xdg-open ~/Pictures/photo.png` / `xdg-open https://example.com`
 
----
-
 - `whatis <command>`
   - **Function**: Displays a one-line description of a command from the manual page database (equivalent to `man -f`).
   - **Parameters**:
     - `<command>` *(required)*: Command name to look up.
   - **Example Usage**: `whatis ls` / `whatis grep` / `whatis chmod`
-
----
 
 - `man [section] <command>`
   - **Function**: Displays the full manual page for a command, system call, or configuration file.
@@ -691,15 +589,11 @@
     - `<command>` *(required)*: Command or topic to look up.
   - **Example Usage**: `man ls` / `man 5 passwd` / `man -k "compress"` / `man -a intro`
 
----
-
 - `which <command>`
   - **Function**: Locates the full path of an executable by searching the directories in `$PATH`.
   - **Parameters**:
     - `<command>` *(required)*: Name of the command to locate.
   - **Example Usage**: `which python3` / `which git` / `which bash`
-
----
 
 - `wget [flags] <url>`
   - **Function**: Downloads files from the internet via HTTP, HTTPS, or FTP.
@@ -720,8 +614,6 @@
 
 ## Modern & Advanced Tools
 
----
-
 - `ncdu [flags] [directory]`
   - **Function**: Interactive disk usage analyzer with a navigable ncurses interface.
   - **Flags**:
@@ -733,8 +625,6 @@
     - `[directory]` *(optional)*: Directory to scan; defaults to current directory.
   - **Example Usage**: `ncdu /` / `ncdu -x /home`
 
----
-
 - `duff [flags] [files/directories...]`
   - **Function**: Finds duplicate files in specified directories.
   - **Flags**:
@@ -744,8 +634,6 @@
   - **Parameters**:
     - `[files/directories...]` *(required)*: Paths to check for duplicates.
   - **Example Usage**: `duff -r ~/Downloads`
-
----
 
 - `rg [flags] <pattern> [path]`
   - **Function**: Recursively searches for a pattern in files (ripgrep — like `grep` but faster, respects `.gitignore`).
@@ -762,8 +650,6 @@
     - `[path]` *(optional)*: Directory or file to search; defaults to current directory.
   - **Example Usage**: `rg "TODO" ./src` / `rg -i "error" -t py` / `rg -l "import os"`
 
----
-
 - `lshw [flags]`
   - **Function**: Lists detailed hardware configuration (CPU, RAM, storage, NIC, etc.).
   - **Flags**:
@@ -773,8 +659,6 @@
     - `-class <name>`: Filter by hardware class (e.g., `cpu`, `memory`, `disk`).
     - `-businfo`: Show bus info for all devices.
   - **Example Usage**: `sudo lshw -short` / `sudo lshw -class disk`
-
----
 
 - `fd [flags] [pattern] [path]`
   - **Function**: Simple, fast, and user-friendly alternative to `find`. Respects `.gitignore` by default.
@@ -790,8 +674,6 @@
     - `[path]` *(optional)*: Search root; defaults to current directory.
   - **Example Usage**: `fd ".log" /var` / `fd -e py -t f` / `fd -H "^\." ~`
 
----
-
 - `fzf [flags]`
   - **Function**: Interactive fuzzy finder for any list of items (files, history, processes, etc.).
   - **Flags**:
@@ -802,8 +684,6 @@
     - `-q <query>`: Start with an initial query string.
   - **Example Usage**: `fzf` / `find . | fzf --preview 'cat {}'` / `history | fzf`
 
----
-
 - `ranger [directory]`
   - **Function**: Terminal-based file manager with Vim-style keybindings and file preview.
   - **Flags**:
@@ -813,15 +693,11 @@
     - `[directory]` *(optional)*: Directory to open; defaults to current directory.
   - **Example Usage**: `ranger` / `ranger ~/Downloads`
 
----
-
 - `z [directory_substring]`
   - **Function**: Smarter `cd` — jumps to frequently visited directories using frecency-based fuzzy matching (zoxide / z.lua / autojump).
   - **Parameters**:
     - `[directory_substring]` *(required)*: Partial name or path of the target directory.
   - **Example Usage**: `z projects` / `z dow` *(jumps to `~/Downloads` if visited frequently)*
-
----
 
 - `exa [flags] [path]`
   - **Function**: Modern replacement for `ls` with colors, icons, Git integration, and tree view.
@@ -837,8 +713,6 @@
     - `[path]` *(optional)*: Directory to list; defaults to current directory.
   - **Example Usage**: `exa -lah --git` / `exa -T --level=2`
 
----
-
 - `glances [flags]`
   - **Function**: Cross-platform, real-time system monitoring dashboard (CPU, RAM, disk, network, processes).
   - **Flags**:
@@ -847,8 +721,6 @@
     - `--export <exporter>`: Export stats (e.g., `csv`, `json`).
     - `-t <n>`: Refresh interval in seconds.
   - **Example Usage**: `glances` / `glances -w` / `glances -t 2`
-
----
 
 - `iotop [flags]`
   - **Function**: Displays real-time I/O usage by processes (requires root).
@@ -860,9 +732,7 @@
     - `-u <user>`: Monitor processes of a specific user.
   - **Example Usage**: `sudo iotop -o` / `sudo iotop -a -d 2`
 
-Similars: `top`, `btop`, `htop`
-
----
+  - **Similars**: `top`, `btop`, `htop`
 
 - `stat [flags] <file>`
   - **Function**: Displays detailed metadata about a file or directory (size, permissions, timestamps, inode).
@@ -874,8 +744,6 @@ Similars: `top`, `btop`, `htop`
     - `<file>` *(required)*: File or directory to inspect.
   - **Example Usage**: `stat ~/.bashrc` / `stat -c "%n %s %y" file.txt`
 
----
-
 - `df [flags]`
   - **Function**: Shows the filesystem siede used, available and where is mounted.
   - **Flags**:
@@ -883,16 +751,12 @@ Similars: `top`, `btop`, `htop`
       - A lot more, but really common.
   - **Example Usage**: `df -h`
 
---- 
-
 - `du [flags] [path]`
   - **Function**: Shows how much space a folder consumes. 
   - **Flags**:
       - `-sh`: shows usage in the highest fitting unit, intead of 1 million bytes you get 1 MB.
       - A lot more, but really common.
   - **Example Usage**: `du -sh ./Downloads`
-
---- 
 
 - `dstat [flags]`
   - **Function**: Versatile, real-time resource statistics tool (combines vmstat, iostat, netstat, etc.).
@@ -905,8 +769,6 @@ Similars: `top`, `btop`, `htop`
     - `--output <file>`: Save stats to a CSV file.
   - **Example Usage**: `dstat -cdnm -t` / `dstat --output stats.csv`
 
----
-
 - `watch [flags] <command>`
   - **Function**: Repeatedly runs a command at regular intervals and displays its output full-screen.
   - **Flags**:
@@ -918,8 +780,6 @@ Similars: `top`, `btop`, `htop`
     - `<command>` *(required)*: Command to execute repeatedly.
   - **Example Usage**: `watch -n 1 df -h` / `watch -d -n 2 "ls -lt /var/log"`
 
----
-
 - `progress [flags]`
   - **Function**: Shows progress (throughput, ETA) of running coreutils commands like `cp`, `mv`, `dd`, `tar`.
   - **Flags**:
@@ -927,8 +787,6 @@ Similars: `top`, `btop`, `htop`
     - `-m`: Monitor all instances of watched commands.
     - `-W`: Keep watching until all monitored processes finish.
   - **Example Usage**: `progress` / `progress -m` *(run in another terminal while `cp`/`mv` is active)*
-
----
 
 - `lsof [flags]`
   - **Function**: Lists open files and the processes that have them open (regular files, sockets, pipes).
@@ -940,8 +798,6 @@ Similars: `top`, `btop`, `htop`
     - `-t`: Output PIDs only (useful for scripting).
   - **Example Usage**: `sudo lsof -i :8080` / `lsof -u john` / `lsof +D /var/log`
 
----
-
 - `systemd-analyze [subcommand]`
   - **Function**: Analyzes systemd unit load times and boot performance.
   - **Parameters** (subcommands):
@@ -951,8 +807,6 @@ Similars: `top`, `btop`, `htop`
     - `time`: Show overall boot time split (firmware, loader, kernel, userspace).
   - **Example Usage**: `systemd-analyze blame` / `systemd-analyze critical-chain` / `systemd-analyze time`
 
----
-
 - `procs [flags]`
   - **Function**: Modern, interactive replacement for `ps` with syntax highlighting and tree view.
   - **Flags**:
@@ -961,13 +815,9 @@ Similars: `top`, `btop`, `htop`
     - `<keyword>`: Filter processes by name or PID (positional argument).
   - **Example Usage**: `procs` / `procs nginx` / `procs --tree`
 
----
-
 - `lazydocker`
   - **Function**: Terminal UI for managing Docker containers, images, volumes, and networks interactively.
   - **Example Usage**: `lazydocker`
-
----
 
 - `shred [flags] <file>`
   - **Function**: Overwrites a file multiple times to make data recovery much harder before deletion.
@@ -979,8 +829,6 @@ Similars: `top`, `btop`, `htop`
   - **Parameters**:
     - `<file>` *(required)*: File to securely overwrite.
   - **Example Usage**: `shred -vuz -n 5 secret.txt`
-
----
 
 - `jq [flags] <filter> [file]`
   - **Function**: Command-line JSON processor — parses, filters, transforms, and formats JSON data.
@@ -995,8 +843,6 @@ Similars: `top`, `btop`, `htop`
     - `[file]` *(optional)*: JSON file to process; reads from stdin if omitted.
   - **Example Usage**: `cat data.json | jq '.users[].name'` / `curl -s api/endpoint | jq -r '.status'`
 
----
-
 - `task [subcommand]`
   - **Function**: Command-line task and todo manager (Taskwarrior).
   - **Parameters** (subcommands):
@@ -1007,8 +853,6 @@ Similars: `top`, `btop`, `htop`
     - `modify <id>`: Modify a task's attributes.
   - **Example Usage**: `task add "Write project report" due:tomorrow` / `task list` / `task 3 done`
 
----
-
 - `asciinema [subcommand]`
   - **Function**: Records and shares terminal sessions as lightweight text-based animations.
   - **Parameters** (subcommands):
@@ -1017,8 +861,6 @@ Similars: `top`, `btop`, `htop`
     - `upload <file>`: Upload a recording to asciinema.org.
     - `auth`: Link local install to an asciinema.org account.
   - **Example Usage**: `asciinema rec demo.cast` / `asciinema play demo.cast`
-
----
 
 - `ollama [subcommand] [model]`
   - **Function**: Runs large language models locally via a CLI interface.
@@ -1034,8 +876,6 @@ Similars: `top`, `btop`, `htop`
 
 ## Networking
 
----
-
 - `ping [flags] <host>`
   - **Function**: Tests network reachability of a host by sending ICMP echo request packets and measuring response times.
   - **Flags**:
@@ -1048,8 +888,6 @@ Similars: `top`, `btop`, `htop`
   - **Parameters**:
     - `<host>` *(required)*: Hostname or IP address to ping.
   - **Example Usage**: `ping google.com` / `ping -c 4 8.8.8.8` / `ping -i 0.5 -q 192.168.1.1`
-
----
 
 - `ssh [flags] [user@]<host> [command]`
   - **Function**: Connects to a remote machine securely over an encrypted SSH session.
@@ -1067,8 +905,6 @@ Similars: `top`, `btop`, `htop`
     - `[command]` *(optional)*: Command to run on the remote host instead of opening a shell.
   - **Example Usage**: `ssh user@192.168.1.10` / `ssh -p 2222 user@server.com` / `ssh -i ~/.ssh/id_rsa user@host "ls /var/log"`
 
----
-
 - `mosh [flags] [user@]<host>`
   - **Function**: Connects to a remote machine like SSH but with better support for roaming and unstable connections (uses UDP).
   - **Flags**:
@@ -1080,8 +916,6 @@ Similars: `top`, `btop`, `htop`
     - `<host>` *(required)*: Remote hostname or IP address.
   - **Example Usage**: `mosh user@192.168.1.10` / `mosh --port 60001 user@server.com`
 
----
-
 - `ifconfig [interface] [options]`
   - **Function**: Configures or displays network interface parameters (IP address, netmask, status). Largely superseded by `ip`.
   - **Flags**:
@@ -1092,8 +926,6 @@ Similars: `top`, `btop`, `htop`
   - **Parameters**:
     - `[interface]` *(optional)*: Network interface to configure (e.g., `eth0`, `wlan0`); shows all if omitted.
   - **Example Usage**: `ifconfig` / `ifconfig eth0` / `sudo ifconfig eth0 192.168.1.10 netmask 255.255.255.0`
-
----
 
 - `ip [flags] <object> <command>`
   - **Function**: Configures and displays network interfaces, routing, and tunnels — modern replacement for `ifconfig` and `route`.
@@ -1109,8 +941,6 @@ Similars: `top`, `btop`, `htop`
     - `neigh` (`n`): Show the ARP/neighbor cache.
   - **Example Usage**: `ip addr show` / `ip -br -c link` / `sudo ip link set eth0 up` / `ip route show`
 
----
-
 - `ss [flags] [filter]`
   - **Function**: Dumps socket statistics — a faster, more detailed replacement for `netstat`.
   - **Flags**:
@@ -1125,8 +955,6 @@ Similars: `top`, `btop`, `htop`
     - `[filter]` *(optional)*: Filter expression (e.g., `dport = :80`, `state established`).
   - **Example Usage**: `ss -tlnp` / `ss -u` / `ss -an state listening` / `ss -tp state established`
 
----
-
 - `netstat [flags]`
   - **Function**: Displays network connections, routing tables, interface statistics, and listening ports. Largely replaced by `ss`.
   - **Flags**:
@@ -1139,8 +967,6 @@ Similars: `top`, `btop`, `htop`
     - `-a`: Show all sockets (listening and established).
   - **Example Usage**: `netstat -tlnp` / `netstat -an | grep :80` / `netstat -r`
 
----
-
 - `resolvectl [subcommand] [args]`
   - **Function**: Queries and manages the systemd-resolved DNS resolver — resolves hostnames, queries DNS records, and shows resolver configuration.
   - **Parameters** (subcommands):
@@ -1150,8 +976,6 @@ Similars: `top`, `btop`, `htop`
     - `flush-caches`: Flush the DNS resolver cache.
     - `statistics`: Show resolver cache statistics and query counts.
   - **Example Usage**: `resolvectl status` / `resolvectl query github.com` / `resolvectl flush-caches`
-
----
 
 - `dig [flags] [type] <domain>`
   - **Function**: DNS lookup tool — queries name servers for DNS records.
@@ -1165,8 +989,6 @@ Similars: `top`, `btop`, `htop`
     - `<domain>` *(required)*: Domain to query.
   - **Example Usage**: `dig google.com` / `dig MX gmail.com` / `dig +short @8.8.8.8 example.com`
 
----
-
 - `dog [flags] [type] <domain>`
   - **Function**: User-friendly DNS client with colorized output — a modern alternative to `dig`.
   - **Flags**:
@@ -1178,8 +1000,6 @@ Similars: `top`, `btop`, `htop`
     - `[type]` *(optional)*: Record type: `A`, `AAAA`, `MX`, `TXT`, etc.
     - `<domain>` *(required)*: Domain to query.
   - **Example Usage**: `dog example.com` / `dog MX gmail.com @8.8.8.8`
-
----
 
 - `mtr [flags] <host>`
   - **Function**: Combines `traceroute` and `ping` into a real-time network diagnostic tool that shows per-hop latency and packet loss.
@@ -1193,15 +1013,11 @@ Similars: `top`, `btop`, `htop`
     - `<host>` *(required)*: Hostname or IP to trace.
   - **Example Usage**: `mtr google.com` / `mtr -r -c 10 8.8.8.8`
 
----
-
 - `ipcalc <IP/netmask>`
   - **Function**: Calculates network information from an IP address and subnet mask (range, broadcast address, prefix length, host count).
   - **Parameters**:
     - `<IP/netmask>` *(required)*: IP address with prefix or dotted netmask (e.g., `192.168.1.0/24`).
   - **Example Usage**: `ipcalc 192.168.1.0/24` / `ipcalc 10.0.0.1/255.255.0.0`
-
----
 
 - `tcpdump [flags] [expression]`
   - **Function**: Captures and analyzes network packets in real time (requires root).
@@ -1216,8 +1032,6 @@ Similars: `top`, `btop`, `htop`
     - `[expression]` *(optional)*: BPF filter expression (e.g., `port 80`, `host 192.168.1.1`).
   - **Example Usage**: `sudo tcpdump -i eth0 port 80` / `sudo tcpdump -w capture.pcap -c 100`
 
----
-
 - `tshark [flags]`
   - **Function**: Terminal-based network protocol analyzer (Wireshark CLI).
   - **Flags**:
@@ -1228,16 +1042,12 @@ Similars: `top`, `btop`, `htop`
     - `-T <format>`: Output format (`fields`, `json`, `text`, etc.).
   - **Example Usage**: `sudo tshark -i eth0 -Y "http"` / `tshark -r capture.pcap -T json`
 
----
-
 - `termshark [flags]`
   - **Function**: Terminal UI for tshark — interactive packet capture viewer in the terminal.
   - **Flags**:
     - `-i <iface>`: Interface to capture on.
     - `-r <file>`: Open a `.pcap` file for inspection.
   - **Example Usage**: `sudo termshark -i eth0` / `termshark -r capture.pcap`
-
----
 
 - `rsync [flags] <source> <destination>`
   - **Function**: Efficiently transfers and synchronizes files locally or over SSH, sending only changed data (delta transfer).
@@ -1255,13 +1065,78 @@ Similars: `top`, `btop`, `htop`
     - `<destination>` *(required)*: Target path (local or `user@host:/path`).
   - **Example Usage**: `rsync -avzP ~/docs/ user@server:/backup/docs/` / `rsync -an --delete src/ dst/`
 
----
-
 - `wormhole send <file>`
   - **Function**: Securely transfers a file to another machine using a one-time human-readable code (Magic Wormhole protocol). The receiver runs `wormhole receive`.
   - **Parameters**:
     - `<file>` *(required)*: File or directory to send.
   - **Example Usage**: `wormhole send archive.tar.gz` / `wormhole send ~/docs/`
 
----
+--- 
 
+## Text Processing 
+
+- `sed `
+
+- `tr`
+
+- `uniq`
+
+- `grep [flags] <pattern> [file...]`
+  - **Function**: Searches for lines matching a pattern in files or stdin.
+  - **Flags**:
+    - `-r` / `-R`: Recursively search directories.
+    - `-i`: Case-insensitive matching.
+    - `-n`: Show line numbers of matches.
+    - `-v`: Invert match — show lines that do **not** match.
+    - `-l`: Print only file names containing matches.
+    - `-c`: Print only the count of matching lines per file.
+    - `-E`: Use extended regular expressions (ERE).
+    - `-A <n>`: Print `n` lines **after** each match.
+    - `-B <n>`: Print `n` lines **before** each match.
+    - `-C <n>`: Print `n` lines before and after each match.
+    - `--color`: Highlight matches in color.
+  - **Parameters**:
+    - `<pattern>` *(required)*: The string or regex to search for.
+    - `[file...]` *(optional)*: File(s) to search; reads from stdin if omitted.
+  - **Example Usage**: `grep -rn "TODO" ./src` / `grep -i "error" /var/log/syslog` / `command | grep -v "debug"`
+
+```bash
+# Match a valid telephone number of the format xxx-xxx-xxxx or (xxx) xxx-xxxx
+grep -E '^(([0-9]{3}-){2}[0-9]{4}|\([0-9]{3}\)[[:space:]][0-9]{3}-[0-9]{4})$' file.txt
+```
+
+- `awk [flags] '<program>' [file...]`
+
+  - **Function**: Pattern-scanning and text-processing language; processes files line by line.
+
+  - **Flags**:
+    - `-F <sep>`: Set the field separator (e.g., `-F ':'` for colon-delimited files).
+    - `-v <var=val>`: Assign a variable before execution.
+    - `-f <script>`: Read the awk program from a file.
+
+  - **Parameters**:
+    - `<program>` *(required)*: Awk program string, e.g., `'{print $1}'`.
+    - `[file...]` *(optional)*: Input file(s); reads from stdin if omitted.
+
+  - **Example Usage**: `awk -F ':' '{print $1}' /etc/passwd` / `awk '{sum += $1} END {print sum}' data.txt`
+
+
+```bash 
+# Transposing a file
+awk '
+{ 
+    for (i=1; i<=NF; i++)  {
+        a[NR,i] = $i
+    }
+}
+NF>p { p = NF }
+END {    
+    for(j=1; j<=p; j++) {
+        str=a[1,j]
+        for(i=2; i<=NR; i++){
+            str=str" "a[i,j];
+        }
+        print str
+    }
+}' file
+```

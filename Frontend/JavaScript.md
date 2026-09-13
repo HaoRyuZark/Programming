@@ -2426,6 +2426,24 @@ fetch("/api/users")
   .then(users => users.filter(u => u.active))
   .then(active => console.log(active))
   .catch(err => console.error(err));
+
+// Custom promiseAll 
+let promiseAll = function(functions) {
+
+
+    return new Promise((resolve, reject) => {
+        let res = new Array(functions.length) ;
+        let c = 0;
+
+        functions.forEach((fn, i) => {
+            fn().then(val => {
+                res[i] = val;
+                c++;
+                if (c == functions.length) resolve(res);
+            }).catch(reason => reject(reason))
+        });
+    });
+};
 ```
 
 ### Promisifying a callback function
