@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS anime (
 
 ### Bridge Table 
 
-A **bridge table** is a table used to establish a many-to-many relationship between two entity tables. It typically contains foreign keys referencing the primary keys of the related entity tables.
+A **bridge table** is a table used to establish a many-to-many relationship between two entity tables. It typically contains foreign keys referencing the primary keys 
+of the related entity tables.
 
 ```sql 
 -- Using the same anime table as before we can not have different genres
@@ -1109,9 +1110,40 @@ or use `psql`
 sudo -u postgres psql
 ```
 
-followed by: 
+Followed by: 
 
 ```sql 
 CREATE USER myuser WITH PASSWORD 'mypassword';
 CREATE DATABASE mydatabase OWNER myuser;
 ```
+
+--- 
+
+## Views 
+
+A **view** is  a query which we store in a variable and which can be handled as a table but it not a table.
+They are basically, **virtual tables**.
+
+Views which include: aggregate functions,`DISTINC`, `GROUP BY`, `HAVING`, `UNION/UNION ALL` and sub-queries in the select list are **not updatable
+or insertable**
+
+Example: 
+
+```sql 
+CREATE VIEW full_employee_departments AS
+    SELECT c.emp_no, first_name, last_name, gender, hire_date, dept_name 
+        FROM employees e 
+            JOIN current_department_employee c ON e,emp_no = c.emp_no 
+                JOIN departments d on c.dept_no = d.dept_no;
+
+SELECT first_name, last_name FROM full_employee_departments;
+```
+
+---
+
+## Migration Scripts 
+
+A **migration script** is series of step written in `SQL` used for an update of data-base either by adding a new table which also needs to be filled with values or a complete 
+transfer of data due to a new schema.
+
+---

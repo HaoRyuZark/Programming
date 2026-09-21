@@ -107,8 +107,12 @@ offsetof(Example, y);
 
 ## Pointers
 
-Pointers are a fundamental concept in low-level programming. They allow you to directly manipulate memory addresses, which is crucial for performance
-and resource management. A pointer is a variable that stores the address of another variable.
+**Pointers** are fundamental to C-programming. They allow us to directly manipulate memory addresses.
+A pointer is a variable that stores the address of another variable.
+
+The concept to **passed by value** and **passed by reference** comes from the fact that primitives like: numbers, 
+characters and booleans are copied if passed as arguments to a function; while arrays, strings decay into pointers which 
+are reference to the original value.
 
 Example of using pointers in C:
 
@@ -202,6 +206,8 @@ int main() {
 ```c
 // Function pointer example
 void (*func_ptr)(int); // pointer to a function that takes an int and returns void
+
+
 ```
 
 ### Cursed Pointers
@@ -1276,10 +1282,16 @@ we use `<header.h>`.
 
 ---
 
-## The pthread Library
+## The `pthread` Library
 
 In this section I will provide code snippets related to different use cases of the concepts
 in multithreading using the `pthread` library.
+
+To bind use 
+
+```c 
+
+```
 
 ### Passing Arguments to Threads and getting a Return-value
 
@@ -1597,7 +1609,7 @@ void* producer(void* args) {
         
         pthread_mutex_unlock(&mutex);
         pthread_cond_signal(&cnd_empty); // this notifies only one thread 
-        // pthread_cond_broadcast(&cnd); this is used to notify all threads
+    // pthread_cond_broadcast(&cnd); // this is used to notify all threads
     }
 }
 
@@ -4487,6 +4499,8 @@ int main() {
 }
 ```
 
+--- 
+
 ## Generic Dynamic Array in C with Void Pointer and Macros
 
 This approach kinda works and we even get to use the `[]` operator, but it is tricky.
@@ -4525,3 +4539,10 @@ void* _array_init(size_t itemsize, int capacity) {
     return ptr;
 }
 ```
+
+--- 
+
+## In-line Assembly
+
+
+--- 

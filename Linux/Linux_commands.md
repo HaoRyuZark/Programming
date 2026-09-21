@@ -1140,3 +1140,500 @@ END {
     }
 }' file
 ```
+
+--- 
+
+## Disk & Partition Management
+
+Partition management involves creating, deleting, resizing, inspecting, formatting, mounting, and checking partitions and filesystems.
+
+> **Warning:** Partitioning and formatting commands can destroy data. Always verify the target disk and partition with `lsblk`, `blkid`, or `fdisk -l` before using 
+commands that modify storage. A typo such as `/dev/sda` instead of `/dev/sdb` can result in complete data loss.
+
+### Inspecting Disks and Partitions
+
+- `lsblk [flags]`
+
+  - **Function**: Lists block devices, disks, partitions, filesystems, mount points, and related information.
+  - **Flags**:
+
+    - `-f`: Display filesystem information, including UUIDs and filesystem types.
+    - `-o <columns>`: Select the columns to display.
+    - `-p`: Display complete device paths such as `/dev/sda1`.
+    - `-a`: Display empty devices as well.
+    - `-l`: Use list output instead of a tree.
+  - **Example Usage**:
+
+    - `lsblk`
+    - `lsblk -f`
+    - `lsblk -o NAME,SIZE,FSTYPE,FSVER,LABEL,UUID,MOUNTPOINTS`
+    - `lsblk -p`
+
+- `blkid [device]`
+
+  - **Function**: Displays filesystem type, UUID, and other identifying information for block devices.
+  - **Parameters**:
+
+    - `[device]` *(optional)*: Specific device to inspect.
+  - **Example Usage**:
+
+    - `sudo blkid`
+    - `sudo blkid /dev/sda1`
+
+- `fdisk -l [device]`
+
+  - **Function**: Displays partition tables and partition information.
+  - **Parameters**:
+
+    - `[device]` *(optional)*: Disk to inspect.
+  - **Example Usage**:
+
+    - `sudo fdisk -l`
+    - `sudo fdisk -l /dev/sda`
+
+- `findmnt [options] [path|device]`
+
+  - **Function**: Displays mounted filesystems and their mount points.
+  - **Flags**:
+
+    - `-t <type>`: Show filesystems of a specific type.
+    - `-S <source>`: Search by device or filesystem source.
+    - `-T <path>`: Find the filesystem containing a particular path.
+    - `--df`: Display information similar to `df`.
+  - **Example Usage**:
+
+    - `findmnt`
+    - `findmnt /`
+    - `findmnt -T /home`
+
+- `df [flags] [filesystem]`
+
+  - **Function**: Displays available and used space on mounted filesystems.
+  - **Flags**:
+
+    - `-h`: Human-readable sizes.
+    - `-T`: Display filesystem type.
+    - `-i`: Display inode usage.
+    - `-a`: Include pseudo and special filesystems.
+  - **Example Usage**:
+
+    - `df -h`
+    - `df -hT`
+    - `df -i`
+
+- `du [flags] [path]`
+
+  - **Function**: Estimates disk space used by files and directories.
+  - **Flags**:
+
+    - `-h`: Human-readable sizes.
+    - `-s`: Display only the total.
+    - `-a`: Include files as well as directories.
+    - `--max-depth=<n>`: Limit directory traversal depth.
+  - **Example Usage**:
+
+    - `du -sh ~/Downloads`
+    - `du -h --max-depth=1 ~`
+
+### Partition Tables
+
+A disk normally contains a partition table describing the partitions stored on it. The two common 
+partition-table formats are **GPT** and **MBR** (also called DOS partition tables).
+
+- **GPT**
+
+  - Modern partition-table format.
+  - Recommended for most modern systems.
+  - Supports very large disks and many partitions.
+  - Commonly used with UEFI systems.
+
+- **MBR/DOS**
+
+  - Older partition-table format.
+  - Has a practical limit of four primary partitions unless extended/logical partitions are used.
+  - Has limitations on maximum disk and partition sizes.
+  - Still useful for compatibility with older systems.
+
+### `fdisk`
+
+- `fdisk <device>`
+
+  - **Function**: Interactive partition-table editor for creating, deleting, modifying, and inspecting partitions.
+  - **Parameters**:
+
+    - `<device>` *(required)*: Disk to modify, such as `/dev/sda` or `/dev/nvme0n1`.
+  - **Important Interactive Commands**:
+
+    - `p`: Print the current partition table.
+    - `n`: Create a new partition.
+    - `d`: Delete a partition.
+    - `t`: Change a partition type.
+    - `l`: List available partition types.
+    - `w`: Write changes to disk and exit.
+    - `q`: Quit without saving changes.
+    - `m`: Display help.
+    - `g`: Create a new GPT partition table.
+    - `o`: Create a new MBR/DOS partition table.
+  - **Example Usage**: `sudo fdisk /dev/sda`
+
+> **Important:** Changes made inside `fdisk` are generally not written to disk until `w` is selected. Selecting `q` discards the pending partition-table changes.
+
+- `fdisk -l`
+
+  - **Function**: Lists partition tables without entering the interactive editor.
+  - **Example Usage**: `sudo fdisk -l /dev/nvme0n1`
+
+### `gdisk`
+
+- `gdisk <device>`
+
+  - **Function**: Interactive partition-table editor specifically designed primarily for GPT disks.
+  - **Parameters**:
+
+    - `<device>` *(required)*: Disk to modify.
+  - **Common Interactive Commands**:
+
+    - `p`: Print the partition table.
+    - `n`: Create a partition.
+    - `d`: Delete a partition.
+    - `t`: Change a partition type.
+    - `l`: List partition types.
+    - `w`: Write changes and exit.
+    - `q`: Quit without saving.
+    - `v`: Verify the GPT structure.
+  - **Example Usage**: `sudo gdisk /dev/nvme0n1`
+
+### `parted`
+
+- `parted [flags] <device>`
+
+  - **Function**: Creates and manages partition tables and partitions. It is particularly useful for scripting and for partitions larger than the traditional MBR limits.
+  - **Flags**:
+
+    - `-l`: List partition tables on all available disks.
+    - `-s`: Run in script/non-interactive mode.
+    - `-a <alignment>`: Set partition alignment policy.
+  - **Example Usage**:
+
+    - `sudo parted -l`
+    - `sudo parted /dev/sda`
+
+- `parted <device> mklabel <type>`
+
+  - **Function**: Creates a new partition table on a disk.
+  - **Parameters**:
+
+    - `<device>`: Target disk.
+    - `<type>`: Partition-table type, commonly `gpt` or `msdos`.
+  - **Example Usage**: `sudo parted /dev/sdb mklabel gpt`
+
+> **Warning:** Creating a new partition table destroys the existing partition-table information and can make existing partitions inaccessible.
+
+- `parted <device> mkpart <name> <filesystem> <start> <end>`
+
+  - **Function**: Creates a partition within the existing partition table.
+  - **Parameters**:
+
+    - `<name>`: Partition name.
+    - `<filesystem>`: Filesystem type or partition type information.
+    - `<start>`: Starting position.
+    - `<end>`: Ending position.
+  - **Example Usage**: `sudo parted /dev/sdb mkpart data ext4 1MiB 100%`
+
+- `parted <device> rm <partition-number>`
+
+  - **Function**: Deletes a partition from the partition table.
+  - **Parameters**:
+
+    - `<partition-number>` *(required)*: Partition number.
+  - **Example Usage**: `sudo parted /dev/sdb rm 1`
+
+### Creating a Filesystem
+
+Creating a partition and creating a filesystem are **different operations**.
+
+A partition is a region of a disk described by the partition table. A filesystem such as ext4 or XFS is then created inside that partition so that files can be stored on it.
+
+- `mkfs [flags] <device>`
+
+  - **Function**: Creates a filesystem on a device or partition.
+  - **Flags**:
+
+    - `-t <type>`: Specify the filesystem type.
+  - **Parameters**:
+
+    - `<device>` *(required)*: Device or partition on which to create the filesystem.
+  - **Example Usage**: `sudo mkfs -t ext4 /dev/sdb1`
+
+- `mkfs.ext4 [flags] <device>`
+
+  - **Function**: Creates an ext4 filesystem.
+  - **Flags**:
+
+    - `-L <label>`: Set a filesystem label.
+  - **Example Usage**:
+
+    - `sudo mkfs.ext4 /dev/sdb1`
+    - `sudo mkfs.ext4 -L Data /dev/sdb1`
+
+- `mkfs.xfs [flags] <device>`
+
+  - **Function**: Creates an XFS filesystem.
+  - **Flags**:
+
+    - `-L <label>`: Set a filesystem label.
+  - **Example Usage**: `sudo mkfs.xfs -L Data /dev/sdb1`
+
+- `mkfs.vfat [flags] <device>`
+
+  - **Function**: Creates a FAT filesystem, commonly used for EFI System Partitions and removable media.
+  - **Flags**:
+
+    - `-F 32`: Create a FAT32 filesystem.
+    - `-n <label>`: Set the filesystem label.
+  - **Example Usage**: `sudo mkfs.vfat -F 32 /dev/sda1`
+
+> **Warning:** `mkfs` destroys the existing filesystem on the target device. It should only be used after verifying the correct device with `lsblk` or `blkid`.
+
+### Mounting Filesystems
+
+- `mount [flags] <device> <directory>`
+
+  - **Function**: Attaches a filesystem to the Linux filesystem hierarchy.
+  - **Flags**:
+
+    - `-t <type>`: Explicitly specify the filesystem type.
+    - `-o <options>`: Specify mount options.
+    - `-a`: Mount all filesystems configured in `/etc/fstab`.
+  - **Parameters**:
+
+    - `<device>`: Device or filesystem to mount.
+    - `<directory>`: Existing directory where the filesystem should be mounted.
+  - **Example Usage**:
+
+    - `sudo mkdir /mnt/data`
+    - `sudo mount /dev/sdb1 /mnt/data`
+
+- `mount <device-or-mountpoint>`
+
+  - **Function**: Mounts a filesystem using information available in `/etc/fstab`.
+  - **Example Usage**: `sudo mount /mnt/data`
+
+- `umount <device|directory>`
+
+  - **Function**: Unmounts a mounted filesystem.
+  - **Parameters**:
+
+    - `<device|directory>` *(required)*: Device or mount point to unmount.
+  - **Example Usage**:
+
+    - `sudo umount /dev/sdb1`
+    - `sudo umount /mnt/data`
+
+> **Important:** A filesystem cannot normally be unmounted while it is being actively used. `lsof` or `fuser` can be used to identify processes preventing an unmount.
+
+- `lsof <path>`
+
+  - **Function**: Lists open files and processes using a filesystem or directory.
+  - **Example Usage**: `sudo lsof /mnt/data`
+
+- `fuser [flags] <path>`
+
+  - **Function**: Identifies processes using a file, directory, or filesystem.
+  - **Flags**:
+
+    - `-m`: Treat the argument as a mounted filesystem.
+    - `-v`: Verbose output.
+    - `-k`: Send a signal to processes using the target.
+  - **Example Usage**:
+
+    - `sudo fuser -vm /mnt/data`
+    - `sudo fuser -km /mnt/data`
+
+### Filesystem Checking and Repair
+
+- `fsck [flags] <device>`
+
+  - **Function**: Checks and, where supported, repairs filesystem inconsistencies.
+
+- **Flags**:
+    - `-f`: Force a check even when the filesystem appears clean.
+    - `-y`: Automatically answer yes to repair questions.
+    - `-n`: Answer no to repair questions without making changes.
+
+  - **Parameters**:
+    - `<device>` *(required)*: Filesystem or partition to check.
+
+  - **Example Usage**:
+
+    - `sudo fsck /dev/sdb1`
+    - `sudo fsck -f /dev/sdb1`
+
+> **Important:** Filesystems should generally be unmounted before running a repair operation. Running filesystem repair against a mounted root or actively used filesystem can cause additional problems.
+
+- `fsck.ext4 [flags] <device>`
+
+  - **Function**: Checks and repairs an ext4 filesystem.
+  - **Example Usage**: `sudo fsck.ext4 -f /dev/sdb1`
+
+- `e2fsck [flags] <device>`
+
+  - **Function**: Checks and repairs ext2/ext3/ext4 filesystems.
+
+   - **Flags**:
+    - `-f`: Force a check.
+    - `-n`: Perform a read-only check without modifying the filesystem.
+    - `-y`: Automatically answer yes to repair prompts.
+
+  - **Example Usage**: `sudo e2fsck -f /dev/sdb1`
+
+### Filesystem Labels and UUIDs
+
+- `tune2fs [flags] <device>`
+
+  - **Function**: Adjusts parameters of ext2/ext3/ext4 filesystems.
+
+  - **Flags**:
+    - `-L <label>`: Set the filesystem label.
+    - `-U <uuid>`: Set the filesystem UUID.
+    - `-l`: Display filesystem information.
+  - **Example Usage**:
+    - `sudo tune2fs -l /dev/sdb1`
+    - `sudo tune2fs -L Data /dev/sdb1`
+
+- `xfs_admin [flags] <device>`
+
+  - **Function**: Displays or modifies XFS filesystem metadata such as labels and UUIDs.
+
+- **Flags**:
+    - `-l`: Display the filesystem label.
+    - `-L <label>`: Set the filesystem label.
+
+  - **Example Usage**: `sudo xfs_admin -l /dev/sdb1`
+
+### Persistent Mounting with `/etc/fstab`
+
+- `/etc/fstab`
+
+  - **Function**: Configuration file describing filesystems that should be mounted automatically.
+
+   - **Typical Fields**:
+    - `<device>`: Device, UUID, or filesystem label.
+    - `<mount-point>`: Directory where the filesystem should be mounted.
+    - `<filesystem-type>`: Filesystem type such as `ext4`, `xfs`, or `vfat`.
+    - `<options>`: Mount options.
+    - `<dump>`: Legacy backup-related field, commonly `0`.
+    - `<fsck-order>`: Filesystem check order, commonly `0`, `1`, or `2`.
+
+   - **Example Entry**:
+    ```text
+    UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx /mnt/data ext4 defaults 0 2
+
+    ```
+   - **Important**: UUIDs can be obtained with `blkid` or `lsblk -f`.
+
+   - **Example Usage**:
+    - `sudo nvim /etc/fstab`
+    - `sudo mount -a`
+
+### Swap
+
+- `mkswap <device>`
+
+  - **Function**: Initializes a partition or file for use as swap space.
+
+   - **Parameters**:
+    - `<device>` *(required)*: Swap partition or swap file.
+
+  - **Example Usage**: `sudo mkswap /dev/sdb2`
+
+- `swapon [flags] <device>`
+
+  - **Function**: Activates swap space.
+  
+  - **Flags**:
+    - `-a`: Activate all swap entries configured in `/etc/fstab`.
+    - `--show`: Display active swap devices.
+
+  - **Example Usage**:
+    - `sudo swapon /dev/sdb2`
+    - `swapon --show`
+
+- `swapoff <device>`
+
+  - **Function**: Deactivates swap space.
+  - **Parameters**:
+    - `<device>` *(required)*: Swap device or file.
+
+  - **Example Usage**: `sudo swapoff /dev/sdb2`
+
+### Partitioning Workflow
+
+A typical workflow for creating a new data partition is:
+
+1. **Identify the disk**
+
+   - `lsblk -f`
+   - `sudo fdisk -l`
+
+2. **Create a partition**
+
+   - `sudo fdisk /dev/sdb`
+   - Use `n` to create the partition.
+   - Use `w` to write the changes.
+
+3. **Verify the partition**
+
+   - `lsblk`
+   - `sudo blkid`
+
+4. **Create a filesystem**
+
+   - `sudo mkfs.ext4 /dev/sdb1`
+
+5. **Create a mount point**
+
+   - `sudo mkdir -p /mnt/data`
+
+6. **Mount the filesystem**
+
+   - `sudo mount /dev/sdb1 /mnt/data`
+
+7. **Verify the mount**
+
+   - `findmnt /mnt/data`
+   - `df -h /mnt/data`
+
+8. **Configure automatic mounting if required**
+
+   - Obtain the UUID with `blkid`.
+   - Add an appropriate entry to `/etc/fstab`.
+   - Test the configuration with:
+
+     - `sudo mount -a`
+
+### Important Device Naming Conventions
+
+Linux represents disks and partitions as devices under `/dev`.
+
+- `/dev/sda`
+  - Usually the first SATA/SCSI disk.
+
+- `/dev/sda1`
+  - First partition on `/dev/sda`.
+
+- `/dev/nvme0n1`
+  - First NVMe disk.
+
+- `/dev/nvme0n1p1`
+  - First partition on the first NVMe disk.
+
+- `/dev/mmcblk0`
+  - Common naming for SD/eMMC storage.
+
+- `/dev/mmcblk0p1`
+  - First partition on that device.
+
+
+
+

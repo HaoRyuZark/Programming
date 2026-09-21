@@ -4,6 +4,8 @@
 for of a central repository which takes cares of the version; in a distributed one, each developer has its own source of truth, and also there is a 
 central server which acts as the source of truth to which developers updload their changes.
 
+--- 
+
 ## Commits, Branches and HEAD 
 
 - **Commits** are the units of storage which are snapshots of the working directory with an identifier of type
@@ -11,6 +13,8 @@ hash.
 
 - **Branches** are just pointer to a commit hash. Mostly at the end of a chain.
 - **HEAD** Is a pointer to the current branch. If you checkout to a commit then the HEAD becomes detached because it is not pointer to any  branch.
+
+--- 
 
 ## Setup and Configuration
 
@@ -57,52 +61,60 @@ ssh -T git@github.com
 If successful, you'll see a message like:
 > Hi `username`! You've successfully authenticated.
 
-## Initial Configuration
+---- 
 
-- `git config --global user.name "Your Name"` – Set your name
-- `git config --global user.email "your.email@example.com"` – Set your email
-- `git config --global color.ui auto` – Enable colored output
-- `git config pull.rebase false` - When pulling merge the branches
-- `git config --list` – List all configured settings
+## Initial Git Configuration
+
+- `git config --global user.name "Your Name"`: Set your name
+- `git config --global user.email "your.email@example.com"`: Set your email
+- `git config --global color.ui auto`: Enable colored output
+- `git config pull.rebase false` : When pulling merge the branches
+- `git config --list`: List all configured settings
+
+--- 
 
 ## Creating and Cloning Repositories
 
-- `git init` – Initialize a new Git repository
-- `git clone <repo_url>` – Clone an existing repository
+- `git init`: Initialize a new Git repository
+- `git clone <repo_url>`: Clone an existing repository
+
+--- 
 
 ## Basic Commands
 
-- `git status` – Show the status of changes
+- `git status`: Show the status of changes
 
-- `git log --stat` = Shows which files were modified and how many lines changed
+- `git log --stat`: Shows which files were modified and how many lines changed
 
 - `git log -p` = Shows which files were modified with the modifications
 
-- `git add <file>` – Stage a file for commit
+- `git add <file>`: Stage a file for commit
 
-- `git add .` – Stage all changes
+- `git add .`: Stage all changes
 
-- `git commit -m "message"` – Commit staged changes
+- `git commit -m "message"`: Commit staged changes
 
-- `git commit --amend` – Edit the last commit
+- `git commit --amend`: Edit the last commit
 
-- `git log` – Show commit history
+- `git log`: Show commit history
 
-- `git log --oneline --graph` – Show a compact commit history
+- `git log --oneline --graph`: Show a compact commit history
 
-- `git log --merge --oneline` – Show commits  which cause a merge conflict.
+- `git log --merge --oneline`: Show commits  which cause a merge conflict.
+
+--- 
 
 ## Branching and Merging
 
-- `git branch` – List branches
+- `git branch`: List branches
 
-- `git branch <branch_name>` – Create a new branch
+- `git branch <branch_name>`: Create a new branch
 
-- `git checkout <branch_name>` – Switch to a branch
+- `git checkout <branch_name>`: Switch to a branch
 
-- `git checkout -b <branch_name>` – Create and switch to a new branch
+- `git checkout -b <branch_name>`: Create and switch to a new branch
 
-- `git merge <branch_name>` – Merges a branch into the **current branch you are in**
+- `git merge <branch_name>`: Merges a branch into the **current branch you are in**
 
 ```sh
 git commit -m "Bla"
@@ -110,12 +122,11 @@ git checkout master
 git merge feature_branch
 ```
 
+- `git branch -d <branch_name>`: Delete a branch
 
-- `git branch -d <branch_name>` – Delete a branch
+- `git branch -D <branch_name>`: Force delete a branch
 
-- `git branch -D <branch_name>` – Force delete a branch
-
-- `git rebase <branch_name>` – Puts the changes of another branch **on top of the current branch**
+- `git rebase <branch_name>`:  Puts the changes of another branch **on top of the current branch**
 
 ```sh
 git commit -m "Bla"
@@ -123,62 +134,99 @@ git checkout master
 git rebase feature_branch
 ```
 
-Or we can use to re-root another branch on top of another like:
+Or we can use to **re-root** another branch on top of another like:
 
 ```sh
 git checkout feature_branch
 git rebase master
+git push --force-with-lease
 ```
 
+> If this is done, then be sure that only you are working on the feature branch, else you will need to coordinate with your team 
+> members for everyone to do a `git pull` before the `force`.
+
+--- 
 
 ## Working with Remotes
 
-- `git remote -v` – List remotes
-- `git remote add origin <repo_url>` – Add a remote repository
-- `git fetch origin` – Fetch changes from remote
-- `git pull origin <branch>` – Pull changes from remote branch (fetch + merge)
-- `git push origin <branch>` – Push changes to remote branch
-- `git push -u origin <branch>` – Push and set upstream branch
-- `git remote remove <name>` – Remove a remote
+- `git remote -v`: List remotes
+
+- `git remote add origin <repo_url>`: Add a remote repository
+
+- `git fetch origin`: Fetch changes from remote
+
+- `git pull origin <branch>`: Pull changes from remote branch (fetch + merge)
+
+- `git push origin <branch>`: Push changes to remote branch
+
+- `git push -u origin <branch>`: Push and set upstream branch
+
+- `git remote remove <name>`: Remove a remote
+
+--- 
 
 ## Stashing Changes
 
-- `git stash` – Stash current changes
-- `git stash list` – List stashed changes
-- `git stash apply` – Apply the latest stash
-- `git stash pop` – Apply and remove the latest stash
-- `git stash drop` – Remove the latest stash
+- `git stash`: Stash current changes
+
+- `git stash list`: List stashed changes
+
+- `git stash apply`: Apply the latest stash
+
+- `git stash pop`: Apply and remove the latest stash
+
+- `git stash drop`: Remove the latest stash
+
+--- 
 
 ## Resetting and Reverting
 
-- `git checkout <commit>` – Visit old commits. Due to the detached HEAD no changes should be made because they will get lost.
-- `git checkout` – Un-does the changes of the current pre-commit changes.
-- `git reset <file>` – Unstage a file
-- `git reset --hard <commit>` – Reset to a specific commit (deletes changes)
-- `git reset --soft <commit>` – Reset to a commit but keep changes staged and the working directory unchanged.
-- `git reset --mixed <commit>` – Reset to a commmit, clears statging and the working directory remeains unchanged (default)
-- `git revert <commit>` – Create a new commit that undoes a previous commit.
+- `git checkout <commit>`: Visit old commits. Due to the detached HEAD no changes should be made because they will get lost.
+
+- `git checkout`: Un-does the changes of the current pre-commit changes.
+
+- `git reset <file>`: Unstage a file
+
+- `git reset --hard <commit>`: Reset to a specific commit (deletes changes)
+
+- `git reset --soft <commit>`: Reset to a commit but keep changes staged and the working directory unchanged.
+
+- `git reset --mixed <commit>`: Reset to a commmit, clears statging and the working directory remeains unchanged (default)
+
+- `git revert <commit>`: Create a new commit that undoes a previous commit.
+
+--- 
 
 ## Tagging
 
-- `git tag` – List all tags
-- `git tag -a v1.0 -m "Version 1.0"` – Create an annotated tag
-- `git push origin --tags` – Push tags to remote
+- `git tag`: List all tags
+
+- `git tag -a v1.0 -m "Version 1.0"`: Create an annotated tag
+
+- `git push origin --tags`: Push tags to remote
+
+--- 
 
 ## Undoing Changes
 
-- `git checkout -- <file>` – Discard changes in a file
-- `git restore <file>` – Restore a file to the last commit
-- `git reflog` – View history of HEAD changes
+- `git checkout -- <file>`: Discard changes in a file
+
+- `git restore <file>`: Restore a file to the last commit
+
+- `git reflog`: View history of HEAD changes
+
 - `git branch recovery <commit>` if when doing changes things went wrong, with `reflog` plus this command we can resolve our errors
-- `git cherry-pick <commit>` – Apply a specific commit from another branch
+
+- `git cherry-pick <commit>`: Apply a specific commit from another branch
+
+--- 
 
 ## Miscellaneous
 
-- `git diff` – Show changes between commits and working directory
-- `git blame <file>` – Show who modified each line in a file
-- `git show <commit>` – Show details of a commit
-- `git rm <file>` – Remove a file from Git
+- `git diff`: Show changes between commits and working directory
+- `git blame <file>`: Show who modified each line in a file
+- `git show <commit>`: Show details of a commit
+- `git rm <file>`: Remove a file from Git
 
 ---
 
@@ -242,6 +290,7 @@ The `.gitignore` file is used to declare files or kinds o files we want git to n
 *.txt
 ```
 
+---
 
 
 

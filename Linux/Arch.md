@@ -1,234 +1,8 @@
-# Manual Linux Setup
-
-Documentation for setting up Arch Linux with the necessary tools and configurations for development.
-
-## Hardware
-
-Real men use a ThinkPad T440p or T480. Jokes aside, just pick a computer.
-
-### ThinkPad T440p
-
-Needs:
-
-- US keyboard
-- If it comes with the NVIDIA GT 730M dGPU, even better.
-
-#### CPU Upgrade
-
-The T440p is one of the last ThinkPads with a socketed CPU, making it upgradeable.
-
-Recommended CPUs:
-
-- Intel Core i7-4702MQ (37W, best efficiency/performance balance)
-- Intel Core i7-4712MQ (37W, slightly faster than the 4702MQ)
-- Intel Core i7-4800MQ (47W, excellent performance)
-- Intel Core i7-4900MQ (47W, one of the fastest officially supported CPUs)
-- Intel Core i7-4910MQ (47W, enthusiast option)
-- Intel Core i7-4980HQ (SR1ZY PGA-modded version only, requires custom adapter and additional cooling considerations)
-
-For the i-5 series, the best option is the i5-4300M (37W) for a good balance of performance and power consumption.
-
-#### RAM Upgrade
-
-Maximum supported memory: 16GB DDR3L (2x8GB).
-
-Recommended RAM kits:
-
-- Crucial CT2KIT102464BF160B (16GB DDR3L 1600MHz)
-- Kingston KVR16LS11K2/16 (16GB DDR3L 1600MHz)
-- Samsung M471B1G73QH0-YK0 (8GB DDR3L 1600MHz modules)
-
-#### Storage Upgrades
-
-The T440p can support up to three storage devices:
-
-1. Main 2.5" SATA bay
-2. M.2 2242 slot (WWAN slot)
-3. Ultrabay caddy replacing the optical drive
-
-Recommended 2.5" SSDs:
-
-- Samsung 870 EVO
-- Crucial MX500
-- WD Blue SA510
-
-Recommended M.2 2242 SSDs:
-
-- Transcend MTS430S
-- Kingspec 2242 SATA SSD
-- MyDigitalSSD Super Boot 2 2242
-
-Recommended Ultrabay caddies:
-
-- Lenovo ThinkPad Serial Ultrabay Enhanced SATA Adapter
-- NewmodeUS Ultrabay HDD Caddy
-- Fenvi 9.5mm Ultrabay SATA Caddy
-
-#### Trackpad Upgrade
-
-The stock T440p clickpad is widely disliked. Most users replace it with the T450 touchpad.
-
-Recommended replacements:
-
-- Lenovo T450 Synaptics Trackpad
-- Lenovo T450 Alps Trackpad
-- Lenovo T450 Touchpad FRU 00HN550
-
-#### Display Upgrade
-
-The display is considered the single most important T440p upgrade.
-
-Recommended IPS FHD panels:
-
-- AUO B140HAN01.3
-- LG LP140WF3-SPD1
-- Innolux N140HCE-EN1
-
-Other popular panels:
-
-- AUO B140HAN01.2
-- LG LP140WF1-SPK1
-- Innolux N140HCG-GQ2
-
-#### Battery Upgrade
-
-Recommended batteries:
-
-- Lenovo 57+ (57Wh)
-- Lenovo 57++ (100Wh)
-- Kingsener 57++ replacement battery
-
-#### Keyboard Upgrade
-
-Recommended US backlit keyboards:
-
-- LiteOn Backlit Keyboard
-- Chicony Backlit Keyboard
-- Darfon Backlit Keyboard
-
-### ThinkPad T480
-
-The T480 is considered the last "modern" highly-upgradeable ThinkPad.
-
-#### CPU
-
-CPU is soldered and cannot be upgraded.
-
-Recommended CPUs when purchasing:
-
-- Intel Core i5-8250U
-- Intel Core i5-8350U
-- Intel Core i7-8550U
-- Intel Core i7-8650U
-
-The i5-8350U is generally considered the best value option.
-
-#### RAM Upgrade
-
-Two DDR4 SO-DIMM slots.
-
-Official maximum:
-
-- 32GB (2x16GB)
-
-Community-tested maximum:
-
-- 64GB (2x32GB)
-
-Recommended RAM:
-
-- Crucial CT2K16G4SFRA32A
-- Kingston Fury Impact DDR4-3200
-- Samsung M471A2K43DB1-CWE
-
-#### Main NVMe SSD
-
-Recommended M.2 2280 NVMe SSDs:
-
-- Samsung 970 EVO Plus
-- Samsung 980
-- WD Black SN770
-- SK Hynix P31 Gold
-- Crucial P3 Plus
-
-#### WWAN Slot SSD Upgrade (2242)
-
-The WWAN slot can be used for an additional PCIe SSD.
-
-Known compatible drives:
-
-- WD SN520
-- Lexar NM520
-- Toshiba RC100
-- SK Hynix BC501
-- Netac N930ES
-- Samsung MZ9LQ256HBJD
-
-#### Display Upgrade
-
-Avoid the 1366x768 TN panel.
-
-Recommended 1080p IPS displays:
-
-- LG LP140WF6-SPB7
-- Innolux N140HCG-GN1
-- AUO B140HAK01.0
-
-Recommended 1440p upgrades:
-
-- AUO B140QAN02.0
-- AUO B140QAN02.3
-- Innolux N140QAN01
-
-#### Trackpad Upgrade
-
-Recommended replacements:
-
-- ThinkPad X1 Carbon Gen 6 Glass Trackpad
-- ThinkPad X1 Extreme Glass Trackpad
-- Lenovo Glass Precision Touchpad FRU 01LX660
-
-#### Wi-Fi Upgrade
-
-Recommended Wi-Fi cards:
-
-- Intel AX200
-- Intel AX210
-- Intel AX211 (with compatible systems)
-
-#### Battery Upgrade
-
-Internal battery:
-
-- Lenovo 01AV421 (24Wh)
-- Lenovo 01AV419 (24Wh)
-- Kingsener 24Wh replacement
-
-External battery:
-
-- Lenovo 61 (24Wh)
-- Lenovo 61+ (48Wh)
-- Lenovo 61++ (72Wh)
-
-#### Keyboard Upgrade
-
-Recommended US backlit keyboards:
-
-- LiteOn Backlit Keyboard
-- Chicony Backlit Keyboard
-- Darfon Backlit Keyboard
-
-#### Cooling Upgrade
-
-Recommended upgrades for Linux users running heavy workloads:
-
-- Dual-pipe dGPU heatsink assembly
-- Genuine Lenovo dGPU cooling assembly
-- Delta replacement cooling fan
+# Arch Set-Up
 
 --- 
 
-## Installation 
+## Installation Of Arch
 
 1. Download the latest Arch Linux ISO from the [official website](https://archlinux.org/download/).
 
@@ -271,13 +45,13 @@ And to disconnect if needed: `[iwd]# station device disconnect`
 - `n` Creates a new partition - `Enter` - `Enter` - `+4G` - `Y` if prompted
 - `n` Creates a new partition - `Enter` - `Enter` - `Enter` - `Y` if prompted
 
--*Optional** because we are going to format them manually anyway
+-**Optional** because we are going to format them manually anyway
 
 - `t` Mark a partition with a type - `2` - `82` For the swap type 
 - `t` Mark a partition with a type - `3` - `48` For the linux file system type
 - `t` Mark a partition with a type - `1` - `1` For the boot type
 
--*Finally**
+-**Finally**
 
 - `w` Write and quit
 
@@ -373,7 +147,7 @@ If everything was done correctly you sould have a working installation.
 
 ---
 
-## Post Install
+## Post Arch Install
 
 ### Connecto to the internet via Wifi
 
@@ -389,27 +163,19 @@ Alternatively a GUI can be used via the command
 
 - `nmtui` 
 
----
-
 ### Install SSH Agent
 
 - `sudo pacman -S sshagent`
 - `sudo systemctl enable sshd.service`
 
----
-
 ### Install a browser
 
 - `sudo pacman -S firefox`
-
----
 
 ### Set up a firewall
 
 - `sudo pacman -S ufw`
 - `sudo systemctl enable ufw.service`
-
----
 
 ### Set up Basic Graphics with sway
 
@@ -418,39 +184,67 @@ Alternatively a GUI can be used via the command
 
 ---
 
-### Set up SSH
+## Pacman and Yay
 
-#### Check if you already have an SSH key
+Pacman was used for almost all examples, but Yay can also be used.
 
-- `ls ~/.ssh`
+- **Installing packages**:
+  `pacman -S package_name1 package_name2 ...`
 
-Look for files like `id_rsa` and `id_rsa.pub`. If they exist, skip to step 1.4.
+- **Installing groups**:
+  `pacman -S gnome`
 
-#### 1.1 Generate a new SSH key
+- **Removing packages**:
+  `pacman -R gnome`
 
-- `ssh-keygen -t ed25519 -C "your_email@example.com" `
+- **Removing packages with dependencies**:
+  `pacman -Rs gnome`
 
-> When prompted, press **Enter** to accept the default file location. You can add a passphrase for extra security (optional).
+- **Updating the official packages**:
+  `pacman -Syu`
 
-#### 1.2 Start the SSH agent
+- **Updating the official and unofficial packages**:
+  `yay -Syu`
 
-- `eval "$(ssh-agent -s)"`
+- **Searching for a package in the official repos**:
+  `pacman -Ss package_name`
 
-#### 1.3 Add your key to the SSH agent
+- **Searching for a package in AUR (yay)**:
+  `yay -Ss package_name`
 
-- `ssh-add ~/.ssh/id_ed25519`
+- **Viewing installed packages**:
+  `pacman -Q`
 
-#### 1.4 Add your SSH key to GitHub
+- **Viewing explicitly installed packages**:
+  `pacman -Qe`
 
-Copy the public key:
+- **Viewing dependencies of a package**:
+  `pacman -Qi package_name`
 
-- `cat ~/.ssh/id_ed25519.pub`
+- **Cleaning the package cache (remove all except the latest version)**:
+  `pacman -Sc`
 
-Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it there.
+- **Cleaning the package cache completely**:
+  `pacman -Scc`
+
+- **Installing a local package file (.pkg.tar.zst)**:
+  `pacman -U ./package_file.pkg.tar.zst`
+
+- **Reinstalling a package**:
+  `pacman -S package_name`
+
+- **Removing orphaned packages**:
+  `pacman -Rns $(pacman -Qtdq)`
+
+- **Editing and building packages from AUR with yay**:
+  `yay -G aur_package_name && cd aur_package_name && makepkg -si`
+
+- **Eliminate Orphan Packages**:
+  `sudo pacman -Qdtq | sudo pacman -Rns -`
 
 ---
 
-### Install the Packages by copying the following command:
+## Install the Packages by copying the following command:
 
 - `sudo pacman -S texlive fastetch 7zip make kitty neovim python pip stow npm python 
    wl-clippboard wofi xorg-wayland luarocks linux-lts lua wayland 
@@ -462,7 +256,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
    lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
    julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl imv swayimg 
-   lxqt-policykit nm-applet postgresql seahorse`
+   lxqt-policykit nm-applet postgresql seahorse swaync`
 
 **Packet plus purpose:**
 
@@ -568,11 +362,12 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `swayimg`: lightweight image viewer 
 - `lxqt-policykit`: polkit 
 - `nm-applet`: password prompt for wifi.
-- `seahorse`
+- `seahorse`:
+- `swaync`: notification daemon for sway.
 
 ---
 
-### Setup yay
+## Setup yay
 
 - `git clone https://aur.archlinux.org/yay.git`
 - `cd yay/`
@@ -599,16 +394,91 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH key**, and paste it
 - `cargo install --git https://github.com/itsjunetime/tdf.git`
 - `sudo npm install -g @angular/cli`
 
+--- 
+
+## Clone Configuration repositories
+
+For everything related to a 'Rice' clone the repositories or setup own configurations. One option is to 
+clone the necessary repositories from github or use stow.
+
+- `git clone git@github.com:HaoRyuZark/dotfiles.git` 
+- `cd dotfiles`
+- `stow */`
+
+### Stow Functionality
+
+- **First Setup**: `stow -D */` to remove the stow links and `stow */` to create the stow links.
+
+- **Adding files to stow and updating**:
+
+  1. To add files to stow use create a mirror of the original struture from the home directory to that file. 
+
+  2. Copy the file or directory to stow 
+
+  3. Run `stow --adopt .` inside the dotfiles directory
+ 
 ---
 
-### GTK and Qt Themes 
+## GTK and Qt Themes 
 
 - **Setting up the Qt env var:** write `QT_QPA_PLATFORMTHEME="qt5ct"` with `sudo vim /etc/environment `
 - **Instaling Qt Themes:** `sudo pacman -S breeze` 
 
 --- 
 
-### ClamAV
+## Maintenance 
+
+- **Clear Cache:** `sudo yay -Scc` and `sudo pacman -Scc`
+- **Update database** `sudo yay -Syy`
+- **Update:** `sudo yay -Syu`
+- **Clean unwanted dependencies:** `yay -Yc`
+- **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)`
+- **Free Disk Space:** Use `Bleachbit` or type `du -sh path` to see the disk usage of some directory and 
+`rm -rf path/` to remove. Be carefull to not important directories.
+- **Cleaning Logs of the Journal directory:** Use `journalctl` to activate the vacuum option. 
+`sudo journalctl --vacuum-time=2weeks`
+- **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist `
+
+---
+
+## Timeshift
+
+### Setup via GUI 
+
+To open, use `sudo -E timeshift-gtk` (Not the best way TODO)
+1. Select the type of snapshots
+2. Select your second storage device 
+3. Schedule the snapshot 
+4. Select the users: `root` and `yourself`, ... 
+5. Skip the filter and click ok 
+
+### Usage CLI 
+
+- **Check config:** `sudo timeshift --check`
+- **Snapshot type:** `sudo timeshift --rsync` or `sudo timeshift --btrfs`
+- **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or
+  `sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
+- **Create a snapshot:** `sudo timeshift --create --comments "Something" --tags D`
+- **See snapshots:** `sudo timeshift --list`
+- **Restore system:** `sudo timeshift --restore` then type the identifier of the target
+- **Delete snapshot:** `sudo timeshift --delete` then type  the identifier of the target
+- **Delete specific snapshot:** `sudo timeshift --delete --snapshot 'date' `
+- **Delete snapshots:** `sudo timeshift --delete-all `
+- **Scheduleling:** `sudo timeshift --schedule --type_of_schedule num`
+
+--- 
+
+## Sensors 
+
+To setup the sensors run the command 
+
+`sensors-detect` then type `YES` for all safe operations. 
+
+To see the data type `sensors`
+
+--- 
+ 
+## ClamAV
 
 - Initial Configuration:
 
@@ -1524,93 +1394,29 @@ Now restart the `clamav-clamonacc.service` using `systemctl`.
 
 - Update database: `freshclam`
  
----
+ ---
 
-### Neovim
-
-Maintenance 
-
-- Delete Everything: `rm -rf ~/.local/share/nvim/*`
-
----
-
-### Sensors 
-
-To setup the sensors run the command 
-
-`sensors-detect` then type `YES` for all safe operations. 
-
-To see the data type `sensors`
-
----
-
-### Clone Configuration repositories
-
-For everything related to a 'Rice' clone the repositories or setup own configurations. One option is to 
-clone the necessary repositories from github or use stow.
-
-- `git clone git@github.com:HaoRyuZark/dotfiles.git` 
-- `cd dotfiles`
-- `stow */`
-
-#### Stow Functionality
-
-- **First Setup**: `stow -D */` to remove the stow links and `stow */` to create the stow links.
-
-- **Adding files to stow and updating**:
-
-  1. To add files to stow use create a mirror of the original struture from the home directory to that file. 
-
-  2. Copy the file or directory to stow 
-
-  3. Run `stow --adopt .` inside the dotfiles directory
-
----
-
-### Audio 
+## Audio 
 
 - `systemctl --user enable --now pipewire pipewire-pulse wireplumber`
 
 ---
 
-### Set pdf viewer 
+## Set pdf viewer 
 
 - `xdg-mime default org.pwmt.zathura.desktop application/pdf`
 
 --- 
 
-### Docker 
+## Docker 
 
 - `sudo systemctl enable docker.service`
 
 ---
 
-### Clone development respositories
+## Second Hardrive 
 
-- `mkdir Homo_Deus`
-- `cd Homo_Deus`
-- `git clone git@github.com:HaoRyuZark/Computer_Science_Compedium.git`
-- `git clone git@github.com:HaoRyuZark/Mathematica_Compendium.git`
-- `git clone git@github.com:HaoRyuZark/Programming.git`
-
---- 
-
-### Copilot in Neovim 
-
-To set up copilot run 
-
-- `Lazy load copilot.vim`
-- `Copilot setup` and proceed to authenticate
-
-### University Stuff
-
-Download the Mathematics folder from Google Drive to obtain books and worksheets.
-
---- 
-
-### Second Hardrive 
-
-Use the same procedure like when during the installtion consisting of: 
+Use the same procedure like when during the installation consisting of: 
 
 - Identifying
 - Paritioning
@@ -1621,125 +1427,5 @@ The difference is that this time we want to add it to `fstab` to mount automatic
 
 - Get the UUID with `lsblk -f`
 - Open and edit the `/etc/fstab` and add the line `UUID=id /mnt/... file_system_type permisions(defaults) dump_option (0)  policy_option (0)`
-
----
-
-### Timeshift
-
-#### Setup via GUI 
-
-To open, use `sudo -E timeshift-gtk` (Not the best way TODO)
-1. Select the type of snapshots
-2. Select your second storage device 
-3. Schedule the snapshot 
-4. Select the users: `root` and `yourself`, ... 
-5. Skip the filter and click ok 
-
-#### Usage CLI 
-
-- **Check config:** `sudo timeshift --check`
-- **Snapshot type:** `sudo timeshift --rsync` or `sudo timeshift --btrfs`
-- **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or
-  `sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
-- **Create a snapshot:** `sudo timeshift --create --comments "Something" --tags D`
-- **See snapshots:** `sudo timeshift --list`
-- **Restore system:** `sudo timeshift --restore` then type the identifier of the target
-- **Delete snapshot:** `sudo timeshift --delete` then type  the identifier of the target
-- **Delete specific snapshot:** `sudo timeshift --delete --snapshot 'date' `
-- **Delete snapshots:** `sudo timeshift --delete-all `
-- **Scheduleling:** `sudo timeshift --schedule --type_of_schedule num`
-
---- 
-
-### Maintenance 
-
-- **Clear Cache:** `sudo yay -Scc` and `sudo pacman -Scc`
-- **Update database** `sudo yay -Syy`
-- **Update:** `sudo yay -Syu`
-- **Clean unwanted dependencies:** `yay -Yc`
-- **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)`
-- **Free Disk Space:** Use `Bleachbit` or type `du -sh path` to see the disk usage of some directory and 
-`rm -rf path/` to remove. Be carefull to not important directories.
-- **Cleaning Logs of the Journal directory:** Use `journalctl` to activate the vacuum option. 
-`sudo journalctl --vacuum-time=2weeks`
-- **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist `
-
---- 
-
-## Command ip link 
-
-In linux the `ip link` command will return three device names 
-
-- `lo` for the loop back device 
-- `Ethernet Plug` 
-- `Ẁifi card`
-
---- 
-
-## Image viewer
-
-- `sxiv path_to_the_image`
-
---- 
-
-## Pacman and Yay
-
-Pacman was used for almost all examples, but Yay can also be used.
-
-- **Installing packages**:
-  `pacman -S package_name1 package_name2 ...`
-
-- **Installing groups**:
-  `pacman -S gnome`
-
-- **Removing packages**:
-  `pacman -R gnome`
-
-- **Removing packages with dependencies**:
-  `pacman -Rs gnome`
-
-- **Updating the official packages**:
-  `pacman -Syu`
-
-- **Updating the official and unofficial packages**:
-  `yay -Syu`
-
-- **Searching for a package in the official repos**:
-  `pacman -Ss package_name`
-
-- **Searching for a package in AUR (yay)**:
-  `yay -Ss package_name`
-
-- **Viewing installed packages**:
-  `pacman -Q`
-
-- **Viewing explicitly installed packages**:
-  `pacman -Qe`
-
-- **Viewing dependencies of a package**:
-  `pacman -Qi package_name`
-
-- **Cleaning the package cache (remove all except the latest version)**:
-  `pacman -Sc`
-
-- **Cleaning the package cache completely**:
-  `pacman -Scc`
-
-- **Installing a local package file (.pkg.tar.zst)**:
-  `pacman -U ./package_file.pkg.tar.zst`
-
-- **Reinstalling a package**:
-  `pacman -S package_name`
-
-- **Removing orphaned packages**:
-  `pacman -Rns $(pacman -Qtdq)`
-
-- **Editing and building packages from AUR with yay**:
-  `yay -G aur_package_name && cd aur_package_name && makepkg -si`
-
-- **Eliminate Orphan Packages**:
-  `sudo pacman -Qdtq | sudo pacman -Rns -`
-
----
 
 

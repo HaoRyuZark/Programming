@@ -110,6 +110,16 @@ Using these paths means that we don’t have to specify an absolute path when ru
    - We can also modify it in the `.bashrc` by putting in our `PATH=$PATH:/path/to/program`.
 ---
 
+## The Files In Linux (Overview)
+
+**Files** in linux are stored in a tree-like structure consisting on tables (directories) whose entries which consists on the file name and the 
+**inode-numbers**. The innode-number is an index of a file-system-implementation-dependent data-structure called the **inode-storage** which has a block of information 
+containing: `size`, `file-type`, `permisions`, `data`, etc. The actual data is stored in blocks inside the disk which is handled by another abstraction layer.
+
+> Directories are also just files. They consists of the table.
+
+--- 
+
 ## File Descriptor
 
 A **file descriptor (FD)** is a low-level integer handle used by an operating system to uniquely identify an open file or input/output (I/O) resource. File descriptors are central to how operating systems like Unix, Linux, and macOS manage I/O operations, including files, pipes, and sockets.

@@ -1,21 +1,37 @@
 # Systems Programming
 
+**System programming** is the discipline of designing and implementing system close to the computer hardware. At this level the abstractions 
+provided by the different tools used tend to be very minimal, although programming languages like C and Rust provide an easy way to interact with the 
+computer. 
+
+It is critical to have an good understanding of the low-level details of modern systems to be a better developer.
+
+> I am not going to include too much electrical engineering since I am not a specialist.
+
 --- 
 
 ## Layers of a Computer 
 
 - **Applications**: compilers, editor, guis, etc.
+
 - **Libraries and Critical Programs**: language Libraries and global executables.
+
 - **OS**: kernel for the interaction with the hardware.
+
 - **Hardware**: Physical layer.
 
 --- 
 
 ## Tasks of an Operating System
 
+The **operating system** is the program responsible to handle the hardware resources and coordinate other programs.
+
 - **Process Management**: Handling the life span of a program as well as allowing multitasking.
+
 - **Memory Management**: Management of the resources of a program.
+
 - **File system**: Definition of how data is going to be stored, retrieved, updated and deleted.
+
 - **Input/Output**: Handling peripherals for the entering or display of data.
 
 --- 
@@ -34,12 +50,12 @@
 ## Binary System
 
 The binary system, or base-2 numeral system, is a number system that uses only two symbols: 0 and 1. 
-This system is fundamental to all modern computers and digital devices because their 
-circuits operate on two states: on (1) or off (0). Unlike the decimal system (base-10), which uses 
-powers of 10, the binary system uses powers of 2. For example, the decimal number 9 is represented in binary as 1001, which
-is calculated as 
 
-```
+This system is fundamental to all modern computers and digital devices because their circuits operate on two states: on (1) or off (0). Unlike the decimal system (base-10), which uses 
+powers of 10, the binary system uses powers of 2. For example, the decimal number 9 is represented in binary as 1001, which
+is calculated as:
+
+```txt
 (1 times2 3
  )+(0
 times2 
@@ -62,7 +78,7 @@ digits.
 
 ### Addition 
 
-```
+```txt
 0+0=0
 
 0+1=1
@@ -72,12 +88,11 @@ digits.
 1+1=10 (which is 0 with a carry-over of 1)
 
 1+1+1=11 (which is 1 with a carry-over of 1)
-
 ```
 
 Example: 1011_2+101_2
 
-```
+```txt
   1011
 +  101
 ------
@@ -90,7 +105,7 @@ Subtraction is done using borrowing.
 
 Example: 101_2−11_2
 
-```
+```txt
   101
 -  011
 ------
@@ -103,7 +118,7 @@ Binary multiplication is a series of additions and shifts.
 
 Example: 101_2 times 11_2
 
-```
+```txt
    101
  x  11
 ------
@@ -119,7 +134,7 @@ Binary division is similar to long division in the decimal system, using repeate
 
 Example: 1101_2 div 10_2
 
-```
+```txt
       110.1
    _______
 10 | 1101.0
@@ -141,8 +156,7 @@ Example: 1101_2 div 10_2
 
 ## Two's Complement
 
-Two's complement is a method used to represent signed (positive and negative) integers 
-in binary. It simplifies arithmetic operations, particularly subtraction, by allowing 
+Two's complement is a method used to represent signed (positive and negative) integers in binary. It simplifies arithmetic operations, particularly subtraction, by allowing 
 it to be performed as addition. To find the two's complement of a number:
 
 - Invert the bits (change all 0s to 1s and 1s to 0s). This is also known as finding the one's complement.
@@ -151,7 +165,7 @@ it to be performed as addition. To find the two's complement of a number:
 
 For example, to represent −5 using 8 bits:
 
-```
+```txt
 The positive binary representation of 5 is 00000101.
 
 Invert the bits: 11111010.
@@ -171,7 +185,7 @@ To convert a decimal number to binary, you repeatedly divide the decimal number 
 
 Example: Convert 13_10 to binary.
 
-```
+```txt
 13
 div2=6 remainder 1
 
@@ -193,7 +207,7 @@ To convert a binary number to decimal, multiply each digit by its corresponding 
 
 Example: Convert 1101_2 to decimal.
 
-```
+```txt
 (1×2 
 3
  )+(1×2 
@@ -209,11 +223,12 @@ Example: Convert 1101_2 to decimal.
  
 ### Binary to Hexadecimal (Hex)
 
-Hexadecimal (base-16) is a number system that uses 16 symbols (0−9 and A−F). It's a compact way to represent binary numbers. To convert binary to hex, group the binary digits into sets of four, starting from the right. Then, convert each group into its hex equivalent.
+Hexadecimal (base-16) is a number system that uses 16 symbols (0−9 and A−F). It's a compact way to represent binary numbers. To convert binary to hex, group the binary digits into sets of four, 
+starting from the right. Then, convert each group into its hex equivalent.
 
 Example: Convert 11011010_2 to hex.
 
-```
+```txt
 Group the digits: 1101 and 1010.
 
 1101_2=13_10, which is D in hex.
@@ -229,7 +244,7 @@ To convert hex to binary, simply convert each hex digit into its 4-bit binary eq
 
 Example: Convert 2A_16 to binary.
 
-```
+```txt
 2_16=0010_2
 
 A_16=1010_2
@@ -256,35 +271,60 @@ This format allows a wide range of values, from very small fractions to very lar
 
 ## Binary Multiplication as Shifts
 
-Binary multiplication is essentially a series of shift-and-add operations. For each '1' in the multiplier, the multiplicand is added to a running total, shifted to the left by the appropriate number of places.
+Binary multiplication is essentially a series of shift-and-add operations. For each '1' in the multiplier, the multiplicand is added to a running total, shifted to the **left** 
+by the appropriate number of places.
 
 ---
 
 ## Binary Division
 
-Binary division, often implemented using repeated subtraction, works much like long division in the decimal system. The divisor is repeatedly subtracted from the dividend, and a '1' is placed in the quotient for each successful subtraction. If the subtraction is not possible, a '0' is placed in the quotient, and the next digit of the dividend is brought down.
+Binary division, often implemented using repeated subtraction, works much like long division in the decimal system. The divisor is repeatedly subtracted from the dividend, and a '1' is 
+placed in the quotient for each successful subtraction. If the subtraction is not possible, a '0' is placed in the quotient, and the next digit of the dividend is brought down.
 
 ---
 
-## The Stack
+## Memory Layout of a Process
 
-Is a memory region that stores local variables, function parameters, and return addresses. It operates in a last-in, first-out (LIFO) manner. The data is 
+The **memory layout** of a process typically consists of several segments:
+
+- **Text Segment**: Contains the executable code of the program.
+
+- **Data Segment**: Contains global and static variables.
+
+- **BSS Segment**: Contains uninitialized global and static variables.
+
+- **Heap Segment**: Used for dynamic memory allocation.I grows up-wards.
+
+- **Stack Segment**: Contains local variables and function call information. I grows down-wards.
+
+```txt 
+                           RAM
+                    |---------------|
+    Higer addresses |     Stack     |
+                    |---------------|
+                    |       |       |
+                    |       -       |
+                    |       |       |
+                    |---------------|
+                    |     Heap      |
+                    |---------------|
+                    | Uninitialized |
+                    |---------------|
+                    | Initialized   |
+                    |---------------|
+                    |               |
+                    |     Text      |
+     Lower adresses |---------------|
+```
+
+
+
+### The Stack
+
+The **stack** is a memory region that stores local variables, function parameters, and return addresses. It operates in a last-in, first-out (LIFO) manner. The data is 
 stored contiguously, and the stack grows downwards in memory. Each function call creates a new stack frame that contains the function's local variables and parameters.
 
----
-
-## Function Inlining and Outlining 
-
-When compilers or the programmer himself generates/writes code, there is the choice between 
-repeating the same code over and over again or writing function. If we focus on the compiler perspective, 
-we will realize that jumping in memory multiple times can be expensive in terms of performance. Due to this fact the compiler 
-tries as much as possible to do function **inlining**, but this can also lead to big binary sizes. 
-
-Contrary to inlining, **outlining** is based on jumping to the address of the of the instructions.
-
----
-
-## The Heap
+### The Heap
 
 The heap is a memory region used for dynamic memory allocation. Unlike the stack, memory in the heap is managed manually by the programmer using functions 
 like `malloc`, `calloc`, `realloc`, and `free`. The heap allows for more flexible memory usage, but it also requires careful management to avoid memory leaks 
@@ -292,18 +332,30 @@ and fragmentation. The heap is considered slower than the stack for memory alloc
 
 ---
 
+## Function Inlining and Outlining 
+
+When compilers or the programmer himself generates/writes code, there is the choice between repeating the same code over and over again or writing function. If we focus on the compiler perspective, 
+we will realize that jumping in memory multiple times can be expensive in terms of performance. Due to this fact the compiler 
+tries as much as possible to do function **inlining**, but this can also lead to big binary sizes. 
+
+Contrary to inlining, **outlining** is based on jumping to the address of the of the instructions.
+
+--- 
+
 ## Cache
 
-Cache is a small, fast memory located close to the CPU that stores frequently accessed data. It helps speed up data retrieval by reducing the time it takes to access data from the main memory (RAM).
+**Cache** is a small, fast memory located close to the CPU that stores frequently accessed data. It helps speed up data retrieval by reducing the time it takes to access data from the main memory (RAM).
 
 When the requested data is found in the cache, it is called a cache hit; if not, it is a cache miss, and the data must be fetched from the slower main memory. There is
-a caching hierarchy, typically consisting of multiple levels (L1, L2, L3), with L1 being the fastest and smallest, and L3 being larger but slower. If data is not used frequently, it may be evicted from the cache to make room for new data.
+a caching hierarchy, typically consisting of multiple levels (L1, L2, L3), with L1 being the fastest and smallest, and L3 being larger but slower. If data is not used frequently, it 
+may be evicted from the cache to make room for new data.
 
 ---
 
 ## System Calls
 
-System calls are the interface between user applications and the operating system kernel. They allow user programs to request services from the kernel, such as file operations, process management, and network communication. System calls provide a controlled way for applications to interact with hardware and system resources.
+**System calls** are the interface between user applications and the operating system kernel. They allow user programs to request services from the kernel, such as file operations, 
+process management, and network communication. System calls provide a controlled way for applications to interact with hardware and system resources.
 
 ---
 
@@ -312,15 +364,19 @@ System calls are the interface between user applications and the operating syste
 The fetch-decode-execute cycle is the fundamental process by which a CPU executes instructions. It consists of three main stages:
 
 1. **Fetch**: The CPU retrieves an instruction from memory, typically from the instruction cache or main memory, using the program counter (PC) to determine the address of the next instruction.
+
 2. **Decode**: The fetched instruction is decoded to determine what operation it specifies and which operands are involved. This step involves interpreting the binary representation of the instruction.
+
 3. **Execute**: The CPU performs the operation specified by the instruction, which may involve arithmetic or logical operations, memory access, or control flow changes. The results of the execution are then stored back in memory or in registers.
+
 4. **Repeat**: The cycle repeats for the next instruction, with the program counter being updated to point to the next instruction in the sequence.
 
 ---
 
 ## Pipelining
 
-Pipelining is a technique used in modern CPUs to improve instruction throughput by overlapping the execution of multiple instructions. Instead of executing one instruction at a time, the CPU divides the instruction execution process into several stages, allowing different instructions to be processed simultaneously at different stages.
+**Pipelining** is a technique used in modern CPUs to improve instruction throughput by overlapping the execution of multiple instructions. Instead of executing one instruction at a time, the CPU 
+divides the instruction execution process into several stages, allowing different instructions to be processed simultaneously at different stages.
 
 This done in the following way:
 
@@ -363,23 +419,11 @@ the state of the current process and loads the state of the next process to be e
 A **binary decoder** is a set of logic gates, mostly AND gates which are used to map a unique fixed-size binary sequence to a unique binary sequence. 
 This is used to access specific memory cells in memory, and to determine which instruction is to be executed by the CPU.
 
---- 
-
-## Memory Layout of a Process
-
-The memory layout of a process typically consists of several segments:
-
-- **Text Segment**: Contains the executable code of the program.
-- **Data Segment**: Contains global and static variables.
-- **BSS Segment**: Contains uninitialized global and static variables.
-- **Heap Segment**: Used for dynamic memory allocation.
-- **Stack Segment**: Contains local variables and function call information.
-
 ---
 
 ## Virtual Memory
 
-Virtual memory is a memory management technique that allows a computer to use more memory than is physically available by using disk space as an extension of RAM. It also provides 
+**Virtual memory** is a memory management technique that allows a computer to use more memory than is physically available by using disk space as an extension of RAM. It also provides 
 the illusion of a large, contiguous memory space to applications, while the operating system manages the mapping between virtual addresses and physical addresses.
 
 It is done by dividing the memory into fixed-size pages and mapping them to physical memory frames. When a program accesses a page that is not currently in physical memory, a page 
@@ -433,7 +477,7 @@ The previously mentioned queues or more informal mailboxes for processes are cal
 
 ## Interrupts
 
-Interrupts are implemented at hardware level to store the state of the CPU correctly. One variant is to use 
+**Interrupts** are implemented at hardware level to store the state of the CPU correctly. One variant is to use 
 two register sets. One for the user mode and one for the kernel mode. 
 
 Another way is to make the stack register of the OS always visible to the CPU via a hardwired memory location or register. So 
@@ -441,7 +485,7 @@ during the context switching the all critical registers can be stored correctly.
 
 ---
 
-## User Mode and Kernel Mode
+## User Mode & Kernel Mode
 
 The mode bit is an special register which allows the cpu to execute privileged instructions. This mode is called **kernel mode**, and 
 is used by the operating system. The **user mode** is used for other programs which need the operating system or drivers to run. 
@@ -454,7 +498,10 @@ The CPU contains a timer to automatically return control to the OS in the case a
 
 ## CPU Scheduling
 
-CPU scheduling is the process of deciding which of the processes in the ready queue will be allocated to the CPU. The primary motivation behind CPU scheduling is to maximize CPU utilization and provide a responsive system for users. A well-designed scheduling algorithm aims to ensure that the CPU is never idle as long as there are processes ready to run, while also providing a fair and efficient allocation of CPU time among competing processes. Scheduling is a fundamental concept in multiprogramming operating systems, where multiple processes can reside in memory at the same time. The scheduler is a key component of the operating system that makes these allocation decisions.
+**CPU scheduling** is the process of deciding which of the processes in the ready queue will be allocated to the CPU. The primary motivation behind CPU scheduling is to maximize 
+CPU utilization and provide a responsive system for users. A well-designed scheduling algorithm aims to ensure that the CPU is never idle as long as there are processes ready to run, 
+while also providing a fair and efficient allocation of CPU time among competing processes. Scheduling is a fundamental concept in multiprogramming operating systems, where multiple 
+processes can reside in memory at the same time. The scheduler is a key component of the operating system that makes these allocation decisions.
 
 ### Cooperative and Preemptive Scheduling
 

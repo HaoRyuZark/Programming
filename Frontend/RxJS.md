@@ -96,6 +96,8 @@ output: --10-20-30-|
 An **observable** is informally: something like an array which gets built over time. This library provides a large
 number of operators which makes working with observables easier than with vanilla JavaScript.
 
+> The **observable** produces data, the **pipe** processes it and the **observer** gets the results and uses the result.
+
 - `new Observable(subscribe)`: creates an observable from a subscribe function.
   - `subscribe`: a function receiving a `subscriber` (observer). Call `subscriber.next(value)`, `subscriber.error(err)`,
     and `subscriber.complete()` to push notifications. It may **return** a teardown function that runs on unsubscribe.
@@ -987,3 +989,60 @@ request$.pipe(
 ).subscribe(render);
 ```
 
+
+--- 
+
+## Demo 
+
+```ts
+
+import { Observable } from "rxjs";
+import { map, filter } from "rxjs/operators";
+
+export class User {
+
+  name: string;
+  status: string;
+  
+  constructor( public name: string, public status: string) {}
+}
+
+// Inside the function we will define the steps to apply on our data
+const observable = new Observable((subscriber) => {
+  subscriber.next();
+});
+
+// All observer must implement next, catch and, complete
+const observer = {
+  next: (val) => {
+    console.log(val);
+  },
+
+  catch: (err) => {
+    console.log("Got error");
+  },
+
+
+  complete: () => {
+    console.log("Complete");
+  }
+};
+
+// Creating connection between the producer and consumer (observable and observer)
+observable.subscribe(observer);
+
+const users = { data: [new User("Aman", "active"), new User("Aman2", "inactive")] };
+
+// Passing the data to the different operators before hitting the observer
+const usersObservable = new Observable((subscriber) => {
+  subscriber.next(users);
+}).pipe(
+  map((value) => {
+    return value.data;
+  }), 
+  filter((value) => value.status !== "active"), 
+  
+);
+
+
+```
