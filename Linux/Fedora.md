@@ -254,8 +254,8 @@ removal, updates, and repository management.
 - `dnf [global-options] <command> [arguments]`
 
   - **Function**: Manages RPM packages and software repositories on Fedora and other RPM-based distributions.
-  - **Common Commands**:
 
+  - **Common Commands**:
     - `install`: Install one or more packages.
     - `remove`: Remove one or more packages.
     - `upgrade`: Upgrade installed packages.
@@ -271,23 +271,24 @@ removal, updates, and repository management.
     - `clean`: Remove cached package and repository data.
     - `check`: Check for dependency problems.
     - `repoquery`: Query packages from enabled repositories.
+  
   - **Example Usage**: `sudo dnf install vim`
 
 - `dnf install [flags] <package>...`
 
   - **Function**: Installs one or more packages and their required dependencies.
-  - **Flags**:
 
+  - **Flags**:
     - `-y`: Automatically answer yes to confirmation prompts.
     - `--allowerasing`: Allow DNF to remove installed packages to resolve dependency conflicts.
     - `--best`: Attempt to install the highest available package version.
     - `--no-best`: Allow installation of an older version if the newest version cannot be installed.
     - `--downloadonly`: Download packages without installing them.
+  
   - **Parameters**:
-
     - `<package>` *(required)*: Name, version, or package specification to install.
-  - **Example Usage**:
 
+  - **Example Usage**:
     - `sudo dnf install firefox`
     - `sudo dnf install gcc gcc-c++ make`
     - `sudo dnf install --downloadonly kernel`
@@ -295,111 +296,118 @@ removal, updates, and repository management.
 - `dnf remove [flags] <package>...`
 
   - **Function**: Removes installed packages and dependencies that are no longer required.
-  - **Flags**:
 
+  - **Flags**:
     - `-y`: Automatically confirm the removal.
     - `--noautoremove`: Do not automatically remove dependencies that are no longer required.
+ 
   - **Parameters**:
-
     - `<package>` *(required)*: Package to remove.
+
   - **Example Usage**: `sudo dnf remove firefox`
 
 - `dnf upgrade [flags] [package]...`
 
   - **Function**: Updates installed packages to newer available versions.
-  - **Flags**:
 
+  - **Flags**:
     - `-y`: Automatically confirm the upgrade.
     - `--refresh`: Refresh repository metadata before checking for updates.
     - `--exclude=<package>`: Exclude a package from the transaction.
+
   - **Parameters**:
-
     - `[package]` *(optional)*: Specific package to upgrade. If omitted, all installed packages are considered.
-  - **Example Usage**:
 
+  - **Example Usage**:
     - `sudo dnf upgrade`
     - `sudo dnf upgrade --refresh`
     - `sudo dnf upgrade firefox`
 
 - `dnf update`
 
-  - **Function**: Updates installed packages. On modern DNF versions, this is effectively an alias for `dnf upgrade`.
-  - **Example Usage**: `sudo dnf update`
+    - **Function**: Updates installed packages. On modern DNF versions, this is effectively an alias for `dnf upgrade`.
+ 
+    - **Example Usage**: `sudo dnf update`
 
 - `dnf search <term>`
 
   - **Function**: Searches enabled repositories for packages matching a name or description.
-  - **Parameters**:
 
+  - **Parameters**:
     - `<term>` *(required)*: Search term.
+
   - **Example Usage**: `dnf search text editor`
 
 - `dnf info <package>`
 
-  - **Function**: Displays detailed information about a package.
-  - **Parameters**:
-
+    - **Function**: Displays detailed information about a package.
+    
+    - **Parameters**:
     - `<package>` *(required)*: Package name.
-  - **Example Usage**: `dnf info neovim`
+    
+    - **Example Usage**: `dnf info neovim`
 
 - `dnf list [flags] [package]`
 
-  - **Function**: Lists installed and available packages.
-  - **Flags**:
+    - **Function**: Lists installed and available packages.
 
-    - `--installed`: Show installed packages.
-    - `--available`: Show packages available for installation.
-    - `--updates`: Show packages with available updates.
-    - `--all`: Show both installed and available packages.
-  - **Example Usage**:
+    - **Flags**:
+      - `--installed`: Show installed packages.
+      - `--available`: Show packages available for installation.
+      - `--updates`: Show packages with available updates.
+      - `--all`: Show both installed and available packages.
 
-    - `dnf list --installed`
-    - `dnf list --updates`
-    - `dnf list --installed neovim`
+    - **Example Usage**:
+      - `dnf list --installed`
+      - `dnf list --updates`
+      - `dnf list --installed neovim`
 
 - `dnf provides <path-or-capability>`
 
   - **Function**: Determines which package provides a particular file or capability.
+
   - **Parameters**:
-
     - `<path-or-capability>` *(required)*: File path, command, library, or capability to search for.
+  
   - **Example Usage**:
-
     - `dnf provides /usr/bin/nvim`
     - `dnf provides '*/libssl.so*'`
 
 - `dnf reinstall <package>`
 
   - **Function**: Reinstalls an installed package, replacing its files with fresh copies.
-  - **Parameters**:
 
+  - **Parameters**:
     - `<package>` *(required)*: Package to reinstall.
+
   - **Example Usage**: `sudo dnf reinstall bash`
 
 - `dnf downgrade <package>`
 
   - **Function**: Attempts to install an older available version of a package.
-  - **Parameters**:
 
+  - **Parameters**:
     - `<package>` *(required)*: Package to downgrade.
+
   - **Example Usage**: `sudo dnf downgrade firefox`
 
 - `dnf autoremove`
 
-  - **Function**: Removes packages installed as dependencies that are no longer needed.
-  - **Example Usage**: `sudo dnf autoremove`
+    - **Function**: Removes packages installed as dependencies that are no longer needed.
+    
+    - **Example Usage**: `sudo dnf autoremove`
 
 - `dnf history [command]`
 
   - **Function**: Displays previous package transactions and can be used to inspect or undo transactions.
-  - **Commands**:
 
+  - **Commands**:
     - `list`: List previous transactions.
     - `info <id>`: Show details about a transaction.
     - `undo <id>`: Attempt to reverse a transaction.
     - `redo <id>`: Repeat a previous transaction.
+  
   - **Example Usage**:
-
     - `sudo dnf history`
     - `sudo dnf history info 15`
     - `sudo dnf history undo 15`
@@ -407,11 +415,12 @@ removal, updates, and repository management.
 - `dnf clean <command>`
 
   - **Function**: Removes cached repository metadata and downloaded package data.
-  - **Commands**:
 
+  - **Commands**:
     - `packages`: Remove cached packages.
     - `metadata`: Remove cached repository metadata.
     - `all`: Remove all cached data.
+
   - **Example Usage**: `sudo dnf clean all`
 
 - `dnf check`
@@ -422,24 +431,25 @@ removal, updates, and repository management.
 - `dnf repolist [flags]`
 
   - **Function**: Displays configured software repositories.
-  - **Flags**:
 
+  - **Flags**:
     - `--enabled`: Show enabled repositories.
     - `--disabled`: Show disabled repositories.
     - `--all`: Show enabled and disabled repositories.
-  - **Example Usage**:
 
+  - **Example Usage**:
     - `dnf repolist`
     - `dnf repolist --all`
 
 - `dnf config-manager`
 
   - **Function**: Manages DNF repository configuration. Availability and syntax can depend on the installed DNF version and Fedora tooling.
-  - **Common Operations**:
 
+  - **Common Operations**:
     - Enable a repository.
     - Disable a repository.
     - Add or modify repository configuration.
+
   - **Example Usage**: `sudo dnf config-manager --set-enabled <repository>`
 
 --- 
@@ -452,7 +462,8 @@ a sandbox and generally use their own runtime and dependency environment.
 - `flatpak [global-options] <command> [arguments]`
 
   - **Function**: Manages Flatpak applications, runtimes, repositories, permissions, and updates.
-  - **Common Commands**:
+
+- **Common Commands**:
 
     - `install`: Install an application or runtime.
     - `uninstall`: Remove an application or runtime.
@@ -466,46 +477,48 @@ a sandbox and generally use their own runtime and dependency environment.
     - `remote-delete`: Remove a repository.
     - `override`: Modify sandbox permissions.
     - `repair`: Repair the local Flatpak installation.
+
   - **Example Usage**: `flatpak search firefox`
 
 - `flatpak search <term>`
 
   - **Function**: Searches configured Flatpak repositories for applications and runtimes.
-  - **Parameters**:
 
+  - **Parameters**:
     - `<term>` *(required)*: Search term.
+
   - **Example Usage**: `flatpak search firefox`
 
 - `flatpak install [flags] <remote> <application>`
 
   - **Function**: Installs a Flatpak application or runtime.
-  - **Flags**:
-
+ 
+ - **Flags**:
     - `-u`: Install for the current user rather than system-wide.
     - `--user`: Explicitly install for the current user.
     - `-y`: Automatically confirm installation.
-  - **Parameters**:
 
+  - **Parameters**:
     - `<remote>`: Flatpak repository from which the package should be installed.
     - `<application>`: Application or runtime ID.
-  - **Example Usage**:
 
+  - **Example Usage**:
     - `flatpak install flathub org.mozilla.firefox`
     - `flatpak install --user flathub org.mozilla.firefox`
 
 - `flatpak uninstall [flags] <application>`
 
   - **Function**: Removes a Flatpak application or runtime.
-  - **Flags**:
 
+  - **Flags**:
     - `--user`: Operate on the per-user installation.
     - `--delete-data`: Remove the application's user data as well.
     - `--unused`: Remove unused runtimes and extensions.
+ 
   - **Parameters**:
-
     - `<application>` *(required)*: Application ID.
-  - **Example Usage**:
 
+  - **Example Usage**:
     - `flatpak uninstall org.mozilla.firefox`
     - `flatpak uninstall --delete-data org.mozilla.firefox`
     - `flatpak uninstall --unused`
@@ -516,22 +529,22 @@ a sandbox and generally use their own runtime and dependency environment.
   - **Parameters**:
 
     - `[application]` *(optional)*: Specific application to update.
-  - **Example Usage**:
 
+  - **Example Usage**:
     - `flatpak update`
     - `flatpak update org.mozilla.firefox`
 
 - `flatpak list [flags]`
 
   - **Function**: Lists installed Flatpak applications and runtimes.
-  - **Flags**:
 
+  - **Flags**:
     - `--app`: Show applications only.
     - `--runtime`: Show runtimes only.
     - `--user`: Show user-installed objects.
     - `--system`: Show system-installed objects.
+  
   - **Example Usage**:
-
     - `flatpak list`
     - `flatpak list --app`
     - `flatpak list --runtime`
@@ -547,52 +560,56 @@ a sandbox and generally use their own runtime and dependency environment.
 - `flatpak run <application>`
 
   - **Function**: Launches a Flatpak application.
-  - **Parameters**:
 
+  - **Parameters**:
     - `<application>` *(required)*: Application ID.
+ 
   - **Example Usage**: `flatpak run org.mozilla.firefox`
 
 - `flatpak remote-list`
 
   - **Function**: Lists configured Flatpak repositories (remotes).
+
   - **Example Usage**: `flatpak remote-list`
 
 - `flatpak remote-add [flags] <name> <url>`
 
   - **Function**: Adds a Flatpak repository.
-  - **Flags**:
 
+  - **Flags**:
     - `--if-not-exists`: Do nothing if the remote already exists.
     - `--user`: Add the remote for the current user only.
-  - **Parameters**:
 
+  - **Parameters**:
     - `<name>`: Local name assigned to the remote.
     - `<url>`: Repository URL or `.flatpakrepo` source.
+
   - **Example Usage**: `flatpak remote-add --if-not-exists flathub <repository-url>`
 
 - `flatpak override [flags] <application>`
 
   - **Function**: Changes the sandbox permissions granted to an application.
-  - **Common Options**:
 
+  - **Common Options**:
     - `--filesystem=<path>`: Grant access to a filesystem location.
     - `--device=<device>`: Grant access to a device.
     - `--share=<type>`: Grant access to a shared resource such as network or IPC.
     - `--socket=<type>`: Grant access to a specific socket.
     - `--show`: Display current overrides.
     - `--reset`: Reset overrides to their defaults.
+  
   - **Example Usage**:
-
     - `flatpak override --show org.mozilla.firefox`
     - `flatpak override --filesystem=home org.mozilla.firefox`
 
 - `flatpak repair [flags]`
 
   - **Function**: Repairs the local Flatpak installation by checking and fixing invalid or incomplete objects.
-  - **Flags**:
 
+  - **Flags**:
     - `--user`: Repair the per-user installation.
     - `--system`: Repair the system installation.
+ 
   - **Example Usage**: `sudo flatpak repair`
 
 --- 

@@ -6,7 +6,7 @@ computer.
 
 It is critical to have an good understanding of the low-level details of modern systems to be a better developer.
 
-> I am not going to include too much electrical engineering since I am not a specialist.
+> I am not going to include too much electrical engineering because I am not a specialist.
 
 --- 
 
@@ -181,7 +181,8 @@ Thus, 11111011 represents −5 in two's complement. This system is crucial for a
 
 ### Decimal to Binary
 
-To convert a decimal number to binary, you repeatedly divide the decimal number by 2 and record the remainders. The binary number is the sequence of remainders, read from bottom to top.
+To convert a decimal number to binary, you repeatedly divide the decimal number by 2 and record the remainders. The binary number is the sequence of remainders,
+read from bottom to top.
 
 Example: Convert 13_10 to binary.
 
@@ -223,8 +224,8 @@ Example: Convert 1101_2 to decimal.
  
 ### Binary to Hexadecimal (Hex)
 
-Hexadecimal (base-16) is a number system that uses 16 symbols (0−9 and A−F). It's a compact way to represent binary numbers. To convert binary to hex, group the binary digits into sets of four, 
-starting from the right. Then, convert each group into its hex equivalent.
+Hexadecimal (base-16) is a number system that uses 16 symbols (0−9 and A−F). It's a compact way to represent binary numbers. To convert binary to hex, group 
+the binary digits into sets of four, starting from the right. Then, convert each group into its hex equivalent.
 
 Example: Convert 11011010_2 to hex.
 
@@ -278,8 +279,8 @@ by the appropriate number of places.
 
 ## Binary Division
 
-Binary division, often implemented using repeated subtraction, works much like long division in the decimal system. The divisor is repeatedly subtracted from the dividend, and a '1' is 
-placed in the quotient for each successful subtraction. If the subtraction is not possible, a '0' is placed in the quotient, and the next digit of the dividend is brought down.
+Binary division, often implemented using repeated subtraction, works much like long division in the decimal system. The divisor is repeatedly subtracted from the dividend, and a '1' 
+is  placed in the quotient for each successful subtraction. If the subtraction is not possible, a '0' is placed in the quotient, and the next digit of the dividend is brought down.
 
 ---
 
@@ -334,17 +335,18 @@ and fragmentation. The heap is considered slower than the stack for memory alloc
 
 ## Function Inlining and Outlining 
 
-When compilers or the programmer himself generates/writes code, there is the choice between repeating the same code over and over again or writing function. If we focus on the compiler perspective, 
-we will realize that jumping in memory multiple times can be expensive in terms of performance. Due to this fact the compiler 
+When compilers or the programmer himself generates/writes code, there is the choice between repeating the same code over and over again or writing function. 
+If we focus on the compiler perspective, we will realize that jumping in memory multiple times can be expensive in terms of performance. Due to this fact the compiler 
 tries as much as possible to do function **inlining**, but this can also lead to big binary sizes. 
 
-Contrary to inlining, **outlining** is based on jumping to the address of the of the instructions.
+Contrary to **inlining**, **outlining** is based on jumping to the address of the of the instructions.
 
 --- 
 
 ## Cache
 
-**Cache** is a small, fast memory located close to the CPU that stores frequently accessed data. It helps speed up data retrieval by reducing the time it takes to access data from the main memory (RAM).
+**Cache** is a small, fast memory located close to the CPU that stores frequently accessed data. It helps speed up data retrieval by reducing the time it 
+takes to access data from the main memory (RAM).
 
 When the requested data is found in the cache, it is called a cache hit; if not, it is a cache miss, and the data must be fetched from the slower main memory. There is
 a caching hierarchy, typically consisting of multiple levels (L1, L2, L3), with L1 being the fastest and smallest, and L3 being larger but slower. If data is not used frequently, it 
@@ -363,11 +365,14 @@ process management, and network communication. System calls provide a controlled
 
 The fetch-decode-execute cycle is the fundamental process by which a CPU executes instructions. It consists of three main stages:
 
-1. **Fetch**: The CPU retrieves an instruction from memory, typically from the instruction cache or main memory, using the program counter (PC) to determine the address of the next instruction.
+1. **Fetch**: The CPU retrieves an instruction from memory, typically from the instruction cache or main memory, using the program counter (PC) to determine the 
+address of the next instruction.
 
-2. **Decode**: The fetched instruction is decoded to determine what operation it specifies and which operands are involved. This step involves interpreting the binary representation of the instruction.
+2. **Decode**: The fetched instruction is decoded to determine what operation it specifies and which operands are involved. 
+This step involves interpreting the binary representation of the instruction.
 
-3. **Execute**: The CPU performs the operation specified by the instruction, which may involve arithmetic or logical operations, memory access, or control flow changes. The results of the execution are then stored back in memory or in registers.
+3. **Execute**: The CPU performs the operation specified by the instruction, which may involve arithmetic or logical operations, memory access, or control flow changes. 
+The results of the execution are then stored back in memory or in registers.
 
 4. **Repeat**: The cycle repeats for the next instruction, with the program counter being updated to point to the next instruction in the sequence.
 
@@ -375,7 +380,8 @@ The fetch-decode-execute cycle is the fundamental process by which a CPU execute
 
 ## Pipelining
 
-**Pipelining** is a technique used in modern CPUs to improve instruction throughput by overlapping the execution of multiple instructions. Instead of executing one instruction at a time, the CPU 
+**Pipelining** is a technique used in modern CPUs to improve instruction throughput by overlapping the execution of multiple instructions. Instead of executing one instruction at a 
+time, the CPU 
 divides the instruction execution process into several stages, allowing different instructions to be processed simultaneously at different stages.
 
 This done in the following way:
@@ -396,7 +402,7 @@ Actually, this process is very complex, and CPU's can actually predict branches,
 
 ---
 
-## When does The OS Run
+## When does The OS Run?
 
 The OS is a process itself, and it runs whenever the CPU is not executing user code. It is loaded into memory when the computer boots and then can be invoked in several ways:
 
@@ -450,6 +456,7 @@ A **process** is an instance of a program with its own memory region.
 The **process control block** is an abstraction the operating system uses to identify processes. 
 An over simplification would be 
 
+
 ```rust 
 pub struct PCB {
     pid: u16,
@@ -457,28 +464,37 @@ pub struct PCB {
     program_counter: u16,
     instruction_register: u8,
 }
-
 ```
 
 Processes from the perspective of the operating system require this structure to be handled by the context switching. This is also considered the 
 CPU state of the process.
 
+--- 
 
-## IPC 
+## Inter Process Communication (IPC) 
 
 This stands for the term **inter process communication**. The two main approaches are **shared memory** and 
 **message passing**. The first one is very simple because is just depends on telling the operating system that processes 
-agree to use the memory region in an specific format. The preferred way is to use an specific region of memory of the OS address space 
-to create a queue or queues in which data from the processes can be communicates can be communicated, this is the second approach.
+agree to use the memory region in an specific format. 
 
-The previously mentioned queues or more informal mailboxes for processes are called **ports**.
+The approaches are:
+
+1. Shared memory both processes share a region of memory (not recomended).
+
+2. An isolated region of memory provided by the **OS**. More specifically, two  queues for **full-duplex** communication.
+The OS needs to provide the syscalls `send` and `receive`.
+
+> Note, that data is not directly passed to the other process; it is send to the shared memory region.
+
+The previously mentioned queues or more informal mailboxes for processes are called **ports**. They are also used in **networking** 
+for inter-computer communication. The OS keeps an standardize list of ports for different purposes.
 
 --- 
 
 ## Interrupts
 
-**Interrupts** are implemented at hardware level to store the state of the CPU correctly. One variant is to use 
-two register sets. One for the user mode and one for the kernel mode. 
+**Interrupts** are implemented at hardware level to handle control to the operating system either by a program or by 
+a timer. They  help store the state of the CPU correctly. One variant is to use two register sets. One for the user mode and one for the kernel mode. 
 
 Another way is to make the stack register of the OS always visible to the CPU via a hardwired memory location or register. So 
 during the context switching the all critical registers can be stored correctly.
@@ -507,21 +523,35 @@ processes can reside in memory at the same time. The scheduler is a key componen
 
 There are two main approaches to CPU scheduling: cooperative and preemptive.
 
-- Cooperative scheduling relies on a process to voluntarily give up the CPU. A running process will continue to use the CPU until it either terminates or explicitly yields the CPU. This type of scheduling is simple to implement but can lead to a system becoming unresponsive if a single process enters an infinite loop or a long computation without yielding. In such a scenario, no other processes would get a chance to run.
+- **Cooperative scheduling** relies on a process to voluntarily give up the CPU. A running process will continue to use the CPU until it either terminates 
+or explicitly yields the CPU. This type of scheduling is simple to implement but can lead to a system becoming unresponsive if a single process enters an infinite 
+loop or a long computation without yielding. In such a scenario, no other processes would get a chance to run.
 
-- Preemptive scheduling is a more robust approach where the operating system can interrupt a running process and force it to give up the CPU. This is typically done after a certain time interval, known as a time slice, has elapsed, or when a higher-priority process becomes ready. Preemptive scheduling ensures that no single process can monopolize the CPU, leading to a more responsive and fair system. It is the dominant approach in modern operating systems.
+- **Preemptive scheduling** is a more robust approach where the operating system can interrupt a running process and force it to give up the CPU. This is typically done 
+after a certain time interval, known as a time slice, has elapsed, or when a higher-priority process becomes ready. Preemptive scheduling ensures that no single process 
+can monopolize the CPU, leading to a more responsive and fair system. It is the dominant approach in modern operating systems.
 
 ### Scheduling Strategies
 
-Several algorithms and strategies are used to implement CPU scheduling, each with its own advantages and disadvantages. The choice of strategy often depends on the goals of the system (e.g., maximizing throughput, minimizing response time, or ensuring fairness).
+Several algorithms and strategies are used to implement CPU scheduling, each with its own advantages and disadvantages. The choice of strategy often depends on the goals of the 
+system (e.g., maximizing throughput, minimizing response time, or ensuring fairness).
 
-- **First-Come, First-Served (FCFS)**: This is the simplest scheduling algorithm, where processes are executed in the order they arrive in the ready queue. FCFS is a non-preemptive algorithm that is easy to implement but can result in a phenomenon called the convoy effect, where a long-running process at the front of the queue can cause all subsequent processes to wait, leading to poor average waiting times.
+- **First-Come, First-Served (FCFS)**: This is the simplest scheduling algorithm, where processes are executed in the order they arrive in the ready queue. FCFS is a non-preemptive 
+algorithm that is easy to implement but can result in a phenomenon called the convoy effect, where a long-running process at the front of the queue can cause all subsequent processes to 
+wait, leading to poor average waiting times.
 
-- **Shortest-Job-Next (SJN)**: This algorithm selects the process with the smallest estimated execution time to run next. SJN can be either preemptive (Shortest Remaining Time First) or non-preemptive. It is an optimal algorithm for minimizing the average waiting time, but it has a major drawback: it requires knowing the future execution time of a process, which is impossible in practice. In practice, this is often estimated based on past behavior.
+- **Shortest-Job-Next (SJN)**: This algorithm selects the process with the smallest estimated execution time to run next. SJN can be either preemptive (Shortest Remaining Time First) 
+or non-preemptive. It is an optimal algorithm for minimizing the average waiting time, but it has a major drawback: it requires knowing the future execution time of a process, 
+which is impossible in practice. In practice, this is often estimated based on past behavior.
 
-- **Priority Scheduling:** This strategy assigns a priority level to each process, and the CPU is allocated to the process with the highest priority. Priority can be based on factors such as process type, memory requirements, or the user who initiated it. A key problem with priority scheduling is starvation, where a low-priority process may never get to run if there is a continuous stream of high-priority processes. This can be mitigated through a technique called aging, where the priority of a process increases over time.
+- **Priority Scheduling:** This strategy assigns a priority level to each process, and the CPU is allocated to the process with the highest priority. Priority can be based on factors 
+such as process type, memory requirements, or the user who initiated it. A key problem with priority scheduling is starvation, where a low-priority process may never get to run if 
+there is a continuous stream of high-priority processes. This can be mitigated through a technique called aging, where the priority of a process increases over time.
 
-- **Round-Robin (RR) Scheduling:** This is a preemptive algorithm designed for time-sharing systems. Each process is given a small unit of CPU time, called a time quantum or time slice. When the time quantum expires, the process is preempted and added to the end of the ready queue. RR provides a fair share of the CPU to each process and is generally effective for interactive systems where response time is a key concern. The performance of RR is highly dependent on the size of the time quantum. A small quantum can lead to frequent context switches, which can increase overhead, while a large quantum can make it behave like FCFS.
+- **Round-Robin (RR) Scheduling:** This is a preemptive algorithm designed for time-sharing systems. Each process is given a small unit of CPU time, called a time quantum or time slice.
+When the time quantum expires, the process is preempted and added to the end of the ready queue. RR provides a fair share of the CPU to each process and is generally effective for 
+interactive systems where response time is a key concern. The performance of RR is highly dependent on the size of the time quantum. A small quantum can lead to frequent context 
+switches, which can increase overhead, while a large quantum can make it behave like FCFS.
 
 ---
 
@@ -568,11 +598,15 @@ int main() {
 
 ## Concurrency And parallelism
 
-Concurrency and parallelism are two related concepts in computer science that deal with the execution of multiple tasks simultaneously.
+**Concurrency** and parallelism are two related concepts in computer science that deal with the execution of multiple tasks simultaneously.
 
-- **Concurrency** refers to the ability of a system to handle multiple tasks at the same time, but not necessarily executing them simultaneously. It involves managing multiple tasks that may be in progress at the same time, allowing for better resource utilization and responsiveness. This is done on a single CPU core by interleaving the execution of tasks, giving the illusion that they are running simultaneously.
+- **Concurrency** refers to the ability of a system to handle multiple tasks at the same time, but not necessarily executing them simultaneously. 
+It involves managing multiple tasks that may be in progress at the same time, allowing for better resource utilization and responsiveness. This is done on a 
+single CPU core by interleaving the execution of tasks, giving the illusion that they are running simultaneously.
 
-- **Parallelism** on the other hand, involves executing multiple tasks simultaneously, typically on multiple CPU cores or processors. This can lead to significant performance improvements for compute-intensive tasks. In contrast to concurrency, parallelism requires multiple processing units to execute tasks at the same time, effectively dividing the workload among them.
+- **Parallelism** on the other hand, involves executing multiple tasks simultaneously, typically on multiple CPU cores or processors. This can lead to significant performance 
+improvements for compute-intensive tasks. In contrast to concurrency, parallelism requires multiple processing units to execute tasks at the same time, effectively dividing 
+the workload among them.
 
 - **Address Space**  is the memory region used by a process.
 
@@ -580,9 +614,11 @@ Concurrency and parallelism are two related concepts in computer science that de
 
 ## Threads
 
-Threads are inner entities in a process which can be executed concurrently inside a process. They have their own CPU state and are 
+**Threads** are inner entities in a process which can be executed concurrently inside a process. They have their own CPU state and are 
 handled via syscalls for creation, deletion and execution. When the OS changes from the one process to another it will excute the 
 threads which are not sleeping.
+
+> They also have a different call stack despite sharing the same memory space, yet they have to coordinate access to global or shared data.
 
 From the OS perspective a thread is not very different from a process but for a developer it is 
 way to inform the operating system that specific regions of a program can be executed concurrently.
@@ -630,6 +666,7 @@ Both approaches use **atomic operations** to ensure no race conditions occur.
 
 The way this instructions are implemented is by combining barriers at the assembly level and atomic operations. In this way 
 there is the guarantee that the atomic instruction happens in the right order.
+
 ---
 
 ## Cores 
@@ -646,12 +683,15 @@ of the OS by regarding the specific software for all peripherals to the fabrican
 
 --- 
 
-## GCC Compiler Process 
+## GCC Compiler Process (Oversimplified)
 
-- Preprocessor: Inserts macros, eliminates comments etc. 
-- Compiler: Generates the assembly code fromt the C file. 
-- Assembler: Takes the assembly file and generates an object file which consists of headers and the binary machine structions. It is not executable. 
-- Linker: Takes the object file/s and links them togethter to create an executable.
+- **Preprocessor**: Inserts macros, eliminates comments etc. 
+
+- **Compiler**: Generates the assembly code fromt the C file. 
+
+- **Assembler**: Takes the assembly file and generates an object file which consists of headers and the binary machine structions. It is not executable. 
+
+- **Linker**: Takes the object file/s and links them together to create an executable.
 
 --- 
 
@@ -705,13 +745,21 @@ metadata (headers). Then with the information of the headers the file can be pro
 Typical formats:
 
 - **Images**: JPEG, PNG GIF, WEBP, SVG.
+
 - **Execs**: EXEC, MSI, APK, ELF4.
+
 - **Document**: PDF, DOCS, TXT, Markdown.
+
 - **Presentations**: PPTX, PDF.
+
 - **Spreadsheet**: CSV, XLSX.
+
 - **Video**: MP4, MKV, MOV, AVI.
+
 - **Audio**: MP3, WAC M4A, FLAC.
+
 - **Compressed**: ZIP, RAR, 7ZIP. 
+
 - **Plain Text**: TXT, C, CPP, JSON, YAML, TOML, every programming language file.
 
 --- 
@@ -727,12 +775,6 @@ Supports only English characters plus punctuation, numbers and some special code
 - Stores all characters in 7 bits.
 - Wide used in systems.
 
-The ASCII table looks like this
-
-```
-
-```
-
 ### Unicode
 
 This is a universal standard for encoding all existing characters on earth plus emojis and way more.
@@ -746,10 +788,6 @@ The mapping is done is done from one **graphene** a unit of human writting to on
 ### UTF-8
 
 This version of **UTF** is a way of translating code points to 1 or 4 bytes.
-
---- 
-
-## Memory Hirarchy 
 
 --- 
 
@@ -817,11 +855,6 @@ that it does take storage capacity.
 - **RAID 5**: Data gets copied to another disk and also  parity-bits are used for integrity.
 
 - **RAID 10**: Data gets splitted across multiple disks with double parity chekcs.
-
-
-
-
-
 
 --- 
 
