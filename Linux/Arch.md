@@ -1,5 +1,7 @@
 # Arch Set-Up
 
+Installation and set-up guide for **Arch Linux**.
+
 --- 
 
 ## Installation Of Arch
@@ -8,142 +10,146 @@
 
 2. Create a bootable USB drive using tools like `Fedora Media Writer`.
 
+If you are a masochist, then proceed to use the terminal:
+
+  - run `lsblk` to identify the name of the USB-device.
+
+  - `sudo dd bs=4M if=~/Downloads/archlinux-2XXX.XX.XX-86_64.iso of=/dev/your_device_name status=progress`
+
 3. Boot from the USB drive and select the Arch Linux installation option.
 
 4. You can just follow the installation guide on the [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide) to set up your system. But we will 
-provide a some own ownsteps here.
+provide a some own steps here.
 
 ### Custom Installation Steps
 
-1. **Load Keys if needed:** `loadkeys de-latin1` for German
+1. **Load Keys if needed:** `loadkeys de-latin1` for German if you are not using a US-keyboard.
 
-2. **Increase Font:** `setfont ter-132b` or `setfont -d`
+2. **Increase Font:** `setfont ter-132b` or `setfont -d`.
 
 3. **Connect to the internet**: Ensure the network interface is listed and enable with `ip link` 
-For wireless connections run: `iwctl` and then run the following commands insede `[idw]#`in order:
+For wireless connections run: `iwctl` and then run the following commands inside `[idw]#`in order:
 
-- `device list`
-- `device name set-property Powered on`
-- `adapter adapter set-property Powered on`
-- `station name scan`
-- `station name get-networks`
-- `station name connect SSID`
-- `station name connect-hidden SSID`
--  Press `Crl + d` to quit
+  - `device list`: will tell you the name of your device.
+  - `device <name> set-property Powered on`
+  - `adapter <adapter> set-property Powered on`
+  - `station <name> scan`
+  - `station <name> get-networks`
+  - `station <name> connect SSID`
+  - `station <name> connect-hidden SSID`
+  -  Press `Crl + d` to quit
 
-For direct connections you can skip and type: `- $ iwctl --passphrase passphrase station name connect SSID`
+For direct connections you can skip and type: `- $ iwctl --passphrase passphrase station <name> connect SSID`
 And to disconnect if needed: `[iwd]# station device disconnect`
 
 4. **Update the system clock:** `timedatectl`
 
-5. **Partion the disks using fdisk:** Identify the hardrive using `lsblk` then run the following commands in order:
+5. **Partion the disks using fdisk:** Identify the hard-drive using `lsblk` then run the following commands in order (note that I am skiping the prompts):
 
-- `fdisk /dev/your_drive_name`
-- `p` Prints the partitions
-- `g` Gives us an empty partition table 
-- `n` Creates a new partition - `Enter` - `Enter` - `+1G` - `Y` if prompted
-- `n` Creates a new partition - `Enter` - `Enter` - `+4G` - `Y` if prompted
-- `n` Creates a new partition - `Enter` - `Enter` - `Enter` - `Y` if prompted
+  - `fdisk /dev/your_drive_name`.
+  - `p` Prints the partitions.
+  - `g` Gives us an empty partition table.
+  - `n` Creates a new partition - `Enter` - `Enter` - `+1G` - `Y` if prompted.
+  - `n` Creates a new partition - `Enter` - `Enter` - `+4G` - `Y` if prompted.
+  - `n` Creates a new partition - `Enter` - `Enter` - `Enter` - `Y` if prompted.
 
--**Optional** because we are going to format them manually anyway
+- **Optional** because we are going to format them manually anyway
 
-- `t` Mark a partition with a type - `2` - `82` For the swap type 
-- `t` Mark a partition with a type - `3` - `48` For the linux file system type
-- `t` Mark a partition with a type - `1` - `1` For the boot type
+  - `t` Mark a partition with a type - `2` - `82` For the swap type 
+  - `t` Mark a partition with a type - `3` - `48` For the linux file system type
+  - `t` Mark a partition with a type - `1` - `1` For the boot type
 
--**Finally**
+- **Finally**
 
-- `w` Write and quit
+  - `w` Write and quit
 
 In case you messed up you can use `d` to delete a partition or `q` to quit without saving and start again.
 
 6. **Format the partitions:**
 
-Type the following commands to format the partition. I recommend using `ext4` or 
-`btrfs` for the filesystem. Type the actual name o your partition in the following commands
+Type the following commands to format the partition. I recommend using `ext4` or `btrfs` for the file-system. Type the actual name of 
+your partition in the following commands
 
-- `mkfs.btrfs /dev/nvme0n1p3/`
-- `mkfs.fat -F 32 /dev/nvme0n1p1/`
-- `mkfs.swap /dev/nvme0n1p2/`
+  - `mkfs.btrfs /dev/nvme0n1p3/`
+  - `mkfs.fat -F 32 /dev/nvme0n1p1/`
+  - `mkfs.swap /dev/nvme0n1p2/`
  
-7. **Mount the filesystem:**
+7. **Mount the file-system:**
 
-- `mount /dev/nvme0n1p3 /mnt`
-- `mkdir -p /mnt/boot/efi`
-- `mount /dev/nvme0n1p1 /mnt/boot/efi`
-- `swapon /dev/nvme0n1p2`
+  - `mount /dev/nvme0n1p3 /mnt`
+  - `mkdir -p /mnt/boot/efi`
+  - `mount /dev/nvme0n1p1 /mnt/boot/efi`
+  - `swapon /dev/nvme0n1p2`
 
 8. **Install Essentials Packages:**
 
-- `pacstrap /mnt base linux linux-firmware sof-firmware base-devel grub efibootmgr vim nano networkmanager ly dunst`
+  - `pacstrap /mnt base linux linux-firmware sof-firmware base-devel grub efibootmgr vim nano networkmanager ly dunst`
 
-If asked for some audio dependency choose `pulse`
+If asked for some audio dependency choose `pulse`.
 
 9. **Fstab**
 
-- `genfstab /mnt > /mnt/etc/fstab`
+  - `genfstab /mnt > /mnt/etc/fstab`
 
-10. **Chroot**
+10. **Chroot**: Enter the installed system 
 
-Enter the installed system 
-
-- `arch-chroot /mnt`
+  - `arch-chroot /mnt`
 
 11. **Time**
 
 Run inside arch:
 
-- `ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime`
-- `hwclock --systohc`
+  - `ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime`
+  - `hwclock --systohc`
 
 
 12. **Localization**
 
 Run inside arch:
 
-- `vim /etc/locale.gen` Uncomment `en_US.UTF-8 UTF-8` for english and write changes 
-- `locale-gen`
-- `vim /etc/locale.conf` Type `LANG=en_US.UTF-8` for english and write changes 
-- `vim /etc/vconsole.conf` Type`KEYMAP=us` for english and write changes 
+  - `vim /etc/locale.gen` uncomment `en_US.UTF-8 UTF-8` for English and write changes 
+  - `locale-gen`
+  - `vim /etc/locale.conf` Type `LANG=en_US.UTF-8` for English and write changes 
+  - `vim /etc/vconsole.conf` Type`KEYMAP=us` for English and write changes 
 
 13. **Host Name**
 
 Choose an epic name for the computer
 
-- `vim /etc/hostname` Type `Father` or some epic name.
+  - `vim /etc/hostname` Type `Father` or some epic name.
 
 14. **Root Password**
 
-Run `passwd` and type a safe root password
+Run `passwd` and type a safe root password.
 
 15. **User plus sudo**
 
 Creating user in the group wheel
 
-- `useradd -m -G wheel -s /bin/bash migu`
-- `passwd migu`
+  - `useradd -m -G wheel -s /bin/bash migu`
+  - `passwd migu`: to set a password.
 
-Sudo:
+sudo:
 
-- `EDITOR=vim visudo` - Then Uncomment the line: `%wheel ALL=(ALL) ALL` and save
+  - `EDITOR=vim visudo` - Then Uncomment the line: `%wheel ALL=(ALL) ALL` and save
 
-16. **Enbling core services**
+16. **Enabling core services**
 
-- `systemctl enable NetworkManager`
-- `systemctl enable ly@ttyX.service`
+  - `systemctl enable NetworkManager`
+  - `systemctl enable ly@ttyX.service`
 
 17. **Bootloader**
 
-- `grub-install /dev/nvme0n1`
-- `grub-mkconfig -o /boot/grub/grub.cfg`
+  - `grub-install /dev/nvme0n1`
+  - `grub-mkconfig -o /boot/grub/grub.cfg`
 
 18. **Reboot**
 
-- `exit`
-- `umount -a`
-- `reboot`
+  - `exit`
+  - `umount -a`
+  - `reboot`
 
-If everything was done correctly you sould have a working installation.
+If everything was done correctly you should have a working installation.
 
 ---
 
@@ -183,187 +189,760 @@ Alternatively a GUI can be used via the command
 - Reboot or run `sway`
 
 ---
-
 ## Pacman and Yay
 
-Pacman was used for almost all examples, but Yay can also be used.
+[`pacman`](https://wiki.archlinux.org/title/Pacman) is the package manager used by Arch Linux and is the primary tool for installing, removing, querying, 
+and updating packages from the official Arch Linux repositories.
 
-- **Installing packages**:
-  `pacman -S package_name1 package_name2 ...`
+[`yay`](https://github.com/Jguer/yay) is an AUR helper that provides a similar interface to `pacman` while also allowing packages from the 
+**Arch User Repository (AUR)** to be searched, built, installed, and updated.
 
-- **Installing groups**:
-  `pacman -S gnome`
 
-- **Removing packages**:
-  `pacman -R gnome`
+### Pacman Command Structure
 
-- **Removing packages with dependencies**:
-  `pacman -Rs gnome`
+Most `pacman` commands follow this structure:
 
-- **Updating the official packages**:
-  `pacman -Syu`
+```bash
+pacman [options] [package(s)]
+```
 
-- **Updating the official and unofficial packages**:
-  `yay -Syu`
+The most important operation flags are:
 
-- **Searching for a package in the official repos**:
-  `pacman -Ss package_name`
 
-- **Searching for a package in AUR (yay)**:
-  `yay -Ss package_name`
+| Flag | Long form    | Function                                          |
+| ---- | ------------ | ------------------------------------------------- |
+| `-S` | `--sync`     | Install or synchronize packages from repositories |
+| `-R` | `--remove`   | Remove installed packages                         |
+| `-Q` | `--query`    | Query the local package database                  |
+| `-F` | `--files`    | Query which package owns a file                   |
+| `-U` | `--upgrade`  | Install/upgrade from a local package file or URL  |
+| `-D` | `--database` | Modify/query package database information         |
 
-- **Viewing installed packages**:
-  `pacman -Q`
 
-- **Viewing explicitly installed packages**:
-  `pacman -Qe`
+Several options can be combined. For example:
 
-- **Viewing dependencies of a package**:
-  `pacman -Qi package_name`
+```bash
+pacman -Syu
+```
 
-- **Cleaning the package cache (remove all except the latest version)**:
-  `pacman -Sc`
+is equivalent to:
 
-- **Cleaning the package cache completely**:
-  `pacman -Scc`
+```text
+-S   Synchronize with repositories
+-y   Refresh repository databases
+-u   Upgrade installed packages
+```
 
-- **Installing a local package file (.pkg.tar.zst)**:
-  `pacman -U ./package_file.pkg.tar.zst`
 
-- **Reinstalling a package**:
-  `pacman -S package_name`
+### Installing Packages
 
-- **Removing orphaned packages**:
-  `pacman -Rns $(pacman -Qtdq)`
+Install one or more packages from the official repositories:
 
-- **Editing and building packages from AUR with yay**:
-  `yay -G aur_package_name && cd aur_package_name && makepkg -si`
+```bash
+sudo pacman -S package_name
+sudo pacman -S package_name1 package_name2 package_name3
+```
 
-- **Eliminate Orphan Packages**:
-  `sudo pacman -Qdtq | sudo pacman -Rns -`
+* `-S` / `--sync`: synchronize and install packages.
+* Multiple packages can be specified in the same command.
+* `sudo` is required because packages are installed system-wide.
+
+### Installing a Package Group
+
+Some software is distributed as a **package group**, which contains multiple related packages.
+
+```bash
+sudo pacman -S gnome
+```
+
+Pacman may display the packages belonging to the group and ask which ones should be installed.
+
+You can search for available groups with:
+
+```bash
+pacman -Sg
+```
+
+or search for groups matching a name:
+
+```bash
+pacman -Sg | grep gnome
+```
+
+### Removing Packages
+
+Remove a package:
+
+```bash
+sudo pacman -R package_name
+```
+
+`-R` / `--remove` removes the specified package but does not automatically remove its dependencies.
+
+To remove the package and dependencies that are no longer required:
+
+```bash
+sudo pacman -Rs package_name
+```
+
+* `-s` / `--recursive`: removes dependencies that are no longer required by any other explicitly installed package.
+
+For example:
+
+```bash
+sudo pacman -Rs gnome
+```
+
+Use recursive removal carefully because it can remove packages that were installed as dependencies.
+
+To additionally remove configuration files associated with the package:
+
+```bash
+sudo pacman -Rns package_name
+```
+
+* `-n` / `--nosave`: removes backup configuration files instead of saving them as `.pacsave` files.
+
+### Updating the System
+
+Refresh the package databases and upgrade all installed packages:
+
+```bash
+sudo pacman -Syu
+```
+
+The flags mean:
+
+* `-S` / `--sync`: synchronize packages with the repositories.
+* `-y` / `--refresh`: download fresh package database information.
+* `-u` / `--sysupgrade`: upgrade all installed packages that have newer versions available.
+
+This is the standard command for performing a full Arch Linux system upgrade.
+
+> **Important:** Avoid performing partial upgrades such as installing packages with an outdated package database. Arch Linux is designed around full system upgrades.
+
+With `yay`:
+
+```bash
+yay -Syu
+```
+
+This can upgrade packages from both the official repositories and the AUR.
+
+### Searching for Packages
+
+Search the official repositories:
+
+```bash
+pacman -Ss package_name
+```
+
+* `-S`: operate on repository packages.
+* `-s` / `--search`: search package names and descriptions.
+
+Example:
+
+```bash
+pacman -Ss neovim
+```
+
+Search the AUR and official repositories using `yay`:
+
+```bash
+yay -Ss package_name
+```
+
+Because `yay` also queries the AUR, this can return packages that are not available in the official Arch repositories.
+
+### Viewing Installed Packages
+
+List all installed packages:
+
+```bash
+pacman -Q
+```
+
+* `-Q` / `--query`: query the local package database.
+
+List packages that were explicitly installed by the user:
+
+```bash
+pacman -Qe
+```
+
+* `-e` / `--explicit`: show explicitly installed packages.
+
+List packages that were installed as dependencies:
+
+```bash
+pacman -Qd
+```
+
+* `-d` / `--deps`: show packages installed as dependencies.
+
+List orphaned packages:
+
+```bash
+pacman -Qdt
+```
+
+* `-d`: packages installed as dependencies.
+* `-t` / `--unrequired`: packages that are no longer required by another package.
+
+To obtain only the package names:
+
+```bash
+pacman -Qdtq
+```
+
+The additional `-q` / `--quiet` suppresses extra information and prints only package names.
+
+### Inspecting a Package
+
+Display detailed information about an installed package:
+
+```bash
+pacman -Qi package_name
+```
+
+This can show information such as:
+
+* package name
+* version
+* architecture
+* installation date
+* installation reason
+* dependencies
+* optional dependencies
+* package size
+* description
+
+To inspect a package that is available in the repositories but not installed:
+
+```bash
+pacman -Si package_name
+```
+
+* `-i` / `--info`: display detailed package information.
+
+### Finding Which Package Owns a File
+
+To determine which installed package owns a file:
+
+```bash
+pacman -Qo /path/to/file
+```
+
+* `-Q`: query the local package database.
+* `-o` / `--owns`: determine which package owns a file.
+
+Example:
+
+```bash
+pacman -Qo /usr/bin/bash
+```
+
+To search the **repository file databases** for a file that is not necessarily installed:
+
+```bash
+pacman -Fy
+pacman -F /usr/bin/example
+```
+
+`-F` operates on the package file database rather than the installed-package database.
+
+### Viewing Package Files
+
+List all files installed by a package:
+
+```bash
+pacman -Ql package_name
+```
+
+* `-l` / `--list`: list files owned by the package.
+
+For example:
+
+```bash
+pacman -Ql bash
+```
+
+### Cleaning the Package Cache
+
+Pacman stores downloaded package files in:
+
+```text
+/var/cache/pacman/pkg/
+```
+
+Remove cached packages except for versions currently installed:
+
+```bash
+sudo pacman -Sc
+```
+
+* `-c` / `--clean`: clean the package cache.
+* Running it once generally removes cached packages that are no longer installed.
+
+To remove **all** cached package files:
+
+```bash
+sudo pacman -Scc
+```
+
+* `-c` twice performs a more aggressive cache cleanup.
+
+### Installing a Local Package
+
+Install a locally downloaded package:
+
+```bash
+sudo pacman -U ./package_file.pkg.tar.zst
+```
+
+* `-U` / `--upgrade`: install or upgrade a package from a local file or URL.
+
+For example:
+
+```bash
+sudo pacman -U ./example-1.0-1-x86_64.pkg.tar.zst
+```
+
+The `.pkg.tar.zst` extension is the standard package format used by Arch Linux.
+
+### Reinstalling a Package
+
+A package can be reinstalled using:
+
+```bash
+sudo pacman -S package_name
+```
+
+If the package is already installed, pacman normally asks whether it should be reinstalled.
+
+For example:
+
+```bash
+sudo pacman -S bash
+```
+
+This is useful if files belonging to an installed package have become corrupted or were accidentally deleted.
+
+### Removing Orphaned Packages
+
+First, list orphaned packages:
+
+```bash
+pacman -Qdt
+```
+
+If the list is correct, remove them:
+
+```bash
+sudo pacman -Rns $(pacman -Qdtq)
+```
+
+Here:
+
+* `pacman -Qdtq` produces the names of orphaned packages.
+* `$(...)` passes those package names to the `pacman -Rns` command.
+* `-R` removes the packages.
+* `-n` removes associated backup configuration files.
+* `-s` removes dependencies that become unnecessary.
+
+An alternative that avoids command substitution is:
+
+```bash
+sudo pacman -Qdtq | sudo pacman -Rns -
+```
+
+The `-` tells pacman to read package names from standard input.
+
+---
+
+## Yay
+
+`yay` is an AUR helper. It supports many of the same commands and flags as pacman.
+
+For example:
+
+```bash
+yay -S package_name
+```
+
+can install either an official repository package or an AUR package.
+
+### Installing an AUR Package
+
+```bash
+yay -S aur_package_name
+```
+
+`yay` downloads the package's PKGBUILD, builds it, and installs the resulting package.
+
+Unlike official repository packages, AUR packages are generally built locally from build instructions maintained by AUR contributors.
+
+You should therefore inspect AUR packages and their PKGBUILDs before installing software you do not trust.
+
+### Searching the AUR
+
+```bash
+yay -Ss package_name
+```
+
+Searches for matching packages in the repositories and AUR.
+
+For example:
+
+```bash
+yay -Ss visual-studio-code
+```
+
+### Updating Official and AUR Packages
+
+```bash
+yay -Syu
+```
+
+This performs a full system upgrade and can update both:
+
+1. packages from the official Arch repositories
+2. packages installed from the AUR
+
+This is one of the main reasons to use `yay` as a convenience tool.
+
+### Downloading an AUR Package Without Installing It
+
+Use:
+
+```bash
+yay -G aur_package_name
+```
+
+* `-G` / `--getpkgbuild`: download the PKGBUILD and related files for an AUR package.
+
+For example:
+
+```bash
+yay -G some-package
+cd some-package
+```
+
+You can then inspect the files:
+
+```bash
+less PKGBUILD
+```
+
+and build/install the package manually:
+
+```bash
+makepkg -si
+```
+
+Here:
+
+* `makepkg`: builds an Arch package from a `PKGBUILD`.
+* `-s` / `--syncdeps`: automatically install missing dependencies.
+* `-i` / `--install`: install the package after building it.
+
+This gives you more control than simply running:
+
+```bash
+yay -S some-package
+```
+
+
+## Pacman Mirror Selection
+
+Arch Linux downloads packages from **mirrors**, which are servers that host copies of the official Arch repositories.
+
+The configured mirrors are normally listed in:
+
+```text
+/etc/pacman.d/mirrorlist
+```
+
+A mirror entry looks approximately like:
+
+```text
+Server = https://mirror.example.org/archlinux/$repo/os/$arch
+```
+
+The variables are replaced automatically:
+
+* `$repo` → repository name, such as `core` or `extra`
+* `$arch` → system architecture, normally `x86_64`
+
+### Checking the Current Mirror List
+
+```bash
+cat /etc/pacman.d/mirrorlist
+```
+
+The order of the mirrors matters. Pacman will generally try the configured servers in order.
+
+### Selecting Fast Mirrors
+
+Arch provides tools for generating a mirror list. A commonly used tool is `reflector`.
+
+Install it with:
+
+```bash
+sudo pacman -S reflector
+```
+
+For example, to generate a mirror list using HTTPS mirrors from Germany:
+
+```bash
+sudo reflector --country Germany --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+```
+
+The important options are:
+
+* `--country Germany`: restrict mirrors to Germany.
+* `--protocol https`: only use HTTPS mirrors.
+* `--latest 10`: select the 10 most recently synchronized mirrors.
+* `--sort rate`: sort mirrors by download rate.
+* `--save`: write the resulting list to the specified file.
+
+You can also use multiple countries:
+
+```bash
+sudo reflector \
+    --country Germany,Netherlands,France \
+    --protocol https \
+    --latest 20 \
+    --sort rate \
+    --save /etc/pacman.d/mirrorlist
+```
+
+After changing the mirror list, refresh the package databases:
+
+```bash
+sudo pacman -Syy
+```
+
+
+### Useful Reflector Options
+
+
+| Option         | Function                                  |
+| -------------- | ----------------------------------------- |
+| `--country`    | Select mirrors from one or more countries |
+| `--protocol`   | Restrict mirrors to HTTP/HTTPS/RSYNC      |
+| `--latest`     | Select mirrors synchronized recently      |
+| `--sort rate`  | Sort by measured download speed           |
+| `--sort age`   | Sort by mirror synchronization age        |
+| `--sort score` | Sort using Reflector's score              |
+| `--save`       | Save the generated list to a file         |
+| `--verbose`    | Display additional information            |
+
+
+A practical configuration for a German Arch installation could therefore be:
+
+```bash
+sudo reflector \
+    --country Germany \
+    --protocol https \
+    --latest 20 \
+    --sort rate \
+    --save /etc/pacman.d/mirrorlist
+```
+
+
+## Common Pacman Flags
+
+The following flags are useful to remember:
+
+| Flag | Meaning                                                 | Example                       |
+| ---- | ------------------------------------------------------- | ----------------------------- |
+| `-S` | Synchronize/install repository packages                 | `pacman -S git`               |
+| `-R` | Remove packages                                         | `pacman -R git`               |
+| `-Q` | Query installed packages                                | `pacman -Q`                   |
+| `-U` | Install local package                                   | `pacman -U ./pkg.pkg.tar.zst` |
+| `-y` | Refresh package databases                               | `pacman -Sy`                  |
+| `-u` | Upgrade installed packages                              | `pacman -Su`                  |
+| `-s` | Recursive dependencies / search, depending on operation | `pacman -Rs pkg`              |
+| `-n` | Do not save backup configuration files                  | `pacman -Rn pkg`              |
+| `-q` | Quiet output                                            | `pacman -Qq`                  |
+| `-i` | Display detailed information                            | `pacman -Qi pkg`              |
+| `-c` | Clean package cache                                     | `pacman -Sc`                  |
+| `-d` | Dependency-related query/removal option                 | `pacman -Qd`                  |
+| `-e` | Explicitly installed packages                           | `pacman -Qe`                  |
+| `-t` | Unrequired packages                                     | `pacman -Qt`                  |
+| `-o` | Find package owning a file                              | `pacman -Qo file`             |
+
+  
 
 ---
 
 ## Install the Packages by copying the following command:
 
-- `sudo pacman -S texlive fastetch 7zip make kitty neovim python pip stow npm python 
-   wl-clippboard wofi xorg-wayland luarocks linux-lts lua wayland 
-   nodejs waybar rust jdk-open-jdk htop man-db man-pages openssh git yazi vi zathura zathura-pdf-poppler
-   julia noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-linux-libertine wget ruby composer php
-   xdotool biber wget pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol lm_sensors btop
-   clamav sxiv bleachbit reflector jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib python-pygame
-   tk nm-connection-editor iwd modemmanager usb_modeswitch timeshift tmux otf-font-awesome
-   fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
-   lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
-   julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl imv swayimg 
-   lxqt-policykit nm-applet postgresql seahorse swaync`
+```bash
+sudo pacman -Syu --needed \
+  texlive biber texlab fastfetch 7zip make kitty neovim vi \
+  python python-pip stow npm nodejs \
+  wl-clipboard wofi xorg-xwayland wayland waybar swayidle swaync swayimg imv \
+  luarocks lua lua-language-server linux-lts \
+  rust jdk-openjdk go ruby php composer clang ghc cabal-install julia \
+  htop btop man-db man-pages openssh git yazi \
+  zathura zathura-pdf-poppler \
+  noto-fonts noto-fonts-emoji noto-fonts-cjk otf-libertinus otf-font-awesome \
+  wget xdotool \
+  pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol \
+  lm_sensors clamav nsxiv bleachbit reflector pacman-contrib timeshift \
+  jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib \
+  python-pygame python-scikit-learn tk \
+  nm-connection-editor network-manager-applet iwd modemmanager usb_modeswitch \
+  tmux fzf bat lsd tldr lazygit thunar autotiling starship \
+  docker kubectl pyright bash-language-server postgresql \
+  wine w3m polkit lxqt-policykit seahorse pkgconf openssl \ 
+  prettier
+```
 
-**Packet plus purpose:**
+### Typesetting
 
-- texlive
-- fastetch 
-- 7zip
-- make
-- kitty 
-- neovim 
-- python 
-- pip 
-- stow 
-- npm 
-- python   
-- wl-clippboard 
-- wofi 
-- xorg-wayland 
-- luarocks 
-- linux-lts 
-- lua 
-- wayland 
-- nodejs 
-- waybar 
-- rust 
-- jdk-open-jdk 
-- htop 
-- man-db 
-- man-pages 
-- openssh 
-- git 
-- yazi 
-- vi 
-- zathura 
-- zathura-pdf-poppler
-- julia 
-- noto-fonts
-- noto-fonts-emoji 
-- noto-fonts-cjk 
-- ttf-linux-libertine 
-- wget 
-- ruby 
-- composer 
-- php
-- xdotool 
-- biber
-- pipewire 
-- pipewire-alsa 
-- pipewire-pulse 
-- wireplumber 
-- pavucontrol 
-- lm_sensors 
-- btop
-- clamav 
-- sxiv 
-- bleachbit 
-- reflector 
-- jupyterlab 
-- jupyter-notebook 
-- python-numpy 
-- python-pandas 
-- python-matplotlib 
-- python-pygame
-- tk 
-- nm-connection-editor 
-- iwd 
-- modemmanager 
-- usb_modeswitch 
-- timeshift 
-- tmux 
-- otf-font-awesome
-- fzf 
-- bat 
-- lsd 
-- tldr 
-- lazygit 
-- swayidle 
-- thunar 
-- autotiling 
-- starship 
-- python-scikit-learn 
-- docker pyright
-- lua-language-server 
-- bash-language-server 
-- texlab 
-- postgresql 
-- clang 
-- pacman-contrib 
-- ghc 
-- cabal-install
-- julia 
-- nm-connection-editor 
-- wine
-- utftex
-- xdotool
-- w3m w3m-img
-- conda
-- kubernetes
-- polkit
-- `go`: GoLang with its tool-chain.
-- composer
-- pkgconf openssl
-- imv
-- `swayimg`: lightweight image viewer 
-- `lxqt-policykit`: polkit 
-- `nm-applet`: password prompt for wifi.
-- `seahorse`:
-- `swaync`: notification daemon for sway.
+- **biber**: bibliography backend for BibLaTeX
+- **texlab**: LaTeX language server
+- **otf-libertinus**: Libertinus serif font, successor to Linux Libertine
+
+### Terminal and shell tools
+
+- **fastfetch**: system info display (neofetch replacement)
+- **kitty**: GPU-accelerated terminal emulator
+- **tmux**: terminal multiplexer
+- **starship**: fast customizable shell prompt
+- **fzf**: fuzzy finder
+- **bat**: `cat` with syntax highlighting
+- **lsd**: modern `ls` with icons and colors
+- **tldr**: simplified command-line examples
+- **htop**: interactive process viewer
+- **btop**: fancier resource monitor
+- **yazi**: terminal file manager
+- **w3m**: text-based web browser
+- **utftex** (AUR): renders LaTeX math as Unicode text
+- **7zip**: `7z` archiver
+- **stow**: symlink manager for dotfiles
+
+### Editor
+
+- **neovim**: modern Vim
+- **vi**: minimal POSIX vi fallback
+
+### Build and languages
+
+- **make**: build automation
+- **pkgconf**: compiler flag lookup for libraries
+- **openssl**: TLS and crypto library and CLI
+- **clang**: C/C++ compiler and LLVM tooling
+- **rust**: Rust compiler and cargo
+- **go**: Go compiler and toolchain
+- **python**: Python interpreter
+- **python-pip**: Python package installer
+- **nodejs**: JavaScript runtime
+- **npm**: Node package manager
+- **lua**: Lua interpreter
+- **luarocks**: Lua package manager
+- **ruby**: Ruby interpreter
+- **php**: PHP interpreter
+- **composer**: PHP dependency manager
+- **jdk-openjdk**: Java development kit
+- **ghc**: Haskell compiler
+- **cabal-install**: Haskell build and package tool
+- **julia**: Julia language for scientific computing
+- **tk**: Tk GUI toolkit (needed by Python's tkinter and matplotlib)
+
+### Language servers
+
+- **pyright**: Python type checker and LSP
+- **lua-language-server**: Lua LSP
+- **bash-language-server**: Bash LSP
+
+### Formatters 
+
+- **prettier**: code formatter for JavaScript, TypeScript, HTML, CSS, and more.
+
+### Data science and Python libraries
+
+- **jupyterlab**: notebook IDE
+- **jupyter-notebook**: classic notebook interface
+- **python-numpy**: numerical arrays
+- **python-pandas**: dataframes
+- **python-matplotlib**: plotting
+- **python-scikit-learn**: machine learning
+- **python-pygame**: 2D game library
+- **miniconda3** (AUR): conda environment and package manager
+
+### Wayland desktop
+
+- **wayland**: display protocol library
+- **xorg-xwayland**: runs X11 apps under Wayland
+- **wofi**: app launcher
+- **waybar**: status bar
+- **swayidle**: idle management (lock/suspend timers)
+- **swaync**: notification daemon and control center
+- **wl-clipboard**: `wl-copy`/`wl-paste` clipboard tools
+- **autotiling**: automatic split direction for Sway/i3
+- **xdotool**: X11 input automation (only affects XWayland apps)
+- **thunar**: GUI file manager
+- **imv**: Wayland image viewer
+- **swayimg**: lightweight image viewer
+- **nsxiv**: X11 image viewer (drop it if imv/swayimg are enough)
+- **zathura**: minimal document viewer
+- **zathura-pdf-poppler**: PDF backend for zathura
+
+### Fonts
+
+- **noto-fonts**: broad Latin/Greek/Cyrillic coverage
+- **noto-fonts-emoji**: emoji
+- **noto-fonts-cjk**: Chinese/Japanese/Korean
+- **otf-font-awesome**: icon font used by waybar and similar
+
+### Audio
+
+- **pipewire**: audio/video server
+- **pipewire-alsa**: ALSA compatibility layer
+- **pipewire-pulse**: PulseAudio compatibility layer
+- **wireplumber**: PipeWire session manager
+- **pavucontrol**: volume control GUI
+
+### Networking
+
+- **iwd**: Intel's wireless daemon
+- **nm-connection-editor**: NetworkManager connection GUI
+- **network-manager-applet**: tray applet with wifi password prompts
+- **modemmanager**: mobile broadband modem support
+- **usb_modeswitch**: switches USB modems out of storage mode
+- **openssh**: SSH client and server
+- **wget**: file downloader
+
+### System and maintenance
+
+- **linux-lts**: long-term-support kernel, a fallback
+- **man-db**: man page viewer
+- **man-pages**: Linux man pages
+- **lm_sensors**: hardware temperature and fan sensors
+- **timeshift**: system snapshots and restore
+- **reflector**: updates the mirror list
+- **pacman-contrib**: extras like `paccache` and `checkupdates`
+- **downgrade** (AUR): roll back packages to older versions
+- **bleachbit**: disk cleaner
+- **clamav**: antivirus
+- **polkit**: privilege-escalation framework
+- **lxqt-policykit**: polkit authentication agent (GUI password prompts)
+- **seahorse**: GNOME keyring and password manager GUI
+
+### Dev services and containers
+
+- **git**: version control
+- **lazygit**: terminal UI for git
+- **docker**: container engine (run `sudo systemctl enable --now docker` and add yourself to the `docker` group)
+- **kubectl**: Kubernetes CLI
+- **postgresql**: database server (needs `initdb` before first start)
+- **wine**: runs Windows applications
+
+- Some packages (`pipewire`, `jack`, fonts) can trigger interactive provider prompts. If the command stops to ask, just press Enter for the default.
 
 ---
 
@@ -373,7 +952,10 @@ Pacman was used for almost all examples, but Yay can also be used.
 - `cd yay/`
 - `cd makepkg -si`
 
---- 
+ ```bash
+yay -S utftex miniconda3 downgrade
+```
+
 
 ### Install Extra Packages
 
@@ -419,6 +1001,18 @@ clone the necessary repositories from github or use stow.
  
 ---
 
+## Vim Provider 
+
+Run 
+
+```py
+pip install --user pynvim` or `pip3 install --user pynvim
+```
+
+to install the python provider for neovim. Else there will be an error in the `checkhealth` command of neovim.
+
+--- 
+
 ## GTK and Qt Themes 
 
 - **Setting up the Qt env var:** write `QT_QPA_PLATFORMTHEME="qt5ct"` with `sudo vim /etc/environment `
@@ -429,13 +1023,20 @@ clone the necessary repositories from github or use stow.
 ## Maintenance 
 
 - **Clear Cache:** `sudo yay -Scc` and `sudo pacman -Scc`
+
 - **Update database** `sudo yay -Syy`
+
 - **Update:** `sudo yay -Syu`
+
 - **Clean unwanted dependencies:** `yay -Yc`
+
 - **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)`
+
 - **Free Disk Space:** Use `Bleachbit` or type `du -sh path` to see the disk usage of some directory and 
 `rm -rf path/` to remove. Be carefull to not important directories.
+
 - **Cleaning Logs of the Journal directory:** Use `journalctl` to activate the vacuum option. 
+
 `sudo journalctl --vacuum-time=2weeks`
 - **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist `
 
@@ -446,24 +1047,37 @@ clone the necessary repositories from github or use stow.
 ### Setup via GUI 
 
 To open, use `sudo -E timeshift-gtk` (Not the best way TODO)
+
 1. Select the type of snapshots
+
 2. Select your second storage device 
+
 3. Schedule the snapshot 
+
 4. Select the users: `root` and `yourself`, ... 
+
 5. Skip the filter and click ok 
 
 ### Usage CLI 
 
 - **Check config:** `sudo timeshift --check`
+
 - **Snapshot type:** `sudo timeshift --rsync` or `sudo timeshift --btrfs`
-- **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or
-  `sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
+
+- **Storage Location:** `sudo timeshift --rsync --snapshot-device /dev/disk_to_use` or `sudo timeshift --rsync --snapshot-device /mnt/disk_to_use`
+
 - **Create a snapshot:** `sudo timeshift --create --comments "Something" --tags D`
+
 - **See snapshots:** `sudo timeshift --list`
+
 - **Restore system:** `sudo timeshift --restore` then type the identifier of the target
+
 - **Delete snapshot:** `sudo timeshift --delete` then type  the identifier of the target
+
 - **Delete specific snapshot:** `sudo timeshift --delete --snapshot 'date' `
+
 - **Delete snapshots:** `sudo timeshift --delete-all `
+
 - **Scheduleling:** `sudo timeshift --schedule --type_of_schedule num`
 
 --- 
@@ -1428,4 +2042,26 @@ The difference is that this time we want to add it to `fstab` to mount automatic
 - Get the UUID with `lsblk -f`
 - Open and edit the `/etc/fstab` and add the line `UUID=id /mnt/... file_system_type permisions(defaults) dump_option (0)  policy_option (0)`
 
+
+--- 
+
+## systemctl
+
+`systemctl` is the primary tool used to examine and control the `systemd` system and service manager on Linux systems. 
+
+Essential commands:
+
+- **Start a service**  `sudo systemctl start <service-name>`
+
+- **Stop a service** `sudo systemctl stop <service-name>`
+
+- **Restart a service** `sudo systemctl restart <service-name>`
+
+- **Enable a service** `sudo systemctl enable <service-name>`
+
+- **Disable a service** `sudo systemctl disable <service-name>`
+
+- **Check status of a service** `systemctl status <service-name>`
+
+- **List all active services** `systemctl list-units --type=service`
 

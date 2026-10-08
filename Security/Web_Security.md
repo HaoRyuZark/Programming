@@ -203,7 +203,8 @@ Do not use AI for stuff it is not suppose to do, LOL.
 
 ## Code Injection
 
-Similar to command injection, **code injection** is a type of security vulnerability that occurs when an attacker is able to inject and execute arbitrary code within the context of a vulnerable application.
+Similar to command injection, **code injection** is a type of security vulnerability that occurs when an attacker is able to inject and execute arbitrary code within the context of
+a vulnerable application.
 They are more common on highly dynamic languages like Python, JavaScript, and PHP or at sophisticated exploits like the XZ compression algorithm vulnerability in which code is injected 
 during the build time in a binary format.
 

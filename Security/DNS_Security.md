@@ -19,7 +19,6 @@ Similart to the last one, we use our machine to pretend to be a DNS server using
 
 --- 
 
-
 ## DNS Cache Poisoning 
 
 In this case, we try to corrupt the cache of a legitimate DNS server.

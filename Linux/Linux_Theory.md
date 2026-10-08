@@ -1,12 +1,8 @@
 # Linux Theory
 
+Collection of my notes when learning to use linux.
 
-## Philosophy 
-
-The Unix-philosophy makes a heavy  emphasis on modularity for all of the individual components in an operating system. 
-Those modules shoudl be independent yet able to work together. Another aspect, code should be keept simple and efficient.
-
---- 
+---
 
 ## Startup Sequence 
 
@@ -33,6 +29,13 @@ Those modules shoudl be independent yet able to work together. Another aspect, c
 **POSIX** is a family of standards derived fomr the UNIX operating system designed to ensure compatibility across 
 different versions of UNIS and its derivatives by setting rules for file reading and writing, command names, etc. 
 
+
+--- 
+
+## Shell 
+
+The **shell** is a program which works as interface provided by the kernel for us to interact with the OS. In linux we mainly have **Bash** as shell, but there are other shells like 
+**zhs**, **fish**, etc. It used via the **terminal** which is the commandline.
 
 --- 
 
@@ -114,7 +117,7 @@ Using these paths means that we don’t have to specify an absolute path when ru
 
 **Files** in linux are stored in a tree-like structure consisting on tables (directories) whose entries which consists on the file name and the 
 **inode-numbers**. The innode-number is an index of a file-system-implementation-dependent data-structure called the **inode-storage** which has a block of information 
-containing: `size`, `file-type`, `permisions`, `data`, etc. The actual data is stored in blocks inside the disk which is handled by another abstraction layer.
+containing: `size`, `file-type`, `permission`, `data`, etc. The actual data is stored in blocks inside the disk which is handled by another abstraction layer.
 
 > Directories are also just files. They consists of the table.
 
@@ -222,19 +225,23 @@ This philosophy promotes simplicity, modularity, and composability.
 ## How Unix Uses Files
 
 - **File Descriptors**: Integer handles for files (`0=stdin`, `1=stdout`, `2=stderr`)
-- **Permissions and Ownership**:
 
-  * Read (r), Write (w), Execute (x)
-  * User, Group, Others
+- **Permissions and Ownership**:
+  - Read (r), Write (w), Execute (x)
+  - User, Group, Others
+
 - **Processes interact with files through system calls**: `open()`, `read()`, `write()`, `close()`
+
 - Devices and IPC mechanisms are accessed like files
+
 - **Symlinks**: Short for symbolic link is a special type of file that points to another file or directory. It is 
 like a pointer. They are useful to for example manage all dotfiles from one place
 
 ---
 
-## Important Directories and Their Functions
+## The File System 
 
+From the root `/` linux uses different directories for different purposes. Most of the time we do not touch this files, but understanding them is critical.
 
 | Directory | Function                                           |
 |:--------- |:-------------------------------------------------- |
@@ -266,43 +273,18 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 - **Partition**: A division of a storage device that acts as a separate logical unit
 
 - **Types**:
-
-  * Primary (up to 4)
-  * Extended (contains logical partitions)
-  * Logical (within extended)
+  - Primary (up to 4)
+  - Extended (contains logical partitions)
+  - Logical (within extended)
 
 - **Tools**:
-
-  * `fdisk` / `parted`: Manage partitions
-  * `lsblk`, `blkid`: View block devices
-  * `mount` / `umount`: Attach/detach partitions
+  - `fdisk` / `parted`: Manage partitions
+  - `lsblk`, `blkid`: View block devices
+  - `mount` / `umount`: Attach/detach partitions
 
 - **Partition table types**:
-
-  * **MBR (Master Boot Record)**
-  * **GPT (GUID Partition Table)** - newer, supports more partitions
-
----
-
-## systemctl
-
-`systemctl` is the primary tool used to examine and control the `systemd` system and service manager on Linux systems. 
-
-Essential commands:
-
-- **Start a service**  `sudo systemctl start <service-name>`
-
-- **Stop a service** `sudo systemctl stop <service-name>`
-
-- **Restart a service** `sudo systemctl restart <service-name>`
-
-- **Enable a service** `sudo systemctl enable <service-name>`
-
-- **Disable a service** `sudo systemctl disable <service-name>`
-
-- **Check status of a service** `systemctl status <service-name>`
-
-- **List all active services** `systemctl list-units --type=service`
+  - **MBR (Master Boot Record)**
+  - **GPT (GUID Partition Table)** - newer, supports more partitions
 
 ---
 
@@ -313,10 +295,15 @@ A desktop environment is a collection of applications and libraries that provide
 Common desktop environments for Linux include:
 
 - **GNOME**: Modern, user-friendly, and widely used (e.g., Ubuntu)
+
 - **KDE Plasma**: Highly customizable and feature-rich (e.g., Kubuntu)
+
 - **XFCE**: Lightweight and fast, ideal for older hardware (e.g., Xubuntu)
+
 - **LXDE/LXQt**: Extremely lightweight, minimal resource usage (e.g., Lubuntu)
+
 - **Cinnamon**: Traditional desktop experience with modern features (e.g., Linux Mint)
+
 - **MATE**: Fork of GNOME 2, classic desktop experience (e.g., Ubuntu MATE)
 
 --- 
@@ -328,4 +315,12 @@ is responsible for managing the layout, behavior, and interactions of applicatio
 
 A compositor is a system software that provides advanced graphical effects, such as transparency, shadows, and animations, by combining multiple window 
 buffers into a single image before displaying it on the screen. Some window managers include built-in compositors, while others rely on external compositors.
+
+---
+
+## Firewall
+
+The actual firewall of linux is `netfilter` which is provided by the kernel. To actually used the firewall other programs which help manage the settings.
+
+--- 
 

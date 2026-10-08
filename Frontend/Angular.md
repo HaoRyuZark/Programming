@@ -1024,4 +1024,364 @@ export class SearchComponent {
 
 --- 
 
+## Testing
+
+Angular ships with a testing setup out of the box: **Jasmine** as the test framework (describe/it/expect) and
+**Karma** as the test runner (newer setups may use **Jest** or **Vitest**). The CLI generates a `.spec.ts` file next
+to every component, service, directive, and pipe. Run the suite with `ng test`.
+
+Angular's `@angular/core/testing` package provides **`TestBed`**, a configurable testing module that mirrors
+`@Component`/`@NgModule` metadata and wires up dependency injection for tests.
+
+- `TestBed.configureTestingModule(metadata)`: sets up a testing module (`imports`, `providers`, `declarations`).
+- `TestBed.createComponent(Component)`: instantiates a component and returns a `ComponentFixture`.
+- `TestBed.inject(Token)`: retrieves a service/dependency from the test injector.
+- `TestBed.overrideProvider(token, { useValue })`: swaps a provider for a mock/stub.
+
+### Vitest (Modern Runner)
+
+**Vitest** is a fast, Vite-powered test runner that Angular supports as an official experimental alternative to Karma
+(v20+). It runs the same `TestBed` + spec code but with a far quicker start-up, native ESM, watch mode, and a built-in
+coverage reporter — all without a real browser (it uses `jsdom`/`happy-dom`). Its API (`describe`, `it`, `expect`,
+`vi`) mirrors Jasmine/Jest, so existing specs port over with minimal changes.
+
+**Setup** — have the CLI configure the Vitest builder for you:
+
+```bash
+ng add @angular/build        # ensures the Vite-based builder is present (v20+)
+```
+
+Then point the `test` target at the Vitest runner in `angular.json`:
+
+```jsonc
+// angular.json → projects → <app> → architect
+"test": {
+  "builder": "@angular/build:unit-test",
+  "options": {
+    "runner": "vitest",              // use Vitest instead of Karma
+    "tsConfig": "tsconfig.spec.json",
+    "buildTarget": "::development"
+  }
+}
+```
+
+Install the runtime dependencies and a DOM environment:
+
+```bash
+npm install -D vitest jsdom         # or happy-dom for a lighter DOM
+```
+
+Optionally add a `vitest.config.ts` for fine-grained control:
+
+```ts
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    globals: true,            // expose describe/it/expect without importing
+    environment: "jsdom",     // DOM for component tests
+    setupFiles: ["src/test-setup.ts"],
+    coverage: { provider: "v8", reporter: ["text", "html"] },
+  },
+});
+```
+
+Run it through the CLI (preferred) or Vitest directly:
+
+```bash
+ng test                      # runs via the configured Vitest builder
+npx vitest                   # watch mode
+npx vitest run --coverage    # single run with coverage
+```
+
+**Vitest API vs Jasmine** — the spec structure is identical; only the mocking helpers differ:
+
+| Jasmine / Karma | Vitest equivalent |
+|-----------------|-------------------|
+| `spyOn(obj, "m")` | `vi.spyOn(obj, "m")` |
+| `jasmine.createSpy()` | `vi.fn()` |
+| `jasmine.createSpyObj("x", ["a"])` | `{ a: vi.fn() }` |
+| `.and.returnValue(v)` | `.mockReturnValue(v)` |
+| `jasmine.clock()` | `vi.useFakeTimers()` / `vi.advanceTimersByTime()` |
+| `beforeEach/afterEach` | same |
+
+```ts
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { TestBed } from "@angular/core/testing";
+import { CounterComponent } from "./counter.component";
+
+describe("CounterComponent (Vitest)", () => {
+  beforeEach(() => TestBed.configureTestingModule({ imports: [CounterComponent] }));
+
+  it("increments on click", () => {
+    const fixture = TestBed.createComponent(CounterComponent);
+    fixture.detectChanges();
+    fixture.componentInstance.increment();
+    expect(fixture.componentInstance.count()).toBe(1);
+  });
+
+  it("mocks a dependency with vi.fn", () => {
+    const api = { get: vi.fn().mockReturnValue("mocked") };
+    expect(api.get()).toBe("mocked");
+    expect(api.get).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+### Jasmine Essentials
+
+- `describe(label, fn)`: groups related specs into a suite.
+- `it(label, fn)`: defines a single spec (test case).
+- `expect(actual).matcher(expected)`: asserts an outcome — `toBe`, `toEqual`, `toBeTruthy`, `toContain`, `toHaveBeenCalled`, `toThrow`.
+- `beforeEach(fn)` / `afterEach(fn)`: run setup/teardown before/after each spec.
+- `spyOn(obj, "method")`: replaces a method with a spy that tracks calls and can fake a return (`.and.returnValue(...)`).
+- `jasmine.createSpyObj("name", ["m1", "m2"])`: builds a mock object full of spies.
+
+```ts
+describe("MathUtils", () => {
+  it("adds two numbers", () => {
+    expect(2 + 3).toBe(5);
+  });
+
+  it("spies on a dependency", () => {
+    const api = jasmine.createSpyObj("Api", ["get"]);
+    api.get.and.returnValue("mocked");
+    expect(api.get()).toBe("mocked");
+    expect(api.get).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+### Testing a Component
+
+The `ComponentFixture` wraps the component instance and its rendered DOM.
+
+- `fixture.componentInstance`: the component class instance (test its logic/state).
+- `fixture.nativeElement`: the root DOM element (query with `querySelector`).
+- `fixture.debugElement`: Angular's debug wrapper; query with `By.css(...)` / `By.directive(...)`.
+- `fixture.detectChanges()`: triggers change detection, rendering bindings and running `ngOnInit`.
+
+```ts
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { CounterComponent } from "./counter.component";
+
+describe("CounterComponent", () => {
+  let fixture: ComponentFixture<CounterComponent>;
+  let component: CounterComponent;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [CounterComponent],        // standalone component goes in imports
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(CounterComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();              // initial render + ngOnInit
+  });
+
+  it("creates the component", () => {
+    expect(component).toBeTruthy();
+  });
+
+  it("increments the signal on click", () => {
+    const button = fixture.debugElement.query(By.css("button"));
+    button.triggerEventHandler("click");  // simulate a click
+    fixture.detectChanges();
+
+    expect(component.count()).toBe(1);
+    const p = fixture.nativeElement.querySelector("p");
+    expect(p.textContent).toContain("Count: 1");
+  });
+});
+```
+
+### Testing Inputs & Outputs
+
+Set inputs via the component instance (or `fixture.componentRef.setInput` for signal inputs), and subscribe to outputs.
+
+```ts
+it("renders the name input and emits on search", () => {
+  fixture.componentRef.setInput("name", "Alice");   // signal input
+  fixture.detectChanges();
+  expect(fixture.nativeElement.textContent).toContain("Alice");
+
+  let emitted = "";
+  component.search.subscribe((value: string) => (emitted = value));  // output()
+  component.onInput({ target: { value: "query" } } as any);
+  expect(emitted).toBe("query");
+});
+```
+
+### Testing a Service
+
+Services are usually plain classes — test them in isolation or through `TestBed` for DI.
+
+```ts
+import { TestBed } from "@angular/core/testing";
+import { CounterService } from "./counter.service";
+
+describe("CounterService", () => {
+  let service: CounterService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(CounterService);
+  });
+
+  it("increments the value", () => {
+    service.increment();
+    expect(service.value()).toBe(1);
+  });
+
+  it("resets to zero", () => {
+    service.increment();
+    service.reset();
+    expect(service.value()).toBe(0);
+  });
+});
+```
+
+### Testing HTTP Requests
+
+`provideHttpClientTesting()` replaces the real backend with a mock controller that lets you assert and flush requests.
+
+- `HttpTestingController.expectOne(url)`: asserts exactly one request to `url` and returns a `TestRequest`.
+- `req.flush(body)`: resolves the request with a fake response body.
+- `req.error(new ProgressEvent("..."))`: simulates a network/HTTP error.
+- `httpMock.verify()`: fails the test if any unmatched requests remain outstanding.
+
+```ts
+import { TestBed } from "@angular/core/testing";
+import { provideHttpClient } from "@angular/common/http";
+import {
+  HttpTestingController, provideHttpClientTesting,
+} from "@angular/common/http/testing";
+import { UserService } from "./user.service";
+
+describe("UserService", () => {
+  let service: UserService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
+    });
+    service = TestBed.inject(UserService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => httpMock.verify());      // no unexpected requests
+
+  it("fetches users", () => {
+    const mock = [{ id: 1, name: "Alice" }];
+
+    service.getUsers().subscribe((users) => {
+      expect(users).toEqual(mock);
+    });
+
+    const req = httpMock.expectOne("/api/users?page=1");
+    expect(req.request.method).toBe("GET");
+    req.flush(mock);                       // respond with fake data
+  });
+});
+```
+
+### Testing Asynchronous Code
+
+Angular offers helpers to control async flow in tests.
+
+- `fakeAsync(fn)`: runs the test in a synthetic time zone where timers can be controlled.
+- `tick(ms?)`: advances the virtual clock inside a `fakeAsync` block, flushing timers/microtasks.
+- `flush()`: drains all pending timers in a `fakeAsync` block.
+- `waitForAsync(fn)` (formerly `async`): waits for all pending promises before completing the spec.
+- `fixture.whenStable()`: resolves once async tasks (e.g., promises) settle.
+
+```ts
+import { fakeAsync, tick } from "@angular/core/testing";
+
+it("updates after a delayed timer", fakeAsync(() => {
+  component.startTimer();      // schedules setTimeout(…, 1000)
+  tick(1000);                  // advance virtual time by 1s
+  expect(component.done).toBeTrue();
+}));
+```
+
+### Testing a Pipe
+
+Pure pipes are plain classes — instantiate and call `transform` directly.
+
+```ts
+import { TruncatePipe } from "./truncate.pipe";
+
+describe("TruncatePipe", () => {
+  const pipe = new TruncatePipe();
+
+  it("truncates long strings", () => {
+    expect(pipe.transform("a".repeat(30), 5)).toBe("aaaaa…");
+  });
+
+  it("leaves short strings intact", () => {
+    expect(pipe.transform("short", 20)).toBe("short");
+  });
+});
+```
+
+### Mocking Dependencies
+
+Override providers to isolate the unit under test from real services.
+
+```ts
+const mockUserService = {
+  getUsers: () => of([{ id: 1, name: "Alice" }]),   // RxJS "of"
+};
+
+TestBed.configureTestingModule({
+  imports: [UserListComponent],
+  providers: [{ provide: UserService, useValue: mockUserService }],
+});
+```
+
+### End-to-End Testing
+
+Unit/integration tests cover logic and templates; **E2E tests** drive the real app in a browser. Angular no longer
+bundles Protractor — the modern choice is **Cypress** or **Playwright**, added via `ng add`.
+
+```bash
+ng add @cypress/schematic      # or: ng e2e (prompts for a runner)
+```
+
+```ts
+// cypress/e2e/users.cy.ts
+describe("Users page", () => {
+  it("creates a user", () => {
+    cy.visit("/users");
+    cy.get("input[name=name]").type("Alice");
+    cy.get("button[type=submit]").click();
+    cy.contains("Alice").should("be.visible");
+  });
+});
+```
+
+### Testing Utilities Summary
+
+| Utility | Purpose |
+|---------|---------|
+| `TestBed.configureTestingModule()` | Build an isolated testing module (DI container) |
+| `TestBed.createComponent()` | Instantiate a component, returns a `ComponentFixture` |
+| `TestBed.inject(Token)` | Retrieve a service/dependency from the test injector |
+| `fixture.detectChanges()` | Run change detection and render bindings |
+| `fixture.componentInstance` | Access the component class instance |
+| `fixture.nativeElement` / `debugElement` | Query the rendered DOM |
+| `By.css()` / `By.directive()` | Select debug elements in the template |
+| `spyOn()` / `createSpyObj()` | Create spies and mock objects |
+| `provideHttpClientTesting()` | Mock the `HttpClient` backend |
+| `HttpTestingController` | Assert and flush HTTP requests |
+| `fakeAsync()` + `tick()` | Control virtual time for async tests |
+| `waitForAsync()` / `whenStable()` | Await pending promises |
+| Cypress / Playwright | End-to-end browser testing |
+
 

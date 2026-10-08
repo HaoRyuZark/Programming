@@ -1255,6 +1255,62 @@ describe("UsersService", () => {
 });
 ```
 
+### Unit Test (controller with a mocked service)
+
+Test a controller in isolation by providing a mock of its service, so you only exercise the routing/delegation logic.
+
+```ts
+import { Test, TestingModule } from "@nestjs/testing";
+import { UsersController } from "./users.controller";
+import { UsersService } from "./users.service";
+
+describe("UsersController", () => {
+  let controller: UsersController;
+
+  const mockService = {
+    findAll: jest.fn().mockReturnValue([{ id: 1, name: "Alice" }]),
+    create: jest.fn((dto) => ({ id: 2, ...dto })),
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
+      providers: [{ provide: UsersService, useValue: mockService }],
+    }).compile();
+
+    controller = module.get<UsersController>(UsersController);
+  });
+
+  it("delegates findAll to the service", () => {
+    expect(controller.findAll()).toEqual([{ id: 1, name: "Alice" }]);
+    expect(mockService.findAll).toHaveBeenCalled();
+  });
+
+  it("delegates create to the service", () => {
+    const dto = { name: "Bob", email: "bob@example.com" };
+    expect(controller.create(dto)).toEqual({ id: 2, ...dto });
+    expect(mockService.create).toHaveBeenCalledWith(dto);
+  });
+});
+```
+
+### Overriding Guards, Interceptors & Pipes
+
+In e2e or integration tests, bypass real guards (e.g. auth) so you can focus on the endpoint under test.
+
+- `.overrideGuard(Guard).useValue({ canActivate: () => true })`: always-allow stub.
+- `.overrideInterceptor(Interceptor).useValue(mock)`: replace an interceptor.
+- `.overridePipe(Pipe).useValue(mock)`: replace a pipe.
+
+```ts
+const moduleRef = await Test.createTestingModule({
+  imports: [AppModule],
+})
+  .overrideGuard(AuthGuard)
+  .useValue({ canActivate: () => true })   // skip authentication in tests
+  .compile();
+```
+
 ### E2E Test (full HTTP stack with supertest)
 
 ```ts

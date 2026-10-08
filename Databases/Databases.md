@@ -4,6 +4,20 @@ A quick reference guide for common SQL commands, concepts and databases in gener
 
 ---
 
+## Databases, Data-warehouses, Data-lakes
+
+- **Database**: stores information about a certain domain in a mostly relational manner. Used to keep track of 
+the information; optimal for read-write operations. 
+
+- **Data-warehouse**: data is stored for analysis on an specific domain which means that irrelevant data or features are ignored.
+Data here can also be processed easily through aggregation and used to train for example machine learning algorithms. It is gained 
+by a **ETL-process**. It is not as fresh.
+
+- **Data-lake**: it consists on structured or semi-structured data. From this data sources we can create a database or a data-warehouse and it 
+is made for large amounts of data.
+
+--- 
+
 ## Database System
 
 A **databases-system** is made of databases-management-engine and clients which

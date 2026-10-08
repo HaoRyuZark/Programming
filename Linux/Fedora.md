@@ -1,4 +1,5 @@
 # Fedora Linux Setup
+
 --- 
 
 ## Installation 
@@ -66,7 +67,7 @@ This script is made to set-up the both the GNOME-settings and the work-spaces. O
    fzf bat lsd tldr lazygit swayidle thunar autotiling starship python-scikit-learn docker pyright
    lua-language-server bash-language-server texlab postgresql clang pacman-contrib ghc cabal-install
    julia nm-connection-editor wine utftex xdotool w3m w3m-img conda kubernetes polkit go composer pkgconf openssl imv swayimg 
-   lxqt-policykit nm-applet postgresql seahorse swaync`
+   lxqt-policykit nm-applet postgresql-server postgresql-contrib seahorse swaync`
 
 -*Packet plus purpose:**
 
@@ -174,7 +175,8 @@ This script is made to set-up the both the GNOME-settings and the work-spaces. O
 - `nm-applet`: password prompt for wifi.
 - `seahorse`:
 - `swaync`: notification daemon for sway
- 
+- `postgresql-server` 
+- `postgresql-contrib`
 
 ### Install Extra Packages
 
@@ -643,4 +645,37 @@ sudo dnf system-upgrade reboot # to reboot into the upgraded system
 ```
  
 --- 
+
+## systemctl
+
+`systemctl` is the primary tool used to examine and control the `systemd` system and service manager on Linux systems. 
+
+Essential commands:
+
+- **Start a service**  `sudo systemctl start <service-name>`
+
+- **Stop a service** `sudo systemctl stop <service-name>`
+
+- **Restart a service** `sudo systemctl restart <service-name>`
+
+- **Enable a service** `sudo systemctl enable <service-name>`
+
+- **Disable a service** `sudo systemctl disable <service-name>`
+
+- **Check status of a service** `systemctl status <service-name>`
+
+- **List all active services** `systemctl list-units --type=service`
+
+--- 
+
+## Vim Provider 
+
+Run 
+
+```py
+pip install --user pynvim` or `pip3 install --user pynvim
+```
+
+to install the python provider for neovim. Else there will be an error in the `checkhealth` command of neovim.
+
 

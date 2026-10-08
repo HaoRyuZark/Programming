@@ -1,6 +1,10 @@
 # Shortcuts and Keybinds
 
+--- 
+
 ## Kitty
+
+--- 
 
 
 | Shortcut | Action |
@@ -25,6 +29,7 @@
 | `Ctrl + Shift + C`        | Copy selected text                     |
 | `Ctrl + Shift + V`        | Paste clipboard content                |
 
+---
 
 ## Wofi
 
@@ -34,9 +39,9 @@
 | `Mod4 + d` | Open Wofi |
 | `Mod4 + Shift + d` | Open Wofi run |
 
+----
 
 ## Browser
-
 
 | Shortcut | Action |
 |----------|--------|
@@ -53,6 +58,7 @@
 | `Ctrl + Shift + arrow keys` | Select text |
 | `Ctrl + f` | Find on page |
 
+--- 
 
 ## Yazi 
 
@@ -109,6 +115,8 @@
 | `Ctrl + z`                                                                  | Suspend process (send to background)                                                              |
 
 
+---
+
 ## Sway 
 
 
@@ -119,7 +127,7 @@
 |                | `Mod + a`                       | Focus parent container                              |
 |                | `Mod + s`                       | Toggle stacking layout                              |
 |                | `Mod + w`                       | Toggle tabbed layout                                |
-|                | `Mod + e`                       | Toggle split layout                                 |
+|                | `Mod + e`                       | Launch File explorer (overwritten)                  |
 | **Launching**  | `Mod + d`                       | Launch application launcher (`wofi` / `bemenu`)     |
 |                | `Mod + Enter`                   | Launch terminal (usually `alacritty` or `foot`)     |
 | **Splitting**  | `Mod + v`                       | Split container vertically                          |
@@ -142,6 +150,8 @@
 |                | `Mod + Shift + e`               | Exit sway                                           |
 |                | `Mod + ?`                       | Show help (if configured)                           |
 
+
+--- 
 
 ## NetRW File Manager in Vim
 
@@ -175,6 +185,7 @@
 | `p`               | Toggle preview window                                                |
 | `:Rexplore`       | Return to previous netrw buffer                                      |
 
+---
 
 ## fzf 
 
@@ -203,6 +214,8 @@
 
 - `TAB` and `Shift-TAB` are key for **multi-select mode** (triggered with `fzf -m`).
 - Some bindings like `CTRL-Y` or `CTRL-Q` depend on your shell/editor integration.
+
+---
 
 ## Oil
 
@@ -314,6 +327,77 @@
 | `^Scroll` | Zoom in or out |
 | `Hold Button2` | Pan the document |
 | `Button1` | Open link |
+
 --- 
 
-## fzf Finder
+## tmux
+
+> Most tmux shortcuts are triggered by a **prefix key** (default `Ctrl + b`), pressed first and then released, followed by the key for the action. The prefix is written below as `Prefix`.
+
+### Sessions
+
+| Shortcut / Command | Action |
+|--------------------|--------|
+| `tmux` | Start a new session |
+| `tmux new -s <name>` | Start a new named session |
+| `tmux ls` | List existing sessions |
+| `tmux attach -t <name>` | Attach to a named session |
+| `tmux kill-session -t <name>` | Kill a named session |
+| `Prefix + d` | Detach from the current session |
+| `Prefix + s` | Show and switch between sessions |
+| `Prefix + $` | Rename the current session |
+| `Prefix + (` | Switch to the previous session |
+| `Prefix + )` | Switch to the next session |
+
+### Windows
+
+| Shortcut | Action |
+|----------|--------|
+| `Prefix + c` | Create a new window |
+| `Prefix + ,` | Rename the current window |
+| `Prefix + &` | Close the current window |
+| `Prefix + n` | Go to the next window |
+| `Prefix + p` | Go to the previous window |
+| `Prefix + [0–9]` | Switch to window by number |
+| `Prefix + w` | List and select windows |
+| `Prefix + f` | Find a window by name |
+| `Prefix + l` | Switch to the last active window |
+
+### Panes
+
+| Shortcut | Action |
+|----------|--------|
+| `Prefix + %` | Split pane vertically (left/right) |
+| `Prefix + "` | Split pane horizontally (top/bottom) |
+| `Prefix + Arrow Keys` | Move focus to another pane |
+| `Prefix + o` | Cycle to the next pane |
+| `Prefix + q` | Show pane numbers |
+| `Prefix + z` | Toggle pane zoom (fullscreen) |
+| `Prefix + {` | Move the current pane left |
+| `Prefix + }` | Move the current pane right |
+| `Prefix + Ctrl + Arrow Keys` | Resize the current pane |
+| `Prefix + Space` | Cycle through pane layouts |
+| `Prefix + x` | Close the current pane |
+| `Prefix + !` | Break the current pane into a new window |
+
+### Copy Mode
+
+| Shortcut | Action |
+|----------|--------|
+| `Prefix + [` | Enter copy mode (scroll/select text) |
+| `Prefix + ]` | Paste the copied buffer |
+| `Space` (in copy mode) | Start selection |
+| `Enter` (in copy mode) | Copy selection and exit |
+| `q` (in copy mode) | Quit copy mode |
+| `/`, `?` (in copy mode) | Search forward/backward |
+
+### Miscellaneous
+
+| Shortcut / Command | Action |
+|--------------------|--------|
+| `Prefix + ?` | List all key bindings (help) |
+| `Prefix + :` | Enter the tmux command prompt |
+| `Prefix + t` | Show a clock |
+| `Prefix + r` | Reload the configuration (if bound in `~/.tmux.conf`) |
+| `tmux source-file ~/.tmux.conf` | Reload the configuration from the shell |
+

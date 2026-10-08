@@ -11,6 +11,8 @@ as well as manage data and control access.
 
 An **entity table** represents a real-world entity and contains its attributes. It usually has a primary key.
 
+**Example**
+
 ```sql
 CREATE TABLE IF NOT EXISTS anime (
     anime_id INTEGER PRIMARY KEY, 
@@ -27,6 +29,8 @@ CREATE TABLE IF NOT EXISTS anime (
 
 A **bridge table** is a table used to establish a many-to-many relationship between two entity tables. It typically contains foreign keys referencing the primary keys 
 of the related entity tables.
+
+**Example**
 
 ```sql 
 -- Using the same anime table as before we can not have different genres
@@ -52,6 +56,8 @@ CREATE TABLE IF NOT EXISTS anime_genre (
 
 A **weak entity table** is a table that depends on another table (the owner) for its existence. It usually has a composite primary key that includes the primary key of the owner table.
 
+**Example** 
+
 ```sql
 CREATE TABLE IF NOT EXISTS episode (
     episode_id INTEGER,
@@ -68,6 +74,8 @@ CREATE TABLE IF NOT EXISTS episode (
 ## Creating a SQL Database 
 
 Inside your SQL file you can start with 
+
+**Example**: 
 
 ```sql
 -- Creation
@@ -102,7 +110,7 @@ USE database_name;
 - **Boolean**:
   - `BOOLEAN` or `TINYINT(1)` (0 = false, 1 = true)
 
-Example:
+**Example**:
 
 ```sql
 CREATE TABLE employees (
@@ -122,15 +130,24 @@ We can **cast** values with the following syntax:
 
 - `CAST(arg AS type)`
 
+**Example**: 
+
+```sql 
+
+```
 --- 
 
 ## Keys
 
+**Keys** are used as unique identifier for rows in our tables.
+
 - **Primary Key**: uniquely identifies each row.
+
 - **Unique Key**: ensures all values are unique.
+
 - **Composite Key**: primary key with multiple columns.
 
-Example:
+**Example**:
 
 ```sql
 CREATE TABLE orders (
@@ -140,14 +157,13 @@ CREATE TABLE orders (
 );
 ```
 
----
 
-## Foreign Keys
+### Foreign Keys
 
 - Establish relationship between tables.
 - References another table’s primary key.
 
-Example:
+**Example**:
 
 ```sql
 CREATE TABLE orders (
@@ -164,7 +180,7 @@ CREATE TABLE orders (
 `DROP TABLE table_name` deletes a table and all its data. If there exists dependencies with other tables via weak entities, these 
 tables will also be deleted.
 
-Example:
+**Example**:
 
 ```sql
 DROP TABLE users;
@@ -178,7 +194,7 @@ Use `ALTER TABLE table anem` to modify an existing table by
 
 - Add `ADD`, remove `DROP`, or rename columns, constrains, ros.
 
-Examples:
+**Examples**:
 
 ```sql
 -- Add a column
@@ -199,15 +215,19 @@ ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE (email);
 RENAME TABLE products TO product
 ```
 
+--- 
 
 ## Constraints
 
-- `NOT NULL` – value cannot be null
-- `UNIQUE` – all values must be different
-- `CHECK` – condition must be met
-- `DEFAULT` – assigns a default value
+- `NOT NULL`: value cannot be null
 
-Example:
+- `UNIQUE`: all values must be different
+
+- `CHECK`: condition must be met
+
+- `DEFAULT`: assigns a default value
+
+**Example**:
 
 ```sql
 CREATE TABLE products (
@@ -225,7 +245,7 @@ CREATE TABLE products (
 Use `CREATE TABLE(attr1 type opt, attr2, ..., CONSTRAINT constraint_name <constraint> ...)` to define a new table with its attributes, 
 constrains, keys, etc.
 
-Example:
+**Example**:
 
 ```sql
 CREATE TABLE users (
@@ -239,9 +259,9 @@ CREATE TABLE users (
 
 ## On Delete
 
-Defines what happens when a referenced row is deleted.
+`ON DELETE` defines what happens when a referenced row is deleted.
 
-Example:
+**Example**:
 
 ```sql
 -- when the row/whole table is deleted we set the order_id in the the users table to NULL
@@ -258,7 +278,7 @@ CREATE TABLE orders (
 
 Automatically deletes or updates child rows when parent row changes.
 
-Example:
+**Example**:
 
 ```sql
 -- the row get deleted if a user which references the order is deleted
@@ -273,15 +293,17 @@ CREATE TABLE orders (
 
 ## SQL SELECT
 
-Selecting is by far the most common operation in sql and thus, also the most complex. There are a lot of variations for  
-the SELECT statements
+**Selecting****** is by far the most common operation in sql and thus, also the most complex. There are a lot of variations for  
+the `SELECT` statements
 
-The common structure looks like:
+### SELECT Structure
 
 ```sql 
 SELECT col1, col2, ..., cols3 AS 'this is an alias' FROM table_1 p "(this p refers o the relation which is going to be created from a JOIN or subquery, thus 
 it is optinal)" WHERE cond1, cond2, cond3;
 ```
+
+### Common Functionality
 
 We can also declare custom columns by using row attributes and combining them into one column `name, gdp/population`.
 
@@ -301,12 +323,13 @@ one after the other.
 - `LIMIT` restricts number of rows.
     - `OFFSET`: given a limit `pagesize` results we use the formula `pagesize * (page - 1)` to get the next offset.
 
-- `LIKE 'pattern'` is used to specify patterns in text using `'%letters%'` `%` is a wild card for any character any number of times and `_` a wild card 
-for exactly one character.
+- `LIKE 'pattern'` is used to specify patterns in text using `'%letters%'` `%` is a wild card for any character any number of times and `_` a wild card for exactly one character.
 
 - `DISTINC` if used after the SELECT keyword it eliminate duplicates.
 
 - `OR AND NOR NOT` we can use this boolean algebra  operations after the WHERE clause to specify conditions.
+
+### Syntax and Execution Order
 
 **Syntax Order**: 
 
@@ -336,7 +359,7 @@ ORDER BY col1 ASC/DESC
 6. `ORDER BY`
 7. `TOP`
 
-Examples: 
+**Example**: 
 
 ```sql
 -- Simple select all
@@ -375,24 +398,75 @@ SELECT name as 'Customers' FROM Customers LEFT JOIN Orders ON Customers.id = Ord
 
 ## Aggregate Functions 
 
-- `COUNT`: 
-- `SUM`:
-- `AVG`:
-- `MAX`:
-- `MIN`:
+**Aggregate functions** use the data from the selected rows to compute extra information,use the data from the selected rows to compute extra information,use the data from the selected rows to compute extra information,use the data from the selected rows to compute extra information.
+
+- They return a single value!
+
+- They can be combined with `GROUP BY` or `HAVING` to get multiple values for the different partitions of our data.
+
+SQL provides the following aggregate functions:
+
+- `COUNT`: counts the number of rows of a set of our table. If used with `COUNT(*)` it ignores NULL-values.
+
+- `SUM`: sums all values.
+
+- `AVG`: returns the average.
+
+- `MAX`: returns the max value of a column.
+
+- `MIN`: returns the min of a column.
+
+> They are very useful if combined with `GROUP BY`
+
+**Example**: 
+
+```sql 
+-- Count the total of names (with duplicates)
+SELECT COUNT(name) AS name_count FROM employees;
+
+-- Skip repeated names
+SELECT COUNT(DISTINC name) FROM students;
+
+-- Return names plus name count
+SELECT first_name, COUNT(first_name) AS name_count FROM employees GROUP BY first_name;
+
+-- Return a summary of sales
+SELECT COUNT(*) AS total_orders,
+       SUM(sales) AS total_sales,
+       AVG(sales) AS avg_sales,
+       MAX(sales) AS highest,
+       MIN(sales) AS lowest
+FROM orders;
+
+-- Per group
+SELECT customer_id, SUM(sales) FROM orders GROUP BY customer_id;
+```
 
 --- 
 
 ## String functions
 
 - `UPPER(str) LOWER(str)`: converts to upper/lower case. 
+
 - `CONCAT(str, ..., strn)`: combines two strings or more strings into one. 
+
 - `LEFT(str, n)`: get the first n  characters from the left.
+
 - `RIGHT(str, n)`: get the first n  characters from the right.
+
 - `SUBSRING(str, start, end)`: extract the substring from start to end.
+
 - `REPLACE(str, pattern, replacement)`: replaces the pattern with a string.
+
 - `TRIM(str)`: removes trailing spaces.
+
 - `LEN(str)`: returns the length of the string.
+
+**Example**:
+
+```sql 
+
+```
 
 --- 
 
@@ -402,17 +476,30 @@ A **DateTime** has the format `YYYY.MM.DD hh:mm:ss` while a **Date** or **Time**
 corresponding portions.
 
 - `NOW`: 
+
 - `CURDATE`:
+
 - `DAY(date)`: get day.
+
 - `MONTH(date)`: get month.
+
 - `YEAR(date)`: get year.
+
 - `DATEPART(part, date)`: (part: year, month, day, hour, quarter, weekday, week) extracts the specified part
+
 - `DATENAME(part, date)`: (part: month, weekday)
+
 - `DATETRUNC(part, date)`: keeps the date until the specified part, the rest gets reseted to its minimal initial value.
+
 - `EOMONTH(date)`: returns the last day of a month.
+
 - `DATEADD(part, interval, date)`: adds or subtracts a DateTime value a certain interval.
+
 - `DATEDIFF(part, start_date, end_date)`: returns the difference between two dates in the specified part
+
 - `ISDATE(value)`: returns 1 if the value is a date.
+
+**Example**: 
 
 ```sql 
 ```
@@ -426,36 +513,98 @@ corresponding portions.
 
 The formats can be found in the internet. 
 
+**Example**: 
+
+
+```sql 
+
+```
+
 ### Converting 
 
 Converts a DateTime value another datatype. 
 
 - `CONVERT(data_type, date)`
 
+**Example**: 
+
+
+```sql 
+
+```
+
 --- 
 
 ## Math Functions 
 
 - `ROUND(num, n)`: rounds up n decimal places. 
+
 - `FLOOR(num, n)`: rounds down n decimal places
-- `CEIL(num)`:
+
+- `CEIL(num)`: rounds
+
 - `ABS(num)`: absolute value
+
+**Example**: 
+
+```sql 
+SELECT first_name, ROUND(salary, 2) FROM employees;
+```
+
 --- 
 
 ## Comparison 
 
 SQL includes all of the classic comparisons `<, > >= <=, ==, <>(not equal in PostgreSQL), !=,  AND, OR, NOT`
 
+**Example**: 
+
+```sql
+SELECT * FROM country WHERE gdp > 100;
+SELECT * FROM country WHERE gdp <> 100;
+SELECT * FROM country WHERE gdp == 100;
+
+```
+
+--- 
+
+## LIKE
+
+**LIKE** is used for searching a pattern in text. For this we use the symbols 
+
+- `Character`: Any character which will be exactly matched like `A`.
+
+- `%`: Any character 0 or more times
+
+- `_`: Something 1 time.
+
+A pattern may look like: `admin_%_depart`.
+
+**Example**: 
+
+```sql 
+SELECT * FROM m_users WHERE role LIKE 'admin_%';
+```
+
 --- 
 
 ## NULL Functions 
 
 - `ISNULL(val, replacement)`: replaces the null with a placeholder.
+
 - `COALESCE(val1, val2, ..., replacement)`: returns the first non-null value from a list.
+
 - `NULLIF(val1, val2)`: return null if they are equal, else val1.
+
 - `IS NULL, IS NOT NULL` return 1 or 0 depending on the input.
 These functions should be used before performing any kind of operation on the data like joining, mathematical manipulation since 
 NULL values lead to errors in such cases.
+
+**Example**:
+
+```sql 
+
+```
 
 --- 
 
@@ -463,40 +612,52 @@ NULL values lead to errors in such cases.
 
 - `BETWEEN lower AND upper`: checks if a value is a inclusive range.
 
+**Example**:
+
+```sql 
+SELECT * FROM customer WHERE score BETWEEN 100 AND 500;
+```
+
 --- 
 
 ## Membership 
 
 - `IN, NOT IN (val1, val2, ...)` checks if a value or is not in a list.
 
-Example:
+**Example**:
 
-```sql
+```sql 
+SELECT name, email FROM my_users WHERE role IN ('admin', 'moderator');
+```
 
--- 
+--- 
+
+## Multiple SELECT Examples
+
+```sql 
 SELECT COUNT(-) AS total_users, AVG(age) AS avg_age 
 FROM users;
 
 -- Count the occurrences of  male and female in the table
-SELECT COUNT(sex), sex FROM employee GROUP by sex 
+SELECT COUNT(sex), sex FROM employee GROUP by sex;
 
 -- ROUND gdp per capita to the neares 1000
 SELECT name, ROUND(gdp/population, -3) FROM world WHERE gdp >= 1000000000000
 
 -- Just rounding  
-SELECT name, ROUND(population/1000000, 2), ROUND(gdp/1000000000, 2) FROM world WHERE continent='South America'
+SELECT name, ROUND(population/1000000, 2), ROUND(gdp/1000000000, 2) FROM world WHERE continent='South America';
 
 -- Show the name and the capital where the first letters of each match. Don't include countries where the name and the capital are the same word.
-SELECT name, capital FROM world WHERE name <> capital AND LEFT(name, 1) = LEFT(capital, 1)
+SELECT name, capital FROM world WHERE name <> capital AND LEFT(name, 1) = LEFT(capital, 1);
 
 -- Select the project_id and average experience in years of the empoyees participating
 SELECT project_id, ROUND(AVG(experience_years), 2) as average_years 
-FROM Project p 
-JOIN Employee e  
-ON
-p.employee_id = e.employee_id 
-GROUP BY 
-project_id;
+    FROM Project p 
+    JOIN Employee e  
+    ON
+    p.employee_id = e.employee_id 
+    GROUP BY 
+    project_id;
 
 -- Select the name plus, some other date based on computation grouped by the name
 SELECT 
@@ -520,10 +681,11 @@ GROUP BY p.product_id;
 ## GROUP BY
 
 `GROUP BY` is an SQL functions which allows to group mathcing rows by an specific criteria done by an aggregate function.
-In plain english it would mean: Apply 'aggregate function on xy' for the elements in the groups generated by 'col'  
+In plain English it would mean: Apply 'aggregate function on xy' for the elements in the groups generated by 'col'  
+
+**Example**:
 
 ```sql 
-
 -- Make a count of each of the orders associated with one product and display them
 SELECT product_id, COUNT(*) FROM orders GROUP BY product_id;
 
@@ -540,6 +702,8 @@ SELECT SUM(amount), order_date FROM transactions GROUP BY order_date;
 
 `HAVING` is used instead of `WHERE` when using `GROUP BY` and it is wirtten after it.
 
+**Example**:
+
 ```sql
 -- Selecting the total amount of all the customers which have spent more than 100 dollars in total
 SELECT customer_id, SUM(amount) FROM transactions GROUP BY customer_id HAVING SUM(amount) > 100;
@@ -550,30 +714,34 @@ SELECT MAX(num) as num FROM MyNumbers n WHERE num IN(SELECT num FROM myNumbers G
 
 --- 
 
-
 ## EXISTS
 
 `EXISTS` is pretty useful for cases where we just want to select rows if they are inside in another table
 
+**Example**:
+
 ```sql
-SELECT p.name
-FROM SalesPerson p
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM Orders o
-    JOIN Company c ON o.com_id = c.com_id
-    WHERE o.sales_id = p.sales_id
-      AND c.name = 'RED'
-);
+SELECT p.name FROM SalesPerson p
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM Orders o
+        JOIN Company c ON o.com_id = c.com_id
+        WHERE o.sales_id = p.sales_id
+          AND c.name = 'RED'
+    );
 ``` 
 
 --- 
 
 ## UNION
 
-Combines results of two queries and removes duplicates (`UNION ALL` keeps them). The syntax is `SELECT_ST 1 UNION SELECT_2`
+The `UNION` operator combines results of two queries and removes duplicates (`UNION ALL` keeps them). The syntax is 
 
-Example:
+```sql 
+SELECT_Stament1 UNION SELECT_Stament2
+```
+
+**Example**:
 
 ```sql
 -- return a list of all the names from both customers and suppliers.
@@ -588,7 +756,9 @@ We can use aliases to rename our columns if necessary due to the fact that the *
 
 ## EXCEPT or MINUS
 
-Is used as set-minus.
+They are used as set-minus.
+
+**Example**:
 
 ```sql 
 -- return customers which are not employees
@@ -603,6 +773,8 @@ SELECT name FROM employees
 
 Is used as a set intersection.
 
+**Example**: 
+
 ```sql 
 -- return customers which are also employees
 SELECT name FROM customers 
@@ -615,6 +787,8 @@ SELECT name FROM employees
 ## CASE 
 
 We can use a switch-statement like in SQL 
+
+**Example**: 
 
 ```sql
 SELECT x, y, z, 
@@ -629,7 +803,7 @@ AS 'triangle' FROM Triangle;
 
 ## Joins
 
-They are used to combining rows from two or more tables based on a related column between them. It consist on a Cartesian product 
+**Joins** are used to combining rows from two or more tables based on a related column between them. It consist on a Cartesian product 
 of the relational algebra plus a selection.
 
 **Syntax**: 
@@ -643,24 +817,36 @@ often longer than an alias.
 
 Types:
 
-- **INNER JOIN**: only matching rows based on a condition
+### INNER JOIN 
+
+Only matching rows based on a condition
+
+**Example**:
 
 ```sql 
 -- select the user-id and email of user which created a product 
-SELECT u.id, u.email, p.name FROM users u INNER JOIN product p ON u.id = p.created.by
+SELECT u.id, u.email, p.name FROM users u INNER JOIN product p ON u.id = p.created_by
 ```
 
-- **LEFT JOIN**: all left table + matches. This means that in this case if a user has not created a product it will be still be retrieved but with null values 
+### LEFT JOIN 
+
+All left table + matches. This means that in this case if a user has not created a product it will be still be retrieved but with null values 
 for the columns related to the product.
 
+**Example**: 
+
 ```sql 
--- all mathches of the inner join plus all the data of the user table
+-- all matches of the inner join plus all the data of the user table
 SELECT u.id, u.email, p.name FROM users u LEFT JOIN product p ON u.id = p.createdBy
 ```
 
 The order matters in the condition, start with the left table for the selection and the condition.
 
-- **RIGHT JOIN**: all right table + matches. Similar to the **left** join this time products with no creator will also be displayed.
+### RIGHT JOIN 
+
+All right table + matches. Similar to the **left** join this time products with no creator will also be displayed.
+
+**Example**:
 
 ```sql
 -- all mathches of the inner join plus all the data of the product table
@@ -669,42 +855,62 @@ SELECT u.id, u.email, p.name FROM users u RIGHT JOIN product p ON u.id = p.creat
 
 The order matters in the condition, start with the **right** table for the selection and the condition.
 
-- **FULL JOIN**: Returns both matches and miss-matches. 
+### FULL JOIN 
+
+Returns both matches and miss-matches. 
+
+**Example**: 
 
 ```sql
 -- all combinations between all rows
 SELECT u.id, u.email, p.id, p.name FROM users u FULL JOIN product p ON u.id = p.createdBy
 ```
 
-- **CROSS JOIN**: It returns the Cartesian product of the two tables 
+### CROSS JOIN 
+
+It returns the Cartesian product of the two tables 
+
+**Example**: 
 
 ```sql
 -- all combinations between all rows
 SELECT u.id, u.email, p.id, p.name FROM users u CROSS JOIN product p
 ```
 
-- **LEFT OUTER JOIN**: It returns all tuples from the left relation with not matches on the right. 
+### LEFT OUTER JOIN 
+
+It returns all tuples from the left relation with not matches on the right. 
+
+**Example**:
 
 ```sql 
 -- Left Outer Join:
 SELECT * FROM T LEFT OUTER JOIN S ON T.a = S.d;
 ```
 
-- **RIGHT OUTER JOIN**: It returns all tuples from the right relation with not matches on the left.
+### RIGHT OUTER JOIN
+
+It returns all tuples from the right relation with not matches on the left.
+
+**Example**: 
 
 ```sql 
 -- Right Outer Join:
 SELECT * FROM T RIGHT OUTER JOIN S ON T.a = S.d;
 ```
 
-- **FULL OUTER JOIN**: It returns all tuples from both relations which are not in the inner join.
+### FULL OUTER JOIN 
+
+It returns all tuples from both relations which are not in the inner join.
+
+**Examples**: 
 
 ```sql 
 -- Full Outer Join:
 SELECT * FROM T FULL OUTER JOIN S ON T.a = S.d;
 ```
 
-**Examples**: 
+### Examples 
 
 ```sql
 SELECT users.name, orders.order_id
@@ -725,7 +931,7 @@ ON employee.emp_id = branch.mgr_id
 
 **Static values** in SQL are used mostly as placeholders or default values when creating, inserting or modifying data when a certain condition is meet.
 
-Example: 
+**Example**: 
 
 ```sql 
 -- returns a table with an unnamed column containg the value 1
@@ -741,7 +947,7 @@ SELECT id, first_name, NULL, 'Unknown' FROM customers
 
 `INSERT INTO` is used to add data. The sentence is build with `INSERT INTO table (col1, col2, ..) VALUES(val1, val2, val3)`
 
-Example:
+**Example**:
 
 ```sql
 INSERT INTO users (id, name, age) VALUES (1, 'Alice', 25);
@@ -769,7 +975,7 @@ INSERT INTO users (id, first_name, birthday, phone)
 
 - Always use `WHERE` to avoid updating all rows.
 
-Example:
+**Example**:
 
 ```sql
 UPDATE users SET age = 26 WHERE id = 1;
@@ -781,7 +987,7 @@ UPDATE users SET age = 26 WHERE id = 1;
 
 Use `DELETE FROM table_name WHERE <condition>` to remove rows.
 
-Example:
+**Example**:
 
 ```sql
 -- Simple deleted statement based on a conditon. It is also possible to delete in more complex ways but the simpler the better
@@ -792,21 +998,77 @@ DELETE FROM users WHERE age < 18;
 
 ## Window Functions 
 
-**Window functions** are special functions which allows us 
+**Window functions** are special functions which perform a calculation across a set of rows related to 
+the current row, called the **window**.
 
-- `PARTIAON BY`:
-- `ORDER BY`:
-- `ROW_NUMBER`:
-- `RANK`:
-- `DENSE_RANK`:
+- `PARTIAON BY`: divides the result into separate groups on which the function is going to act.
+
+- `ORDER BY`: inside **OVER()** determines the order in which the window function processes the rows.
+
+- `ROW_NUMBER`: assigns the row its current number as an extra column.
+
+- `RANK`: assigns a rank to each row based on the specified ordering. Rows with equal values receive the 
+same rank. The following rank is then skipped.
+
+- `DENSE_RANK`: similar to rank but does not skip ranks when both rows have the same value
+
+- `LEAD(column, index)`: allows a row to access a value from a following/s row/s within the window.
+
+- `LAG(column, index)`: allows a row to access a value from a previous row/s within the window.
+
+- `NTILE(number_of_buckets)`: distributes our data into a number of buckets. We use `ORDER BY` to control the distribution since 
+it happens sequentially.
+
+> PARTITION BY and ORDER BY are not window functions themselves. They are clauses of 
+the OVER() clause that define the window. Functions such as ROW_NUMBER(), RANK(), DENSE_RANK(), and LEAD() 
+are window functions.
+
+**Example**: 
+
+```sql 
+
+-- Number of students for each gender
+SELECT name, gender, ROW_NUMBER() OVER (PARTITION BY gender ORDER BY name) AS number FROM students;
+
+-- dense rank example
+SELECT name, score, DENSE_RANK() OVER (ORDER BY score DESC) AS ranking FROM students;
+
+--  Select names and gender plus occurrences and assign a popularity score
+SELECT
+    name,
+    gender,
+    total,
+    ROW_NUMBER() OVER (ORDER BY total DESC) AS popularity
+FROM (
+    SELECT
+        name,
+        gender,
+        COUNT(*) AS total
+    FROM students
+    GROUP BY name, gender
+) AS counts
+ORDER BY popularity;
+
+
+SELECT DISTINCT num AS ConsecutiveNums
+FROM (
+    SELECT
+        num,
+        LAG(num, 1) OVER (ORDER BY id) AS prev_num, -- access the previous num
+        LAG(num, 2) OVER (ORDER BY id) AS prev_prev_num -- access the pre-previous num
+    FROM Logs
+) AS t
+WHERE num = prev_num AND num = prev_prev_num;
+
+```
 
 --- 
 
 ## Nested Queries
 
-Query inside another query.
+A **nested query** is query inside another query. This allows for selection from specific tables generated by other queries.
 
-Example:
+**Example**:
 
 ```sql
 SELECT name 
@@ -816,6 +1078,12 @@ WHERE id IN (
     FROM orders 
     WHERE product_id = 10
 );
+
+-- Selecting the second highest salary and returning null if there is none. We achive the null with the outer MAX
+SELECT MAX(salary) AS SecondHighestSalary FROM (
+    SELECT salary, DENSE_RANK() OVER(ORDER BY salary DESC) as row_num FROM Employee
+) AS ranked
+WHERE row_num = 2;
 ```
 
 --- 
@@ -824,47 +1092,144 @@ WHERE id IN (
 
 **Stored procedures** are a way of storing common routines which consist on multiple queries which can take parameters. 
 
+- A query which assigns variables can not return a result set
+**Example**: 
+
 ```sql 
 CREATE OR ALTER PROCEDURE my_stored_procedure(@param1 datatype, @param2 datatype) 
-AS  $$
+AS $$
 BEGIN 
+    DECLARE @myvar INT;  
+    -- Query for assigning
+    SELECT @myvar = col2 FROM table_name WHERE col1 = @param1;
     SELECT col1, col2 FROM table_name WHERE col1 = @param1;
-END; $$;
+END;
+$$;
 
 -- The way it is called depends on the server
 CALL my_stored_procedure('migu', 'leo');
 EXEC my_stored_procedure('migu', 'leo');
+
+
+CREATE PROCEDURE transfer_money(
+    p_from INTEGER,
+    p_to INTEGER,
+    p_amount NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE accounts
+    SET balance = balance - p_amount
+    WHERE id = p_from;
+
+    UPDATE accounts
+    SET balance = balance + p_amount
+    WHERE id = p_to;
+END;
+$$;
+
+
+CREATE PROCEDURE withdraw(
+    p_account_id INTEGER,
+    p_amount NUMERIC
+    )
+LANGUAGE plpgsql
+AS $$
+    DECLARE current_balance NUMERIC;
+    BEGIN
+        SELECT balance INTO current_balance
+        FROM accounts
+        WHERE id = p_account_id;
+
+        IF current_balance >= p_amount THEN
+            UPDATE accounts
+            SET balance = balance - p_amount
+            WHERE id = p_account_id;
+        ELSE
+            RAISE EXCEPTION 'Insufficient funds';
+    END IF;
+END;
+$$;
 ```
 
 They can be useful to reduce the number of queries send by the application to the database, but they can become very complex making the development process 
 slower as well as being harder to version control.
 
---- 
-
-## Dynamic SQL
-
-**Dynamic SQL** is way of creating sql statements at runtime by passing the necessary parameters to a string which then gets executed. It 
-can be used in combination with stored procedures which already accept parameters to allow for even more flexibility.
-
-```sql 
-
-```
-
---- 
+---  
 
 ## SQL Functions 
 
-```sql 
+A **function** is a named operations which accepts parameter and returns a **value**.
 
+The general syntax is  
+
+```sql 
+CREATE [OR REPLACE] FUNCTION function_name(
+    parameter_name data_type,
+    ...
+)
+RETURNS return_type
+LANGUAGE language_name
+AS $$
+BEGIN
+    -- statements
+    RETURN value;
+END;
+$$;
+```
+
+Quite similar to stored procedures.
+
+**Example**: 
+
+```sql 
+CREATE FUNCTION get_product_price(
+    p_product_id INTEGER
+)
+RETURNS NUMERIC
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    product_price NUMERIC;
+BEGIN
+    SELECT price
+    INTO product_price
+    FROM products
+    WHERE id = p_product_id;
+
+    RETURN product_price;
+END;
+$$;
+```
+
+### Example With Window Functions 
+
+```sql 
+CREATE OR REPLACE FUNCTION NthHighestSalary(N INT)
+RETURNS TABLE (Salary INT)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT ranked.salary
+    FROM (
+        SELECT
+            Employee.salary,
+            DENSE_RANK() OVER (ORDER BY Employee.salary DESC) AS row_num
+        FROM Employee
+    ) AS ranked
+    WHERE row_num = N limit 1;
+END;
+$$ LANGUAGE plpgsql
 ```
 
 --- 
 
 ## Triggers
 
-Run automatically when an event occurs.
+**Triggers** run automatically when an event occurs.
 
-Example:
+**Example**:
 
 ```sql
 CREATE TRIGGER update_stock
@@ -875,16 +1240,6 @@ BEGIN
     SET stock = stock - 1 
     WHERE id = NEW.product_id;
 END;
-```
-
---- 
-
-## Updating 
-
-To update we specify the table the column and under which condition we want to update.
-
-```sql
-UPDATE accounts SET balance = balance - 100 WHERE id = 1;
 ```
 
 --- 
@@ -911,16 +1266,16 @@ GROUP BY id
 ORDER BY id
 ```
 
-The oringal table just had month, id an revenue, but we instead return a new table with id, and the revenue of each month.
+The original table just had month, id an revenue, but we instead return a new table with id, and the revenue of each month.
 
 --- 
 
 ## Transactions
 
-The transactions are a way of avoding anomalies inside the database by adding the features of `commit` and `rollback`. A
+**Transactions** are a way of avoding anomalies inside the database by adding the features of `commit` and `rollback`. A
 transaction woks under the philosophy of all or nothing.
 
-Example:
+**Example**:
 
 ```sql
 START TRANSACTION;
@@ -1075,7 +1430,74 @@ There is also the Min-Max notation which is $(min, max)$
 
 ---
 
-## Setting Up Postgres (In Arch)
+## Views 
+
+A **view** is  a query which we store in a variable and which can be handled as a table but it not a table.
+They are basically, **virtual tables**.
+
+Views which include: aggregate functions,`DISTINC`, `GROUP BY`, `HAVING`, `UNION/UNION ALL` and sub-queries in the select list are **not updatable
+or insertable**
+
+**Example**: 
+
+```sql 
+CREATE VIEW full_employee_departments AS
+    SELECT c.emp_no, first_name, last_name, gender, hire_date, dept_name 
+        FROM employees e 
+            JOIN current_department_employee c ON e,emp_no = c.emp_no 
+                JOIN departments d on c.dept_no = d.dept_no;
+
+SELECT first_name, last_name FROM full_employee_departments;
+```
+
+---
+
+## Indexes
+
+**Indexes** are used to speed up reads at the cost of slower writes. Internally like a B-tree.
+They can be categorized into the following types: 
+
+- **Clustered**: Sorts the table's data by the key. Default with primary keys.
+
+- **Non-clustered**: Separate structure with pointers to rows.
+
+- **Columnstore**: Column-based storage for big analytical tables.
+
+- **Unique**: enforces unique values. 
+
+- **Filtered**: Index on a subset satisfying a condition. 
+
+- **Composite**: Uses multiple columns.
+
+**Example**: 
+
+```sql 
+-- Clustered
+CREATE CLUSTERED INDEX idx_customers_id ON customers (id);
+
+-- Non-clustered
+CREATE NONCLUSTERED INDEX idx_customers_lastname ON customers (last_name);
+
+-- Composite
+CREATE INDEX idx_country_score ON customers (country, score);
+
+-- Columnstore
+CREATE CLUSTERED COLUMNSTORE INDEX idx_orders_cs ON orders;
+
+-- Unique / Filtered
+CREATE UNIQUE NONCLUSTERED INDEX idx_unique_email ON customers (email);
+CREATE NONCLUSTERED INDEX idx_us_customers ON customers (country) WHERE country = 'USA';
+
+-- Drop
+DROP INDEX idx_customers_lastname ON customers;
+```
+
+--- 
+
+
+## Setting Up Postgres
+
+Originally for arch, but it works similar on others systems. 
 
 1. Install Postgres
 
@@ -1117,33 +1539,231 @@ CREATE USER myuser WITH PASSWORD 'mypassword';
 CREATE DATABASE mydatabase OWNER myuser;
 ```
 
---- 
 
-## Views 
+### Fedora 
 
-A **view** is  a query which we store in a variable and which can be handled as a table but it not a table.
-They are basically, **virtual tables**.
+```bash 
 
-Views which include: aggregate functions,`DISTINC`, `GROUP BY`, `HAVING`, `UNION/UNION ALL` and sub-queries in the select list are **not updatable
-or insertable**
+sudo dnf install postgresql-server postgresql-contrib
 
-Example: 
+sudo systemctl enable --now postgresql
 
-```sql 
-CREATE VIEW full_employee_departments AS
-    SELECT c.emp_no, first_name, last_name, gender, hire_date, dept_name 
-        FROM employees e 
-            JOIN current_department_employee c ON e,emp_no = c.emp_no 
-                JOIN departments d on c.dept_no = d.dept_no;
+sudo postgresql-setup --initdb
 
-SELECT first_name, last_name FROM full_employee_departments;
+sudo systemctl restart postgresql
+
+sudo -u postgres psql
+
+sudo -u postgres createuser --interactive
+
+createdb mydatabase
 ```
 
----
+--- 
 
 ## Migration Scripts 
 
 A **migration script** is series of step written in `SQL` used for an update of data-base either by adding a new table which also needs to be filled with values or a complete 
 transfer of data due to a new schema.
+
+---
+
+## PostgreSQL 
+
+Is a concrete (and best) implementation of an SQL server which can handle both relational and non-relational models.
+
+Some important details are: 
+
+- The data is stored in the **database cluster**.
+
+- Every table in stored into heap files which are roughly 8kb in size.
+
+- Data is compressed. 
+
+- It features atomicity.
+
+### CLI Commands
+
+- **Create db**:
+
+```bash 
+createdb mydatabase
+```
+
+- **Connect to the database**:
+
+```bash
+psql <name>
+```
+
+- **List databases**:
+
+```bash
+select * from <database> | \l
+```
+
+- **List tables**:
+
+```bash
+\dt
+```
+
+- **Detail of a table** 
+
+```bash 
+\d+ table_name
+```
+
+- **List views** 
+
+```bash 
+\dv 
+```
+
+- **List schemas** 
+
+```bash 
+\dn
+```
+
+- **List functions** 
+
+```bash 
+\df
+```
+
+- **Cleaning**
+
+```bash 
+VACUUM ANALYZE
+```
+
+- **Create User**:
+
+```
+create user <name> with password '....'
+```
+
+- **Help**:
+
+```bash 
+\?
+```
+
+- **List Users**:
+
+```bash 
+\du 
+```
+or
+
+```sql 
+SELECT * FROM pg_user;
+```
+
+- **Show Connection Information**: 
+
+```bash 
+\conninf
+```
+
+- **Update Password**: 
+
+```bash 
+\password <user_name>
+```
+
+or 
+
+```sql 
+ALTER USER username WITH PASSWORD 'new_password';
+```
+
+- **Check Current User**: 
+
+```sql 
+SELECT current_user;   -- user used for permission checks
+SELECT session_user;   -- user who originally connected
+```
+
+
+--- 
+
+## Postgres Authentication Troubleshooting
+
+If you can not connect to your database except via the command line or the command
+
+```bash 
+psql -h localhost -U user_name -d database_name
+```
+
+fails, the following can help.
+
+It is a `pg_hba.conf` issue, not a problem with your credentials. When you use `-h localhost`, 
+psql connects over TCP, and your server's config has those connections set to `ident` authentication. 
+That method asks an ident service which OS user is connecting and requires it to match 
+the database user. It usually fails because there's no ident server running or the names 
+don't match (the OS user isn't `miguel`).
+
+To fix the issue we can do the following: 
+
+1. Find the config file:
+
+```bash
+sudo -u postgres psql -c "SHOW hba_file;"
+```
+
+2. Edit it and find the lines for `127.0.0.1/32` and `::1/128`:
+
+```txt
+host    all    all    127.0.0.1/32    ident
+host    all    all    ::1/128         ident
+```
+Change `ident` to `scram-sha-256` (or `md5` if your server is older or your passwords were set with md5):
+```
+host    all    all    127.0.0.1/32    scram-sha-256
+host    all    all    ::1/128         scram-sha-256
+```
+
+3. Make sure `miguel` has a password:
+
+```bash
+sudo -u postgres psql -c "ALTER USER miguel WITH PASSWORD 'yourpassword';"
+```
+
+4. Reload the config:
+
+```bash
+sudo systemctl reload postgresql
+```
+
+5. Try again:
+
+```bash
+psql -h localhost -U miguel -d mediagux
+```
+
+**Quick alternative:** if the OS user `miguel` exists and matches the database role, you can skip TCP and 
+use the Unix socket, which normally uses `peer` authentication:
+
+```bash
+psql -U miguel -d mediagux
+```
+
+If you set the password under `md5` before and switch to `scram-sha-256`, re-run 
+the `ALTER USER` so the password is stored in the right format.
+
+--- 
+
+## Setting Up Connections 
+
+If you are not using vscode or other GUI tools, you can use nvim with its dedicated family of plugins for databases like: 
+`vim-dadbob`. To set up a connection using this plugin run as **command inside neovim**: 
+
+```bash 
+DBUI postgresql://USERNAME:PASSWORD@localhost:5432/DATABASE
+```
+
+This connection can be saved to be used in the future.
 
 ---

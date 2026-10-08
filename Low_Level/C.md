@@ -25,6 +25,9 @@ These are commonly used header files inside `C` projects
 #include "./my_custom_header.h"
 ```
 
+- `errno.h`:
+
+
 ## Numbers in C
 
 In the `C` programming language, numbers in bases other than 10 can be used by adding a prefix to the number's start.
@@ -224,11 +227,11 @@ char *(*(*x[8][8])())[10]; // x is a 2D array of pointers to functions that retu
 
 ### Strings and Char Buffers in C
 
-In C, strings are represented as arrays of characters terminated by a null character ('\0'). Unlike higher-level languages, C does not have a native
+In C, **strings** are represented as arrays of characters terminated by a null character (`'\0'`). Unlike higher-level languages, C does not have a native
 string type—just character arrays.
 
 ```c
-char str1[] = "Hello";       // Size is automatically 6 (5 + null terminator)
+char str1[] = "Hello";       // Size is automatically 6 (5 + null terminator) (read only)
 
 char str2[10] = "Hi";        // Manually specified size, with extra space (will be null-terminated)
 
@@ -348,7 +351,7 @@ void foo(int* __restrict a, int* __restrict b) {
 
 ## Bit Manipulation
 
-Bit manipulation is a powerful technique in systems programming that allows you to perform operations at the bit level. This can be useful for
+**Bit manipulation** is a powerful technique in systems programming that allows you to perform operations at the bit level. This can be useful for
 optimizing performance, reducing memory usage, and implementing low-level protocols.
 
 Example of bit manipulation in C:

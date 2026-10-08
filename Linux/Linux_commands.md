@@ -1071,15 +1071,66 @@
     - `<file>` *(required)*: File or directory to send.
   - **Example Usage**: `wormhole send archive.tar.gz` / `wormhole send ~/docs/`
 
+- `curl [flags] <url...>`
+  - **Function**: Transfers data to or from a server using a wide range of protocols (HTTP, HTTPS, FTP, etc.); commonly used to make web requests and download files.
+  - **Flags**:
+    - `-o <file>`: Write output to a file instead of stdout.
+    - `-O`: Save the file using its remote name.
+    - `-L`: Follow HTTP redirects.
+    - `-X <method>`: Specify the request method (e.g., `GET`, `POST`, `PUT`, `DELETE`).
+    - `-H <header>`: Add a custom request header.
+    - `-d <data>`: Send data in a `POST` request body.
+    - `-F <name=content>`: Send multipart/form-data (file uploads).
+    - `-u <user:pass>`: Provide credentials for authentication.
+    - `-s`: Silent mode — hide progress and error messages.
+    - `-i`: Include the response headers in the output.
+    - `-I`: Fetch the response headers only (HEAD request).
+    - `-k`: Allow insecure connections (skip SSL certificate verification).
+  - **Parameters**:
+    - `<url...>` *(required)*: One or more URLs to send the request to.
+  - **Example Usage**: `curl https://example.com` / `curl -O https://example.com/file.zip` / `curl -X POST -H "Content-Type: application/json" -d '{"name":"john"}' https://api.example.com/users`
+
 --- 
 
 ## Text Processing 
 
-- `sed `
+- `sed [flags] '<script>' [file...]`
+  - **Function**: Stream editor — performs text transformations (substitution, deletion, insertion) on input line by line.
+  - **Flags**:
+    - `-i`: Edit files in place (optionally `-i.bak` to create a backup).
+    - `-n`: Suppress automatic printing; print only with the `p` command.
+    - `-e <script>`: Add another editing command to run.
+    - `-E` / `-r`: Use extended regular expressions.
+    - `-f <file>`: Read the sed script from a file.
+  - **Parameters**:
+    - `<script>` *(required)*: sed command(s), e.g., `s/old/new/g`.
+    - `[file...]` *(optional)*: Input file(s); reads from stdin if omitted.
+  - **Example Usage**: `sed 's/foo/bar/g' file.txt` / `sed -n '5,10p' log.txt` / `sed -i '/^#/d' config.conf`
 
-- `tr`
+- `tr [flags] <set1> [set2]`
+  - **Function**: Translates, squeezes, or deletes characters read from stdin, writing the result to stdout.
+  - **Flags**:
+    - `-d`: Delete characters found in `set1`.
+    - `-s`: Squeeze repeated characters in `set1` into a single character.
+    - `-c`: Use the complement of `set1`.
+    - `-t`: Truncate `set1` to the length of `set2`.
+  - **Parameters**:
+    - `<set1>` *(required)*: Set of characters to translate from.
+    - `[set2]` *(optional)*: Set of characters to translate to.
+  - **Example Usage**: `echo "hello" | tr 'a-z' 'A-Z'` / `tr -d '0-9' < file.txt` / `tr -s ' ' < file.txt`
 
-- `uniq`
+- `uniq [flags] [input] [output]`
+  - **Function**: Filters out or reports adjacent duplicate lines (input should usually be sorted first).
+  - **Flags**:
+    - `-c`: Prefix each line with the number of occurrences.
+    - `-d`: Print only duplicated lines.
+    - `-u`: Print only unique (non-duplicated) lines.
+    - `-i`: Case-insensitive comparison.
+    - `-f <n>`: Skip the first `n` fields when comparing.
+  - **Parameters**:
+    - `[input]` *(optional)*: Input file; reads from stdin if omitted.
+    - `[output]` *(optional)*: Output file; writes to stdout if omitted.
+  - **Example Usage**: `sort names.txt | uniq` / `sort access.log | uniq -c | sort -rn` / `uniq -d entries.txt`
 
 - `grep [flags] <pattern> [file...]`
   - **Function**: Searches for lines matching a pattern in files or stdin.
