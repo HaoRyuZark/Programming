@@ -1,8 +1,130 @@
-# Web Security 
+# Cyber-Security 
 
-In this reference we will list common web security vulnerabilities and best practices to mitigate them.
+In this reference we will list common web, and other kinds of security vulnerabilities and best practices to mitigate them.
 
 > DISCLAIMER: A lot of this attacks could be prevented just by avoiding technical debt and validating user input :D
+
+--- 
+
+## Goals Cyber-Security 
+
+- **Confidentiality**: Ensuring that sensitive information is only accessible to authorized users.
+
+- **Integrity**: Ensuring that data is not tampered with or altered by unauthorized users.
+
+- **Availability**: Ensuring that web applications and services are available and accessible to authorized users when needed.
+
+--- 
+
+## Security & Safety
+
+**Security** refers to the protection of systems, networks, and data from unauthorized access, use, disclosure, disruption, modification, or destruction.
+
+**Safety** refers to the protection of people and property from harm or danger. While security focuses on protecting digital assets, safety focuses on 
+protecting physical assets and human life.
+
+When designing a system, one should consider both and stress-test the system for both domains to ensure that it is secure and safe for users.
+
+--- 
+
+## Plan-Do-Check-Act (PDCA) Cycle
+
+The **PDCA cycle** is a framework used in cyber-security to continously improve the security posture of an organization.
+
+- **Plan**: Identify security risks and develop a plan to mitigate them.
+
+- **Do**: Implement the security plan and put security controls in place.
+
+- **Check**: Monitor and evaluate the effectiveness of the implemented controls. 
+
+- **Act**: Take corrective actions based on the results of the evaluation and make improvements to the security plan.
+
+> A similar cycle can be found for software-development in SCRUM.
+
+--- 
+
+## Security Management
+
+**Security management** refers to the process of identifying, controlling and mitigating security risk in a organization and its systems. 
+
+There are several framework and tolls which can be used to automate some checks in this process, but in general a dedicated security team internal or 
+external to the organization is recomeded to ensure the security of the firm and its customers.
+
+--- 
+
+## Define-Measure-Analyze-Improve-Control (DMAIC) Cycle
+
+The **DMAIC cycle** is data-driven improvement cycle used for optimizing and stabilizing business process and designs.
+
+- **Define**: Identify and define the business problem.
+
+- **Measure**: Collect data and measure the current performance of the system; does the data show the problem?
+
+- **Analyze**: Analyze the data to identify the root cause of the problem. This step can include statistical analysis, exploratory data analysis, 
+ML, etc.
+
+- **Improve**: In this step, we identify, test and implement a solution to the problem. Use the **PDCA cycle** for this step.
+
+- **Control**: Here we integrate the changes into the system and monitor for the effectiveness of the solution. We also can perform more in-depth analysis to 
+ensure that our solution in effective and not a temporary fix.
+
+> This framework has the criticism that it is not effective for communication since it is very data-driven and does not promote direct communication with 
+clients, yet this can be easily integrated.
+
+While the PDCA-cycle is more focused on the implementation step, this cycle used as a meta-framework for development, 
+and operation of the system.
+
+--- 
+
+## Security By Design
+
+**Security by design** is principle which incorporates security into the designing and architecture process of a 
+system. This is done by applying best practices from the very conception of the system and one takes preventive measurements 
+for the entire life-cycle of the system.
+
+### Principles 
+
+- **Risk assestment**: Identify potential security risks and vulnerabilities in the system and prioritize 
+them based on their impact and likelihood of occurrence.
+
+- **Security requierements**: Define security requirements for the system based on the identified risks and vulnerabilities.
+
+- **Architecture and design**: Incorporate security into the system architecture and design, including secure coding practices,
+encryption, access controls, and authentication mechanisms. Also plan for future growth.
+
+- **Coding practices**: Implement practices for secure, maintainable, readable, scalable and testable code. This includes code reviews, 
+static analysis, and testing for security vulnerabilities.
+
+- **Security testing**: Conduct security testing throughout the development process, including penetration testing, vulnerability scanning, and code reviews.
+
+- **Security monitoring**: Implement security monitoring and logging to detect and respond to security incidents in a timely manner.
+
+- **Security awareness and training**: Provide security awareness and training to developers, testers, and other stakeholders to ensure that they understand 
+the importance of security and how to implement it effectively.
+
+--- 
+
+## The Security Development Lifecycle (SDL)
+
+The **security development lifecycle (SDL)** is a software development process that helps developers build more secure 
+software and address security compliance requirements while reducing development cost. It is a process that incorporates 
+security into every phase of the software development life-cycle, from planning and design to implementation and testing.
+
+- **Training**: Provide training to developers and other stakeholders on secure coding practices, threat modeling, and security testing.
+
+- **Requirements**: Define security requirements for the software based on the identified risks and vulnerabilities.
+
+- **Design**: Incorporate security into the software architecture and design, including secure coding practices, encryption, access controls, and authentication mechanisms.
+Opt for analyzing attacks and their impact on the system.
+
+- **Coding**: Implement secure coding practices, including input validation, output encoding, and error handling. Use static analysis tools to identify 
+security vulnerabilities in the code.
+
+- **Testing**: Conduct both functionality and security testing as well as reviews. 
+
+- **Release**: Create concrete release and emergency plans for the software deployment. Review the final version and archive the versions.
+
+- **Reaction**: Monitor the system and act accordingly.
 
 --- 
 
@@ -354,4 +476,30 @@ For example, an attacker could create a malicious website that contains a hidden
 attacker abuses the stored cookie in the user's browser to perform actions on the web application without the user's knowledge or consent.
 
 ---
+
+## DNS Security 
+
+
+**DNS** is a critical service for the internet infrastructure based on **UDP**, hence is 
+both a common target for attacks as well as a well suited attack vector. 
+
+
+### ID Hacking 
+
+We can pretend to be a legitimate DNS servers if we know the servers ID and manage the computer 
+of the victim to e redirected to out machine. 
+
+
+### DNS Spoofing
+
+Similar to the last one, we use our machine to pretend to be a DNS server using the ID. 
+
+
+### DNS Cache Poisoning 
+
+In this case, we try to corrupt the cache of a legitimate DNS server.
+
+--- 
+
+
 

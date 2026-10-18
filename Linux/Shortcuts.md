@@ -4,8 +4,6 @@
 
 ## Kitty
 
---- 
-
 
 | Shortcut | Action |
 |----------|--------|
@@ -41,7 +39,27 @@
 
 ----
 
+## Shell Hot Keys 
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl + c` | Kill current process |
+| `Ctrl + z` | Suspend current process |
+|`Ctrl + k` | Exit shell | 
+| `Ctrl + l` | Clear terminal |
+| `Ctrl + a`| Move cursor to the beginning of the line |
+| `Ctrl + e` | Move cursor to the end of the line |
+| `Ctrl + u` | Delete from cursor to the beginning of the line |
+| `CtrL + f` | Move cursor forward one character |
+| `Ctrl + b` | Move cursor backward one character |
+| `Alt + f` | Move cursor forward one word |
+| `Alt + b` | Move cursor backward one word |
+| `Ctrl + x CtrL + e` | Open the current command in the default editor |
+
+--- 
+
 ## Browser
+
 
 | Shortcut | Action |
 |----------|--------|

@@ -798,9 +798,13 @@ sudo pacman -Syu --needed \
   tmux fzf bat lsd tldr lazygit thunar autotiling starship \
   docker kubectl pyright bash-language-server postgresql \
   wine w3m polkit lxqt-policykit seahorse pkgconf openssl \ 
-  prettier
+  prettier intel-ucode blueman
 ```
 
+### Bluetooth 
+
+- **blueman**: is a GTK based bluetooth manager.
+ 
 ### Typesetting
 
 - **biber**: bibliography backend for BibLaTeX
@@ -829,6 +833,11 @@ sudo pacman -Syu --needed \
 
 - **neovim**: modern Vim
 - **vi**: minimal POSIX vi fallback
+
+### Microcode Updates 
+
+- **intel-ucode**: for intel systems. 
+- **amd-ucode**: for amd systems. 
 
 ### Build and languages
 
@@ -987,9 +996,17 @@ clone the necessary repositories from github or use stow.
 - `cd dotfiles`
 - `stow */`
 
-### Stow Functionality
+### Stow
 
-- **First Setup**: `stow -D */` to remove the stow links and `stow */` to create the stow links.
+**Stow** is software which allows us create symlinks from the folder where we use `stow` in the exact same structure they 
+are organized.
+
+- **Create Symlinks**: `stow .` inside the `dotfiles` directory. This is done for the first setup as well. Note that 
+the original files should not exists in the original location anymore.
+
+- **Remove Symlinks**: `stow -D */` to remove the stow links. 
+
+- **Create `stow */` to create the stow links.
 
 - **Adding files to stow and updating**:
 
@@ -2065,3 +2082,242 @@ Essential commands:
 
 - **List all active services** `systemctl list-units --type=service`
 
+--- 
+
+## Printers 
+
+To set up printer just install and enable the `cups` packages with the following lines: 
+
+```bash 
+sudo pacman -S cups cups-pdf system-config-printer
+sudo systemctl enable --now cups
+```
+
+For network printer auto-discovery also install `Avahi`
+
+```bash 
+sudo pacman -S avahi nss-mdns
+sudo systemctl enable --now avahi-daemon
+```
+
+--- 
+
+## Firewall 
+
+Just run the following: 
+
+```bash 
+sudo pacman -S ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw enable
+sudo systemctl enable ufw
+```
+
+Check with 
+
+```bash 
+sudo ufw status verbose
+```
+
+For a GUI run 
+
+```bash 
+sudo pacman -S gufw
+```
+
+--- 
+
+## Flatpak
+
+`flatpak` is a package-management and application-distribution system primarily designed for desktop applications. Unlike DNF, Flatpak applications run inside 
+a sandbox and generally use their own runtime and dependency environment.
+
+To install and setup
+
+```bash 
+sudo pacman -S flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+```
+
+### Commands 
+
+- `flatpak [global-options] <command> [arguments]`
+
+  - **Function**: Manages Flatpak applications, runtimes, repositories, permissions, and updates.
+
+- **Common Commands**:
+
+    - `install`: Install an application or runtime.
+    - `uninstall`: Remove an application or runtime.
+    - `update`: Update installed applications and runtimes.
+    - `search`: Search configured remotes.
+    - `list`: List installed applications and runtimes.
+    - `info`: Display application or runtime information.
+    - `run`: Launch an application.
+    - `remote-list`: List configured repositories.
+    - `remote-add`: Add a repository.
+    - `remote-delete`: Remove a repository.
+    - `override`: Modify sandbox permissions.
+    - `repair`: Repair the local Flatpak installation.
+
+  - **Example Usage**: `flatpak search firefox`
+
+- `flatpak search <term>`
+
+  - **Function**: Searches configured Flatpak repositories for applications and runtimes.
+
+  - **Parameters**:
+    - `<term>` *(required)*: Search term.
+
+  - **Example Usage**: `flatpak search firefox`
+
+- `flatpak install [flags] <remote> <application>`
+
+  - **Function**: Installs a Flatpak application or runtime.
+ 
+ - **Flags**:
+    - `-u`: Install for the current user rather than system-wide.
+    - `--user`: Explicitly install for the current user.
+    - `-y`: Automatically confirm installation.
+
+  - **Parameters**:
+    - `<remote>`: Flatpak repository from which the package should be installed.
+    - `<application>`: Application or runtime ID.
+
+  - **Example Usage**:
+    - `flatpak install flathub org.mozilla.firefox`
+    - `flatpak install --user flathub org.mozilla.firefox`
+
+- `flatpak uninstall [flags] <application>`
+
+  - **Function**: Removes a Flatpak application or runtime.
+
+  - **Flags**:
+    - `--user`: Operate on the per-user installation.
+    - `--delete-data`: Remove the application's user data as well.
+    - `--unused`: Remove unused runtimes and extensions.
+ 
+  - **Parameters**:
+    - `<application>` *(required)*: Application ID.
+
+  - **Example Usage**:
+    - `flatpak uninstall org.mozilla.firefox`
+    - `flatpak uninstall --delete-data org.mozilla.firefox`
+    - `flatpak uninstall --unused`
+
+- `flatpak update [application]`
+
+  - **Function**: Updates installed Flatpak applications and runtimes.
+  - **Parameters**:
+
+    - `[application]` *(optional)*: Specific application to update.
+
+  - **Example Usage**:
+    - `flatpak update`
+    - `flatpak update org.mozilla.firefox`
+
+- `flatpak list [flags]`
+
+  - **Function**: Lists installed Flatpak applications and runtimes.
+
+  - **Flags**:
+    - `--app`: Show applications only.
+    - `--runtime`: Show runtimes only.
+    - `--user`: Show user-installed objects.
+    - `--system`: Show system-installed objects.
+  
+  - **Example Usage**:
+    - `flatpak list`
+    - `flatpak list --app`
+    - `flatpak list --runtime`
+
+- `flatpak info <application>`
+
+  - **Function**: Displays detailed information about an installed application or runtime.
+  - **Parameters**:
+
+    - `<application>` *(required)*: Application ID.
+  - **Example Usage**: `flatpak info org.mozilla.firefox`
+
+- `flatpak run <application>`
+
+  - **Function**: Launches a Flatpak application.
+
+  - **Parameters**:
+    - `<application>` *(required)*: Application ID.
+ 
+  - **Example Usage**: `flatpak run org.mozilla.firefox`
+
+- `flatpak remote-list`
+
+  - **Function**: Lists configured Flatpak repositories (remotes).
+
+  - **Example Usage**: `flatpak remote-list`
+
+- `flatpak remote-add [flags] <name> <url>`
+
+  - **Function**: Adds a Flatpak repository.
+
+  - **Flags**:
+    - `--if-not-exists`: Do nothing if the remote already exists.
+    - `--user`: Add the remote for the current user only.
+
+  - **Parameters**:
+    - `<name>`: Local name assigned to the remote.
+    - `<url>`: Repository URL or `.flatpakrepo` source.
+
+  - **Example Usage**: `flatpak remote-add --if-not-exists flathub <repository-url>`
+
+- `flatpak override [flags] <application>`
+
+  - **Function**: Changes the sandbox permissions granted to an application.
+
+  - **Common Options**:
+    - `--filesystem=<path>`: Grant access to a filesystem location.
+    - `--device=<device>`: Grant access to a device.
+    - `--share=<type>`: Grant access to a shared resource such as network or IPC.
+    - `--socket=<type>`: Grant access to a specific socket.
+    - `--show`: Display current overrides.
+    - `--reset`: Reset overrides to their defaults.
+  
+  - **Example Usage**:
+    - `flatpak override --show org.mozilla.firefox`
+    - `flatpak override --filesystem=home org.mozilla.firefox`
+
+- `flatpak repair [flags]`
+
+  - **Function**: Repairs the local Flatpak installation by checking and fixing invalid or incomplete objects.
+
+  - **Flags**:
+    - `--user`: Repair the per-user installation.
+    - `--system`: Repair the system installation.
+ 
+  - **Example Usage**: `sudo flatpak repair`
+
+--- 
+
+## Power Management for Laptops 
+
+These are programs which automatically manage the power for laptops 
+
+```bash 
+sudo pacman -S tlp tlp-rdw
+sudo systemctl enable --now tlp
+sudo systemctl mask systemd-rfkill.service systemd-rfkill.socket
+```
+
+If after running 
+
+```bash 
+sudo tlp-stat -b
+```
+
+the model tells you to install `acpi_call` then proceed to 
+
+```bash 
+sudo pacman -S acpi_call
+```
+
+--- 

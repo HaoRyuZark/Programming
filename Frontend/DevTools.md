@@ -289,7 +289,7 @@ navigator.serviceWorker.controller
 
 // Inspect all iframes and their origins
 $$("iframe").map(f => ({ src: f.src, origin: new URL(f.src).origin }))
-
+// 
 // Test for open redirects — check where redirect parameters point
 new URLSearchParams(location.search).get("redirect")
 ```

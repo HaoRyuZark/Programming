@@ -1,4 +1,8 @@
 #!/usr/bin/env/bash  
+
+# to run any custom bash script we first need to make it executable via 
+# chmod +x file.sh or +ux for a user and group execution permission. 
+
 set -euo pipefail # this lines set bash to strict mode. Means that if errors occurrs then 
 # execution of the script is aborted
 # e for exit on error 
@@ -20,9 +24,14 @@ set -euo pipefail # this lines set bash to strict mode. Means that if errors occ
 # this is the header for the interpreter to use
 echo Hello World!           # print
 
+NAME=`whoami`                # command substitution with backticks (old syntax)
+
+echo "$NAME"
+
 #Variables
-MY_VAR=Migu             #Capital camel Case for variables. No spaces between name and equal sign
-echo Hello $MY_VAR   # $ for referencing Variables
+MY_VAR=Migu             # Capital camel Case for variables. No spaces between name and equal sign
+echo Hello $MY_VAR      # $ for referencing Variables
+echo Hello ${MY_VAR}    # $ for referencing Variables with nested functionality
 
 # Printing the a variable in a string 
 NAME="Migu"
@@ -38,24 +47,31 @@ echo $FIRST_NAME
 # Postional arguments
 echo Say $1 $2   # Placeholders for arguments entered from the command line
 # we can also create variables for the arguments 
-FIRST = $1
+FIRST=$1
 
 # Subshell 
 # This feature allows us to run commands our scripts without actually having the effects in the main 
 # enviroment
 # Example: Using command output as values
-user = $(whoami)
+USER=$(whoami)
 echo $user
+
+# Command substitution vs Process substitution vs Subshell
+#
+# Proces substitution: <(command) or >(command)  # this is used to treat the output of a command as a file and then compare them.
+# Subshell: (command)  # this is used to run commands in a subshell without actually having the effects in the main enviroment.
+# Command substitution: $(command)  # this is used to use the output of a command as a value in a variable or in a command.
 
 # Example: Basic
 cd ; pwd # changes the directory and the prints the name  
 (cd ..; pwd) # does not actually change the directory 
 
 # Example: Arithmetic
-echo ((4 + 4))
+echo $((4 + 4))
 
 # Example:Process substitution 
-diff <(ls ./v1) < (ls ./v2) # treating the ouput of a command as a file and then comparing them
+# we treat the output of a command as a file and then compare them.
+diff < $(ls ./v1) < $(ls ./v2) # treating the ouput of a command as a file and then comparing them
 
 # Piping
 #This is used for redirecting output of a programm to anoter as input, parameter, etc.
@@ -75,9 +91,10 @@ diff <(ls ./v1) < (ls ./v2) # treating the ouput of a command as a file and then
 #/$: echo $?
 
 #if elif else
-if [${1,,} = herbert ]; then  #take a positional argument (first) {,,} for ignoring case in the test expression
+# in between [[ ]] we need to use spaces for the test expression.
+if [ ${1,,}=herbert ]; then  #take a positional argument (first) {,,} for ignoring case in the test expression
         echo "Moin"
-elif [${1,,} = help ]; then   ##same
+elif [ ${1,,}=help ]; then   ##same
         echo "Help needed"
 else 
     echo "Sike"
@@ -87,7 +104,7 @@ fi
 # 0 for succes and anything else is a failure 
 
 # Conditionals 
-#
+# [[ ]]
 # String comparasion 
 VAL="a"
 [[ "$VAL" == "a" ]]
@@ -123,12 +140,12 @@ SECOND_NAME="Alice"
 
 echo "--- Internal Logical Operators with [[ ... ]] ---"
 
-# Internal AND (&&): Both conditions must be true
+# Internal AND (&& / -a): Both conditions must be true
 if [[ "John" == "John" && "$SECOND_NAME" == "Alice" ]]; then
     echo "Internal AND: Both names match."
 fi
 
-# Internal OR (||): At least one condition must be true
+# Internal OR (|| / -o): At least one condition must be true
 if [[ "Bob" == "Charlie" || "$SECOND_NAME" == "Alice" ]]; then
     echo "Internal OR: At least one condition is true."
 fi
@@ -153,24 +170,62 @@ esac
 # Arrays
 MY_LIST=(one two three)
 
-echo $MY_LIST  #print first
-echo ${MY_LIST[@]} #print all
-echo ${MY_LIST[0]} #print at index
+echo $MY_LIST      # print first only
+echo "${MY_LIST[@]}" # print all
+echo ${MY_LIST[0]} # print at index
 
 # For Loops
-for item in ${MY_LIST[@]}; do echo -n $item | wc -c; done
-for ((i = 0; i < 10 i++)); do echo "$i"; done
-for i in {1..10}; do echo "$i"; done
-for item in ./content/*.md; do echo "$item"; done # with pattern matching
-for i in $(ls); do echo "$i"; done # command result
+
+# Loop through the array
+for item in "${MY_LIST[@]}"; do 
+    echo -n $item | wc -c; 
+done
+
+# C-style
+for ((i=0; i < 10; i++)); do 
+    echo "$i"; 
+done
+
+# Range
+for i in {1..10}; do 
+    echo "$i"; 
+done
+
+# Pattern matching
+for item in ./content/*.md; do 
+    echo "$item"; 
+done # with pattern matching
+
+# Loop through the output of a command
+for i in $(globs); do 
+    echo "$i"; 
+done # command result
+
+# While loops 
+
+while read line; do 
+    echo "$line"; 
+done < file.txt # read from file
+
+while [[ $COUNT -lt 10 ]]; do 
+    echo "$COUNT"; 
+    ((COUNT++)); 
+done # while loop with condition
+
+# Multiple files 
+# Bash has no concepts of namespaces or modules. we want to 
+# use other scripts we call them with the source command or the dot command `./other_script.sh` or `source other_script.sh`.
+# we can also source the script by prefixig with a dot and a space `. other_script.sh` (put all the contents of the other script 
+# into the current script).
+
 
 # Functions
-showuptime(){
+# functions do not have parameters properly we just pass them as positional arguments.
+function showuptime() {
     echo Hello $1
-    local up=$(uptime - p  | cut -c4-)
+    local up=$(uptime - p  | cut -c4-) # declaring local var
     local since=$(uptime -s)
     cat << EOF
-
 ---
 This machine has been up for ${up}
 It has been running since ${since}
@@ -179,10 +234,7 @@ EOF
 }
 
 
-showuptime Herbert #function plus parameter
-
-# Local Variables
-local MY_VAR_2 "AHHHHH"
+showuptime Herbert #function plus "parameter"
 
 # AWK
 awk -F,'{print $1}' test.txt #get firt word after coma

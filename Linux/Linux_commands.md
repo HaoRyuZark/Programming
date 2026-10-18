@@ -281,6 +281,17 @@
     - `[file]` *(optional)*: File to view.
   - **Example Usage**: `more /etc/hosts`
 
+- `bat [flags] [file]`
+  - **Function**: A modern alternative to `cat` with syntax highlighting and Git integration.
+  - **Flags**:
+    - `--style <style>`: Choose output style (e.g., `plain`, `grid`, `header`).
+    - `--color <when>`: Control color output (`always`, `auto`, `never`).
+    - `--line-range <start>:<end>`: Show only lines from `start` to `end`.
+    - `--paging <when>`: Control paging behavior (`always`, `auto`, `never`).
+  - **Parameters**:
+    - `[file]` *(optional)*: File to display; reads from stdin if omitted.
+  - **Example Usage**: `bat script.py` / `bat --style=grid README.md`
+
 - `head [flags] [file]`
   - **Function**: Displays the first lines of a file (default: 10).
   - **Flags**:
@@ -515,6 +526,19 @@
 ---
 
 ## Miscellaneous
+
+- `compgen [flags] [word]`
+  - **Function**: Generates possible completions for a given word or command (used in shell scripting and autocompletion).
+  - **Flags**:
+    - `-c`: List all commands.
+    - `-a`: List all aliases.
+    - `-b`: List all built-in shell commands.
+    - `-k`: List all keywords.
+    - `-A <type>`: Specify the type of completion (`command`, `alias`, `function`, etc.).
+  - **Parameters**:
+    - `[word]` *(optional)*: Partial word to complete; if omitted, lists all possible completions.
+  - **Example Usage**: `compgen -c ls` / `compgen -a` / `compgen -k if`
+
 
 - `echo [flags] <text>`
   - **Function**: Prints text or variable values to the terminal.
@@ -1192,6 +1216,8 @@ END {
 }' file
 ```
 
+- `xarg`
+
 --- 
 
 ## Disk & Partition Management
@@ -1685,6 +1711,5 @@ Linux represents disks and partitions as devices under `/dev`.
 - `/dev/mmcblk0p1`
   - First partition on that device.
 
-
-
+--- 
 
