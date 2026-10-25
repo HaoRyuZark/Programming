@@ -3359,6 +3359,8 @@ console.timeEnd("operation");
 
 ### Default Values
 
+Via **coalescing** `??` or **logical OR** `||`, or de-structuring defaults.
+
 ```js
 // Nullish coalescing — fallback only for null/undefined
 const port = process.env.PORT ?? 3000;

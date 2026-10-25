@@ -1,4 +1,4 @@
-# AI
+# Artificial Intelligence (AI)
 
 Best practices and explanations for **AI** 
 
@@ -121,44 +121,80 @@ The code is executed by the agent program.
 
 ### Definition
 
-Prompt engineering is the practice of **designing and refining inputs** (prompts) to guide large language models (LLMs) toward producing accurate, 
+**Prompt engineering** is the practice of **designing and refining inputs** (prompts) to guide large language models (LLMs) toward producing accurate, 
 relevant, and useful outputs. It is a core skill in leveraging AI systems effectively.
 
 ### Uses
 
 Prompt engineering is applied in multiple domains, including:
 
--   **Automation** – Streamlining workflows with precise task instructions.
--   **Content Generation** – Writing, summarization, and brainstorming.
--   **Data Analysis** – Extracting insights, cleaning, or transforming data.
--   **Education & Training** – Building interactive tutors or explanations.
--   **Prototyping** – Quickly testing ideas for applications using LLMs.
+-   **Automation**: Streamlining workflows with precise task instructions.
+
+-   **Content Generation**: Writing, summarization, and brainstorming.
+
+-   **Data Analysis**: Extracting insights, cleaning, or transforming data.
+
+-   **Education & Training**: Building interactive tutors or explanations.
+
+-   **Prototyping**: Quickly testing ideas for applications using LLMs.
 
 ### 5 Steps Framework
 
 -   **Task** - Define the objective clearly. Include specific instructions and a persona.
+
 -   **Context** - Provide necessary background information.
+
 -   **References** - Include examples or templates if applicable.
+
 -   **Evaluate** - Set criteria for success.
+
 -   **Iterate** - Refine the prompt based on output quality.
 
 ### How to Do It Properly
 
 Effective prompt engineering involves:
 
-1. **Clarity** – Use explicit and unambiguous language.
-2. **Context** – Provide relevant background, examples, and constraints.
-3. **Structure** – Use lists, steps, structure, or formatting for better comprehension.
-4. **Iteration** – Test, refine, and adjust prompts based on results.
-5. **Evaluation** – Compare outputs against desired outcomes.
-6. **Persona** – Specify the role or style the model should adopt (e.g., "Act as a professional tutor").
-7. **References** – Provide references and examples.
+1. **Clarity**: Use explicit and unambiguous language.
+
+2. **Context**: Provide relevant background, examples, and constraints.
+
+3. **Structure**: Use lists, steps, structure, or formatting for better comprehension.
+
+4. **Iteration**: Test, refine, and adjust prompts based on results.
+
+5. **Evaluation**: Compare outputs against desired outcomes.
+
+6. **Persona**: Specify the role or style the model should adopt (e.g., "Act as a professional tutor").
+
+7. **References**: Provide references and examples.
+
+8. **Constraints**: Set clear boundaries.
 
 ### Zero-Shot vs. Few-Shot
 
 - **Zero-Shot**: The model is given a prompt without any examples. It relies solely on its pre-trained knowledge to generate a response.
 
 - **Few-Shot**: The model is provided with a few examples in the prompt to guide its response. This helps the model understand the desired format or style.
+
+
+### Advanced Prompting Techniques 
+
+#### Prompt Chaining
+
+**Prompt chaining** guides an AI-tool through a series of interconnected prompts, adding new layers of complexity along the way. You 
+basically use the output of the other prompt as the input for the next prompt.
+
+#### Tree and Chain of Thought  Prompting
+
+**Chain of thought prompting** is about asking the Model the chain of reasoning for the result
+
+**Tree of thought prompting** is about asking the AI to explain not only the chain, but also take into consideration different 
+branches and also use this different branches for different results.
+
+#### Meta Prompting
+
+**Meta prompting** is the process of using an LLM to enhance another prompt with best practices, this is very useful once you have a structure 
+and you want to improve the quality without the tedious process of double-checking each sentence.
 
 ### Hallucinations
 
@@ -169,6 +205,8 @@ Ways to mitigate hallucinations:
 -   Use **verification steps** (cross-check with external data).
 -   Keep prompts **specific** and avoid open-ended ambiguity.
 
+> Even with all the constraints and best practices, LLMs will still make errors which means the human in the loop the more important than ever.
+
 ### Best Practices
 
 - **Be Specific** – Clear, detailed prompts yield better answers.
@@ -178,6 +216,43 @@ Ways to mitigate hallucinations:
 - **Validate Outputs** – Always review results for accuracy and reliability.
 - **Architecture** - Define the architecture and tech stack.
 - **1 Task 1 Session** - The fuller the context window gets the worse it gets.
+
+--- 
+
+## Context Engineering
+
+**Context engineering** is the discipline of deciding what a model should see and not see for a task. This is done 
+by giving the right files in a code base, explicit tool declarations, professional prompts, etc.
+
+This is the reason why is it good to store: skills, instructions, common workflows, prompts, into folders the agent can use so that for an specific task,
+we can give him exactly the context it needs. 
+
+### Context Stack
+
+1. **Global instructions:** How the agent should behave; safety and tool-use rules.
+
+2. **Project instructions**: Repository conventions, constraints, commands and coding standards.
+
+
+3. **System architecture**: Components, boundaries, dependencies and data flow.
+
+
+4. **Domain knowledge**: Business rules, terminology, entities and invariants.
+
+
+5. **Task context**: The current objective, acceptance criteria and scope.
+
+
+6. **Implementation context**: Relevant source files, schemas, APIs and examples.
+
+
+7. **Execution context**: Available tools, command results, errors and test output.
+
+
+8. **Feedback and state**: What has been completed, what failed and what remains.
+
+> Definitions may vary depending on the source, but the idea is mostly the same: give the agent the necessary information it needs 
+not via repeating it in every prompt, but by actual permanent documents and configurations.
 
 --- 
 
@@ -243,6 +318,9 @@ Typical Agents:
 
 It is based on describing to the agent the goal, and specific tech decisions, etc. in a structured document for generating the individual pieces of our
 application. It is basically a framework of programming in natural language.
+
+> Not all tasks need a spec, the spec is mainly for code files, classes, modules, etc. For smaller or exploratory 
+task a documented prompt with the results is mostly enough.
 
 ### Best Practices
 
@@ -345,8 +423,38 @@ and review the results.
 
 ### Agentic Support 
 
-Most agentic enviroments already provide commands `\command` which enhance the requests to the LLM by adding necessary context. This can enhance the quality 
+Most agentic environments already provide commands `\command` which enhance the requests to the LLM by adding necessary context. This can enhance the quality 
 of the individual phases.
+
+### EARS Patterns 
+
+**EARS** stands for **easy approach to requirement syntax** which is a lightweight method for writing clear, structure, requirements using 
+a fixed clause order and a small set of keywords.
+
+#### Rules 
+
+- Zero or many preconditions 
+
+- Zero or one trigger 
+
+- Exactly one system name 
+
+- One or more system response.
+
+
+#### Patters 
+
+
+| Pattern  | Template | Example | 
+|---------|---------|----------|
+| **Ubiquitous**| The `system-name` shall `system-reponse` | The download-button should trigger a download of the resource via an HTTPs requestest | 
+| **State-Driven** | While `pre-condtion`, the `system-name` shall `system-response` | The while the download is in progress, the page can enqueue more download requests |
+| **Event-Driven** | When `trigger`, the `system-name` shall `system-response` | When the users clicks save, the system sall persist data to the database | 
+| **Unwanted Behavior** | If `condtion`, then the `system-name` shall `system-response`| If the connection times out, then the system shall retry 3 times |
+| **Optimal feature** | Where `feature-is-enabled`, the `system-name` shall `system-response` | Where dark mode is enabled, the system sall use the dark color scheme |
+
+
+> The spec needs to be always be up to date!!!!
 
 --- 
 

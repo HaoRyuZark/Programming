@@ -1407,7 +1407,7 @@ Run it: `echo "DB_PASSWORD=s3cret" > .env && docker compose up -d --build`
 
 ---
 
-## How to Containarize An Application? 
+## How to Containerize An Application? 
 
 
 1. Identify the dependencies of your application like node, packages, etc. 
