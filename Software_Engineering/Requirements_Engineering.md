@@ -244,3 +244,42 @@ the future.
 
 --- 
 
+## Spec Driven development (SDD)
+
+With large language model we can now use **SDD** to generate code from our requirements once they are put into specifications and tasks. If done 
+properly and with coding knowledge this can reduce the development time and also keep the skills of the developlers involved in the project.
+
+
+--- 
+
+## EARS Syntax
+
+**EARS** stands for **easy approach to requirement syntax** which is a lightweight method for writing clear, structure, requirements using 
+a fixed clause order and a small set of keywords.
+
+### Rules 
+
+- Zero or many preconditions 
+
+- Zero or one trigger 
+
+- Exactly one system name 
+
+- One or more system response.
+
+### Patters 
+
+
+| Pattern  | Template | Example | 
+|---------|---------|----------|
+| **Ubiquitous**| The `system-name` shall `system-reponse` | The download-button should trigger a download of the resource via an HTTPs requestest | 
+| **State-Driven** | While `pre-condtion`, the `system-name` shall `system-response` | The while the download is in progress, the page can enqueue more download requests |
+| **Event-Driven** | When `trigger`, the `system-name` shall `system-response` | When the users clicks save, the system sall persist data to the database | 
+| **Unwanted Behavior** | If `condtion`, then the `system-name` shall `system-response`| If the connection times out, then the system shall retry 3 times |
+| **Optimal feature** | Where `feature-is-enabled`, the `system-name` shall `system-response` | Where dark mode is enabled, the system sall use the dark color scheme |
+
+
+--- 
+
+
+
