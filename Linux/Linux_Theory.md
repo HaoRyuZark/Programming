@@ -1,6 +1,6 @@
 # Linux Theory
 
-Collection of my notes when learning to use linux.
+Collection of my notes when learning to use Linux.
 
 ---
 
@@ -18,7 +18,7 @@ Collection of my notes when learning to use linux.
 10. Start services. 
 11. Display manager starts.
 12. User authentication. 
-13. Start User Enviroment.
+13. Start User environment.
 14. Start Display server.
 15. Start desktop environment if available.
 
@@ -28,7 +28,6 @@ Collection of my notes when learning to use linux.
 
 **POSIX** is a family of standards derived fomr the UNIX operating system designed to ensure compatibility across 
 different versions of UNIS and its derivatives by setting rules for file reading and writing, command names, etc. 
-
 
 --- 
 
@@ -79,20 +78,20 @@ We can end a process using the `kill` command plus the specified **id**.
 
 --- 
 
-## Enviroment variables 
+## Environment variables 
 
-Like in other operating systems, an enviroment is a varible which affects 
-the way processes run for the specific enviroment.
+Like in other operating systems, an environment is a varible which affects 
+the way processes run for the specific environment.
 
 Common use cases: 
 
-- In Linux the variables can be printed using the the command `env`. 
+- In Linux the variables can be printed using the command `env`. 
 
 - To see the value we can use the command `printvar`. Finally to modify we can use the command `export NAME=value`
 
-- We can create enviroment variables for the current section by typing  `NAME=VALUE` in the shell.
+- We can create environment variables for the current section by typing  `NAME=VALUE` in the shell.
 
-- To create persistent enviroment variables we have to modify the `.bashrc` by adding 
+- To create persistent environment variables we have to modify the `.bashrc` by adding 
 `export NAME=value` and then source the file with the `source FILE` command. 
 
 - To set a global env. variable we have to modify the file `vim /etc/environment` using the 
@@ -243,6 +242,7 @@ like a pointer. They are useful to for example manage all dotfiles from one plac
 
 From the root `/` linux uses different directories for different purposes. Most of the time we do not touch this files, but understanding them is critical.
 
+
 | Directory | Function                                           |
 |:--------- |:-------------------------------------------------- |
 | `/`       | Root directory                                     |
@@ -265,6 +265,7 @@ From the root `/` linux uses different directories for different purposes. Most 
 | `/run`    | Temp filesystem for temporal runtime information   |
 | `/srv`    | If the computer is a service(server) the files for users will be stored here                    |
 | `/sys`    | Acts as a dynamic interface between the kernel and the hardware  |
+
 
 ---
 

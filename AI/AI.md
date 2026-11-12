@@ -106,11 +106,9 @@ Another key point is for the agent to be able to take decisions based on which i
 - **RAG**: Retrival Augemented Generation is a process in which before the AI process the prompt, it is first converted into embedings, then information 
 from the vector Database is returned and finally given to LLM as context which increases the accuracy of the answers.
 
-- **MCP**: Model Content Protocol is a procedure in which LLMs ouput its responses in a very specific way to allow the surrounding system to 
-parse its ouput and based on an specific format make "tool-call" whose output is then eventually retrived to the LLM to know now how to continue the prompt 
-and if the task was accomplished. We can also provide a series of files for infomation to be used as context or as part of responses.
-
-Installing an MCP-server is basically downloading a markdown file which contains the format for the API of a tool, etc.
+- **MCP Servers**: Model Content Protocol servers are used allow LLM access to other programs. This works by training the LLM to use a set of commands
+so that the LLM produces a certain output which is parsed by the infrastructure around the LLM and then the **MCP server** which is a program 
+which exposes a set of commands (commonly a python scripts or a REST-API) which then executes the command and returns the output to the LLM.
 
 - **Skills**: They are markdown files which describe a number of commands for the AI to use. They can also come with scripts for using certain tools. 
 The code is executed by the agent program.
@@ -599,8 +597,27 @@ Refactor this function to improve readability and reduce duplication
 
 ## Other Tools 
 
-- **CodeRabbit** :Code reviwer software for git commits.
+- **CodeRabbit** :Code reviewer software for git commits.
 
-- **Claude Code**: Similar to copilot, general porpuse coding.
+- **Claude Code**: Similar to copilot, general purpose coding.
 
 - **OpenClaw**: Agent which access to full computer. **Dangerous!!!**
+
+--- 
+
+## AI Agent Governance Framework
+
+1. **Alignment**: Ensure the AI agent's is consistent and aligned with the organization's goals, values, and ethical standards.
+
+2. **Control**: The scope and permissions of the AI agent should be clearly defined and controlled to prevent misuse or unintended consequences. Also 
+task scoped.
+
+3. **Transparency**: The AI agent's decision-making process should be transparent and explainable to stakeholders, including users and regulators. This 
+can be accomplished for example by using a **chain of thought** prompting for the LLM to explain its reasoning.
+
+4. **Security**: The LLM should run in a sandboxed environment if possible and have restricted access to critical tools and data. This can be accomplished 
+via permissions, MCP servers and containers.
+
+5. **Social Responsibility**: The use of the AI agent should be accompained by a accountability policy by the user and by a set of rules for the human.
+
+6. **Monitoring and Auditing**: The AI agent's actions and decisions should be monitored and audited regularly to ensure compliance with policies and regulations.

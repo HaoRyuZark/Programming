@@ -106,6 +106,7 @@ in the production environment.
    - Artifacts are deployed to staging/test environments for validation.
    - If extended to **Continuous Deployment (CD)**, production deployment can be automated.
 
+--- 
 
 ## Functions of CI
 

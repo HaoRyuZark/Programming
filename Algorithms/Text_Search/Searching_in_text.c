@@ -308,7 +308,6 @@ void compute_good_suffix_shift(char* pattern, int m, int* shift) {
 }
 
 void boyer_moore(char* text, char* pattern, int n, int m) {
-
     int i = 0;
     int* bad_character_shift = (int*)calloc(256, sizeof(int)); // only lower case ascii for simplicity
     int* good_suffix_shift = (int*)calloc(m + 1, sizeof(int));

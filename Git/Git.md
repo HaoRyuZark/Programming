@@ -12,6 +12,7 @@ central server which acts as the source of truth to which developers updload the
 hash. 
 
 - **Branches** are just pointer to a commit hash. Mostly at the end of a chain.
+
 - **HEAD** Is a pointer to the current branch. If you checkout to a commit then the HEAD becomes detached because it is not pointer to any  branch.
 
 --- 
@@ -224,8 +225,11 @@ git push --force-with-lease
 ## Miscellaneous
 
 - `git diff`: Show changes between commits and working directory
+
 - `git blame <file>`: Show who modified each line in a file
+
 - `git show <commit>`: Show details of a commit
+
 - `git rm <file>`: Remove a file from Git
 
 ---
@@ -291,6 +295,4 @@ The `.gitignore` file is used to declare files or kinds o files we want git to n
 ```
 
 ---
-
-
 
