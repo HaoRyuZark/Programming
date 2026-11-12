@@ -14,7 +14,7 @@ If you are a masochist, then proceed to use the terminal:
 
   - run `lsblk` to identify the name of the USB-device.
 
-  - `sudo dd bs=4M if=~/Downloads/archlinux-2XXX.XX.XX-86_64.iso of=/dev/your_device_name status=progress`
+  - `sudo dd bs=4M if=~/Downloads/archlinux-2XXX.XX.XX-x86_64.iso of=/dev/your_device_name status=progress oflag=sync`
 
 3. Boot from the USB drive and select the Arch Linux installation option.
 
@@ -28,74 +28,99 @@ provide a some own steps here.
 2. **Increase Font:** `setfont ter-132b` or `setfont -d`.
 
 3. **Connect to the internet**: Ensure the network interface is listed and enable with `ip link` 
-For wireless connections run: `iwctl` and then run the following commands inside `[idw]#`in order:
+For wireless connections run: `iwctl` and then run the following commands inside `[iwd]#` in order:
 
   - `device list`: will tell you the name of your device.
   - `device <name> set-property Powered on`
   - `adapter <adapter> set-property Powered on`
   - `station <name> scan`
   - `station <name> get-networks`
-  - `station <name> connect SSID`
-  - `station <name> connect-hidden SSID`
-  -  Press `Crl + d` to quit
+  - `station <name> connect SSID` (for a hidden network use `station <name> connect-hidden SSID` instead)
+  -  Press `Ctrl + d` to quit
 
-For direct connections you can skip and type: `- $ iwctl --passphrase passphrase station <name> connect SSID`
-And to disconnect if needed: `[iwd]# station device disconnect`
+For direct connections you can skip the interactive prompt and type: `iwctl --passphrase passphrase station <name> connect SSID`
+And to disconnect if needed: `[iwd]# station <name> disconnect`
 
-4. **Update the system clock:** `timedatectl`
+Verify the connection with `ping archlinux.org`.
 
-5. **Partion the disks using fdisk:** Identify the hard-drive using `lsblk` then run the following commands in order (note that I am skiping the prompts):
+4. **Verify the boot mode:** `cat /sys/firmware/efi/fw_platform_size`. It must print `64`. If the file does not exist, 
+you booted in BIOS (legacy) mode and the UEFI/GRUB steps of this guide will not work. Reboot and select the UEFI entry 
+of the USB drive in your firmware.
+
+5. **Update the system clock:** `timedatectl` (NTP is enabled by default in the live environment, this just checks it).
+
+6. **Partition the disks using fdisk:** Identify the hard-drive using `lsblk` then run the following commands in order (note that I am skipping the prompts):
 
   - `fdisk /dev/your_drive_name`.
   - `p` Prints the partitions.
-  - `g` Gives us an empty partition table.
-  - `n` Creates a new partition - `Enter` - `Enter` - `+1G` - `Y` if prompted.
-  - `n` Creates a new partition - `Enter` - `Enter` - `+4G` - `Y` if prompted.
-  - `n` Creates a new partition - `Enter` - `Enter` - `Enter` - `Y` if prompted.
+  - `g` Gives us an empty GPT partition table.
+  - `n` Creates a new partition - `Enter` - `Enter` - `+1G` - `Y` if prompted to remove a signature.
+  - `n` Creates a new partition - `Enter` - `Enter` - `+4G` - `Y` if prompted to remove a signature.
+  - `n` Creates a new partition - `Enter` - `Enter` - `Enter` - `Y` if prompted to remove a signature.
 
-- **Optional** because we are going to format them manually anyway
+- **Set the partition types** (required for partition 1: some firmwares only boot from a partition marked as *EFI System*).
+fdisk accepts the type aliases directly:
 
-  - `t` Mark a partition with a type - `2` - `82` For the swap type 
-  - `t` Mark a partition with a type - `3` - `48` For the linux file system type
-  - `t` Mark a partition with a type - `1` - `1` For the boot type
+  - `t` Mark a partition with a type - `1` - `uefi` For the EFI System type
+  - `t` Mark a partition with a type - `2` - `swap` For the Linux swap type
+  - `t` Mark a partition with a type - `3` - `linux` For the Linux filesystem type
 
 - **Finally**
 
+  - `p` Check the result
   - `w` Write and quit
 
 In case you messed up you can use `d` to delete a partition or `q` to quit without saving and start again.
 
-6. **Format the partitions:**
+7. **Format the partitions:**
 
 Type the following commands to format the partition. I recommend using `ext4` or `btrfs` for the file-system. Type the actual name of 
 your partition in the following commands
 
-  - `mkfs.btrfs /dev/nvme0n1p3/`
-  - `mkfs.fat -F 32 /dev/nvme0n1p1/`
-  - `mkfs.swap /dev/nvme0n1p2/`
- 
-7. **Mount the file-system:**
+  - `mkfs.btrfs /dev/nvme0n1p3` (or `mkfs.ext4 /dev/nvme0n1p3`)
+  - `mkfs.fat -F 32 /dev/nvme0n1p1`
+  - `mkswap /dev/nvme0n1p2`
+
+- **btrfs only: create subvolumes.** Timeshift's btrfs mode requires the Ubuntu-style layout with the subvolumes `@` (root) 
+and `@home`. Without them `timeshift --btrfs` will not work.
 
   - `mount /dev/nvme0n1p3 /mnt`
+  - `btrfs subvolume create /mnt/@`
+  - `btrfs subvolume create /mnt/@home`
+  - `umount /mnt`
+ 
+8. **Mount the file-system:**
+
+  - btrfs: `mount -o compress=zstd,subvol=@ /dev/nvme0n1p3 /mnt`
+  - btrfs: `mkdir -p /mnt/home`
+  - btrfs: `mount -o compress=zstd,subvol=@home /dev/nvme0n1p3 /mnt/home`
+  - ext4 instead of the three lines above: `mount /dev/nvme0n1p3 /mnt`
   - `mkdir -p /mnt/boot/efi`
   - `mount /dev/nvme0n1p1 /mnt/boot/efi`
   - `swapon /dev/nvme0n1p2`
 
-8. **Install Essentials Packages:**
+9. **Install Essentials Packages:**
 
-  - `pacstrap /mnt base linux linux-firmware sof-firmware base-devel grub efibootmgr vim nano networkmanager ly dunst`
+  - `pacstrap -K /mnt base linux linux-firmware sof-firmware base-devel grub efibootmgr btrfs-progs intel-ucode vim nano networkmanager ly sway foot git`
 
-If asked for some audio dependency choose `pulse`.
+Notes:
 
-9. **Fstab**
+  - Use `amd-ucode` instead of `intel-ucode` on an AMD CPU. It must be installed **before** `grub-mkconfig` so GRUB loads the microcode.
+  - `btrfs-progs` is only needed for btrfs (it is harmless otherwise).
+  - `sway` and `foot` (sway's default terminal) are installed here so `ly` has a graphical session to start after the first reboot.
+  - Do not install a second notification daemon such as `dunst`: `swaync` (installed later) takes that role.
+  - If a provider prompt appears, press `Enter` for the default. Do **not** pick `pulseaudio` for anything; PipeWire is used later.
 
-  - `genfstab /mnt > /mnt/etc/fstab`
+10. **Fstab**
 
-10. **Chroot**: Enter the installed system 
+  - `genfstab -U /mnt >> /mnt/etc/fstab` (`-U` uses UUIDs instead of device names)
+  - `cat /mnt/etc/fstab` to check it
+
+11. **Chroot**: Enter the installed system 
 
   - `arch-chroot /mnt`
 
-11. **Time**
+12. **Time**
 
 Run inside arch:
 
@@ -103,26 +128,26 @@ Run inside arch:
   - `hwclock --systohc`
 
 
-12. **Localization**
+13. **Localization**
 
 Run inside arch:
 
   - `vim /etc/locale.gen` uncomment `en_US.UTF-8 UTF-8` for English and write changes 
   - `locale-gen`
   - `vim /etc/locale.conf` Type `LANG=en_US.UTF-8` for English and write changes 
-  - `vim /etc/vconsole.conf` Type`KEYMAP=us` for English and write changes 
+  - `vim /etc/vconsole.conf` Type `KEYMAP=us` for a US keyboard (or `KEYMAP=de-latin1` for a German one) and write changes 
 
-13. **Host Name**
+14. **Host Name**
 
 Choose an epic name for the computer
 
   - `vim /etc/hostname` Type `Father` or some epic name.
 
-14. **Root Password**
+15. **Root Password**
 
 Run `passwd` and type a safe root password.
 
-15. **User plus sudo**
+16. **User plus sudo**
 
 Creating user in the group wheel
 
@@ -133,21 +158,21 @@ sudo:
 
   - `EDITOR=vim visudo` - Then Uncomment the line: `%wheel ALL=(ALL) ALL` and save
 
-16. **Enabling core services**
+17. **Enabling core services**
 
   - `systemctl enable NetworkManager`
-  - `systemctl enable ly@ttyX.service`
+  - `systemctl enable ly@tty2.service` (`ly` runs on tty2)
 
-17. **Bootloader**
+18. **Bootloader (UEFI)**
 
-  - `grub-install /dev/nvme0n1`
+  - `grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB`
   - `grub-mkconfig -o /boot/grub/grub.cfg`
 
-18. **Reboot**
+19. **Reboot**
 
   - `exit`
-  - `umount -a`
-  - `reboot`
+  - `umount -R /mnt`
+  - `reboot` and remove the USB drive
 
 If everything was done correctly you should have a working installation.
 
@@ -155,7 +180,7 @@ If everything was done correctly you should have a working installation.
 
 ## Post Arch Install
 
-### Connecto to the internet via Wifi
+### Connect to the internet via Wifi
 
 List nearby Wi-Fi networks:
 
@@ -169,10 +194,15 @@ Alternatively a GUI can be used via the command
 
 - `nmtui` 
 
-### Install SSH Agent
+### Install SSH
 
-- `sudo pacman -S sshagent`
-- `sudo systemctl enable sshd.service`
+- `sudo pacman -S openssh` (provides `ssh`, `ssh-agent`, `ssh-keygen` and the `sshd` server)
+- `sudo systemctl enable --now sshd.service` **only** if you want to log into this machine remotely.
+
+To clone repositories from GitHub over SSH (e.g. the dotfiles below) create a key and add the public key to GitHub:
+
+- `ssh-keygen -t ed25519`
+- `cat ~/.ssh/id_ed25519.pub`
 
 ### Install a browser
 
@@ -180,13 +210,18 @@ Alternatively a GUI can be used via the command
 
 ### Set up a firewall
 
-- `sudo pacman -S ufw`
-- `sudo systemctl enable ufw.service`
+See the [Firewall](#firewall) section below.
 
-### Set up Basic Graphics with sway
+### Basic Graphics with sway
 
-- `sudo pacman -S sway`
-- Reboot or run `sway`
+`sway` was installed with `pacstrap`. Log in through `ly` and select the sway session, or run `sway` from a tty.
+The default sway config opens `foot` with `Mod + Enter`; your dotfiles later switch it to `kitty`/`wofi`.
+
+### Update the boot loader
+
+`intel-ucode`/`amd-ucode` and `linux-lts` add boot entries. Every time you install or remove a kernel or microcode package run:
+
+- `sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
 ---
 ## Pacman and Yay
@@ -785,24 +820,40 @@ sudo pacman -Syu --needed \
   python python-pip stow npm nodejs \
   wl-clipboard wofi xorg-xwayland wayland waybar swayidle swaync swayimg imv \
   luarocks lua lua-language-server linux-lts \
-  rust jdk-openjdk go ruby php composer clang ghc cabal-install julia \
-  htop btop man-db man-pages openssh git yazi \
+  rust rust-analyzer jdk-openjdk go ruby php composer clang ghc cabal-install julia \
+  htop btop man-db man-pages openssh git yazi ripgrep fd \
   zathura zathura-pdf-poppler \
   noto-fonts noto-fonts-emoji noto-fonts-cjk otf-libertinus otf-font-awesome \
-  wget xdotool \
-  pipewire pipewire-alsa pipewire-pulse wireplumber pavucontrol \
-  lm_sensors clamav nsxiv bleachbit reflector pacman-contrib timeshift \
+  wget xdotool libnotify \
+  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber pavucontrol \
+  lm_sensors clamav nsxiv bleachbit reflector pacman-contrib timeshift cronie \
   jupyterlab jupyter-notebook python-numpy python-pandas python-matplotlib \
-  python-pygame python-scikit-learn tk \
+  python-pygame python-scikit-learn tk python-pynvim python-pylatexenc tree-sitter-cli \
   nm-connection-editor network-manager-applet iwd modemmanager usb_modeswitch \
   tmux fzf bat lsd tldr lazygit thunar autotiling starship \
-  docker kubectl pyright bash-language-server postgresql \
-  wine w3m polkit lxqt-policykit seahorse pkgconf openssl \ 
-  prettier intel-ucode blueman
+  xdg-desktop-portal-wlr xdg-desktop-portal-gtk xdg-user-dirs qt5ct qt6ct \
+  docker docker-compose kubectl pyright bash-language-server postgresql \
+  wine w3m polkit lxqt-policykit seahorse gnome-keyring pkgconf openssl \
+  prettier bluez bluez-utils blueman
 ```
+
+After the installation finishes, regenerate the GRUB config so the `linux-lts` kernel shows up in the boot menu, and enable the services:
+
+```bash
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+sudo systemctl enable --now bluetooth.service cronie.service
+xdg-user-dirs-update
+```
+
+- Microcode (`intel-ucode`/`amd-ucode`) was already installed with `pacstrap`.
+- Do **not** enable `iwd.service`: NetworkManager uses `wpa_supplicant` by default and the two would fight over the wifi card.
+- `rust` (from pacman) and `rustup` conflict. This list uses `rust` + `rust-analyzer`. If you prefer `rustup`, replace both with 
+`rustup` and run `rustup default stable` and `rustup component add rust-analyzer`.
 
 ### Bluetooth 
 
+- **bluez**: the Linux bluetooth stack (`bluetooth.service`).
+- **bluez-utils**: provides `bluetoothctl`.
 - **blueman**: is a GTK based bluetooth manager.
  
 ### Typesetting
@@ -821,6 +872,8 @@ sudo pacman -Syu --needed \
 - **bat**: `cat` with syntax highlighting
 - **lsd**: modern `ls` with icons and colors
 - **tldr**: simplified command-line examples
+- **ripgrep**: fast recursive grep (`rg`)
+- **fd**: fast `find` alternative
 - **htop**: interactive process viewer
 - **btop**: fancier resource monitor
 - **yazi**: terminal file manager
@@ -836,8 +889,8 @@ sudo pacman -Syu --needed \
 
 ### Microcode Updates 
 
-- **intel-ucode**: for intel systems. 
-- **amd-ucode**: for amd systems. 
+- **intel-ucode**: for intel systems (installed with `pacstrap`). 
+- **amd-ucode**: for amd systems (installed with `pacstrap`). 
 
 ### Build and languages
 
@@ -846,6 +899,7 @@ sudo pacman -Syu --needed \
 - **openssl**: TLS and crypto library and CLI
 - **clang**: C/C++ compiler and LLVM tooling
 - **rust**: Rust compiler and cargo
+- **rust-analyzer**: Rust LSP
 - **go**: Go compiler and toolchain
 - **python**: Python interpreter
 - **python-pip**: Python package installer
@@ -881,6 +935,9 @@ sudo pacman -Syu --needed \
 - **python-matplotlib**: plotting
 - **python-scikit-learn**: machine learning
 - **python-pygame**: 2D game library
+- **python-pynvim**: Python provider for neovim
+- **python-pylatexenc**: LaTeX to Unicode conversion (used by neovim plugins)
+- **tree-sitter-cli**: tree-sitter parser generator (used by nvim-treesitter)
 - **miniconda3** (AUR): conda environment and package manager
 
 ### Wayland desktop
@@ -900,6 +957,11 @@ sudo pacman -Syu --needed \
 - **nsxiv**: X11 image viewer (drop it if imv/swayimg are enough)
 - **zathura**: minimal document viewer
 - **zathura-pdf-poppler**: PDF backend for zathura
+- **xdg-desktop-portal-wlr**: screen sharing on wlroots compositors (sway)
+- **xdg-desktop-portal-gtk**: file picker and other portals for sandboxed/Flatpak apps
+- **xdg-user-dirs**: creates `~/Downloads`, `~/Documents`, ...
+- **libnotify**: provides `notify-send` (used by scripts, e.g. the ClamAV alert)
+- **qt5ct** / **qt6ct**: Qt theme configuration (needed for `QT_QPA_PLATFORMTHEME`)
 
 ### Fonts
 
@@ -912,13 +974,14 @@ sudo pacman -Syu --needed \
 
 - **pipewire**: audio/video server
 - **pipewire-alsa**: ALSA compatibility layer
-- **pipewire-pulse**: PulseAudio compatibility layer
+- **pipewire-pulse**: PulseAudio compatibility layer (conflicts with `pulseaudio`, never install both)
+- **pipewire-jack**: JACK compatibility layer (avoids the `jack2` provider prompt)
 - **wireplumber**: PipeWire session manager
 - **pavucontrol**: volume control GUI
 
 ### Networking
 
-- **iwd**: Intel's wireless daemon
+- **iwd**: Intel's wireless daemon (keep installed as a fallback, but do not enable it alongside NetworkManager)
 - **nm-connection-editor**: NetworkManager connection GUI
 - **network-manager-applet**: tray applet with wifi password prompts
 - **modemmanager**: mobile broadband modem support
@@ -933,6 +996,7 @@ sudo pacman -Syu --needed \
 - **man-pages**: Linux man pages
 - **lm_sensors**: hardware temperature and fan sensors
 - **timeshift**: system snapshots and restore
+- **cronie**: cron daemon, required for Timeshift's scheduled snapshots
 - **reflector**: updates the mirror list
 - **pacman-contrib**: extras like `paccache` and `checkupdates`
 - **downgrade** (AUR): roll back packages to older versions
@@ -941,49 +1005,56 @@ sudo pacman -Syu --needed \
 - **polkit**: privilege-escalation framework
 - **lxqt-policykit**: polkit authentication agent (GUI password prompts)
 - **seahorse**: GNOME keyring and password manager GUI
+- **gnome-keyring**: the keyring daemon seahorse manages
 
 ### Dev services and containers
 
 - **git**: version control
 - **lazygit**: terminal UI for git
-- **docker**: container engine (run `sudo systemctl enable --now docker` and add yourself to the `docker` group)
+- **docker**: container engine (see the [Docker](#docker) section)
+- **docker-compose**: multi-container definitions (`docker compose`)
 - **kubectl**: Kubernetes CLI
 - **postgresql**: database server (needs `initdb` before first start)
 - **wine**: runs Windows applications
 
-- Some packages (`pipewire`, `jack`, fonts) can trigger interactive provider prompts. If the command stops to ask, just press Enter for the default.
+- Some packages can trigger interactive provider prompts. `pipewire-jack` and `noto-fonts` are already listed so the `jack` 
+and font prompts are answered. If the command still stops to ask, press Enter for the default, but never choose `pulseaudio`.
 
 ---
 
 ## Setup yay
 
+Requires `git` and `base-devel` (both already installed). Run as your normal user, **never** with `sudo`:
+
 - `git clone https://aur.archlinux.org/yay.git`
 - `cd yay/`
-- `cd makepkg -si`
+- `makepkg -si`
+- `cd .. && rm -rf yay`
 
- ```bash
+```bash
 yay -S utftex miniconda3 downgrade
 ```
 
 
 ### Install Extra Packages
 
+AUR packages:
+
 - `yay -S brave-bin` - `Enter` - `Enter`
-- `yay -S ripgrep`
-- `yay -S fd`
 - `yay -S visual-studio-code-bin`
-- `sudo npm install -g neovim`
-- `sudo pacman -S python-neovim`
-- `sudo pacman -S python-pylatexenc`
-- `gem install neovim`
-- `sudo npm install -g regex`
-- `npm install -g tree-sitter-cli`
 - `yay -S sql-language-server`
 - `yay -S asm-lsp`
-- `rustup component add rust-analyzer`
 - `yay -S tex-fmt`
-- `cargo install --git https://github.com/itsjunetime/tdf.git`
+
+Language-specific packages (`ripgrep`, `fd`, `python-pynvim`, `python-pylatexenc`, `tree-sitter-cli` and `rust-analyzer` 
+are already in the pacman list above):
+
+- `sudo npm install -g neovim`
 - `sudo npm install -g @angular/cli`
+- `gem install neovim` (installs into `~/.local/share/gem`; add its `bin` directory to your `PATH` if neovim's `checkhealth` complains)
+- `cargo install --git https://github.com/itsjunetime/tdf.git` (installs into `~/.cargo/bin`, add it to your `PATH`)
+- Claude Code (for the claude code integration in neovim): `curl -fsSL https://claude.ai/install.sh | bash` 
+(native installer, no `sudo` needed) or `sudo npm install -g @anthropic-ai/claude-code`
 
 --- 
 
@@ -992,78 +1063,94 @@ yay -S utftex miniconda3 downgrade
 For everything related to a 'Rice' clone the repositories or setup own configurations. One option is to 
 clone the necessary repositories from github or use stow.
 
-- `git clone git@github.com:HaoRyuZark/dotfiles.git` 
+- `git clone git@github.com:HaoRyuZark/dotfiles.git` (needs an SSH key added to GitHub, see [Install SSH](#install-ssh)) 
+or `git clone https://github.com/HaoRyuZark/dotfiles.git` (no key needed, but you cannot push)
 - `cd dotfiles`
 - `stow */`
 
 ### Stow
 
 **Stow** is software which allows us create symlinks from the folder where we use `stow` in the exact same structure they 
-are organized.
+are organized. Every top-level directory of `dotfiles` is a "package" (e.g. `nvim/.config/nvim/...`) and `stow */` links 
+all of them into the parent directory (`~`).
 
-- **Create Symlinks**: `stow .` inside the `dotfiles` directory. This is done for the first setup as well. Note that 
-the original files should not exists in the original location anymore.
+- **Create Symlinks**: `stow */` inside the `dotfiles` directory. This is done for the first setup as well. Note that 
+the original files must not exist in the target location, otherwise stow aborts with a conflict. Delete or move them first 
+(e.g. the default `~/.bashrc`).
 
 - **Remove Symlinks**: `stow -D */` to remove the stow links. 
 
-- **Create `stow */` to create the stow links.
+- **Re-create Symlinks**: `stow -R */` to remove and create the stow links again (useful after adding files).
 
 - **Adding files to stow and updating**:
 
-  1. To add files to stow use create a mirror of the original struture from the home directory to that file. 
+  1. To add files to stow create a mirror of the original structure from the home directory to that file inside a package directory. 
 
   2. Copy the file or directory to stow 
 
-  3. Run `stow --adopt .` inside the dotfiles directory
+  3. Run `stow --adopt */` inside the dotfiles directory. **Careful:** `--adopt` moves the files currently in `~` into the repo, 
+  overwriting the repo's version. Check `git diff` afterwards and `git checkout .` if you want to keep the repo's version.
  
 ---
 
 ## Vim Provider 
 
-Run 
+The python provider for neovim is the `python-pynvim` package (already in the pacman list). Else there will be an error 
+in the `checkhealth` command of neovim.
 
-```py
-pip install --user pynvim` or `pip3 install --user pynvim
+```bash
+sudo pacman -S python-pynvim
 ```
 
-to install the python provider for neovim. Else there will be an error in the `checkhealth` command of neovim.
+Do not use `pip install --user pynvim`: Arch marks the system Python as externally managed (PEP 668) and pip refuses to install.
 
 --- 
 
 ## GTK and Qt Themes 
 
-- **Setting up the Qt env var:** write `QT_QPA_PLATFORMTHEME="qt5ct"` with `sudo vim /etc/environment `
-- **Instaling Qt Themes:** `sudo pacman -S breeze` 
+- **Requirements:** `qt5ct` and `qt6ct` (already in the pacman list)
+- **Setting up the Qt env var:** write `QT_QPA_PLATFORMTHEME=qt5ct` with `sudo vim /etc/environment` (qt6ct reads the same value for Qt 6 apps), then log out and in again
+- **Installing Qt Themes:** `sudo pacman -S breeze` then select it in `qt5ct` and `qt6ct`
 
 --- 
 
 ## Maintenance 
 
-- **Clear Cache:** `sudo yay -Scc` and `sudo pacman -Scc`
+Never run `yay` with `sudo`; it asks for your password itself when needed.
 
-- **Update database** `sudo yay -Syy`
+- **Clear Cache:** `yay -Scc` (cleans the pacman cache and the AUR build cache). `sudo paccache -rk2` is a gentler 
+alternative that keeps the last two versions of each package (useful for downgrades).
 
-- **Update:** `sudo yay -Syu`
+- **Update:** `yay -Syu` (always refresh and upgrade together; `-Syy` without `-u` risks a partial upgrade)
 
 - **Clean unwanted dependencies:** `yay -Yc`
 
-- **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)`
+- **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)` (prints an error if there are no orphans, that is fine)
 
 - **Free Disk Space:** Use `Bleachbit` or type `du -sh path` to see the disk usage of some directory and 
-`rm -rf path/` to remove. Be carefull to not important directories.
+`rm -rf path/` to remove. Be careful to not delete important directories.
 
 - **Cleaning Logs of the Journal directory:** Use `journalctl` to activate the vacuum option. 
 
 `sudo journalctl --vacuum-time=2weeks`
-- **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist `
+
+- **Update the mirror list:** `sudo reflector -c COUNTRY -a 6 --sort rate --save /etc/pacman.d/mirrorlist`
+
+- **After a kernel or microcode update:** nothing to do, but if you install/remove a kernel run `sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
 ---
 
 ## Timeshift
 
+Requirements:
+
+- **Scheduled snapshots** need a cron daemon: `cronie` (in the pacman list) with `sudo systemctl enable --now cronie.service`.
+- **btrfs mode** needs the `@` / `@home` subvolume layout created during the installation. Otherwise use rsync mode.
+
 ### Setup via GUI 
 
-To open, use `sudo -E timeshift-gtk` (Not the best way TODO)
+To open, run `timeshift-launcher` (or pick Timeshift in `wofi`). It asks for the root password through polkit, so the 
+polkit agent (`lxqt-policykit`) must be running in your sway session (e.g. `exec lxqt-policykit-agent` in the sway config).
 
 1. Select the type of snapshots
 
@@ -1095,7 +1182,8 @@ To open, use `sudo -E timeshift-gtk` (Not the best way TODO)
 
 - **Delete snapshots:** `sudo timeshift --delete-all `
 
-- **Scheduleling:** `sudo timeshift --schedule --type_of_schedule num`
+- **Scheduling:** there is no CLI flag for it. Set the schedule in the GUI (Settings - Schedule) or edit 
+`/etc/timeshift/timeshift.json` (`schedule_daily`, `count_daily`, ...). Requires `cronie` to be running.
 
 --- 
 
@@ -1103,7 +1191,7 @@ To open, use `sudo -E timeshift-gtk` (Not the best way TODO)
 
 To setup the sensors run the command 
 
-`sensors-detect` then type `YES` for all safe operations. 
+`sudo sensors-detect` then type `YES` for all safe operations. 
 
 To see the data type `sensors`
 
@@ -1113,9 +1201,13 @@ To see the data type `sensors`
 
 - Initial Configuration:
 
-- `clamconf -g freshclam.conf > freshclam.conf`
-- `clamconf -g clamd.conf > clamd.conf`
-- `clamconf -g clamav-milter.conf > clamav-milter.conf`
+Arch already ships `/etc/clamav/clamd.conf` and `/etc/clamav/freshclam.conf`. Only if they are missing, regenerate them 
+**into `/etc/clamav`** (running `clamconf -g` in another directory just creates files there):
+
+- `sudo sh -c 'clamconf -g freshclam.conf > /etc/clamav/freshclam.conf'`
+- `sudo sh -c 'clamconf -g clamd.conf > /etc/clamav/clamd.conf'`
+
+Then edit `/etc/clamav/clamd.conf` with `sudo vim /etc/clamav/clamd.conf` so it matches the following.
 
 #### clamd.conf
 
@@ -1243,7 +1335,6 @@ TemporaryDirectory /tmp
 
 # Path to a local socket file the daemon will listen on.
 # Default: disabled (must be specified by a user)
-LocalSocket /run/clamav/clamd.ctl
 LocalSocket /run/clamav/clamd.ctl
 
 # Sets the group ownership on the unix socket.
@@ -1908,7 +1999,9 @@ OnAccessExtraScanning yes
 # made on vital system directories)
 # It can be used multiple times.
 # Default: disabled
-OnAccessMountPath /
+# Left disabled on purpose: setting a mount path disables the DDD system that
+# OnAccessIncludePath /home and OnAccessExtraScanning rely on.
+#OnAccessMountPath /
 #OnAccessMountPath /home/user
 
 # With this option you can exclude the root UID (0). Processes run under
@@ -1989,7 +2082,7 @@ OnAccessExcludeUname clamav
 VirusEvent /etc/clamav/virus-event.bash
 ```
 
-- Create the file: `/etc/sudoers.d/clamav` and add this line
+- Create the file with `sudo EDITOR=vim visudo -f /etc/sudoers.d/clamav` (visudo checks the syntax, a broken sudoers file can lock you out of `sudo`) and add this line
 
 ```
 clamav ALL=(ALL) NOPASSWD: SETENV: /usr/bin/notify-send
@@ -2011,7 +2104,13 @@ for ADDRESS in /run/user/*; do
 done
 ```
 
-- Finally edit the `clamav-clamonacc.service` by writting in the section 
+- Make the script executable (`notify-send` comes from `libnotify`, which is in the pacman list):
+
+```bash
+sudo chmod 755 /etc/clamav/virus-event.bash
+```
+
+- Finally edit the `clamav-clamonacc.service` by writing in the section 
 for edits. Run `sudo systemctl edit clamav-clamonacc.service` to edit
 
 ```conf
@@ -2020,16 +2119,29 @@ ExecStart=
 ExecStart=/usr/sbin/clamonacc -F --fdpass --log=/var/log/clamav/clamonacc.log
 ```
 
-Now restart the `clamav-clamonacc.service` using `systemctl`.
+- Download the virus database **first** (`clamd` refuses to start without it), then enable the services in this order:
 
+```bash
+sudo freshclam
+sudo systemctl enable --now clamav-freshclam.service
+sudo systemctl enable --now clamav-daemon.service
+sudo systemctl enable --now clamav-clamonacc.service
+```
 
-- Update database: `freshclam`
+After changing the config later, restart with `sudo systemctl restart clamav-daemon clamav-clamonacc`.
  
  ---
 
 ## Audio 
 
-- `systemctl --user enable --now pipewire pipewire-pulse wireplumber`
+PipeWire, pipewire-pulse and WirePlumber are socket-activated user services that start automatically on login. 
+If audio does not work, check them with:
+
+- `systemctl --user status pipewire pipewire-pulse wireplumber`
+- `systemctl --user enable --now pipewire pipewire-pulse wireplumber` if they are not running
+- `pactl info` should show `Server Name: PulseAudio (on PipeWire ...)`
+
+Make sure `pulseaudio` is **not** installed, it conflicts with `pipewire-pulse`.
 
 ---
 
@@ -2041,7 +2153,12 @@ Now restart the `clamav-clamonacc.service` using `systemctl`.
 
 ## Docker 
 
-- `sudo systemctl enable docker.service`
+- `sudo systemctl enable --now docker.service`
+- `sudo usermod -aG docker $USER` then log out and in again to use `docker` without `sudo`
+- Test with `docker run hello-world`
+
+> **Note:** Docker writes its own iptables rules. Ports published with `-p` are reachable from the network **even if ufw 
+> denies them**. Bind to localhost (`-p 127.0.0.1:8080:80`) for services that should stay local.
 
 ---
 
@@ -2050,14 +2167,22 @@ Now restart the `clamav-clamonacc.service` using `systemctl`.
 Use the same procedure like when during the installation consisting of: 
 
 - Identifying
-- Paritioning
+- Partitioning
 - Formating 
 - Mounting 
 
 The difference is that this time we want to add it to `fstab` to mount automatically when booting
 
 - Get the UUID with `lsblk -f`
-- Open and edit the `/etc/fstab` and add the line `UUID=id /mnt/... file_system_type permisions(defaults) dump_option (0)  policy_option (0)`
+- Create the mount point: `sudo mkdir -p /mnt/data`
+- Open and edit the `/etc/fstab` and add the line `UUID=id /mnt/... file_system_type options dump_option(0) fsck_order(2)`, e.g.:
+
+```text
+UUID=xxxx-xxxx  /mnt/data  ext4  defaults,nofail  0  2
+```
+
+`nofail` keeps the system booting if the drive is missing or broken. Test the entry without rebooting with 
+`sudo systemctl daemon-reload && sudo mount -a`.
 
 
 --- 
@@ -2131,8 +2256,10 @@ sudo pacman -S gufw
 
 ## Flatpak
 
-`flatpak` is a package-management and application-distribution system primarily designed for desktop applications. Unlike DNF, Flatpak applications run inside 
+`flatpak` is a package-management and application-distribution system primarily designed for desktop applications. Unlike pacman packages, Flatpak applications run inside 
 a sandbox and generally use their own runtime and dependency environment.
+
+Unlike pacman packages, Flatpak applications are not updated by `pacman -Syu`/`yay -Syu`; run `flatpak update` as well.
 
 To install and setup
 
@@ -2305,8 +2432,12 @@ These are programs which automatically manage the power for laptops
 ```bash 
 sudo pacman -S tlp tlp-rdw
 sudo systemctl enable --now tlp
+sudo systemctl enable NetworkManager-dispatcher.service
 sudo systemctl mask systemd-rfkill.service systemd-rfkill.socket
 ```
+
+`NetworkManager-dispatcher.service` is required for `tlp-rdw` (radio device wizard) to work. Do not install 
+`power-profiles-daemon` alongside TLP, they conflict.
 
 If after running 
 
@@ -2314,10 +2445,11 @@ If after running
 sudo tlp-stat -b
 ```
 
-the model tells you to install `acpi_call` then proceed to 
+the model tells you to install `acpi_call` then proceed to install the DKMS version, because this system runs two kernels 
+(`linux` and `linux-lts`) and the plain `acpi_call` package only works with `linux`:
 
 ```bash 
-sudo pacman -S acpi_call
+sudo pacman -S acpi_call-dkms linux-headers linux-lts-headers
 ```
 
 --- 
