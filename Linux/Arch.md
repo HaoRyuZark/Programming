@@ -2453,3 +2453,51 @@ sudo pacman -S acpi_call-dkms linux-headers linux-lts-headers
 ```
 
 --- 
+
+## Throuble Shooting 
+
+### Common Issues
+
+- **Slow boot**: Check the boot time with `systemd-analyze blame` and `systemd-analyze critical-chain`. 
+If you see a service taking too long, check its status with `systemctl status <service-name>` and its logs with `journalctl -u <service-name>`.
+
+- **Idle waiting for keyboard input after locked screen (swaylock)**: Check the input of the following command 
+
+```bash 
+cat /etc/pam.d/swaylock
+authselect current          # look for "with-fingerprint"
+grep -r fprintd /etc/pam.d/
+
+#
+# PAM configuration file for the swaylock screen locker. By default, it includes
+# the 'login' configuration file (see /etc/pam.d/login)
+#
+```
+
+If the output looks like this:
+
+```
+auth include login
+Profile ID: local
+Enabled features:
+- with-silent-lastlog
+- with-fingerprint
+- with-mdns4
+```
+
+then run:
+
+```bash 
+sudo authselect disable-feature with-fingerprint
+```
+
+### Broken System
+
+If the system is broken and you cannot log in, boot into a live USB and mount the root partition. Then chroot into it:
+
+```bash
+sudo mount /dev/sdXn /mnt  # Replace sdXn with your root
+```
+
+
+
