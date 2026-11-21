@@ -1123,6 +1123,10 @@ alternative that keeps the last two versions of each package (useful for downgra
 
 - **Update:** `yay -Syu` (always refresh and upgrade together; `-Syy` without `-u` risks a partial upgrade)
 
+- **Update npm packages:** `sudo npm install npm@latest -g`.
+
+- **Update rust toolchain:** `rustup update`.
+
 - **Clean unwanted dependencies:** `yay -Yc`
 
 - **Clean orphan packages:** `sudo pacman -Rns $(pacman -Qtdq)` (prints an error if there are no orphans, that is fine)
