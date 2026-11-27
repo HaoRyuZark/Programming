@@ -2233,6 +2233,8 @@ sudo systemctl enable --now avahi-daemon
 
 ## Firewall 
 
+The firewall we are going to use is `ufw` (Uncomplicated Firewall). It is a frontend for `iptables` and is designed to be easy to use.
+
 Just run the following: 
 
 ```bash 
@@ -2255,6 +2257,12 @@ For a GUI run
 ```bash 
 sudo pacman -S gufw
 ```
+
+
+> NOTE: some firewall rules may block some applications like docker and other network applications
+In such a case if some unknown errors appears, check the firewall rules and disable it if necessary.
+
+One also use `SELinux` for a more advanced firewall, but it is not covered in this guide.
 
 --- 
 
